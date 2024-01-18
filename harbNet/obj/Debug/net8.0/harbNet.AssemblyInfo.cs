@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("harbNet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f260df6d57a52a142aa42fb582b689321f5aae8d")]
 [assembly: System.Reflection.AssemblyProductAttribute("harbNet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("harbNet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
