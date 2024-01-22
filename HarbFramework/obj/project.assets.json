@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj",
-      "projectName": "Simulation",
-      "projectPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj",
+      "projectUniqueName": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj",
+      "projectName": "HarbFramework",
+      "projectPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj",
       "packagesPath": "C:\\Users\\andbe\\.nuget\\packages\\",
-      "outputPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\obj\\",
+      "outputPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

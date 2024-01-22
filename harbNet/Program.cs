@@ -1,10 +1,55 @@
-﻿namespace harbNet
+﻿using System.ComponentModel;
+using System;
+
+namespace harbNet
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
-        }
+
+            harbNet.create();
+
+            harbNet.setName(String navn);
+
+            harbNet.createPort(PortSize portSize); //sender inn enum portsize
+
+            // harbNet.setNumberOfShips(int LargeShips, int MediumShips, int );
+
+            harbNet.createShip(ShipSize shipSize, DateOnly StartDate DateTime ReturnDate) // overload for funksjonen hvor man kan sette bare skip størelse, skip størelse og start dato eller skipstørrelse, start dato og returdato.
+
+            harbNet.SimulationDuration(DateOnly StartDate.Date EndDate);
+
+            harbNet.run(); //Få errors hvis man ikke har satt riktige variabler.
+
+            harbNet.getContainerHistory(UUID ContainerId); // Collection med Events -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getShipHistory(UUID ShipId); // Collection med Events -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getContainerIDs(); // Collection med container IDs. 
+
+            harbNet.getShipIDs(); // Collection med Ship IDs;
+
+            harbNet.printHistoryToConsole(); // printer simulerings historien til konsoll -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.printHistoryToFile(String Filepath); // printer simulerings historien til fil -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getShipTurnAroundTime(); //gjennomsnitts turnouround for alle skip -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getContainerTurnAroundTime(); //gjennomsnitts turnouround for alle skip -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getAverageLoadTime(); //gjenomsnitlig loadtime for alle skip -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getAverageUnloadTime(); //gjenomsnitlig loadtime for alle skip unload time for alle skip -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getAverageQueueTime(); //gjennomsnittstid skip venter i kø -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getWeatherHistory(); //collection med events av vær -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getContainersMoved(); //Antall containere flyttet i løpet av simuleringen  -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+            harbNet.getNumberOfDockings() //Antall skip docket i løpet av simuleringen    -- m. overloads hvor man sender inn dato for ett gitt døgn
+
+        } 
     }
 }
