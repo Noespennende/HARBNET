@@ -15,7 +15,7 @@ namespace HarbFramework
         public Guid createPort(PortSize portSize); //returnerer Guid til porten som ble laget
         public Guid createShip(ShipSize shipSize); //Returnerer Guid til skipet som ble laget
         public Guid createShip(ShipSize shipSize, DateTime startDate); //Returnerer Guid til skipet som ble laget
-        public Guid createShip(ShipSize shipSize, DateTime startDate, DateTime, returnDate); //Returnerer Guid til skipet som ble laget
+        public Guid createShip(ShipSize shipSize, DateTime startDate, int roundTripInDays); //Returnerer Guid til skipet som ble laget
         public Boolean removeShip(Guid shipId); //Returnerer True hvis skipet ble fjernet, false ellers.
         public Boolean removePort(Guid PortId); //Returnerer True hvis havna ble fjernet, false ellers.
         public void simulationDuration(DateTime startDate, DateTime endDate);

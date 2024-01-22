@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarbFramework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,9 @@ namespace harbNet
     internal class Container
     {
         Guid id = Guid.NewGuid();
-        List<Hashtable> history = new List<Hashtable>();
-        Hashtable historyEvent = new Hashtable();
-        //Enum containerClass;
-        int Weight;
+        ICollection<Event> History;
+        ContainerSize size;
+        int WeightInKG;
         Guid currentPoison;
     }
 }

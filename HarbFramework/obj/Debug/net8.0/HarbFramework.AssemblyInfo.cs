@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HarbFramework")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6fbaaac7353f03ad9992b0108e6ff19de8d6369")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b5fd660282a8e0242acf3105cdd6631cd5f47f69")]
 [assembly: System.Reflection.AssemblyProductAttribute("HarbFramework")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HarbFramework")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
