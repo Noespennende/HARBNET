@@ -12,7 +12,7 @@ namespace HarbFramework
     {
         public void create(); //Oppretter simuleringen
         public String setName(String name); //returnerer navnet
-        public Guid createPort(PortSize portSize); //returnerer Guid til porten som ble laget
+        public Guid createPort(DockSize portSize); //returnerer Guid til porten som ble laget
         public Guid createShip(ShipSize shipSize); //Returnerer Guid til skipet som ble laget
         public Guid createShip(ShipSize shipSize, DateTime startDate); //Returnerer Guid til skipet som ble laget
         public Guid createShip(ShipSize shipSize, DateTime startDate, int roundTripInDays); //Returnerer Guid til skipet som ble laget
@@ -28,7 +28,7 @@ namespace HarbFramework
         public void printHistoryToConsole();
         public void printHistoryToFile(String fileName);
         public int getShipTurnaroundTimeInHours(); //får int med tid i timer. 
-        public int getShipTurnaroundTimeInHours(DateTime startDate DateTime endDate); //får int med tid i timer beregnet mellom start og sluttdato
+        public int getShipTurnaroundTimeInHours(DateTime startDate, DateTime endDate); //får int med tid i timer beregnet mellom start og sluttdato
         public int getContainerTurnAroundTimeInHours();//får int med tid i timer. 
         public int getContainerTurnAroundTimeInHours(DateTime startDate, DateTime endDate); //får int med tid i timer beregnet mellom start og sluttdato
         public int getAverageLoadTimeInHours(); //får int med tid i timer. 

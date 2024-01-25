@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
-    public enum ContainerSize
+    internal enum DockSize
     {
         None,
         Small,
         Medium,
-        Large
+        Large,
     }
 }

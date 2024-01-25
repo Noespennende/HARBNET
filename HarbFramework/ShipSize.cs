@@ -8,6 +8,7 @@ namespace HarbFramework
 {
     public enum ShipSize
     {
+        //Sjekk boka om Enum skal være i caps eller ikke
         None,
         Small,
         Medium,
