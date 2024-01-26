@@ -26,7 +26,7 @@ namespace harbNet
         internal int baseDockingTimeInHours { get; set; }
         internal bool nextStepCheck = false;
 
-        internal Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, ICollection<Container> containersOnBoard)
+        internal Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, ArrayList containersOnBoard)
         {
             this.shipSize = shipSize;
             this.startDate = StartDate;

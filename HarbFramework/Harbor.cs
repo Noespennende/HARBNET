@@ -16,8 +16,8 @@ namespace harbNet
         internal Hashtable shipsInDock = new Hashtable(); // Ship : Dock
         internal ArrayList harbourQueInn = new ArrayList();  
         internal Hashtable shipsInTransit = new Hashtable(); // ship: int number of days until return
-        internal ArrayList allContainerSpaces = new ArrayList(); // størelse : antall
-        internal ArrayList freeContainerSpaces = new ArrayList(); // størelse : antall ledige
+        internal Hashtable allContainerSpaces = new Hashtable(); // størelse : antall
+        internal Hashtable freeContainerSpaces = new Hashtable(); // størelse : antall ledige
         internal Hashtable storedContainers = new Hashtable(); // Container : ContainerSpace
         Guid transitLocationID = Guid.NewGuid();
         Guid portQueInnID = Guid.NewGuid();
