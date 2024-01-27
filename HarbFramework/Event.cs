@@ -11,9 +11,9 @@ namespace HarbFramework
         Guid subject {  get; set; }
         Guid subjectLocation { get; set; }
         DateTime pointInTime { get; set; }
-        Status status { get; set; }
+        internal Status status { get; set; }
 
-        public Event (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
+        internal Event (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
         {
             this.subject = subject;
             this.subjectLocation = subjectLocation;

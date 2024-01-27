@@ -15,11 +15,11 @@ namespace harbNet
         internal ICollection<Event> history {  get; set; }
         internal ContainerSize size { get; set; }
         internal int WeightInTonn { get; set; }
-        internal Guid currentPoison { get; set; }
+        internal Guid currentPosition { get; set; }
 
         internal Container(ContainerSize size, int WeightInKG, Guid currentPosition) {
             this.size = size;
-            this.currentPoison = currentPosition;
+            this.currentPosition = currentPosition;
             this.WeightInTonn = WeightInKG;
         }
 
@@ -27,7 +27,7 @@ namespace harbNet
 
         internal void addHistoryEvent (Status status, DateTime currentTime)
         {
-            history.Add(new Event(id, currentPoison, currentTime, status));
+            history.Add(new Event(id, currentPosition, currentTime, status));
         }
     }
 }

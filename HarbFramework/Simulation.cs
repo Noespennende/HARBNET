@@ -12,9 +12,9 @@ namespace HarbFramework
     internal class Simulation
     {
         //StartTime variabler 
-        private int startTime = 0;
-        private int currentTime = 0;
-        private int endTime = 1;
+        private DateTime startTime;
+        private DateTime currentTime;
+        private DateTime endTime;
         private int harborSmallCount = 0;
         private int harborMediumCount = 0;
         private int harborLargeCount = 0;
@@ -24,67 +24,204 @@ namespace HarbFramework
 
 
 
-        private ArrayList ContainersOnBoard = new ArrayList();
+        private ArrayList containersOnBoard = new ArrayList();
         private ArrayList allDocks = new ArrayList();
         private ArrayList freeDocks = new ArrayList();
         private Hashtable shipsInDock = new Hashtable();
         private Harbor harbor;
         private Ship shipSmall, shipMedium, shipLarge;
-        nextStepCheck = false;
         //private Log log = new Log()
+
+
+        // Mathilde - Jeg la det her for nå
+        private ArrayList allShipsInSimulation = new ArrayList();
+        public void Run()
+        {
+            Setup();
+
+            while (currentTime != endTime)
+            {
+                // Resetter nextStepCheck for alle Ship før neste runde
+                foreach (Ship ship in allShipsInSimulation)
+                    ship.nextStepCheck = false; 
+
+                UndockingShips();
+                LoadingShips();
+
+
+                // Slutt på "runde"
+
+                currentTime.AddHours(6); // Får bli enige om hvor mange timer en "runde" skal ta
+                continue;
+            }
+
+
+        }
+        private void UndockingShips()
+        {
+            foreach (Ship ship in harbor.dockedShips())
+            {
+
+                Guid shipID = ship.id;
+                Event? @event = ship.history.Count > 0 ? ship.history[^1] as Event : null; // Finner siste Event i history, så skipet siste status kan sjekkes
+
+                if (@event != null && @event.status == Status.Undocking)
+                {
+                    harbor.unDockShip(shipID, currentTime);
+                    ship.nextStepCheck = true;
+                    // Opprette Event her ....
+                }
+            }
+        }
+
+        private void LoadingShips()
+        {
+            foreach (Ship ship in harbor.dockedShips())
+            {
+                Guid shipID = ship.id;
+                Event? @event = ship.history.Count > 0 ? ship.history[^1] as Event : null; // Finner siste Event i history, så skipet siste status kan sjekkes
+
+                if (ship.nextStepCheck = false && @event != null && @event.status == Status.Loading)
+                {
+                    ContainerSize ContainerSize;
+                    if (ship.shipSize == ShipSize.Small)
+                    {
+                        ContainerSize = ContainerSize.Small;
+                    }
+                    else if (ship.shipSize == ShipSize.Medium)
+                    {
+                        ContainerSize = ContainerSize.Medium;
+                    }
+                    else if (ship.shipSize == ShipSize.Large)
+                    {
+                        ContainerSize = ContainerSize.Large;
+                    }
+                    else
+                    {
+                        ContainerSize = ContainerSize.Small;
+                        // Håndtering hvis ingen av de andre if-ene blir kjørt ... ellers klager ContainerSize i loadContainer om at den ikke får noen verdi.
+                        // ?? Noen bedre måte å håndtere dette på ??
+                    }
+
+                    if (ship.containersOnBoard.Count != ship.containerCapacity) // Hvis det er fri plass til container på skipet
+                    {
+                        harbor.loadContainer(ContainerSize, ship, currentTime);
+                    }
+                    else if (ship.containersOnBoard.Count == ship.containerCapacity)
+                    {
+                        Status status = Status.Undocking; // Her burde det kanskje være en mellomting? "Venter på å undocke". Den undocker jo egentlig ikke før neste "runde"
+                    }
+                    ship.nextStepCheck = true;
+
+                    // Opprette Event her .... - ta i bruk status variabelen over
+                }
+            }
+        }
+
+
+        private void Setup()
+        {
+
+            // Harbor oppretter ContainerSpaces internt basert på parameterne
+            Harbor harbor = new Harbor(10, 10, 10, 100, 100, 100);
+
+            int totalSmallHarborContainerSpaces = harbor.allContainerSpaces[ContainerSize.Small].Count;
+            int totalMediumHarborContainerSpaces = harbor.allContainerSpaces[ContainerSize.Medium].Count;
+            int totalLargeHarborContainerSpaces = harbor.allContainerSpaces[ContainerSize.Large].Count;
+            int totalContainersInSimulation = calcuateTotalContainersInSimulation(); ;
+
+            int calcuateTotalContainersInSimulation()
+            {
+                int totalHarborContainerCapacity = totalSmallHarborContainerSpaces + totalMediumHarborContainerSpaces + totalLargeHarborContainerSpaces;
+                int totalShipContainerCapcacity = 0;
+                
+               
+                foreach (Ship ship in allShipsInSimulation)
+                {
+                    totalShipContainerCapcacity += ship.containerCapacity;
+                }
+
+                
+                int totalContainersInSimulation = totalHarborContainerCapacity + totalShipContainerCapcacity;
+                // Skal vi legge til et tilfeldig antall containere som ikke har plass på verken skip eller harbor?
+                // Ser for meg at dette kan garantere at før eller siden så må et skip må vente med å unloade til et annet har loadet?
+
+                return totalContainersInSimulation;
+            }
+            
+            List<ContainerSpace> allContainerSpaces = new List<ContainerSpace>();
+
+            ArrayList tempContainersOnBoard = new ArrayList();
+          
+            Ship tempShipS = new(ShipSize.Small, startTime, 10, tempContainersOnBoard);
+
+            // Oppretter og fyller Harbor med containere
+            for (int i = 0; i < totalContainersInSimulation/3; i++)
+            {
+                tempContainersOnBoard.Add(new Container(ContainerSize.Small, 10000, Guid.Empty));  // Legge til en Small container, på temp Ship
+                tempContainersOnBoard.Add(new Container(ContainerSize.Large, 25000, Guid.Empty));  // Legge til en Medium container, på temp Ship
+                tempContainersOnBoard.Add(new Container(ContainerSize.Small, 50000, Guid.Empty));  // Legge til en Large container, på temp Ship
+
+                harbor.unloadContainer(ContainerSize.Small, tempShipS, currentTime); // Fyller så Harbor opp med containere
+                // Dette kan nok gjøres på en annen og mer direkte måte, men for nå gjorde jeg det slik :) - Mathilde
+            }
+        }
+        // Mathilde slutt
 
 
 
         public Simulation()
         {
-            Container containerSmall = new Container(ContainerSize.Small, 1000, 1);
-            Container containerMedium = new Container(ContainerSize.Medium, 2500, 1);
-            Container containerLarge = new Container(ContainerSize.Large, 5000, 1);
-            
 
+            Container containerSmall = new Container(ContainerSize.Small, 1000, Guid.Empty);
+            Container containerMedium = new Container(ContainerSize.Medium, 2500, Guid.Empty);
+            Container containerLarge = new Container(ContainerSize.Large, 5000, Guid.Empty);
 
             for (int i = 0; i < 50; i++)
             {
-                ContainersOnBoard.add(containerSmall)
-                ContainersOnBoard.add(containerMedium);
-                ContainersOnBoard.add(containerLarge);
+                containersOnBoard.Add(containerSmall);
+                containersOnBoard.Add(containerMedium);
+                containersOnBoard.Add(containerLarge);
             }
 
             harbor = new Harbor(10, 10, 10, 100, 100, 100);
-            Hashtable allContainerSpaces = harbor.allContainerSpaces;
-            Hashtable freeContainerSpaces = harbor.freeContainerSpaces;
-            Hashtable storedContainerSpaces = new Hashtable();
+            Dictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = harbor.allContainerSpaces;
+            Dictionary<ContainerSize, List<ContainerSpace>> freeContainerSpaces = harbor.freeContainerSpaces;
+            Dictionary<ContainerSize, List<ContainerSpace>> storedContainerSpaces = new();
 
 
             
 
-            shipSmall = new Ship(ShipSize.Small, 1, 12, containersOnBoard);
-            shipMedium = new Ship(ShipSize.Medium, 1, 12, ContainersOnBoard);
-            shipLarge = new Ship(ShipSize.Large, 1, 12, ContainersOnBoard);
+            shipSmall = new Ship(ShipSize.Small, currentTime, 12, containersOnBoard);
+            shipMedium = new Ship(ShipSize.Medium, currentTime, 12, containersOnBoard);
+            shipLarge = new Ship(ShipSize.Large, currentTime, 12, containersOnBoard);
 
             //eventlogger ikke implementert
-            while (!endTime)
+            while (endTime != currentTime)
             {
-                nextStepCheck = false;
+               
                 foreach (Ship ship in harbor.shipsInDock) //undock
                 {
-                    if (ship.containersOnBoard.Count == 0)
+                    if (ship.nextStepCheck == false)
                     {
-                        harbor.unDockShip(ship.getID, currentTime);
-                        shipsInDock.Remove(ship.getID);
-                        harbor.NumberOfFreeDocks(ship.shipSize) //usikker på denne, om den skal legge til på den måten og om neste løkke burde endres isåfall
+                        if (ship.containersOnBoard.Count == 0)
+                        {
+                            harbor.unDockShip(ship.id, currentTime);
+                            shipsInDock.Remove(ship.id);
+                            harbor.NumberOfFreeDocks(ship.shipSize); //usikker på denne, om den skal legge til på den måten og om neste løkke burde endres isåfall
 
 
-                        nextStepCheck = true;
+                            ship.nextStepCheck = true;
 
-                    }
-                    else
-                    {
-                        break;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
 
-                if (harbor.freeDockExists(ShipSize.Small) || harbor.freeDockExists(ShipSize.Medium) || harbor.freeDockExists(ShipSize.Large)
+                if (harbor.freeDockExists(ShipSize.Small) || harbor.freeDockExists(ShipSize.Medium) || harbor.freeDockExists(ShipSize.Large))
                     //dock har ikke tatt hensyn til forskjellige størrelser
                 {
                     foreach (Ship ship in harbor.harbourQueInn)
@@ -93,11 +230,11 @@ namespace HarbFramework
                         {//første parameter usikker
                             foreach (Dock dock in harbor.freeDocks)
                             {
-                                if (dock.size.Equals(ship.shipSize)
+                                if (dock.size.Equals(ship.shipSize))
                                 {
-                                    harbor.removeShipFromQueue(ship.getID)
-                                    harbor.dockedShips(ship.id, currentTime);
-                                    harbor.removeDockFromFreeDocks(dock.getID)
+                                    harbor.removeShipFromQueue(ship.id);
+                                    harbor.DockShip(ship.id, currentTime);
+                                    harbor.removeDockFromFreeDocks(dock.id);
                                     ship.nextStepCheck = true;
                                     break;
                                 }
@@ -131,6 +268,9 @@ namespace HarbFramework
                             ship.nextStepCheck = true;
                         }
                         else if (ship.containerCapacity < ship.getNumberOfContainersOnBoard(ContainerSize.Large) && ship.currentWeightInTonn < ship.currentWeightInTonn)
+                        {
+                            // ?
+                        }
 
                     }
                 }
@@ -140,7 +280,7 @@ namespace HarbFramework
                     shipflag.nextStepCheck = true;
                 }
 
-                currentTime += 1;
+                currentTime.AddHours(6); // Får bli enige om hvor mange timer en "runde" skal ta
             }
         }
 
@@ -164,5 +304,3 @@ namespace HarbFramework
     //Setter alle nextStepCheck til false hos alle objekter (For løkke som går gjennom alle skip i simuleringen og setter next step check til false)
     //oppdaterer current time med +1 time}
     //Current time == Start of day + 24 hours => Lag log fil
-}
-}
