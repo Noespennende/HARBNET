@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
-    internal class Harbor : IHarbor
+    public class Harbor : IHarbor
     {
         internal ArrayList allDocks = new ArrayList();
         internal ArrayList freeDocks = new ArrayList();
@@ -17,13 +17,15 @@ namespace harbNet
         internal ArrayList harbourQueInn = new ArrayList();  
         internal Hashtable shipsInTransit = new Hashtable(); // ship: int number of days until return
 
+        internal ArrayList allShips { get; set;  } = new ArrayList(); // Sikkert midlertidig, til vi kan regne på det
+
         internal Dictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new();
         //internal Hashtable allContainerSpaces = new Hashtable(); // størelse : antall
         internal Dictionary<ContainerSize, List<ContainerSpace>> freeContainerSpaces = new();
         //internal Hashtable freeContainerSpaces = new Hashtable(); // størelse : antall ledige
         internal Dictionary<Container, ContainerSpace> storedContainers = new(); // Container : ContainerSpace
         Guid transitLocationID = Guid.NewGuid();
-        Guid harbourQueInnID = Guid.NewGuid();
+        internal Guid harbourQueInnID = Guid.NewGuid();
 
 
         public Harbor (ICollection<Ship> listOfShips, int numberOfSmallDocks, int numberOfMediumDocks, int numberOfLargeDocks, int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces,
@@ -55,8 +57,8 @@ namespace harbNet
                     spaces.Add(new ContainerSpace(containerSize));
                 }
 
-                allContainerSpaces[ContainerSize.Small] = spaces; // Gir allContainerSpaces de gitte opprettede spacene
-                freeContainerSpaces[ContainerSize.Small] = spaces; // Gir freeContainerSpaces de gitte opperettede spaces
+                allContainerSpaces[containerSize] = spaces; // Gir allContainerSpaces de gitte opprettede spacene
+                freeContainerSpaces[containerSize] = spaces; // Gir freeContainerSpaces de gitte opperettede spaces
                                                                    // (Siden de er alle tomme ved oppstart av harbor og heller fylles opp senere med andre metodekall)
             }
             /* Koden fra da allContainerSpaces var HashTable : 
@@ -77,9 +79,11 @@ namespace harbNet
             */
 
 
-            harbourQueInn.Add(listOfShips);
+            allShips.AddRange((ICollection)listOfShips);
+            harbourQueInn.AddRange((ICollection)listOfShips);
+            
 
-            for (Ship ship in harbourQueInn)
+            foreach (Ship ship in harbourQueInn)
             {
                 ship.currentLocation = harbourQueInnID;
             }
@@ -162,7 +166,12 @@ namespace harbNet
         internal ArrayList dockedShips()
         {
             ArrayList ships = new ArrayList();
-            ships.Add(shipsInDock);
+
+            foreach (Ship ship in shipsInDock.Keys)
+            {
+                ships.Add(ship); // Legg til hvert individuelle Ship-objekt, ikke hele Hashtable
+            }
+
             return ships;
         }
         internal bool freeDockExists (ShipSize shipSize)
@@ -233,6 +242,7 @@ namespace harbNet
                 }
             }
             return count;
+            
 
         } //returnerer antallet ledige container plasser av den gitte typen.
         internal int getNumberOfOccupiedContainerSpaces(ContainerSize containerSize) {
@@ -241,18 +251,19 @@ namespace harbNet
         } //returnerer antallet okuperte plasser av den gitte typen
 
         internal ContainerSpace getFreeContainerSpace(ContainerSize containerSize) {
-            
             foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize]) // Sto originalt storedContainers, går ut ifra det skulle stå freeContainerSpaces
             {
+                
                 if (containerSpace.free == true && containerSpace.size == containerSize)
                 {
                     return containerSpace;
+
                 }
             }
             return null;
 
         } //returnerer en Guid til en ledig plass av den gitte typen
-    
+
         internal Container getStoredContainer (ContainerSize containerSize)
         {
             foreach (Container container in storedContainers.Keys)
@@ -291,7 +302,9 @@ namespace harbNet
 
             if (containerToBeUnloaded == null || containerSpace == null)
             {
+
                 return Guid.Empty;
+               
             }
 
             ship.removeContainer(containerToBeUnloaded.id);
@@ -305,7 +318,7 @@ namespace harbNet
 
             containerToBeUnloaded.currentPosition = containerSpace.id;
             containerToBeUnloaded.addHistoryEvent(Status.InStorage, currentTime);
-
+            
             return containerSpace.id;
 
         } // returnerer Guid til container spaces containeren ble lagret, returnerer empty Guid hvis containeren ikke finnes
@@ -313,17 +326,20 @@ namespace harbNet
         internal Guid loadContainer (ContainerSize containerSize, Ship ship, DateTime currentTime)
         {
             Container containerToBeLoaded = getStoredContainer(containerSize);
-            ContainerSpace containerSpace = storedContainers[containerToBeLoaded];
-            // ContainerSpace containerSpace = (ContainerSpace)storedContainers[containerToBeLoaded];
 
             if (containerToBeLoaded == null || !storedContainers.ContainsKey(containerToBeLoaded))
             {
+                
                 return Guid.Empty;
+
             }
 
+            ContainerSpace containerSpace = storedContainers[containerToBeLoaded];
+          
             ship.addContainer(containerToBeLoaded);
             containerToBeLoaded.currentPosition = ship.id;
-            containerToBeLoaded.addHistoryEvent (Status.Transit, currentTime);
+
+            containerToBeLoaded.addHistoryEvent(Status.Transit, currentTime);
 
             containerSpace.free = true;
             containerSpace.storedContainer = Guid.Empty;
@@ -338,6 +354,28 @@ namespace harbNet
         internal void AddNewShipToHarbourQueue (Ship ship)
         {
             harbourQueInn.Add(ship);
+        }
+
+        /* ** Interface implementasjon som må gjøres ** */
+
+        public string GetShipStatus(Guid ShipID)
+        {
+            return ("ImplementasjoN!");
+        }
+
+        public string GetDockStatus(Guid dockID)
+        {
+            return("ImplementasjoN!");
+        }
+
+        public string GetStatusAllDocks()
+        {
+            return ("ImplementasjoN!");
+        }
+
+        public string GetStatusAllShips()
+        {
+            return ("ImplementasjoN!");
         }
     }
 }

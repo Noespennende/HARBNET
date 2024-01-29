@@ -9,7 +9,7 @@ namespace HarbFramework
     internal class Event
     {
         Guid subject {  get; set; }
-        Guid subjectLocation { get; set; }
+        internal Guid subjectLocation { get; set; }
         DateTime pointInTime { get; set; }
         internal Status status { get; set; }
 

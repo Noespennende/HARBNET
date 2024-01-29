@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System;
+using HarbFramework;
 
 namespace harbNet
 {
@@ -8,6 +9,22 @@ namespace harbNet
         static void Main(string[] args)
         {
 
+            DateTime startTime = DateTime.Now;
+            DateTime endTime = startTime + TimeSpan.FromSeconds(15);
+            List<Ship> ships = new List<Ship>();
+
+            Ship testShip = new(ShipSize.Large, startTime, 10, 1);
+            ships.Add(testShip);
+
+            Harbor harbor = new Harbor(ships, 10, 10, 10, 2, 2, 1);
+
+
+            Simulation simulation = new Simulation(harbor, startTime, endTime);
+
+            simulation.Run(startTime, endTime);
+            Console.WriteLine("Hei her er jeg");
+
+            /*
             harbNet.create();
 
             harbNet.setName(String navn);
@@ -49,6 +66,7 @@ namespace harbNet
             harbNet.getContainersMoved(); //Antall containere flyttet i løpet av simuleringen  -- m. overloads hvor man sender inn dato for ett gitt døgn
 
             harbNet.getNumberOfDockings() //Antall skip docket i løpet av simuleringen    -- m. overloads hvor man sender inn dato for ett gitt døgn
+            */
 
         } 
     }

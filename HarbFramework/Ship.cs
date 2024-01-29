@@ -9,22 +9,24 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
-    internal class Ship
+    public class Ship
     {
         internal Guid id = Guid.NewGuid();
-        internal ShipSize shipSize { public get; set; }
-        internal DateTime startDate { public get; set; }
-        internal int roundTripInDays {public get; set; }
-        internal Guid currentLocation { public get; set; }
-        internal ArrayList history {public get; set; }
-        internal ArrayList containersOnBoard { public get; set; }
-        internal int containerCapacity { public get; set; }
-        internal int maxWeighInTonn { public get; set; }
-        internal int baseWeigtInTonn {public get; set; }
-        internal int currentWeightInTonn {public get; set; }
+        internal ShipSize shipSize { get; set; }
+        internal DateTime startDate { get; set; }
+        internal int roundTripInDays { get; set; }
+        internal Guid currentLocation { get; set; }
+        internal ArrayList history { get; set; } = new ArrayList();
+        internal ArrayList containersOnBoard { get; set; } = new ArrayList();
+        internal int containerCapacity {  get; set; }
+        internal int maxWeighInTonn {  get; set; }
+        internal int baseWeigtInTonn { get; set; }
+        internal int currentWeightInTonn { get; set; }
         internal int containersLoadedPerHour { get; set; }
         internal int baseDockingTimeInHours { get; set; }
         internal bool nextStepCheck = false;
+
+        internal int baseBerthingTimeInHours { get; set; }
 
         public Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
         {
@@ -43,7 +45,7 @@ namespace harbNet
                 }
                 if (i%3 == 2)
                 {
-                    containersOnBoard.Add(new Container(ContainerSize.Large, 15, this.id))
+                    containersOnBoard.Add(new Container(ContainerSize.Large, 15, this.id));
                 }
             } 
 
@@ -80,26 +82,36 @@ namespace harbNet
 
             int currentWeight = baseWeigtInTonn;
 
-            for (Container container in containersOnBoard)
+            foreach (Container container in containersOnBoard)
             {
                 currentWeight += container.WeightInTonn;
             }
-            
-            if (currentWeight > maxWeighInTonn)
+
+            try
             {
-                throw new Exception("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)")
-            } else if (shipSize == ShipSize.Small && containersOnBoard.Count > containerCapacity)
-            {
-                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers")
+                if (currentWeight > maxWeighInTonn)
+                {
+                    throw new Exception("The ship's current weight is too heavy. Max overall container weight for small ships is 600 tons (about 55 containers), for medium ships: 1320 tons (about 55 containers), for large ships: 5600 tons (about 150 containers)");
+                }
+                else if (shipSize == ShipSize.Small && containersOnBoard.Count > containerCapacity)
+                {
+                    throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
+                }
+                else if (shipSize == ShipSize.Medium && containersOnBoard.Count > containerCapacity)
+                {
+                    throw new Exception("The ship has too many containers on board. The container capacity for medium ships is max 50 containers");
+                }
+                else if (shipSize == ShipSize.Large && containersOnBoard.Count > containerCapacity)
+                {
+                    throw new Exception("The ship has too many containers on board. The container capacity for large ships is max 100 containers");
+                }
+
             }
-            else if (shipSize == ShipSize.Medium && containersOnBoard.Count > containerCapacity)
+            catch (Exception ex)
             {
-                throw new Exception("The ship has too many containers on board. The container capacity for medium ships is max 50 containers")
+                Console.WriteLine("Error: " + ex.Message);
             }
-            else if (shipSize == ShipSize.Small && containersOnBoard.Count > containerCapacity)
-            {
-                throw new Exception("The ship has too many containers on board. The container capacity for large ships is max 100 containers")
-            }
+
         }
 
         public Guid getID()
@@ -109,9 +121,10 @@ namespace harbNet
 
         internal Event addHistoryEvent (DateTime currentTime, Guid currentLocation, Status status)
         {
-            Event currentEvent = new Event(id, currentLocation, currentTime, status);
+            Event currentEvent = new Event(id,currentLocation, currentTime, status);
             history.Add(currentEvent);
             return currentEvent;
+            
 
         }
 

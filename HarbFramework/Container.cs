@@ -12,7 +12,7 @@ namespace harbNet
     internal class Container
     {
         internal Guid id = Guid.NewGuid();
-        internal ICollection<Event> history {  get; set; }
+        internal ICollection<Event> history {  get; set; } = new List<Event>();
         internal ContainerSize size { get; set; }
         internal int WeightInTonn { get; set; }
         internal Guid currentPosition { get; set; }

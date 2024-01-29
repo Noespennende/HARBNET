@@ -1,0 +1,12 @@
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\bin\Release\net8.0\HarbFramework.deps.json
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\bin\Release\net8.0\HarbFramework.dll
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\bin\Release\net8.0\HarbFramework.pdb
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\HarbFramework.AssemblyInfoInputs.cache
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\HarbFramework.AssemblyInfo.cs
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\HarbFramework.csproj.CoreCompileInputs.cache
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\HarbFramework.sourcelink.json
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\HarbFramework.dll
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\refint\HarbFramework.dll
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\HarbFramework.pdb
+C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Release\net8.0\ref\HarbFramework.dll

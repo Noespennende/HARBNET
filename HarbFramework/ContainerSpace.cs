@@ -8,7 +8,7 @@ namespace HarbFramework
 {
     internal class ContainerSpace
     {
-        internal Guid id = new Guid();
+        internal Guid id = Guid.NewGuid();
         internal ContainerSize size { get; set; }
         internal bool free {  get; set; }
         internal Guid storedContainer;
