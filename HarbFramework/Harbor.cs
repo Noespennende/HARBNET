@@ -23,10 +23,11 @@ namespace harbNet
         //internal Hashtable freeContainerSpaces = new Hashtable(); // størelse : antall ledige
         internal Dictionary<Container, ContainerSpace> storedContainers = new(); // Container : ContainerSpace
         Guid transitLocationID = Guid.NewGuid();
-        Guid portQueInnID = Guid.NewGuid();
+        Guid harbourQueInnID = Guid.NewGuid();
 
 
-        internal Harbor (int numberOfSmallDocks, int numberOfMediumDocks, int numberOfLargeDocks, int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces, int numberOfLargeContainerSpaces)
+        public Harbor (ICollection<Ship> listOfShips, int numberOfSmallDocks, int numberOfMediumDocks, int numberOfLargeDocks, int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces,
+            int numberOfLargeContainerSpaces)
         {
             for (int i = 0; i < numberOfSmallDocks; i++)
             {
@@ -58,7 +59,6 @@ namespace harbNet
                 freeContainerSpaces[ContainerSize.Small] = spaces; // Gir freeContainerSpaces de gitte opperettede spaces
                                                                    // (Siden de er alle tomme ved oppstart av harbor og heller fylles opp senere med andre metodekall)
             }
-
             /* Koden fra da allContainerSpaces var HashTable : 
             for (int i = 0; i < numberOfSmallContainerSpaces; i++)
             {
@@ -75,6 +75,10 @@ namespace harbNet
                 allContainerSpaces.Add(new ContainerSpace(ContainerSize.Large));
             }
             */
+
+
+            harbourQueInn.Add(listOfShips);
+
 
             freeDocks = (ArrayList)allDocks.Clone();
         }
@@ -325,6 +329,11 @@ namespace harbNet
 
             return ship.id;
 
+        }
+
+        internal void AddNewShipToHarbourQueue (Ship ship)
+        {
+            harbourQueInn.Add(ship);
         }
     }
 }

@@ -35,6 +35,15 @@ namespace HarbFramework
 
         // Mathilde - Jeg la det her for nå
         private ArrayList allShipsInSimulation = new ArrayList();
+
+        public Simulation (Harbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
+        {
+            this.harbor = harbor;
+            this.startTime = simulationStartTime;
+            this.endTime = simulationEndTime;
+        }
+
+
         public void Run()
         {
             Setup();

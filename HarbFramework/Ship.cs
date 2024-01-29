@@ -26,12 +26,26 @@ namespace harbNet
         internal int baseDockingTimeInHours { get; set; }
         internal bool nextStepCheck = false;
 
-        internal Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, ArrayList containersOnBoard)
+        public Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
         {
             this.shipSize = shipSize;
             this.startDate = StartDate;
             this.roundTripInDays = roundTripInDays;
-            this.containersOnBoard = containersOnBoard;
+            
+            for (int i = 0; i < numberOfcontainersOnBoard; i++)
+            {
+                if (i%3 == 0) { 
+                    containersOnBoard.Add(new Container(ContainerSize.Small, 10, this.id));
+                }
+                if (i%3 == 1)
+                {
+                    containersOnBoard.Add(new Container(ContainerSize.Medium, 15, this.id));
+                }
+                if (i%3 == 2)
+                {
+                    containersOnBoard.Add(new Container(ContainerSize.Large, 15, this.id))
+                }
+            } 
 
             if (shipSize == ShipSize.Small)
             {
@@ -62,6 +76,29 @@ namespace harbNet
             } else
             {
                 throw new Exception("Invalid ship size given. Valid ship sizes: ShipSize.Small, ShipSize.Medium, ShipSize.Large");
+            }
+
+            int currentWeight = baseWeigtInTonn;
+
+            for (Container container in containersOnBoard)
+            {
+                currentWeight += container.WeightInTonn;
+            }
+            
+            if (currentWeight > maxWeighInTonn)
+            {
+                throw new Exception("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)")
+            } else if (shipSize == ShipSize.Small && containersOnBoard.Count > containerCapacity)
+            {
+                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers")
+            }
+            else if (shipSize == ShipSize.Medium && containersOnBoard.Count > containerCapacity)
+            {
+                throw new Exception("The ship has too many containers on board. The container capacity for medium ships is max 50 containers")
+            }
+            else if (shipSize == ShipSize.Small && containersOnBoard.Count > containerCapacity)
+            {
+                throw new Exception("The ship has too many containers on board. The container capacity for large ships is max 100 containers")
             }
         }
 
