@@ -301,7 +301,7 @@ namespace HarbFramework
         // Mathilde slutt
 
 
-        /*
+
          public Simulation()
          {
 
@@ -415,7 +415,6 @@ namespace HarbFramework
                  currentTime.AddHours(6); // Får bli enige om hvor mange timer en "runde" skal ta
              }
          }
-        */
     }
 
 }
