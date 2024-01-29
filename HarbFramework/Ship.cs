@@ -12,17 +12,17 @@ namespace harbNet
     internal class Ship
     {
         internal Guid id = Guid.NewGuid();
-        internal ShipSize shipSize { get; set; }
-        internal DateTime startDate { get; set; }
-        internal int roundTripInDays { get; set; }
-        internal Guid currentLocation { get; set; }
-        internal ArrayList history { get; set; }
-        internal ArrayList containersOnBoard { get; set; }
-        internal int containerCapacity { get; set; }
-        internal int maxWeighInTonn { get; set; }
-        internal int baseWeigtInTonn { get; set; }
-        internal int currentWeightInTonn { get; set; }
-        internal int baseBerthingTimeInHours { get; set; }
+        internal ShipSize shipSize { public get; set; }
+        internal DateTime startDate { public get; set; }
+        internal int roundTripInDays {public get; set; }
+        internal Guid currentLocation { public get; set; }
+        internal ArrayList history {public get; set; }
+        internal ArrayList containersOnBoard { public get; set; }
+        internal int containerCapacity { public get; set; }
+        internal int maxWeighInTonn { public get; set; }
+        internal int baseWeigtInTonn {public get; set; }
+        internal int currentWeightInTonn {public get; set; }
+        internal int containersLoadedPerHour { get; set; }
         internal int baseDockingTimeInHours { get; set; }
         internal bool nextStepCheck = false;
 
@@ -53,7 +53,7 @@ namespace harbNet
                 this.baseWeigtInTonn = 5000;
                 this.maxWeighInTonn = baseWeigtInTonn + (24 * 25);
 
-                this.baseDockingTimeInHours = 6;
+                this.baseDockingTimeInHours = 3;
                 this.baseBerthingTimeInHours = 6;
 
             } else if (shipSize == ShipSize.Medium) {
@@ -62,7 +62,7 @@ namespace harbNet
                 this.baseWeigtInTonn = 50000;
                 this.maxWeighInTonn = baseWeigtInTonn + (24 * 55);
 
-                this.baseDockingTimeInHours = 7;
+                this.baseDockingTimeInHours = 5;
                 this.baseBerthingTimeInHours = 7;
 
             } else if(shipSize == ShipSize.Large)
@@ -71,7 +71,7 @@ namespace harbNet
                 this.baseWeigtInTonn = 100000;
                 this.maxWeighInTonn = baseWeigtInTonn + (24 * 150);
 
-                this.baseDockingTimeInHours = 9;
+                this.baseDockingTimeInHours = 7;
                 this.baseBerthingTimeInHours = 9;
             } else
             {
@@ -102,7 +102,7 @@ namespace harbNet
             }
         }
 
-        internal Guid getID()
+        public Guid getID()
         {
             return this.id;
         }

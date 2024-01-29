@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
-    internal class Harbor
+    internal class Harbor : IHarbor
     {
         internal ArrayList allDocks = new ArrayList();
         internal ArrayList freeDocks = new ArrayList();
@@ -79,6 +79,10 @@ namespace harbNet
 
             harbourQueInn.Add(listOfShips);
 
+            for (Ship ship in harbourQueInn)
+            {
+                ship.currentLocation = harbourQueInnID;
+            }
 
             freeDocks = (ArrayList)allDocks.Clone();
         }
