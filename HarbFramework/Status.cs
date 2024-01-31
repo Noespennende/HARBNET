@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
-    internal enum Status
+    public enum Status
     {
         None,
         Docking,

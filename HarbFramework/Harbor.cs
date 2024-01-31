@@ -100,14 +100,14 @@ namespace harbNet
             if (freeDockExists(size))
             {
                 dock = getFreeDock(size);
-                dock.dockedShip = shipToBeDocked.getID();
+                dock.dockedShip = shipToBeDocked.GetID();
                 dock.free = false;
 
                 shipToBeDocked.currentLocation = dock.getID();
                 shipToBeDocked.addHistoryEvent(currentTime, dock.id, Status.Docking);
                 shipsInDock.Add(shipToBeDocked, dock);
                 
-                removeShipFromQueue(shipToBeDocked.getID());
+                removeShipFromQueue(shipToBeDocked.GetID());
                 removeDockFromFreeDocks(dock.getID());
 
                 return dock.getID();
@@ -143,7 +143,7 @@ namespace harbNet
         {
             foreach (Ship ship in harbourQueInn)
             {
-                if (ship.getID().Equals(shipID))
+                if (ship.GetID().Equals(shipID))
                 {
                     return ship;
                 }
@@ -156,7 +156,7 @@ namespace harbNet
         {
             foreach (Ship ship in shipsInDock.Keys)
             {
-                if (ship.getID() == shipID)
+                if (ship.GetID() == shipID)
                 {
                     return ship;
                 }
@@ -201,7 +201,7 @@ namespace harbNet
         {
             foreach (Ship ship in harbourQueInn)
             {
-                if (ship.getID() == shipID)
+                if (ship.GetID() == shipID)
                 {
                     harbourQueInn.Remove(ship);
                     return true;

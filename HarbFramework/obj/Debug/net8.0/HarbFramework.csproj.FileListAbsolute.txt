@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfoInputs.cache
 C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfo.cs
@@ -10,3 +11,10 @@ C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFr
 C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\refint\HarbFramework.dll
 C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.pdb
 C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\ref\HarbFramework.dll
+=======
+D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
+D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfoInputs.cache
+D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfo.cs
+D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.csproj.CoreCompileInputs.cache
+D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.sourcelink.json
+>>>>>>> Stashed changes

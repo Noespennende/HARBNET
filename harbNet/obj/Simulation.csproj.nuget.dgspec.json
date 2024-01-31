@@ -1,9 +1,10 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mathilde\\Documents\\GitHub\\HARBNET\\harbNet\\Simulation.csproj": {}
+    "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj": {}
   },
   "projects": {
+<<<<<<< Updated upstream
     "C:\\Users\\Mathilde\\Documents\\GitHub\\HARBNET\\HarbFramework\\HarbFramework.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -12,12 +13,22 @@
         "projectPath": "C:\\Users\\Mathilde\\Documents\\GitHub\\HARBNET\\HarbFramework\\HarbFramework.csproj",
         "packagesPath": "C:\\Users\\Mathilde\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Mathilde\\Documents\\GitHub\\HARBNET\\HarbFramework\\obj\\",
+=======
+    "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj",
+        "projectName": "Simulation",
+        "projectPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj",
+        "packagesPath": "C:\\Users\\andbe\\.nuget\\packages\\",
+        "outputPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\obj\\",
+>>>>>>> Stashed changes
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Mathilde\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\andbe\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -60,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },

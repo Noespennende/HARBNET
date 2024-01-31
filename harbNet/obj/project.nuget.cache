@@ -1,8 +1,12 @@
 {
   "version": 2,
+<<<<<<< Updated upstream
   "dgSpecHash": "I8jyHQCnCRm3yZkLhkjP38BmUCeqN+znYPJUFCm9WQWFeZd8pPapfwrS+2BvAJlIE1kvyP9jyi+8vCkhwdO33Q==",
+=======
+  "dgSpecHash": "nqwl96mv5RzsdwyvgfTVrH5qZPdA/BFB0Bcu4gw6/Q7v6wLCSTlvxpP3cpOmhUD22SRrmB1emDkvfe+ohWvfLQ==",
+>>>>>>> Stashed changes
   "success": true,
-  "projectFilePath": "C:\\Users\\Mathilde\\Documents\\GitHub\\HARBNET\\harbNet\\Simulation.csproj",
+  "projectFilePath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
