@@ -360,22 +360,104 @@ namespace harbNet
 
         public string GetShipStatus(Guid ShipID)
         {
-            return ("ImplementasjoN!");
+            Event lastEvent = null;
+            foreach (Ship ship in allShips)
+            {
+                if (ShipID == ship.GetID())
+                {
+                    if (ship.history != null && ship.history.Count > 0)
+                    {
+                        lastEvent = ship.history.Last();
+                    }
+                    break;
+
+                }
+
+            }
+            if (lastEvent != null)
+            {
+                return lastEvent.ToString();
+            }
+            else
+            {
+                return "The ship could not be found or has no events";
+            }
         }
 
-        public string GetDockStatus(Guid dockID)
-        {
-            return("ImplementasjoN!");
-        }
-
-        public string GetStatusAllDocks()
-        {
-            return ("ImplementasjoN!");
-        }
-
+        //må endre på toString til en representasjon som fungerer
         public string GetStatusAllShips()
         {
-            return ("ImplementasjoN!");
+            Event lastEvent = null;
+            foreach (Ship ship in allShips)
+            {
+                lastEvent = ship.history.Last();
+            }
+            return lastEvent.ToString();
         }
+
+        //Denne kan potensielt endres
+        //må endre på toString til en representasjon som fungerer
+        public string GetDockStatus(Guid dockID)
+        {
+            bool dockFree = false;
+            foreach (Dock dock in allDocks)
+            {
+                if (dockID == dock.id)
+                {
+                    dockFree = dock.free;
+                }
+            }
+            return dockFree.ToString();
+
+        }
+        //må endre på toString til en representasjon som fungerer
+        public string GetStatusAllDocks()
+        {
+            Dictionary<Dock, bool> dockStatus = new Dictionary<Dock, bool>();
+
+            foreach (Dock dock in allDocks)
+            {
+                dockStatus[dock] = dock.free;
+            }
+            return dockStatus.ToString();
+        }
+
+        //må endre på toString til en representasjon som fungerer
+        public string getContainerStatus(Guid ContainerId)
+        {
+            Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
+            foreach (Container container in storedContainers.Keys)
+            {
+                if (container.id == ContainerId)
+                {
+                    containerStatus[container] = container.history.Last().status;
+                }
+            }
+            return containerStatus.ToString();
+        }
+
+        //må endre på toString til en representasjon som fungerer
+        public string getAllContainerStatus()
+        {
+            Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
+            Status lastEventStatus = Status.None;
+            foreach (Container container in storedContainers.Keys)
+            {
+                if (container != null && container.history != null && container.history.Count > 0)
+                {
+                    lastEventStatus = container.history.Last().status;
+                    containerStatus[container] = lastEventStatus;
+
+                }
+                else
+                    containerStatus[container] = Status.None;
+
+
+            }
+            return lastEventStatus.ToString();
+        }
+
+
     }
 }
+
