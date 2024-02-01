@@ -59,8 +59,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Mathilde\\Documents\\GitHub\\HARBNET\\HarbFramework\\HarbFramework.csproj": {
-              "projectPath": "C:\\Users\\Mathilde\\Documents\\GitHub\\HARBNET\\HarbFramework\\HarbFramework.csproj"
+            "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj": {
+              "projectPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj"
             }
           }
         }
@@ -93,5 +93,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
