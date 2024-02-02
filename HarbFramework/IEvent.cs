@@ -8,9 +8,9 @@ namespace HarbFramework
 {
     public interface IEvent
     {
-        Guid subject { get; }
-        Guid subjectLocation { get; }
-        DateTime pointInTime { get; }
-        Status status { get; };
+        public Guid subject { get; }
+        public Guid subjectLocation { get; }
+        public DateTime pointInTime { get; }
+        public Status status { get; }
     }
 }

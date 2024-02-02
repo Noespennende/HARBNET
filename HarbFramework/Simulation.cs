@@ -17,21 +17,13 @@ namespace HarbFramework
         private DateTime startTime;
         private DateTime currentTime;
         private DateTime endTime;
-        private int harborSmallCount = 0;
-        private int harborMediumCount = 0;
-        private int harborLargeCount = 0;
-        private int containerSmallCount = 0;
-        private int containerMediumCount = 0;
-        private int containerLargeCount = 0;
-
-
-
         private ArrayList containersOnBoard = new ArrayList();
         private ArrayList allDocks = new ArrayList();
         private ArrayList freeDocks = new ArrayList();
         private Hashtable shipsInDock = new Hashtable();
         private Harbor harbor;
         private Ship shipSmall, shipMedium, shipLarge;
+        public ICollection<Log> history {  get; private set; }
         //private Log log = new Log()
 
 

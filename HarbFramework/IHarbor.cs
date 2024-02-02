@@ -11,12 +11,12 @@ namespace harbNet
         public string GetStatusAllDocks();
         public string GetStatusAllShips();
 
-        Status GetShipStatus(Guid ShipID);
+        public Status GetShipStatus(Guid ShipID);
 
-        string GetDockStatus(Guid dockID);
+        public string GetDockStatus(Guid dockID);
 
-        Dictionary<Guid,String>  GetStatusAllDocks();
+        public Dictionary<Guid,String>  GetStatusAllDocks();
 
-        Dictionary<Ship, Status> GetStatusAllShips();
+        public Dictionary<Ship, Status> GetStatusAllShips();
 
     }

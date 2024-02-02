@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Micha\\OneDrive\\Documents\\GitHub\\HARBNET\\HarbFramework\\HarbFramework.csproj": {}
+    "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Micha\\OneDrive\\Documents\\GitHub\\HARBNET\\HarbFramework\\HarbFramework.csproj": {
+    "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Micha\\OneDrive\\Documents\\GitHub\\HARBNET\\HarbFramework\\HarbFramework.csproj",
+        "projectUniqueName": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj",
         "projectName": "HarbFramework",
-        "projectPath": "C:\\Users\\Micha\\OneDrive\\Documents\\GitHub\\HARBNET\\HarbFramework\\HarbFramework.csproj",
-        "packagesPath": "C:\\Users\\Micha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Micha\\OneDrive\\Documents\\GitHub\\HARBNET\\HarbFramework\\obj\\",
+        "projectPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj",
+        "packagesPath": "C:\\Users\\andbe\\.nuget\\packages\\",
+        "outputPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Micha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\andbe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
