@@ -9,9 +9,9 @@ namespace HarbFramework
 {
     public interface ILog
     {
-        DateTime time { get; }
-        ICollection<Ship> shipsInQueue { get; }
-        ICollection<Ship> shipsInTransit {  get; }
+        DateTime Time { get; }
+        ICollection<Ship> ShipsInQueue { get; }
+        ICollection<Ship> ShipsInTransit {  get; }
         ICollection<Ship> GetDockedShips();
         ICollection<Guid> GetContainersInHarbour();
 

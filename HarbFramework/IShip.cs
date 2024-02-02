@@ -5,15 +5,15 @@ namespace harbNet
     public interface IShip
     {
         Guid GetID();
-        ShipSize shipSize { get; }
-        DateTime startDate { get; }
-        int roundTripInDays { get; }
-        Guid currentLocation { get; }
-        ICollection<Event> history { get; }
-        ICollection<String> getContainersOnBoard { get; }
-        int containerCapacity { get; }
-        int maxWeightInTonn { get; }
-        int baseWeightInTonn { get; }
-        int currentWeightInTonn { get; }
+        ShipSize ShipSize { get; }
+        DateTime StartDate { get; }
+        int RoundTripInDays { get; }
+        Guid CurrentLocation { get; }
+        ICollection<Event> History { get; }
+        ICollection<String> GetContainersOnBoard { get; }
+        int ContainerCapacity { get; }
+        int MaxWeightInTonn { get; }
+        int BaseWeightInTonn { get; }
+        int CurrentWeightInTonn { get; }
     }
 }

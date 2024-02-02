@@ -9,23 +9,23 @@ namespace HarbFramework
     public class Event : IEvent
     {
 <<<<<<< Updated upstream
-        Guid subject {  get; set; }
-        internal Guid subjectLocation { get; set; }
-        DateTime pointInTime { get; set; }
-        internal Status status { get; set; }
+        Guid Subject {  get; set; }
+        internal Guid SubjectLocation { get; set; }
+        DateTime PointInTime { get; set; }
+        internal Status Status { get; set; }
 =======
-        public Guid subject {  get; internal set; }
-        public Guid subjectLocation { get; internal set; }
-        public DateTime pointInTime { get; internal set; }
-        public Status status { get; internal set; }
+        public Guid Subject {  get; internal set; }
+        public Guid SubjectLocation { get; internal set; }
+        public DateTime PointInTime { get; internal set; }
+        public Status Status { get; internal set; }
 >>>>>>> Stashed changes
 
         internal Event (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
         {
-            this.subject = subject;
-            this.subjectLocation = subjectLocation;
-            this.pointInTime = pointInTime;
-            this.status = status;
+            this.Subject = subject;
+            this.SubjectLocation = subjectLocation;
+            this.PointInTime = pointInTime;
+            this.Status = status;
         }
     }
 }

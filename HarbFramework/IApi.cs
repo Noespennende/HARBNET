@@ -10,34 +10,34 @@ namespace HarbFramework
 {
     internal interface IApi
     {
-        public void create(); //Oppretter simuleringen
-        public String setName(String name); //returnerer navnet
-        public Guid createPort(DockSize portSize); //returnerer Guid til porten som ble laget
-        public Guid createShip(ShipSize shipSize); //Returnerer Guid til skipet som ble laget
-        public Guid createShip(ShipSize shipSize, DateTime startDate); //Returnerer Guid til skipet som ble laget
-        public Guid createShip(ShipSize shipSize, DateTime startDate, int roundTripInDays); //Returnerer Guid til skipet som ble laget
-        public Boolean removeShip(Guid shipId); //Returnerer True hvis skipet ble fjernet, false ellers.
-        public Boolean removePort(Guid PortId); //Returnerer True hvis havna ble fjernet, false ellers.
-        public void simulationDuration(DateTime startDate, DateTime endDate);
-        public void run(); //starte simuleringen
-        public ICollection<Event> getContasinerHistory(Guid containerID);
-        public ICollection<Event> getShipHistory(Guid shipID);
-        public ICollection<Event> getWeatherHistory();
-        public ICollection<Guid> getContainerIDs();
-        public ICollection<Guid> getShipIDs();
-        public void printHistoryToConsole();
-        public void printHistoryToFile(String fileName);
-        public int getShipTurnaroundTimeInHours(); //får int med tid i timer. 
-        public int getShipTurnaroundTimeInHours(DateTime startDate, DateTime endDate); //får int med tid i timer beregnet mellom start og sluttdato
-        public int getContainerTurnAroundTimeInHours();//får int med tid i timer. 
-        public int getContainerTurnAroundTimeInHours(DateTime startDate, DateTime endDate); //får int med tid i timer beregnet mellom start og sluttdato
-        public int getAverageLoadTimeInHours(); //får int med tid i timer. 
-        public int getAverageLoadTimeInHours(DateTime startDate, DateTime endDate);  //får int med tid i timer beregnet mellom start og sluttdato
-        public int getAverageQueuingTimeInHours(); //får int med tid i timer skip må vente i kø. 
-        public int getAverageQueuingTimeInHours(DateTime startDate, DateTime endDate); //får int med tid i timer skip må vente i kø. 
-        public int getContainersMoved(); //Antall containere flyttet i løpet av simuleringen
-        public int getContainersMoved(DateTime startDate, DateTime endDate);
-        public int getNumberOfDockings(); //Antall skip docket i løpet av simuleringen 
-        public int getNumDockings(DateTime startDate); //Antall skip docket i løpet av simuleringen 
+        public void Create(); //Oppretter simuleringen
+        public String SetName(String name); //returnerer navnet
+        public Guid CreatePort(DockSize portSize); //returnerer Guid til porten som ble laget
+        public Guid CreateShip(ShipSize shipSize); //Returnerer Guid til skipet som ble laget
+        public Guid CreateShip(ShipSize shipSize, DateTime startDate); //Returnerer Guid til skipet som ble laget
+        public Guid CreateShip(ShipSize shipSize, DateTime startDate, int roundTripInDays); //Returnerer Guid til skipet som ble laget
+        public Boolean RemoveShip(Guid shipId); //Returnerer True hvis skipet ble fjernet, false ellers.
+        public Boolean RemovePort(Guid PortId); //Returnerer True hvis havna ble fjernet, false ellers.
+        public void SimulationDuration(DateTime startDate, DateTime endDate);
+        public void Run(); //starte simuleringen
+        public ICollection<Event> GetContasinerHistory(Guid containerID);
+        public ICollection<Event> GetShipHistory(Guid shipID);
+        public ICollection<Event> GetWeatherHistory();
+        public ICollection<Guid> GetContainerIDs();
+        public ICollection<Guid> GetShipIDs();
+        public void PrintHistoryToConsole();
+        public void PrintHistoryToFile(String fileName);
+        public int GetShipTurnaroundTimeInHours(); //får int med tid i timer. 
+        public int GetShipTurnaroundTimeInHours(DateTime startDate, DateTime endDate); //får int med tid i timer beregnet mellom start og sluttdato
+        public int GetContainerTurnAroundTimeInHours();//får int med tid i timer. 
+        public int GetContainerTurnAroundTimeInHours(DateTime startDate, DateTime endDate); //får int med tid i timer beregnet mellom start og sluttdato
+        public int GetAverageLoadTimeInHours(); //får int med tid i timer. 
+        public int GetAverageLoadTimeInHours(DateTime startDate, DateTime endDate);  //får int med tid i timer beregnet mellom start og sluttdato
+        public int GetAverageQueuingTimeInHours(); //får int med tid i timer skip må vente i kø. 
+        public int GetAverageQueuingTimeInHours(DateTime startDate, DateTime endDate); //får int med tid i timer skip må vente i kø. 
+        public int GetContainersMoved(); //Antall containere flyttet i løpet av simuleringen
+        public int GetContainersMoved(DateTime startDate, DateTime endDate);
+        public int GetNumberOfDockings(); //Antall skip docket i løpet av simuleringen 
+        public int GetNumDockings(DateTime startDate); //Antall skip docket i løpet av simuleringen 
     }
 }
