@@ -14,10 +14,10 @@ namespace harbNet
         internal ArrayList allDocks = new ArrayList();
         internal ArrayList freeDocks = new ArrayList();
         internal Hashtable shipsInDock = new Hashtable(); // Ship : Dock
-        internal ArrayList harbourQueInn = new ArrayList();  
+        internal ArrayList harbourQueInn = new ArrayList();
         internal Hashtable shipsInTransit = new Hashtable(); // ship: int number of days until return
 
-        internal ArrayList allShips { get; set;  } = new ArrayList(); // Sikkert midlertidig, til vi kan regne på det
+        internal ArrayList allShips { get; set; } = new ArrayList(); // Sikkert midlertidig, til vi kan regne på det
 
         internal Dictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new();
         //internal Hashtable allContainerSpaces = new Hashtable(); // størelse : antall
@@ -28,7 +28,7 @@ namespace harbNet
         internal Guid harbourQueInnID = Guid.NewGuid();
 
 
-        public Harbor (ICollection<Ship> listOfShips, int numberOfSmallDocks, int numberOfMediumDocks, int numberOfLargeDocks, int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces,
+        public Harbor(ICollection<Ship> listOfShips, int numberOfSmallDocks, int numberOfMediumDocks, int numberOfLargeDocks, int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces,
             int numberOfLargeContainerSpaces)
         {
             for (int i = 0; i < numberOfSmallDocks; i++)
@@ -36,7 +36,7 @@ namespace harbNet
                 allDocks.Add(new Dock(ShipSize.Small));
             }
 
-            for(int i = 0;i < numberOfMediumDocks; i++)
+            for (int i = 0; i < numberOfMediumDocks; i++)
             {
                 allDocks.Add(new Dock(ShipSize.Medium));
             }
@@ -59,7 +59,7 @@ namespace harbNet
 
                 allContainerSpaces[containerSize] = spaces; // Gir allContainerSpaces de gitte opprettede spacene
                 freeContainerSpaces[containerSize] = spaces; // Gir freeContainerSpaces de gitte opperettede spaces
-                                                                   // (Siden de er alle tomme ved oppstart av harbor og heller fylles opp senere med andre metodekall)
+                                                             // (Siden de er alle tomme ved oppstart av harbor og heller fylles opp senere med andre metodekall)
             }
             /* Koden fra da allContainerSpaces var HashTable : 
             for (int i = 0; i < numberOfSmallContainerSpaces; i++)
@@ -81,7 +81,7 @@ namespace harbNet
 
             allShips.AddRange((ICollection)listOfShips);
             harbourQueInn.AddRange((ICollection)listOfShips);
-            
+
 
             foreach (Ship ship in harbourQueInn)
             {
@@ -106,7 +106,7 @@ namespace harbNet
                 shipToBeDocked.currentLocation = dock.getID();
                 shipToBeDocked.addHistoryEvent(currentTime, dock.id, Status.Docking);
                 shipsInDock.Add(shipToBeDocked, dock);
-                
+
                 removeShipFromQueue(shipToBeDocked.GetID());
                 removeDockFromFreeDocks(dock.getID());
 
@@ -116,12 +116,13 @@ namespace harbNet
             return Guid.Empty; //returnerer en Guid med verdi "00000000-0000-0000-0000-000000000000" hvis han ikke finner noen ledige docker.
         }//returnerer Guid til docken skipet docker til
 
-        internal Guid unDockShip (Guid shipID, DateTime currentTime) {
+        internal Guid unDockShip(Guid shipID, DateTime currentTime)
+        {
             Ship shipToBeUndocked = getShipFromDock(shipID);
 
             if (shipToBeUndocked != null)
             {
-                Dock dock = (Dock) shipsInDock[shipToBeUndocked];
+                Dock dock = (Dock)shipsInDock[shipToBeUndocked];
                 //need to add history event for ship
                 dock.dockedShip = Guid.Empty;
                 dock.free = true;
@@ -174,7 +175,7 @@ namespace harbNet
 
             return ships;
         }
-        internal bool freeDockExists (ShipSize shipSize)
+        internal bool freeDockExists(ShipSize shipSize)
         {
             foreach (Dock dock in freeDocks)
             {
@@ -185,19 +186,20 @@ namespace harbNet
             }
             return false;
         }
-        internal Dock getFreeDock (ShipSize shipSize)
+        internal Dock getFreeDock(ShipSize shipSize)
         {
-            
+
             foreach (Dock dock in freeDocks)
             {
-                if (dock.free == true && dock.size == shipSize) {
+                if (dock.free == true && dock.size == shipSize)
+                {
                     return dock;
                 }
             }
 
             return null;
         }
-        internal bool removeShipFromQueue (Guid shipID)
+        internal bool removeShipFromQueue(Guid shipID)
         {
             foreach (Ship ship in harbourQueInn)
             {
@@ -209,7 +211,7 @@ namespace harbNet
             }
             return false;
         }
-        internal bool removeDockFromFreeDocks (Guid dockID)
+        internal bool removeDockFromFreeDocks(Guid dockID)
         {
             foreach (Dock dock in freeDocks)
             {
@@ -221,7 +223,8 @@ namespace harbNet
             }
             return false;
         }
-        internal int NumberOfFreeDocks(ShipSize shipSize) {
+        internal int NumberOfFreeDocks(ShipSize shipSize)
+        {
             int count = 0;
             foreach (Dock dock in freeDocks)
             {
@@ -232,7 +235,8 @@ namespace harbNet
             }
             return count;
         } //Returnerer antall ledige plasser av den gitte typen
-        internal int NumberOfFreeContainerSpaces(ContainerSize containerSize) {
+        internal int NumberOfFreeContainerSpaces(ContainerSize containerSize)
+        {
             int count = 0;
             foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
             {
@@ -242,18 +246,20 @@ namespace harbNet
                 }
             }
             return count;
-            
+
 
         } //returnerer antallet ledige container plasser av den gitte typen.
-        internal int getNumberOfOccupiedContainerSpaces(ContainerSize containerSize) {
+        internal int getNumberOfOccupiedContainerSpaces(ContainerSize containerSize)
+        {
             return storedContainers.Count;
 
         } //returnerer antallet okuperte plasser av den gitte typen
 
-        internal ContainerSpace getFreeContainerSpace(ContainerSize containerSize) {
+        internal ContainerSpace getFreeContainerSpace(ContainerSize containerSize)
+        {
             foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize]) // Sto originalt storedContainers, går ut ifra det skulle stå freeContainerSpaces
             {
-                
+
                 if (containerSpace.free == true && containerSpace.size == containerSize)
                 {
                     return containerSpace;
@@ -264,7 +270,7 @@ namespace harbNet
 
         } //returnerer en Guid til en ledig plass av den gitte typen
 
-        internal Container getStoredContainer (ContainerSize containerSize)
+        internal Container getStoredContainer(ContainerSize containerSize)
         {
             foreach (Container container in storedContainers.Keys)
             {
@@ -295,16 +301,16 @@ namespace harbNet
             return false;
         }
 
-        internal Guid unloadContainer (ContainerSize containerSize, Ship ship, DateTime currentTime)
+        internal Guid unloadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
         {
             Container containerToBeUnloaded = ship.getContainer(containerSize);
-            ContainerSpace containerSpace = getFreeContainerSpace (containerSize);
+            ContainerSpace containerSpace = getFreeContainerSpace(containerSize);
 
             if (containerToBeUnloaded == null || containerSpace == null)
             {
 
                 return Guid.Empty;
-               
+
             }
 
             ship.removeContainer(containerToBeUnloaded.id);
@@ -318,24 +324,24 @@ namespace harbNet
 
             containerToBeUnloaded.currentPosition = containerSpace.id;
             containerToBeUnloaded.addHistoryEvent(Status.InStorage, currentTime);
-            
+
             return containerSpace.id;
 
         } // returnerer Guid til container spaces containeren ble lagret, returnerer empty Guid hvis containeren ikke finnes
 
-        internal Guid loadContainer (ContainerSize containerSize, Ship ship, DateTime currentTime)
+        internal Guid loadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
         {
             Container containerToBeLoaded = getStoredContainer(containerSize);
 
             if (containerToBeLoaded == null || !storedContainers.ContainsKey(containerToBeLoaded))
             {
-                
+
                 return Guid.Empty;
 
             }
 
             ContainerSpace containerSpace = storedContainers[containerToBeLoaded];
-          
+
             ship.addContainer(containerToBeLoaded);
             containerToBeLoaded.currentPosition = ship.id;
 
@@ -351,7 +357,7 @@ namespace harbNet
 
         }
 
-        internal void AddNewShipToHarbourQueue (Ship ship)
+        internal void AddNewShipToHarbourQueue(Ship ship)
         {
             harbourQueInn.Add(ship);
         }
@@ -361,84 +367,102 @@ namespace harbNet
         public string GetShipStatus(Guid ShipID)
         {
             Event lastEvent = null;
+            StringBuilder sb = new StringBuilder();
             foreach (Ship ship in allShips)
             {
-                if (ShipID == ship.GetID())
+                if (ship.id == ShipID && ship.history != null && ship.history.Count > 0)
                 {
-                    if (ship.history != null && ship.history.Count > 0)
-                    {
-                        lastEvent = ship.history.Last();
-                    }
-                    break;
-
+                    lastEvent = (Event)ship.history[ship.history.Count - 1];
+                    String shipStatus = $"ShipId: {ship.id}, Last event: {lastEvent}";
+                    sb.Append(shipStatus);
                 }
 
             }
-            if (lastEvent != null)
-            {
-                return lastEvent.ToString();
-            }
-            else
-            {
-                return "The ship could not be found or has no events";
-            }
+            return sb.ToString();
         }
 
-        //må endre på toString til en representasjon som fungerer
+
+        //må kjøre denne for å se om den funker som tenkt
         public string GetStatusAllShips()
         {
-            Event lastEvent = null;
+
+            StringBuilder sb = new StringBuilder();
             foreach (Ship ship in allShips)
             {
-                lastEvent = ship.history.Last();
+                Event lastEvent = null;
+
+                for (int i = 0; i < ship.history.Count; i++)
+                {
+                    lastEvent = (Event)ship.history[i];
+
+                    string shipStatus = $"ShipId: {ship.id} Last event: {lastEvent}";
+
+                    sb.AppendLine(shipStatus);
+                }
             }
-            return lastEvent.ToString();
+            return sb.ToString();
         }
 
         //Denne kan potensielt endres
         //må endre på toString til en representasjon som fungerer
         public string GetDockStatus(Guid dockID)
         {
+            StringBuilder sb = new StringBuilder();
             bool dockFree = false;
             foreach (Dock dock in allDocks)
             {
                 if (dockID == dock.id)
                 {
                     dockFree = dock.free;
+                    String dockStatus = $"DockId: {dock.id}, dock free: {dockFree}";
+                    sb.Append(dockStatus);
                 }
             }
-            return dockFree.ToString();
+            return sb.ToString();
 
         }
         //må endre på toString til en representasjon som fungerer
         public string GetStatusAllDocks()
         {
+            StringBuilder sb = new StringBuilder();
             Dictionary<Dock, bool> dockStatus = new Dictionary<Dock, bool>();
 
             foreach (Dock dock in allDocks)
             {
                 dockStatus[dock] = dock.free;
+
             }
-            return dockStatus.ToString();
+            foreach (var keyValue in dockStatus)
+            {
+                sb.AppendLine($"dockId: {keyValue.Key}, dock free: {keyValue.Value}");
+            }
+            return sb.ToString();
         }
 
         //må endre på toString til en representasjon som fungerer
         public string getContainerStatus(Guid ContainerId)
         {
+            StringBuilder sb = new StringBuilder();
             Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
             foreach (Container container in storedContainers.Keys)
             {
                 if (container.id == ContainerId)
                 {
                     containerStatus[container] = container.history.Last().status;
+
+                    foreach (var keyvalue in containerStatus)
+                    {
+                        sb.Append($"ContainerId: {keyvalue.Key}, containerStatus: {keyvalue.Value}");
+                    }
                 }
             }
-            return containerStatus.ToString();
+            return sb.ToString();
         }
 
         //må endre på toString til en representasjon som fungerer
         public string getAllContainerStatus()
         {
+            StringBuilder sb = new StringBuilder();
             Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
             Status lastEventStatus = Status.None;
             foreach (Container container in storedContainers.Keys)
@@ -448,16 +472,14 @@ namespace harbNet
                     lastEventStatus = container.history.Last().status;
                     containerStatus[container] = lastEventStatus;
 
+                    foreach (var keyvalue in containerStatus)
+                    {
+                        sb.AppendLine($"ContainerId: {keyvalue.Key}, containerStatus: {keyvalue.Value}");
+                    }
                 }
-                else
-                    containerStatus[container] = Status.None;
-
-
             }
-            return lastEventStatus.ToString();
+            return sb.ToString();
         }
-
-
     }
 }
-
+               
