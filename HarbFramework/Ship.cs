@@ -9,40 +9,29 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
-<<<<<<< Updated upstream
-    public class Ship
-    {
-        internal Guid ID = Guid.NewGuid();
-        internal ShipSize ShipSize { get; set; }
-        internal DateTime StartDate { get; set; }
-        internal int RoundTripInDays { get; set; }
-        internal Guid CurrentLocation { get; set; }
-        internal ArrayList History { get; set; } = new ArrayList();
-        internal ArrayList ContainersOnBoard { get; set; } = new ArrayList();
-        internal int ContainerCapacity {  get; set; }
-        internal int MaxWeightInTonn {  get; set; }
-        internal int BaseWeightInTonn { get; set; }
-        internal int CurrentWeightInTonn { get; set; }
-=======
     public class Ship : IShip
     {
-        internal Guid id = Guid.NewGuid();
-        public ShipSize shipSize { get; internal set; }
-        public DateTime startDate { get; internal set; }
-        public int roundTripInDays { get; internal set; }
-        public Guid currentLocation { get; internal set; }
-        public ICollection<Event> history { get; internal set; }
-        internal ICollection<Container> containersOnBoard {  get; set; }
-        public int containerCapacity { get; internal set; }
-        public int maxWeightInTonn {  get; internal set; }
-        public int baseWeightInTonn { get; internal set; }
-        public int currentWeightInTonn { get; internal set; }
->>>>>>> Stashed changes
+        internal Guid ID = Guid.NewGuid();
+        public ShipSize ShipSize { get; internal set; }
+        public DateTime StartDate { get; internal set; }
+        public int RoundTripInDays { get; internal set; }
+        public Guid CurrentLocation { get; internal set; }
+        public ICollection<Event> History { get; internal set; } = new List<Event>();
+        internal ICollection<Container> ContainersOnBoard {  get; set; } = new List<Container>();
+        public int ContainerCapacity { get; internal set; }
+        public int MaxWeightInTonn {  get; internal set; }
+        public int BaseWeightInTonn { get; internal set; }
+        public int CurrentWeightInTonn { get; internal set; }
+
         internal int ContainersLoadedPerHour { get; set; }
         internal int BaseBerthingTimeInHours { get; set; }
         internal int BaseDockingTimeInHours { get; set; }
+
+        // IMPLEMENT ME ? OR DELETE ME FROM INTERFACE ? 
+        public ICollection<string> GetContainersOnBoard => throw new NotImplementedException();
+
         internal bool NextStepCheck = false;
-S
+
         public Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
         {
             this.ShipSize = shipSize;
@@ -52,15 +41,15 @@ S
             for (int i = 0; i < numberOfcontainersOnBoard; i++)
             {
                 if (i%3 == 0) { 
-                    ContainersOnBoard.Add(new Container(ContainerSize.Small, 10, this.id));
+                    ContainersOnBoard.Add(new Container(ContainerSize.Small, 10, this.ID));
                 }
                 if (i%3 == 1)
                 {
-                    ContainersOnBoard.Add(new Container(ContainerSize.Medium, 15, this.id));
+                    ContainersOnBoard.Add(new Container(ContainerSize.Medium, 15, this.ID));
                 }
                 if (i%3 == 2)
                 {
-                    ContainersOnBoard.Add(new Container(ContainerSize.Large, 15, this.id));
+                    ContainersOnBoard.Add(new Container(ContainerSize.Large, 15, this.ID));
                 }
             } 
 
@@ -101,49 +90,14 @@ S
             {
                 currentWeight += container.WeightInTonn;
             }
-<<<<<<< Updated upstream
-
-            try
-            {
-                if (currentWeight > MaxWeightInTonn)
-                {
-                    throw new Exception("The ship's current weight is too heavy. Max overall container weight for small ships is 600 tons (about 55 containers), for medium ships: 1320 tons (about 55 containers), for large ships: 5600 tons (about 150 containers)");
-                }
-                else if (shipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
-                {
-                    throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
-                }
-                else if (shipSize == ShipSize.Medium && ContainersOnBoard.Count > ContainerCapacity)
-                {
-                    throw new Exception("The ship has too many containers on board. The container capacity for medium ships is max 50 containers");
-                }
-                else if (shipSize == ShipSize.Large && ContainersOnBoard.Count > ContainerCapacity)
-                {
-                    throw new Exception("The ship has too many containers on board. The container capacity for large ships is max 100 containers");
-                }
-
-=======
             
-            if (urrentWeight > maxWeightInTonn)
+            if (currentWeight > MaxWeightInTonn)
             {
                 throw new Exception("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)");
-            } else if (shipSize == ShipSize.Small && containersOnBoard.Count > containerCapacity)
+            } else if (shipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
             {
                 throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
->>>>>>> Stashed changes
-            }
-            catch (Exception ex)
-            {
-<<<<<<< Updated upstream
-                Console.WriteLine("Error: " + ex.Message);
-=======
-                throw new Exception("The ship has too many containers on board. The container capacity for medium ships is max 50 containers");
-            }
-            else if (shipSize == ShipSize.Small && containersOnBoard.Count > containerCapacity)
-            {
-                throw new Exception("The ship has too many containers on board. The container capacity for large ships is max 100 containers");
->>>>>>> Stashed changes
-            }
+            };
 
         }
 

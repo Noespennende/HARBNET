@@ -1,20 +1,32 @@
 <<<<<<< Updated upstream
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfoInputs.cache
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfo.cs
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.csproj.CoreCompileInputs.cache
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.sourcelink.json
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\bin\Debug\net8.0\HarbFramework.deps.json
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\bin\Debug\net8.0\HarbFramework.dll
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\bin\Debug\net8.0\HarbFramework.pdb
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.dll
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\refint\HarbFramework.dll
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.pdb
-C:\Users\Mathilde\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\ref\HarbFramework.dll
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.AssemblyInfoInputs.cache
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.AssemblyInfo.cs
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.csproj.CoreCompileInputs.cache
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.sourcelink.json
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/bin/Debug/net8.0/HarbFramework.deps.json
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/bin/Debug/net8.0/HarbFramework.dll
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/bin/Debug/net8.0/HarbFramework.pdb
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.dll
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/refint/HarbFramework.dll
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.pdb
+C:/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/ref/HarbFramework.dll
 =======
-D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
-D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfoInputs.cache
-D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfo.cs
-D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.csproj.CoreCompileInputs.cache
-D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.sourcelink.json
+D:/Google Drive/Skole/4 semester/NET/Obliger/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
+D:/Google Drive/Skole/4 semester/NET/Obliger/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.AssemblyInfoInputs.cache
+D:/Google Drive/Skole/4 semester/NET/Obliger/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.AssemblyInfo.cs
+D:/Google Drive/Skole/4 semester/NET/Obliger/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.csproj.CoreCompileInputs.cache
+D:/Google Drive/Skole/4 semester/NET/Obliger/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.sourcelink.json
 >>>>>>> Stashed changes
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.AssemblyInfoInputs.cache
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.AssemblyInfo.cs
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.csproj.CoreCompileInputs.cache
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.sourcelink.json
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.dll
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/refint/HarbFramework.dll
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/HarbFramework.pdb
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/bin/Debug/net8.0/HarbFramework.deps.json
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/bin/Debug/net8.0/HarbFramework.dll
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/bin/Debug/net8.0/HarbFramework.pdb
+/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/ref/HarbFramework.dll

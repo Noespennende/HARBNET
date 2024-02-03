@@ -24,7 +24,7 @@ namespace harbNet
         internal Dictionary<ContainerSize, List<ContainerSpace>> FreeContainerSpaces = new();
         //internal Hashtable freeContainerSpaces = new Hashtable(); // størelse : antall ledige
         internal Dictionary<Container, ContainerSpace> StoredContainers = new(); // Container : ContainerSpace
-        Guid TransitLocationID = Guid.NewGuid();
+        internal Guid TransitLocationID = Guid.NewGuid();
         internal Guid HarbourQueInnID = Guid.NewGuid();
 
 
@@ -132,8 +132,10 @@ namespace harbNet
 
                 ShipsInDock.Remove(shipToBeUndocked);
                 FreeDocks.Add(dock);
-                ShipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
-
+                if (!ShipsInTransit.ContainsKey(shipToBeUndocked))
+                {
+                    ShipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
+                }
                 return dock.GetID();
             }
 
@@ -364,6 +366,8 @@ namespace harbNet
 
         /* ** Interface implementasjon som må gjøres ** */
 
+        // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
+        // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
         public string GetShipStatus(Guid ShipID)
         {
             Event lastEvent = null;
@@ -372,7 +376,8 @@ namespace harbNet
             {
                 if (ship.ID == ShipID && ship.History != null && ship.History.Count > 0)
                 {
-                    lastEvent = (Event)ship.History[ship.History.Count - 1];
+                    // Måtte kommentere ut for å kjøre fordi ship.History[ship.History.Count - 1] gir error
+                    // lastEvent = ship.History[ship.History.Count - 1] as Event;
                     String shipStatus = $"ShipId: {ship.ID}, Last event: {lastEvent}";
                     sb.Append(shipStatus);
                 }
@@ -381,6 +386,10 @@ namespace harbNet
             return sb.ToString();
         }
 
+
+
+        // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
+        // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
 
         //må kjøre denne for å se om den funker som tenkt
         public string GetStatusAllShips()
@@ -393,7 +402,8 @@ namespace harbNet
 
                 for (int i = 0; i < ship.History.Count; i++)
                 {
-                    lastEvent = (Event)ship.History[i];
+                    // Måtte kommentere ut for å kunne kjøre fordi ship.History[i]; gir error
+                    // lastEvent = (Event)ship.History[i];
 
                     string shipStatus = $"ShipId: {ship.ID} Last event: {lastEvent}";
 
@@ -421,6 +431,10 @@ namespace harbNet
             return sb.ToString();
 
         }
+
+        // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
+        // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
+
         //må endre på toString til en representasjon som fungerer
         public string GetStatusAllDocks()
         {
@@ -459,6 +473,8 @@ namespace harbNet
             return sb.ToString();
         }
 
+
+
         //må endre på toString til en representasjon som fungerer
         public string GetAllContainerStatus()
         {
@@ -479,7 +495,11 @@ namespace harbNet
                 }
             }
             return sb.ToString();
-        }
+        }        
+
+        
+
+        
     }
 }
                
