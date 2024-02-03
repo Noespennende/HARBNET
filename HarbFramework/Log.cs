@@ -16,32 +16,26 @@ namespace HarbFramework
         public ICollection<Ship> ShipsInTransit { get; internal set; }
         internal Hashtable ContainersInHarbour { get; set; }
 
-        internal Log(DateTime time, Hashtable dockedShips, ICollection<Ship> shipsInQueue, Hashtable containersInHarbour, ICollection<Ship> shipsInTransit ) { 
-            this.Time = time;
-            this.ContainersInHarbour = containersInHarbour;
-            this.ShipsInQueue = shipsInQueue;
-            this.ShipsInTransit = shipsInTransit;
-            this.DockedShips = dockedShips;
-        }
+        public DateTime time => throw new NotImplementedException();
 
-        public ICollection<Ship> GetDockedShips()
+        ICollection<Ship> ILog.DockedShips()
         {
-            ICollection<Ship> ships = new List<Ship>();
-            foreach ( Ship ship in DockedShips.Values ) {
-                ships.Add( ship );
-            }
-
-            return ships;
-        }
-
-        public ICollection<Guid> GetContainersInHarbour()
-        {
-            ICollection<Guid> containers = new List<Guid>();
-            foreach (Container container in ContainersInHarbour.Values )
+            List<Ship> dockedShipsList = new List<Ship>();
+            foreach (var ship in DockedShips.Values)
             {
-                containers.Add(container.ID);
+                dockedShipsList.Add((Ship)ship);
             }
-            return containers;
+            return dockedShipsList;
+        }
+
+        ICollection<Guid> ILog.ContainersInHarbour()
+        {
+            List<Guid> containersList = new List<Guid>();
+            foreach(Container container in ContainersInHarbour.Values)
+            {
+                containersList.Add(container.ID);
+            }
+            return containersList;
         }
     }
 }

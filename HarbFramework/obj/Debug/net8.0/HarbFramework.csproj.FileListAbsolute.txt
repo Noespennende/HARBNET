@@ -38,3 +38,7 @@ C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\
 C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.dll
 C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\refint\HarbFramework.dll
 C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.pdb
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\bin\Debug\net8.0\HarbFramework.deps.json
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\bin\Debug\net8.0\HarbFramework.dll
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\bin\Debug\net8.0\HarbFramework.pdb
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\ref\HarbFramework.dll

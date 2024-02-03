@@ -23,7 +23,7 @@ namespace harbNet
             Ship testShip3 = new(ShipSize.Small, startTime, 7, 20);
             ships.Add(testShip3);
 
-            Harbor harbor = new Harbor(ships, 10, 10, 10, 300, 300, 300);
+            Harbor harbor = new Harbor(ships, 10, 10, 10, 300, 300, 300,300,300,300);
 
 
             Simulation simulation = new Simulation(harbor, startTime, endTime);
