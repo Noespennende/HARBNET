@@ -9,21 +9,7 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
-<<<<<<< Updated upstream
-    public class Ship
-    {
-        internal Guid id = Guid.NewGuid();
-        internal ShipSize shipSize { get; set; }
-        internal DateTime startDate { get; set; }
-        internal int roundTripInDays { get; set; }
-        internal Guid currentLocation { get; set; }
-        internal ArrayList history { get; set; } = new ArrayList();
-        internal ArrayList containersOnBoard { get; set; } = new ArrayList();
-        internal int containerCapacity {  get; set; }
-        internal int maxWeighInTonn {  get; set; }
-        internal int baseWeigtInTonn { get; set; }
-        internal int currentWeightInTonn { get; set; }
-=======
+
     public class Ship : IShip
     {
         internal Guid id = Guid.NewGuid();
@@ -37,7 +23,6 @@ namespace harbNet
         public int maxWeightInTonn {  get; internal set; }
         public int baseWeightInTonn { get; internal set; }
         public int currentWeightInTonn { get; internal set; }
->>>>>>> Stashed changes
         internal int containersLoadedPerHour { get; set; }
         internal int baseBerthingTimeInHours { get; set; }
         internal int baseDockingTimeInHours { get; set; }

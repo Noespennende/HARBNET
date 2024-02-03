@@ -15,7 +15,7 @@ namespace harbNet
 
         public string GetDockStatus(Guid dockID);
 
-        public Dictionary<Guid,String>  GetStatusAllDocks();
+        public Dictionary<Guid, bool> StatusAllDocks();
 
         public Dictionary<Ship, Status> GetStatusAllShips();
 
