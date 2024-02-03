@@ -122,7 +122,7 @@ namespace harbNet
                 dock.Free = false;
 
                 shipToBeDocked.currentLocation = dock.GetID();
-                shipToBeDocked.AddHistoryEvent(currentTime, dock.ID, Status.Docking);
+                shipToBeDocked.AddHistoryEvent(currentTime, dock.ID, Status.DockingToLoadingDock);
                 shipsInLoadingDock.Add(shipToBeDocked, dock);
 
                 RemoveShipFromAnchorage(shipToBeDocked.GetID());
@@ -148,7 +148,7 @@ namespace harbNet
                 dock.Free = false;
 
                 shipToBeDocked.currentLocation = dock.GetID();
-                shipToBeDocked.AddHistoryEvent(currentTime, dock.ID, Status.Docking);
+                shipToBeDocked.AddHistoryEvent(currentTime, dock.ID, Status.DockingToShipDock);
 
                 shipsInShipDock.Add(shipToBeDocked, dock);
                 shipsInLoadingDock.Remove(shipToBeDocked);
