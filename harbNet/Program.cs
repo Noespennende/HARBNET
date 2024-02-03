@@ -30,6 +30,7 @@ namespace harbNet
 
             simulation.Run(startTime, endTime);
             Console.WriteLine("Hei her er jeg");
+            
 
 
             /*

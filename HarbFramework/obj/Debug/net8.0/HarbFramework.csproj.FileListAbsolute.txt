@@ -30,3 +30,11 @@ D:/Google Drive/Skole/4 semester/NET/Obliger/HARBNET/HarbFramework/obj/Debug/net
 /Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/bin/Debug/net8.0/HarbFramework.dll
 /Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/bin/Debug/net8.0/HarbFramework.pdb
 /Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/obj/Debug/net8.0/ref/HarbFramework.dll
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfoInputs.cache
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.AssemblyInfo.cs
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.csproj.CoreCompileInputs.cache
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.sourcelink.json
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.dll
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\refint\HarbFramework.dll
+C:\Users\Micha\OneDrive\Documents\GitHub\HARBNET\HarbFramework\obj\Debug\net8.0\HarbFramework.pdb

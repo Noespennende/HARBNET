@@ -231,7 +231,7 @@ namespace harbNet
 
             foreach (var item in shipsInLoadingDock)
             {
-                ships.Add(item.key); // Legg til hvert individuelle Ship-objekt, ikke hele Hashtable
+                ships.Add(item.Key); // Legg til hvert individuelle Ship-objekt, ikke hele Hashtable
             }
 
             return ships;
@@ -430,7 +430,7 @@ namespace harbNet
             ContainerSpace containerSpace = storedContainers[containerToBeLoaded];
 
             ship.AddContainer(containerToBeLoaded);
-            containerToBeLoaded.CurrentPosition = ship.ID;
+            containerToBeLoaded.CurrentPosition = ship.id;
 
             containerToBeLoaded.AddHistoryEvent(Status.Transit, currentTime);
 
@@ -453,22 +453,22 @@ namespace harbNet
 
         // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
         // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
-        public string GetShipStatus(Guid ShipID)
+        public Status GetShipStatus(Guid ShipID)
         {
             Event lastEvent = null;
             StringBuilder sb = new StringBuilder();
             foreach (Ship ship in allShips)
             {
-                if (ship.ID == ShipID && ship.History != null && ship.History.Count > 0)
+                if (ship.id == ShipID && ship.history != null && ship.history.Count > 0)
                 {
                     // Måtte kommentere ut for å kjøre fordi ship.History[ship.History.Count - 1] gir error
                     // lastEvent = ship.History[ship.History.Count - 1] as Event;
-                    String shipStatus = $"ShipId: {ship.ID}, Last event: {lastEvent}";
+                    String shipStatus = $"ShipId: {ship.id}, Last event: {lastEvent}";
                     sb.Append(shipStatus);
                 }
 
             }
-            return sb.ToString();
+            return Status.None;
         }
 
 
@@ -477,25 +477,29 @@ namespace harbNet
         // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
 
         //må kjøre denne for å se om den funker som tenkt
-        public string GetStatusAllShips()
+        public Dictionary<Ship, Status> GetStatusAllShips()
         {
-
-            StringBuilder sb = new StringBuilder();
+            Dictionary<Ship, Status> shipStatus = new Dictionary<Ship, Status>();
+            
             foreach (Ship ship in allShips)
             {
-                Event lastEvent = null;
-
-                for (int i = 0; i < ship.History.Count; i++)
+                Event test = ship.history.Last();
+                if (test != null)
                 {
-                    // Måtte kommentere ut for å kunne kjøre fordi ship.History[i]; gir error
-                    // lastEvent = (Event)ship.History[i];
-
-                    string shipStatus = $"ShipId: {ship.ID} Last event: {lastEvent}";
-
-                    sb.AppendLine(shipStatus);
+                    shipStatus[ship] = test.Status;
                 }
             }
-            return sb.ToString();
+            return shipStatus;
+        }
+
+        public Dictionary<Guid, bool> StatusAllDocks()
+        {
+            Dictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
+            foreach(Dock dock in allShipDocks)
+            {
+                dockStatus[dock.ID] = dock.Free;
+            }
+            return dockStatus;
         }
 
         //Denne kan potensielt endres
@@ -535,7 +539,7 @@ namespace harbNet
             {
                 sb.AppendLine($"dockId: {keyValue.Key}, dock free: {keyValue.Value}");
             }
-            return sb.ToString();
+            return dockStatus.ToString();
         }
 
         //må endre på toString til en representasjon som fungerer
