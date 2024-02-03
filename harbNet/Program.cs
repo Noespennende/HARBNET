@@ -9,20 +9,27 @@ namespace harbNet
         static void Main(string[] args)
         {
 
-            DateTime startTime = DateTime.Now;
-            DateTime endTime = startTime + TimeSpan.FromSeconds(15);
+            DateTime startTime = new DateTime(2023, 2, 2, 8, 0, 0);
+            DateTime endTime = startTime + TimeSpan.FromDays(50);
             List<Ship> ships = new List<Ship>();
 
-            Ship testShip = new(ShipSize.Large, startTime, 10, 1);
+            Ship testShip = new(ShipSize.Large, startTime, 10, 100);
             ships.Add(testShip);
 
-            Harbor harbor = new Harbor(ships, 10, 10, 10, 2, 2, 1);
+            Ship testShip2 = new(ShipSize.Medium, startTime + TimeSpan.FromHours(1), 5, 50);
+            ships.Add(testShip2);
+
+            Ship testShip3 = new(ShipSize.Small, startTime, 7, 20);
+            ships.Add(testShip3);
+
+            Harbor harbor = new Harbor(ships, 10, 10, 10, 300, 300, 300);
 
 
             Simulation simulation = new Simulation(harbor, startTime, endTime);
 
             simulation.Run(startTime, endTime);
             Console.WriteLine("Hei her er jeg");
+
 
             /*
             harbNet.create();
@@ -68,6 +75,6 @@ namespace harbNet
             harbNet.getNumberOfDockings() //Antall skip docket i løpet av simuleringen    -- m. overloads hvor man sender inn dato for ett gitt døgn
             */
 
-        } 
+        }
     }
 }

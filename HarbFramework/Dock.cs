@@ -9,20 +9,20 @@ namespace HarbFramework
 {
     internal class Dock
     {
-        internal Guid id = new Guid();
-        internal ShipSize size { get; set; }
-        internal bool free { get; set; }
-        internal Guid dockedShip {  get; set; }
+        internal Guid ID = new Guid();
+        internal ShipSize Size { get; set; }
+        internal bool Free { get; set; }
+        internal Guid DockedShip {  get; set; }
 
         internal Dock (ShipSize shipSize)
         {
-            this.size = shipSize;
-            this.free = true;
+            this.Size = shipSize;
+            this.Free = true;
         }
 
-        internal Guid getID()
+        internal Guid GetID()
         {
-            return id;
+            return ID;
         }
 
     }

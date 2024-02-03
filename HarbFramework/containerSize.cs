@@ -9,8 +9,8 @@ namespace HarbFramework
     public enum ContainerSize
     {
         None,
-        Small,
-        Medium,
-        Large
+        Small = 10,
+        Medium = 15,
+        Large = 20
     }
 }

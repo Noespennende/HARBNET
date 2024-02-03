@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = HarbFramework
-build_property.ProjectDir = D:\Google Drive\Skole\4 semester\NET\Obliger\HARBNET\HarbFramework\
+build_property.ProjectDir = /Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

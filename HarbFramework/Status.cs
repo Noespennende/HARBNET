@@ -15,6 +15,9 @@ namespace HarbFramework
         Unloading,
         Transit,
         InStorage,
-        Queuing
+        Queuing,
+
+        UnloadingDone,
+        LoadingDone
     }
 }

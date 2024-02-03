@@ -11,23 +11,23 @@ namespace harbNet
 {
     internal class Container
     {
-        internal Guid id = Guid.NewGuid();
-        internal ICollection<Event> history {  get; set; } = new List<Event>();
-        internal ContainerSize size { get; set; }
+        internal Guid ID = Guid.NewGuid();
+        internal ICollection<Event> History {  get; set; } = new List<Event>();
+        internal ContainerSize Size { get; set; }
         internal int WeightInTonn { get; set; }
-        internal Guid currentPosition { get; set; }
+        internal Guid CurrentPosition { get; set; }
 
         internal Container(ContainerSize size, int WeightInKG, Guid currentPosition) {
-            this.size = size;
-            this.currentPosition = currentPosition;
+            this.Size = size;
+            this.CurrentPosition = currentPosition;
             this.WeightInTonn = WeightInKG;
         }
 
-        internal Guid getId() { return id; }
+        internal Guid GetId() { return ID; }
 
-        internal void addHistoryEvent (Status status, DateTime currentTime)
+        internal void AddHistoryEvent (Status status, DateTime currentTime)
         {
-            history.Add(new Event(id, currentPosition, currentTime, status));
+            History.Add(new Event(ID, CurrentPosition, currentTime, status));
         }
     }
 }

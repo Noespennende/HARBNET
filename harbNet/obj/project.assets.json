@@ -27,40 +27,32 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\andbe\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/Mathilde/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj",
+      "projectUniqueName": "/Users/Mathilde/Documents/GitHub/HARBNET/harbNet/Simulation.csproj",
       "projectName": "Simulation",
-      "projectPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\Simulation.csproj",
-      "packagesPath": "C:\\Users\\andbe\\.nuget\\packages\\",
-      "outputPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\harbNet\\obj\\",
+      "projectPath": "/Users/Mathilde/Documents/GitHub/HARBNET/harbNet/Simulation.csproj",
+      "packagesPath": "/Users/Mathilde/.nuget/packages/",
+      "outputPath": "/Users/Mathilde/Documents/GitHub/HARBNET/harbNet/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\andbe\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/Mathilde/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj": {
-              "projectPath": "D:\\Google Drive\\Skole\\4 semester\\NET\\Obliger\\HARBNET\\HarbFramework\\HarbFramework.csproj"
+            "/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/HarbFramework.csproj": {
+              "projectPath": "/Users/Mathilde/Documents/GitHub/HARBNET/HarbFramework/HarbFramework.csproj"
             }
           }
         }
@@ -90,7 +82,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
