@@ -9,6 +9,7 @@ namespace harbNet
         static void Main(string[] args)
         {
 
+
             DateTime startTime = new DateTime(2023, 2, 2, 8, 0, 0);
             DateTime endTime = startTime + TimeSpan.FromDays(50);
             List<Ship> ships = new List<Ship>();
