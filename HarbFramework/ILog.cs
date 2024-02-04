@@ -9,7 +9,7 @@ namespace HarbFramework
 {
     public interface ILog
     {
-        public DateTime time { get; }
+        public DateTime Time { get; }
         public ICollection<Ship> ShipsInQueue { get; }
         public ICollection<Ship> ShipsInTransit { get; }
         public ICollection<Ship> DockedShips();

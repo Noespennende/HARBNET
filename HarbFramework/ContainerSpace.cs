@@ -11,13 +11,13 @@ namespace HarbFramework
         internal Guid ID = Guid.NewGuid();
         internal ContainerSize Size { get; set; }
         internal bool Free {  get; set; }
-        internal Guid StoredContainer;
+        internal Guid storedContainer;
 
         internal ContainerSpace (ContainerSize size)
         {
             this.Size = size;
             this.Free = true;
-            this.StoredContainer = Guid.Empty;
+            this.storedContainer = Guid.Empty;
         }
         
     }
