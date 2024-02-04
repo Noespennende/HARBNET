@@ -12,37 +12,40 @@ namespace harbNet
 
     public class Ship : IShip
     {
-        internal Guid id = Guid.NewGuid();
-        public ShipSize shipSize { get; internal set; }
-        public DateTime startDate { get; internal set; }
-        public int roundTripInDays { get; internal set; }
-        public Guid currentLocation { get; internal set; }
-        public ICollection<Event> history { get; internal set; }
-        internal ICollection<Container> containersOnBoard {  get; set; }
-        public int containerCapacity { get; internal set; }
-        public int maxWeightInTonn {  get; internal set; }
-        public int baseWeightInTonn { get; internal set; }
-        public int currentWeightInTonn { get; internal set; }
-        internal int containersLoadedPerHour { get; set; }
-        internal int baseBerthingTimeInHours { get; set; }
-        internal int baseDockingTimeInHours { get; set; }
-        internal bool nextStepCheck = false;
-
+        internal Guid ID = Guid.NewGuid();
+        public ShipSize ShipSize { get; internal set; }
+        public DateTime StartDate { get; internal set; }
+        public int RoundTripInDays { get; internal set; }
+        public Guid CurrentLocation { get; internal set; }
+        public ICollection<Event> History { get; internal set; }
+        internal ICollection<Container> ContainersOnBoard {  get; set; }
+        public int ContainerCapacity { get; internal set; }
+        public int MaxWeightInTonn {  get; internal set; }
+        public int BaseWeightInTonn { get; internal set; }
+        public int CurrentWeightInTonn { get; internal set; }
         internal int ContainersLoadedPerHour { get; set; }
         internal int BaseBerthingTimeInHours { get; set; }
         internal int BaseDockingTimeInHours { get; set; }
-
+        internal bool NextStepCheck = false;
+        /*
+        internal int ContainersLoadedPerHour { get; set; }
+        internal int BaseBerthingTimeInHours { get; set; }
+        internal int BaseDockingTimeInHours { get; set; }
+        skal det over være her ? */
         // IMPLEMENT ME ? OR DELETE ME FROM INTERFACE ? 
         public ICollection<string> GetContainersOnBoard => throw new NotImplementedException();
 
-        internal bool NextStepCheck = false;
+        
 
         public Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
         {
             this.ShipSize = shipSize;
             this.StartDate = StartDate;
             this.RoundTripInDays = roundTripInDays;
-            
+            this.ContainersOnBoard = new List<Container>();
+            this.History = new List<Event>();
+
+
             for (int i = 0; i < numberOfcontainersOnBoard; i++)
             {
                 if (i%3 == 0) { 

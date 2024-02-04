@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,21 +41,22 @@ namespace HarbFramework
 
         public void Run(DateTime startTime, DateTime endTime)
         {
+            Log harborLog = new Log();
             this.endTime = endTime;
             this.currentTime = startTime;
 
             while (currentTime < endTime)
             {
 
-                foreach (Ship ship in harbor.allShips)
+                foreach (Ship ship in harbor.AllShips)
                 {
                     if (currentTime == startTime)
-                        ship.AddHistoryEvent(currentTime, harbor.anchorageID, Status.Docking);
+                        ship.AddHistoryEvent(currentTime, harbor.AnchorageID, Status.DockingToLoadingDock);
                 }
 
 
                 // Resetter nextStepCheck for alle Ship før neste runde
-                foreach (Ship ship in harbor.allShips) {
+                foreach (Ship ship in harbor.AllShips) {
                     ship.NextStepCheck = false;
                     
                 }
@@ -68,10 +70,23 @@ namespace HarbFramework
                 LoadingShips();
 
                 InTransitShips();
+               
 
 
                 if (currentTime.Hour >= 0 && currentTime.Hour <= 3)
                 {
+
+                    foreach (Ship ship in harbor.AllShips)
+                    {
+
+                        Console.WriteLine($"ShipId: {ship.ID}");
+                        foreach(var his in ship.History)
+                        {
+                            Console.WriteLine($"Event: {his.Subject}, {his.PointInTime}, {his.Status}");
+                        }
+
+                    }
+
                     /* !! Skriv ut dagslogger her !! */
 
                     // Dette kan reworkers/slettes
@@ -94,7 +109,7 @@ namespace HarbFramework
 
             // Uten lokal HarbourQueInn fungerer ikke foreach, fordi endringer blir gjort i ShipsInHarbourQueInn
             // mens man går gjennom den (skip blir tatt ut mens foreach går gjennom)
-            ArrayList ShipsInHarbourQueInn = new ArrayList(harbor.anchorage);
+            ArrayList ShipsInHarbourQueInn = new ArrayList(harbor.Anchorage);
 
             foreach (Ship ship in ShipsInHarbourQueInn)
             {
@@ -103,10 +118,11 @@ namespace HarbFramework
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
 
 
-                if (!ship.NextStepCheck && lastEvent != null && (lastEvent.Status == Status.Docking || lastEvent.Status == Status.Queuing))
+                if (!ship.NextStepCheck && lastEvent != null && (lastEvent.Status == Status.DockingToLoadingDock || lastEvent.Status == Status.Queuing)) 
                 {
                     Guid dockID = harbor.DockShipToLoadingDock(shipID, currentTime);
                     ship.NextStepCheck = true;
+                    
 
                     ship.AddHistoryEvent(currentTime, dockID, Status.Unloading);
                     Console.WriteLine("\n" + ship.ID + " docked");
@@ -118,7 +134,7 @@ namespace HarbFramework
 
         private void UnloadingShips()
         {
-            foreach (Ship ship in harbor.shipsInLoadingDock.Keys)
+            foreach (Ship ship in harbor.ShipsInLoadingDock.Keys)
             {
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
 
@@ -129,6 +145,7 @@ namespace HarbFramework
                     if (ship.ContainersOnBoard.Count != 0)
                     {
                         Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last(); // Logisk riktig rekkefølge
+                        
 
                         harbor.UnloadContainer(ContainerToBeUnloaded.Size, ship, currentTime);
                         // Console.WriteLine("Stored containers: " + harbor.storedContainers.Count);
@@ -159,7 +176,7 @@ namespace HarbFramework
                 {
                     harbor.UnDockShipFromLoadingDockToTransit(shipID, currentTime);
 
-                    ship.AddHistoryEvent(currentTime, harbor.transitLocationID, Status.Transit);
+                    ship.AddHistoryEvent(currentTime, harbor.TransitLocationID, Status.Transit);
 
                     Console.WriteLine("\nUndocking successful!");
                     Console.WriteLine(ship.ID + " in transit!");
@@ -227,7 +244,7 @@ namespace HarbFramework
 
                     else if (ship.ContainersOnBoard.Count == ship.ContainerCapacity
                         || ship.CurrentWeightInTonn == ship.MaxWeightInTonn
-                        || harbor.storedContainers.Keys.Count == 0)
+                        || harbor.StoredContainers.Keys.Count == 0)
                     {
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.LoadingDone);
                         Console.WriteLine("\nLoading successful for " + ship.ID + "!");
@@ -241,7 +258,7 @@ namespace HarbFramework
 
         private void InTransitShips()
         {
-            foreach (Ship ship in harbor.shipsInTransit.Keys)
+            foreach (Ship ship in harbor.ShipsInTransit.Keys)
             {
 
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
@@ -288,8 +305,8 @@ namespace HarbFramework
              }
 
              //harbor = new Harbor(10, 10, 10, 100, 100, 100);
-             Dictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = harbor.allContainerSpaces;
-             Dictionary<ContainerSize, List<ContainerSpace>> freeContainerSpaces = harbor.freeContainerSpaces;
+             Dictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = harbor.AllContainerSpaces;
+             Dictionary<ContainerSize, List<ContainerSpace>> freeContainerSpaces = harbor.FreeContainerSpaces;
              Dictionary<ContainerSize, List<ContainerSpace>> storedContainerSpaces = new();
 
 
@@ -300,10 +317,11 @@ namespace HarbFramework
              shipLarge = new Ship(ShipSize.Large, currentTime, 12, containersOnBoard.Count);
 
              //eventlogger ikke implementert
+             /*
              while (endTime != currentTime)
              {
 
-                 foreach (Ship ship in harbor.shipsInLoadingDock) //undock
+                 foreach (Ship ship in harbor.ShipsInLoadingDock) //undock
                  {
                      if (ship.NextStepCheck == false)
                      {
@@ -384,7 +402,7 @@ namespace HarbFramework
                  }
 
                  currentTime.AddHours(6); // Får bli enige om hvor mange timer en "runde" skal ta
-             }
+             }*/
          }
     }
 
