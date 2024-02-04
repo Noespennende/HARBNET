@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
-    public class Simulation
+    public class Simulation : ISimulation
     {
         //StartTime variabler 
         private DateTime startTime;
@@ -24,7 +24,7 @@ namespace HarbFramework
         private Hashtable shipsInDock = new Hashtable();
         private Harbor harbor;
         private Ship shipSmall, shipMedium, shipLarge;
-        public ICollection<Log> history {  get; private set; }
+        public ICollection<Log> History {  get; private set; }
         //private Log log = new Log()
 
         // Mathilde - Jeg la det her for nå
