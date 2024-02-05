@@ -504,7 +504,7 @@ namespace harbNet
 
         //Denne kan potensielt endres
         //må endre på toString til en representasjon som fungerer
-        public string GetLoadingDockStatus(Guid dockID)
+        public string LoadingDockIsFree(Guid dockID)
         {
             StringBuilder sb = new StringBuilder();
             bool dockFree = false;

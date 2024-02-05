@@ -6,11 +6,12 @@ namespace harbNet
 {
     public interface IHarbor
     {
-        public string GetStatusAllLoadingDocks();
+        public Guid ID { get; }
+        public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks();
 
         public Status GetShipStatus(Guid ShipID);
 
-        public string GetLoadingDockStatus(Guid dockID);
+        public bool LoadingDockIsFree(Guid dockID);
 
         public Dictionary<Guid, bool> StatusAllDocks();
 

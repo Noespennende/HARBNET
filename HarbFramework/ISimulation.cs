@@ -2,7 +2,7 @@
 {
     public interface ISimulation
     {
-        public ICollection<Log> History { get; }
+        public IList<Log> History { get; }
         public void Run(DateTime startTime, DateTime endTime);
     }
 }

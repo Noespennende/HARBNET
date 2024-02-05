@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
-    internal class Container
+    public class Container : IContainer
     {
-        internal Guid ID = Guid.NewGuid();
-        internal ICollection<Event> History {  get; set; } = new List<Event>();
-        internal ContainerSize Size { get; set; }
-        internal int WeightInTonn { get; set; }
-        internal Guid CurrentPosition { get; set; }
+        public Guid ID { get; } = Guid.NewGuid();
+        public IList<Event> History {  get; internal set; } = new List<Event>();
+        public ContainerSize Size { get; internal set; }
+        public int WeightInTonn { get; internal set; }
+        public Guid CurrentPosition { get; internal set; }
 
         internal Container(ContainerSize size, int WeightInKG, Guid currentPosition) {
             this.Size = size;
