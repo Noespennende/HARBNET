@@ -11,14 +11,14 @@ namespace harbNet
 
 
             DateTime startTime = new DateTime(2023, 2, 2, 8, 0, 0);
-            DateTime endTime = startTime + TimeSpan.FromDays(50);
+            DateTime endTime = startTime + TimeSpan.FromDays(100);
             List<Ship> ships = new List<Ship>();
 
             Ship testShip = new(ShipSize.Large, startTime, 10, 100);
             ships.Add(testShip);
 
-            Ship testShip2 = new(ShipSize.Medium, startTime + TimeSpan.FromHours(1), 5, 50);
-            ships.Add(testShip2);
+            //Ship testShip2 = new(ShipSize.Medium, startTime + TimeSpan.FromHours(1), 5, 50);
+            //ships.Add(testShip2);
 
             Ship testShip3 = new(ShipSize.Small, startTime, 7, 20);
             ships.Add(testShip3);

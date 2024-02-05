@@ -43,6 +43,16 @@ namespace harbNet
             this.StartDate = StartDate;
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
+            if(shipSize == ShipSize.Large)
+            {
+               ContainersLoadedPerHour = 10;
+            }else if(shipSize == ShipSize.Medium) {
+                ContainersLoadedPerHour = 8;
+            }
+            else
+            {
+                ContainersLoadedPerHour= 6;
+            }
             this.History = new List<Event>();
 
 
