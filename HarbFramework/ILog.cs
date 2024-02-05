@@ -12,8 +12,8 @@ namespace HarbFramework
         public DateTime Time { get; }
         public IList<Ship> ShipsInQueue { get; }
         public IList<Ship> ShipsInTransit { get; }
-        public IList<Ship> DockedShips();
-        public IList<Guid> ContainersInHarbour();
+        public IList<Ship> DockedShips { get; }
+        public IList<Guid> ContainersInHarbour { get; }
         
     }
 }

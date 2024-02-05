@@ -23,8 +23,6 @@ namespace harbNet
             this.WeightInTonn = WeightInKG;
         }
 
-        internal Guid GetId() { return ID; }
-
         internal void AddHistoryEvent (Status status, DateTime currentTime)
         {
             History.Add(new Event(ID, CurrentPosition, currentTime, status));

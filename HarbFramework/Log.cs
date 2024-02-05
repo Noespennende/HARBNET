@@ -11,14 +11,13 @@ namespace HarbFramework
     public class Log : ILog
     {
         public DateTime Time { get; set; }
-        internal Hashtable DockedShips { get; set; }
-        public ICollection<Ship> ShipsInQueue { get; internal set; }
-        public ICollection<Ship> ShipsInTransit { get; internal set; }
-        internal Hashtable ContainersInHarbour { get; set; }
+        public IList<Ship> DockedShips { get; set; }
+        public IList<Ship> ShipsInQueue { get; internal set; }
+        public IList<Ship> ShipsInTransit { get; internal set; }
+        public IList<Guid> ContainersInHarbour { get; set;}
 
-        public DateTime time => throw new NotImplementedException();
-
-        ICollection<Ship> ILog.DockedShips()
+        /*
+        IList<Ship> DockedShips()
         {
             List<Ship> dockedShipsList = new List<Ship>();
             foreach (var ship in DockedShips.Values)
@@ -28,7 +27,7 @@ namespace HarbFramework
             return dockedShipsList;
         }
 
-        ICollection<Guid> ILog.ContainersInHarbour()
+        IList<Guid> ILog.ContainersInHarbour()
         {
             List<Guid> containersList = new List<Guid>();
             foreach(Container container in ContainersInHarbour.Values)
@@ -37,5 +36,6 @@ namespace HarbFramework
             }
             return containersList;
         }
+        */
     }
 }

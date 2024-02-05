@@ -16,7 +16,7 @@ namespace harbNet
         public Dictionary<Guid, bool> StatusAllDocks();
 
         public Dictionary<Ship, Status> GetStatusAllShips();
-        public Guid GetAnchorageID();
-        public Guid GetTransitID();
+        public Guid AnchorageID { get; }
+        public Guid TransitLocationID { get; }
     }
 }

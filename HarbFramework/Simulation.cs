@@ -20,17 +20,10 @@ namespace HarbFramework
         private DateTime currentTime;
         private DateTime endTime;
 
-        private ArrayList containersOnBoard = new ArrayList();
-        private ArrayList allDocks = new ArrayList();
-        private ArrayList freeDocks = new ArrayList();
-        private Hashtable shipsInDock = new Hashtable();
         private Harbor harbor;
-        private Ship shipSmall, shipMedium, shipLarge;
-        public ICollection<Log> History {  get; private set; }
-        //private Log log = new Log()
 
-        // Mathilde - Jeg la det her for nå
-        private ArrayList allShipsInSimulation = new ArrayList();
+        public IList<Log> History {  get; private set; } = new List<Log>();
+
 
         public Simulation (Harbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
         {
@@ -52,7 +45,7 @@ namespace HarbFramework
                 foreach (Ship ship in harbor.AllShips)
                 {
                     if (currentTime == startTime)
-                        ship.AddHistoryEvent(currentTime, harbor.anchorageID, Status.DockingToLoadingDock);
+                        ship.AddHistoryEvent(currentTime, harbor.AnchorageID, Status.DockingToLoadingDock);
                 }
 
 
@@ -113,11 +106,11 @@ namespace HarbFramework
         private void DockingShips()
         {
 
-            // Uten lokal HarbourQueInn fungerer ikke foreach, fordi endringer blir gjort i ShipsInHarbourQueInn
+            // Uten lokal Anchorage fungerer ikke foreach, fordi endringer blir gjort i ShipsInHarbourQueInn
             // mens man går gjennom den (skip blir tatt ut mens foreach går gjennom)
-            ArrayList ShipsInHarbourQueInn = new ArrayList(harbor.anchorage);
+            List<Ship> Anchorage = harbor.Anchorage.ToList();
 
-            foreach (Ship ship in ShipsInHarbourQueInn)
+            foreach (Ship ship in Anchorage)
             {
 
                 Guid shipID = ship.ID;
@@ -189,7 +182,7 @@ namespace HarbFramework
 
                     harbor.UnDockShipFromLoadingDockToTransit(shipID, currentTime);
 
-                    ship.AddHistoryEvent(currentTime, harbor.transitLocationID, Status.Transit);
+                    ship.AddHistoryEvent(currentTime, harbor.TransitLocationID, Status.Transit);
 
                     Console.WriteLine("\nUndocking successful!");
                     Console.WriteLine(ship.ID + " in transit!");

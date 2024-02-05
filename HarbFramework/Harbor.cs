@@ -11,27 +11,29 @@ namespace harbNet
 {
     public class Harbor : IHarbor
     {
-        internal ArrayList allLoadingDocks = new ArrayList();
-        internal ArrayList freeLoadingDocks = new ArrayList();
+        public Guid ID { get; set; } = Guid.NewGuid();
+        internal IList<Dock> allLoadingDocks = new List<Dock>();
+        internal IList<Dock> freeLoadingDocks = new List<Dock>();
         internal IDictionary<Ship, Dock> shipsInLoadingDock = new Dictionary<Ship, Dock>(); // Ship : Dock
 
-        internal ArrayList allShipDocks = new ArrayList();
-        internal ArrayList freeShipDocks = new ArrayList();
+        internal IList<Dock> allShipDocks = new List<Dock>();
+        internal IList<Dock> freeShipDocks = new List<Dock>();
         internal IDictionary<Ship,Dock> shipsInShipDock = new Dictionary<Ship, Dock>(); // Ship : Dock
 
-        internal ArrayList anchorage = new ArrayList();
+        internal IList<Ship> Anchorage = new List<Ship>();
         internal Hashtable shipsInTransit = new Hashtable(); // ship: int number of days until return
-        internal ArrayList AllShips { get; set; } = new ArrayList(); // Sikkert midlertidig, til vi kan regne på det
+        internal IList<Ship> AllShips { get; set; } = new List<Ship>(); // Sikkert midlertidig, til vi kan regne på det
         internal IDictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
-        //internal Hashtable allContainerSpaces = new Hashtable(); // størelse : antall
+
         internal IDictionary<ContainerSize, List<ContainerSpace>> freeContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
-        //internal Hashtable freeContainerSpaces = new Hashtable(); // størelse : antall ledige
+
         internal IDictionary<Container, ContainerSpace> storedContainers = new Dictionary<Container, ContainerSpace>(); // Container : ContainerSpace
-        internal Guid transitLocationID = Guid.NewGuid();
-        internal Guid anchorageID = Guid.NewGuid();
+
+        public Guid TransitLocationID { get; } = Guid.NewGuid();
+        public Guid AnchorageID { get; } = Guid.NewGuid();
 
 
-        public Harbor(ICollection<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
+        public Harbor(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
             int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,
             int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces, int numberOfLargeContainerSpaces)
         {
@@ -79,34 +81,17 @@ namespace harbNet
                 freeContainerSpaces[containerSize] = spaces; // Gir freeContainerSpaces de gitte opperettede spaces
                                                              // (Siden de er alle tomme ved oppstart av harbor og heller fylles opp senere med andre metodekall)
             }
-            /* Koden fra da allContainerSpaces var HashTable : 
-            for (int i = 0; i < numberOfSmallContainerSpaces; i++)
+
+            AllShips = listOfShips.ToList();
+            Anchorage = listOfShips.ToList();
+
+
+            foreach (Ship ship in Anchorage)
             {
-                allContainerSpaces.Add(new ContainerSpace(ContainerSize.Small));
+                ship.CurrentLocation = AnchorageID;
             }
 
-            for (int i = 0; i < numberOfMediumContainerSpaces; i++)
-            {
-                allContainerSpaces.Add(new ContainerSpace(ContainerSize.Medium));
-            }
-
-            for (int i = 0; i < numberOfLargeContainerSpaces; i++)
-            {
-                allContainerSpaces.Add(new ContainerSpace(ContainerSize.Large));
-            }
-            */
-
-
-            AllShips.AddRange((ICollection)listOfShips);
-            anchorage.AddRange((ICollection)listOfShips);
-
-
-            foreach (Ship ship in anchorage)
-            {
-                ship.CurrentLocation = anchorageID;
-            }
-
-            freeLoadingDocks = (ArrayList)allLoadingDocks.Clone();
+            freeLoadingDocks = allLoadingDocks.ToList();
         }
 
         internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime) //omskriv til å sende inn størrelse. 
@@ -118,17 +103,17 @@ namespace harbNet
             if (FreeLoadingDockExists(size))
             {
                 dock = GetFreeLoadingDock(size);
-                dock.DockedShip = shipToBeDocked.GetID();
+                dock.DockedShip = shipToBeDocked.ID;
                 dock.Free = false;
 
-                shipToBeDocked.CurrentLocation = dock.GetID();
+                shipToBeDocked.CurrentLocation = dock.ID;
                 
                 shipsInLoadingDock.Add(shipToBeDocked, dock);
 
-                RemoveShipFromAnchorage(shipToBeDocked.GetID());
-                RemoveLoadingDockFromFreeLoadingDocks(dock.GetID());
+                RemoveShipFromAnchorage(shipToBeDocked.ID);
+                RemoveLoadingDockFromFreeLoadingDocks(dock.ID);
 
-                return dock.GetID();
+                return dock.ID;
             }
 
             return Guid.Empty; //returnerer en Guid med verdi "00000000-0000-0000-0000-000000000000" hvis han ikke finner noen ledige docker.
@@ -144,10 +129,10 @@ namespace harbNet
             if (FreeLoadingDockExists(size))
             {
                 dock = GetFreeShipDock(size);
-                dock.DockedShip = shipToBeDocked.GetID();
+                dock.DockedShip = shipToBeDocked.ID;
                 dock.Free = false;
 
-                shipToBeDocked.CurrentLocation = dock.GetID();
+                shipToBeDocked.CurrentLocation = dock.ID;
                 shipToBeDocked.AddHistoryEvent(currentTime, dock.ID, Status.DockingToShipDock);
 
                 shipsInShipDock.Add(shipToBeDocked, dock);
@@ -155,7 +140,7 @@ namespace harbNet
                 freeLoadingDocks.Add(loadingDock);
                 freeShipDocks.Remove(dock);
 
-                return dock.GetID();
+                return dock.ID;
             }
 
             return Guid.Empty;
@@ -172,7 +157,7 @@ namespace harbNet
                 dock.DockedShip = Guid.Empty;
                 dock.Free = true;
 
-                shipToBeUndocked.CurrentLocation = transitLocationID;
+                shipToBeUndocked.CurrentLocation = TransitLocationID;
         
 
                 shipsInLoadingDock.Remove(shipToBeUndocked);
@@ -181,7 +166,7 @@ namespace harbNet
                 {
                     shipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
                 }
-                return dock.GetID();
+                return dock.ID;
             }
 
             return Guid.Empty;
@@ -189,9 +174,9 @@ namespace harbNet
 
         internal Ship GetShipFromAnchorage(Guid shipID)
         {
-            foreach (Ship ship in anchorage)
+            foreach (Ship ship in Anchorage)
             {
-                if (ship.GetID().Equals(shipID))
+                if (ship.ID.Equals(shipID))
                 {
                     return ship;
                 }
@@ -205,7 +190,7 @@ namespace harbNet
 
             foreach (Ship ship in shipsInLoadingDock.Keys)
             {
-                if (ship.GetID().Equals(shipID))
+                if (ship.ID.Equals(shipID))
                 {
                     return ship;
                 }
@@ -216,7 +201,7 @@ namespace harbNet
         {
             foreach (var item in shipsInLoadingDock)
             {
-                if (item.Key.GetID() == shipID)
+                if (item.Key.ID == shipID)
                 {
                     return item.Value;
                 }
@@ -225,9 +210,9 @@ namespace harbNet
             return null;
         }
 
-        internal ArrayList DockedShipsInLoadingDock()
+        internal List<Ship> DockedShipsInLoadingDock()
         {
-            ArrayList ships = new ArrayList();
+            List<Ship> ships = new List<Ship>();
 
             foreach (var item in shipsInLoadingDock)
             {
@@ -288,11 +273,11 @@ namespace harbNet
         }
         internal bool RemoveShipFromAnchorage(Guid shipID)
         {
-            foreach (Ship ship in anchorage)
+            foreach (Ship ship in Anchorage)
             {
-                if (ship.GetID() == shipID)
+                if (ship.ID == shipID)
                 {
-                    anchorage.Remove(ship);
+                    Anchorage.Remove(ship);
                     return true;
                 }
             }
@@ -302,9 +287,9 @@ namespace harbNet
         {
             foreach (Dock dock in freeLoadingDocks)
             {
-                if (dock.GetID() == dockID)
+                if (dock.ID == dockID)
                 {
-                    anchorage.Remove(dock);
+                    freeLoadingDocks.Remove(dock);
                     return true;
                 }
             }
@@ -440,13 +425,13 @@ namespace harbNet
             freeContainerSpaces[containerSize].Add(containerSpace);
             storedContainers.Remove(containerToBeLoaded);
 
-            return ship.GetID();
+            return ship.ID;
 
         }
 
         internal void AddNewShipToHarbourQueue(Ship ship)
         {
-            anchorage.Add(ship);
+            Anchorage.Add(ship);
         }
 
         /* ** Interface implementasjon som må gjøres ** */
@@ -586,12 +571,17 @@ namespace harbNet
             return sb.ToString();
         }
 
-        public Guid GetAnchorageID()
+        public Guid GetTransitID()
         {
             throw new NotImplementedException();
         }
 
-        public Guid GetTransitID()
+        public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks()
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IHarbor.LoadingDockIsFree(Guid dockID)
         {
             throw new NotImplementedException();
         }

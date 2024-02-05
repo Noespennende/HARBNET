@@ -12,13 +12,13 @@ namespace harbNet
 
     public class Ship : IShip
     {
-        internal Guid ID = Guid.NewGuid();
+        public Guid ID { get; } = Guid.NewGuid();
         public ShipSize ShipSize { get; internal set; }
         public DateTime StartDate { get; internal set; }
         public int RoundTripInDays { get; internal set; }
         public Guid CurrentLocation { get; internal set; }
-        public ICollection<Event> History { get; internal set; }
-        internal ICollection<Container> ContainersOnBoard {  get; set; }
+        public IList<Event> History { get; internal set; }
+        public IList<Container> ContainersOnBoard {  get; set; }
         public int ContainerCapacity { get; internal set; }
         public int MaxWeightInTonn {  get; internal set; }
         public int BaseWeightInTonn { get; internal set; }
@@ -27,16 +27,8 @@ namespace harbNet
         internal int BaseBerthingTimeInHours { get; set; }
         internal int BaseDockingTimeInHours { get; set; }
         internal bool NextStepCheck = false;
-        /*
-        internal int ContainersLoadedPerHour { get; set; }
-        internal int BaseBerthingTimeInHours { get; set; }
-        internal int BaseDockingTimeInHours { get; set; }
-        skal det over være her ? */
-        // IMPLEMENT ME ? OR DELETE ME FROM INTERFACE ? 
-        public ICollection<string> GetContainersOnBoard => throw new NotImplementedException();
 
         
-
         public Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
         {
             this.ShipSize = shipSize;
@@ -117,11 +109,6 @@ namespace harbNet
                 throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
             };
 
-        }
-
-        public Guid GetID()
-        {
-            return this.ID;
         }
 
         internal Event AddHistoryEvent (DateTime currentTime, Guid currentLocation, Status status)
