@@ -12,7 +12,7 @@ namespace HarbFramework
     {
         public DateTime Time { get; set; }
         public IList<Ship> DockedShips { get; set; }
-        public IList<Ship> ShipsInQueue { get; internal set; }
+        public IList<Ship> ShipsInAnchorage { get; internal set; }
         public IList<Ship> ShipsInTransit { get; internal set; }
         public IList<Guid> ContainersInHarbour { get; set;}
 

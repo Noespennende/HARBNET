@@ -9,13 +9,13 @@ namespace harbNet
         public Guid ID { get; }
         public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks();
 
-        public Status GetShipStatus(Guid ShipID);
-
         public bool LoadingDockIsFree(Guid dockID);
 
-        public Dictionary<Guid, bool> StatusAllDocks();
+        public Status GetShipStatus(Guid ShipID);
 
-        public Dictionary<Ship, Status> GetStatusAllShips();
+        public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks();
+
+        public IDictionary<Ship, Status> GetStatusAllShips();
         public Guid AnchorageID { get; }
         public Guid TransitLocationID { get; }
     }

@@ -8,9 +8,9 @@ namespace HarbFramework
 {
     public enum ShipSize
     {
-        None,
+        None = 0,
         Small,
         Medium,
-        Large,
+        Large
     }
 }
