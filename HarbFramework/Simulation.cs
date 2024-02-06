@@ -117,7 +117,7 @@ namespace HarbFramework
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
 
 
-                if (!ship.NextStepCheck && lastEvent != null && (lastEvent.Status == Status.DockingToLoadingDock || lastEvent.Status == Status.Queuing)) 
+                if (!ship.NextStepCheck && lastEvent != null && (lastEvent.Status == Status.DockingToLoadingDock || lastEvent.Status == Status.Anchoring)) 
                 {
                     Guid dockID = harbor.DockShipToLoadingDock(shipID, currentTime);
                     ship.NextStepCheck = true;
@@ -308,7 +308,7 @@ namespace HarbFramework
                     // Hvis roundTripInDays er større eller lik dager siden transit begynte (dagens dato - når eventet skjedde = dager siden eventet skjedde)
                     if (DaysSinceTransitStart >= ship.RoundTripInDays)
                     {
-                        ship.AddHistoryEvent(currentTime, CurrentPosition, Status.Queuing);
+                        ship.AddHistoryEvent(currentTime, CurrentPosition, Status.Anchoring);
                         harbor.AddNewShipToHarbourQueue(ship);
                         Console.WriteLine("\nTransit done for " + ship.ID);
                         Console.WriteLine("Now in Queue for docking");

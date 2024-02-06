@@ -8,7 +8,7 @@ namespace HarbFramework
 {
     public enum Status
     {
-        None,
+        None = 0,
         DockingToLoadingDock,
         DockingToShipDock,
         Undocking,
@@ -16,8 +16,7 @@ namespace HarbFramework
         Unloading,
         Transit,
         InStorage,
-        Queuing,
-
+        Anchoring,
         UnloadingDone,
         LoadingDone
     }
