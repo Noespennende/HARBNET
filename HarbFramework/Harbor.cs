@@ -570,7 +570,7 @@ namespace harbNet
             }
             return sb.ToString();
         }
-
+        //La de til for kompilering
         public Guid GetTransitID()
         {
             throw new NotImplementedException();
@@ -582,6 +582,16 @@ namespace harbNet
         }
 
         bool IHarbor.LoadingDockIsFree(Guid dockID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks()
+        {
+            throw new NotImplementedException();
+        }
+
+        IDictionary<Ship, Status> IHarbor.GetStatusAllShips()
         {
             throw new NotImplementedException();
         }

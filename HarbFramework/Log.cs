@@ -15,6 +15,12 @@ namespace HarbFramework
         public IList<Ship> ShipsInAnchorage { get; internal set; }
         public IList<Ship> ShipsInTransit { get; internal set; }
         public IList<Guid> ContainersInHarbour { get; set;}
+        //la de til for kompilering
+        public IList<Ship> ShipsDockedInLoadingDocks => throw new NotImplementedException();
+
+        public IList<Ship> ShipsDockedInShippingDocks => throw new NotImplementedException();
+
+        IList<Container> ILog.ContainersInHarbour => throw new NotImplementedException();
 
         /*
         IList<Ship> DockedShips()

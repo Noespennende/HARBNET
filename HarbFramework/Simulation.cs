@@ -33,7 +33,7 @@ namespace HarbFramework
         }
 
 
-        public void Run(DateTime startTime, DateTime endTime)
+        public void Run()
         {
             Log harborLog = new Log();
             this.endTime = endTime;
@@ -81,15 +81,17 @@ namespace HarbFramework
 
                         foreach (Ship ship in harbor.AllShips)
                         {
+                            Console.WriteLine("-------------------------------------------------------------------------------");
+                            Console.WriteLine($"History ShipId: {ship.ID} Shipname: {ship.ShipName}");
+                            Console.WriteLine("-------------------------------------------------------------------------------");
 
-                            Console.WriteLine($"ShipId: {ship.ID}");
-                            foreach (Event his in ship.History)
+                        foreach (Event his in ship.History)
                             {
-                                
-                                Console.WriteLine($"ShipId: {his.Subject}Date: {his.PointInTime}|Status: {his.Status}|\n");
-
+                            
+                                Console.WriteLine($"ShipName: {ship.ShipName} Date: {his.PointInTime} Status: {his.Status} ---{his.SubjectLocation}\n");
+                            
                             }
-
+                           
                         }
                         Console.WriteLine("----------------------------");
                     }
@@ -215,36 +217,37 @@ namespace HarbFramework
                         || ship.CurrentWeightInTonn != ship.MaxWeightInTonn
                         || harbor.storedContainers.Keys.Count != 0)
                         {
-
-                            // Try loading small container
-
-                            if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Large)
+                            for (int i = 0; i < 5; i++)
                             {
-                                if (ship.CurrentWeightInTonn + (int)ContainerSize.Small <= ship.MaxWeightInTonn)
+                                // Try loading small container
+                                if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Large)
                                 {
-                                    harbor.LoadContainer(ContainerSize.Small, ship, currentTime);
-                                    // Console.WriteLine("Loading Small");
+                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Small <= ship.MaxWeightInTonn)
+                                    {
+                                        harbor.LoadContainer(ContainerSize.Small, ship, currentTime);
+                                        // Console.WriteLine("Loading Small");
+                                    }
                                 }
-                            }
 
-                            // Try loading medium container
-                            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Small)
-                            {
-
-                                if (ship.CurrentWeightInTonn + (int)ContainerSize.Medium <= ship.MaxWeightInTonn)
+                                // Try loading medium container
+                                else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Small)
                                 {
-                                    harbor.LoadContainer(ContainerSize.Medium, ship, currentTime);
-                                    // Console.WriteLine("Loading Medium");
+
+                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Medium <= ship.MaxWeightInTonn)
+                                    {
+                                        harbor.LoadContainer(ContainerSize.Medium, ship, currentTime);
+                                        // Console.WriteLine("Loading Medium");
+                                    }
                                 }
-                            }
 
-                            // Try loading large container
-                            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Medium)
-                            {
-                                if (ship.CurrentWeightInTonn + (int)ContainerSize.Large <= ship.MaxWeightInTonn)
+                                // Try loading large container
+                                else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Medium)
                                 {
-                                    harbor.LoadContainer(ContainerSize.Large, ship, currentTime);
-                                    // Console.WriteLine("Loading Large");
+                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Large <= ship.MaxWeightInTonn)
+                                    {
+                                        harbor.LoadContainer(ContainerSize.Large, ship, currentTime);
+                                        // Console.WriteLine("Loading Large");
+                                    }
                                 }
                             }
 
@@ -263,7 +266,7 @@ namespace HarbFramework
                             Console.WriteLine("\nLoading successful for " + ship.ID + "!");
                         }
 
-                       
+
                     }
                     else
                     {
@@ -280,13 +283,13 @@ namespace HarbFramework
 
 
                 }
-                }
             }
+        }
 
-            
-       
 
-        
+
+
+
 
         private void InTransitShips()
         {

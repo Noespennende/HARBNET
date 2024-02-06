@@ -14,6 +14,7 @@ namespace harbNet
     {
         public Guid ID { get; } = Guid.NewGuid();
         public ShipSize ShipSize { get; internal set; }
+        public String ShipName { get; internal set; }
         public DateTime StartDate { get; internal set; }
         public int RoundTripInDays { get; internal set; }
         public Guid CurrentLocation { get; internal set; }
@@ -29,8 +30,9 @@ namespace harbNet
         internal bool NextStepCheck = false;
 
         
-        public Ship (ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
+        public Ship (String ShipName, ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
         {
+            this.ShipName = ShipName;
             this.ShipSize = shipSize;
             this.StartDate = StartDate;
             this.RoundTripInDays = roundTripInDays;
@@ -116,7 +118,7 @@ namespace harbNet
             Event currentEvent = new Event(ID,currentLocation, currentTime, status);
             History.Add(currentEvent);
             return currentEvent;
-            
+
 
         }
 
@@ -124,13 +126,15 @@ namespace harbNet
         {
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.Size == containerSize) 
+                if (container.Size == containerSize)
                 {
                     return container;
                 }
             }
             return null;
         }
+
+
 
         internal int GetNumberOfContainersOnBoard (ContainerSize containerSize)
         {

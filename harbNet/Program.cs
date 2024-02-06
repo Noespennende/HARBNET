@@ -14,13 +14,13 @@ namespace harbNet
             DateTime endTime = startTime + TimeSpan.FromDays(100);
             List<Ship> ships = new List<Ship>();
 
-            Ship testShip = new(ShipSize.Large, startTime, 10, 100);
+            Ship testShip = new("SS MonkeyPaw", ShipSize.Large, startTime, 10, 100);
             ships.Add(testShip);
 
-            //Ship testShip2 = new(ShipSize.Medium, startTime + TimeSpan.FromHours(1), 5, 50);
-            //ships.Add(testShip2);
+            Ship testShip2 = new("SS WeTheBestMusic",ShipSize.Medium, startTime + TimeSpan.FromHours(1), 5, 50);
+            ships.Add(testShip2);
 
-            Ship testShip3 = new(ShipSize.Small, startTime, 7, 20);
+            Ship testShip3 = new("SS Queen's Love", ShipSize.Small, startTime, 7, 20);
             ships.Add(testShip3);
 
             Harbor harbor = new Harbor(ships, 10, 10, 10, 300, 300, 300,300,300,300);
@@ -28,9 +28,16 @@ namespace harbNet
 
             Simulation simulation = new Simulation(harbor, startTime, endTime);
 
-            simulation.Run(startTime, endTime);
-            Console.WriteLine("Hei her er jeg");
             
+            simulation.Run();
+            Console.WriteLine("Hei her er jeg");
+            Console.WriteLine("TestTime----");
+            List<Event> shipHistory = testShip.GetShipHistory(testShip);
+            foreach (Event ev in shipHistory)
+            {
+                Console.WriteLine($"Event: {ev.Subject} - Location: {ev.SubjectLocation} - Time: {ev.PointInTime} - Status: {ev.Status}");
+            }
+
 
 
             /*

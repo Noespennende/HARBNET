@@ -9,7 +9,7 @@ namespace HarbFramework
 {
     internal class Dock
     {
-        internal Guid ID { get; } = new Guid();
+        internal Guid ID { get; } = Guid.NewGuid();
         internal ShipSize Size { get; set; }
         internal bool Free { get; set; }
         internal Guid DockedShip {  get; set; }
