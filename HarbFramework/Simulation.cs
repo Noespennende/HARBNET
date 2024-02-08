@@ -3,6 +3,7 @@ using System;
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection;
@@ -83,33 +84,43 @@ namespace HarbFramework
                 /* !! Skriv ut dagslogger her !! */
 
                 // Dette kan reworkers/slettes
+                DateTime teset = currentTime.AddHours(-24);
                 if (currentTime.Hour == 0)
                 {
                     Console.WriteLine("\nDay over");
                     Console.WriteLine("Current time: " + currentTime);
-                }
                     if (currentTime.Hour == 0)
                     {
 
                         foreach (Ship ship in harbor.AllShips)
                         {
-                            Console.WriteLine("-------------------------------------------------------------------------------");
-                            Console.WriteLine($"History ShipId: {ship.ID} Shipname: {ship.ShipName}");
-                            Console.WriteLine("-------------------------------------------------------------------------------");
 
-                        foreach (Event his in ship.History)
+                            foreach (Event his in ship.History)
                             {
-                            
-                                Console.WriteLine($"ShipName: {ship.ShipName} Date: {his.PointInTime} Status: {his.Status} ---{his.SubjectLocation}\n");
-                            
+
+                                if (his.PointInTime >= teset && his.PointInTime <= currentTime)
+                                {
+
+                                    if (his.Status == Status.Transit)
+                                    {
+                                        Console.WriteLine(ship.ShipName + " in transit");
+                                    }
+                                    else
+
+                                        Console.WriteLine($"ShipName: {ship.ShipName}| Date: {his.PointInTime}| Status: {his.Status}|\n");
+                                }
+
+
+
                             }
-                           
+
                         }
                         Console.WriteLine("----------------------------");
                     }
+                }
 
                 // Runden er over
-                currentTime = currentTime.AddHours(1);
+                currentTime = currentTime.AddHours(4);
 
                 continue;
             }
@@ -139,8 +150,7 @@ namespace HarbFramework
                     ship.NextStepCheck = true;
 
                     ship.AddHistoryEvent(currentTime, harbor.AnchorageID, Status.Anchored);
-                    Console.WriteLine("\n" + ship.ID + " anchored");
-                    Console.WriteLine("Anchored successful!");
+                    
 
                 }
             }
@@ -270,13 +280,13 @@ namespace HarbFramework
                     else if (ship.ContainersOnBoard.Count == 0 && !(ship.TripFrequency == TripFrequency.OneTime && ContainsTransitStatus(ship)))
                     {
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.UnloadingDone);
-                        Console.WriteLine("Unloading successful for " + ship.ID + "!");
+                       
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.Loading);
                     }
                     else if (ship.ContainersOnBoard.Count == 0 && (ship.TripFrequency == TripFrequency.OneTime && ContainsTransitStatus(ship)))
                     {
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.UnloadingDone);
-                        Console.WriteLine("Unloading successful for " + ship.ID + "!");
+                        
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.DockingToShipDock);
                     }
 
@@ -317,8 +327,7 @@ namespace HarbFramework
 
                     ship.AddHistoryEvent(currentTime, harbor.TransitLocationID, Status.Transit);
 
-                    Console.WriteLine("\nUndocking successful!");
-                    Console.WriteLine(ship.ID + " in transit!");
+                    
 
 
                     ship.NextStepCheck = true;
@@ -426,8 +435,7 @@ namespace HarbFramework
                         // Hvis ingen container passer til max vekten, sier seg ferdig
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.LoadingDone);
                         ship.AddHistoryEvent(currentTime, harbor.TransitLocationID, Status.Undocking);
-                        Console.WriteLine("\nLoading successful for " + ship.ID + "!");
-                        Console.WriteLine("Max weight reached, finishing loading");
+                        
                     }
 
                     ship.NextStepCheck = true;
@@ -463,8 +471,7 @@ namespace HarbFramework
                     {
                         ship.AddHistoryEvent(currentTime, CurrentPosition, Status.Anchoring);
                         harbor.AddNewShipToHarbourQueue(ship);
-                        Console.WriteLine("\nTransit done for " + ship.ID);
-                        Console.WriteLine("Now in Queue for docking");
+                        
                     }
 
                     ship.NextStepCheck = true;
