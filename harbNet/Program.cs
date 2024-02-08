@@ -11,17 +11,21 @@ namespace harbNet
 
 
             DateTime startTime = new DateTime(2023, 2, 2, 8, 0, 0);
-            DateTime endTime = startTime + TimeSpan.FromDays(100);
+            DateTime endTime = startTime + TimeSpan.FromDays(30);
             List<Ship> ships = new List<Ship>();
 
             Ship testShip = new("SS MonkeyPaw", ShipSize.Large, startTime, 10, 100);
             ships.Add(testShip);
 
-            Ship testShip2 = new("SS WeTheBestMusic",ShipSize.Medium, startTime + TimeSpan.FromHours(1), 5, 50);
-            ships.Add(testShip2);
+            //Ship testShip2 = new("SS WeTheBestMusic",ShipSize.Medium, startTime + TimeSpan.FromHours(1), 5, 50);
+            //ships.Add(testShip2);
 
-            Ship testShip3 = new("SS Queen's Love", ShipSize.Small, startTime, 7, 20);
-            ships.Add(testShip3);
+            //Ship testShip3 = new("SS Queen's Love", ShipSize.Small, startTime, 7, 20);
+            //ships.Add(testShip3);
+
+            Ship oneTripShip = new("SS OneTrip", ShipSize.Small, startTime.AddDays(5), TripFrequency.OneTime, 6, 2);
+            ships.Add(oneTripShip);
+
 
             Harbor harbor = new Harbor(ships, 10, 10, 10, 300, 300, 300,300,300,300);
 
@@ -32,12 +36,13 @@ namespace harbNet
             simulation.Run();
             Console.WriteLine("Hei her er jeg");
             Console.WriteLine("TestTime----");
-            List<Event> shipHistory = testShip.GetShipHistory(testShip);
-            foreach (Event ev in shipHistory)
-            {
-                Console.WriteLine($"Event: {ev.Subject} - Location: {ev.SubjectLocation} - Time: {ev.PointInTime} - Status: {ev.Status}");
-            }
 
+            Console.WriteLine(oneTripShip.History.Count);
+
+            oneTripShip.PrintHistory();
+            Console.WriteLine("---------------------------------");
+            testShip.PrintHistory();
+            
 
 
             /*

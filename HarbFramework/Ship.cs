@@ -19,7 +19,7 @@ namespace harbNet
         public int RoundTripInDays { get; internal set; }
         public Guid CurrentLocation { get; internal set; }
         public IList<Event> History { get; internal set; }
-        public IList<Container> ContainersOnBoard {  get; set; }
+        public IList<Container> ContainersOnBoard {  get; set; } = new List<Container>();
         public int ContainerCapacity { get; internal set; }
         public int MaxWeightInTonn {  get; internal set; }
         public int BaseWeightInTonn { get; internal set; }
@@ -29,6 +29,8 @@ namespace harbNet
         internal int BaseDockingTimeInHours { get; set; }
         internal bool NextStepCheck = false;
 
+        internal TripFrequency TripFrequency { get; set; } = TripFrequency.None;
+
         
         public Ship (String ShipName, ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
         {
@@ -37,34 +39,58 @@ namespace harbNet
             this.StartDate = StartDate;
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
-            if(shipSize == ShipSize.Large)
+
+            if (shipSize == ShipSize.Large)
             {
-               ContainersLoadedPerHour = 10;
-            }else if(shipSize == ShipSize.Medium) {
+                ContainersLoadedPerHour = 10;
+            }
+            else if (shipSize == ShipSize.Medium)
+            {
                 ContainersLoadedPerHour = 8;
             }
             else
             {
-                ContainersLoadedPerHour= 6;
+                ContainersLoadedPerHour = 6;
+            }
+            this.History = new List<Event>();
+
+            AddContainersOnBoard(numberOfcontainersOnBoard);
+
+            SetBaseShipInformation(shipSize);
+
+        }
+
+        public Ship (String ShipName, ShipSize shipSize, DateTime startDate, TripFrequency tripFrequency, int roundTripInDays, int numberOfcontainersOnBoard)
+        {
+            this.ShipName = ShipName;
+            this.ShipSize = shipSize;
+            this.StartDate = startDate;
+            this.RoundTripInDays = roundTripInDays;
+            this.TripFrequency = tripFrequency;
+            this.ContainersOnBoard = new List<Container>();
+
+            if (shipSize == ShipSize.Large)
+            {
+                ContainersLoadedPerHour = 10;
+            }
+            else if (shipSize == ShipSize.Medium)
+            {
+                ContainersLoadedPerHour = 8;
+            }
+            else
+            {
+                ContainersLoadedPerHour = 6;
             }
             this.History = new List<Event>();
 
 
-            for (int i = 0; i < numberOfcontainersOnBoard; i++)
-            {
-                if (i%3 == 0) { 
-                    ContainersOnBoard.Add(new Container(ContainerSize.Small, 10, this.ID));
-                }
-                if (i%3 == 1)
-                {
-                    ContainersOnBoard.Add(new Container(ContainerSize.Medium, 15, this.ID));
-                }
-                if (i%3 == 2)
-                {
-                    ContainersOnBoard.Add(new Container(ContainerSize.Large, 15, this.ID));
-                }
-            } 
+            SetBaseShipInformation(shipSize);
 
+        }
+
+
+        private void SetBaseShipInformation(ShipSize shipSize)
+        {
             if (shipSize == ShipSize.Small)
             {
                 this.ContainerCapacity = 20;
@@ -74,7 +100,9 @@ namespace harbNet
                 this.BaseDockingTimeInHours = 3;
                 this.BaseBerthingTimeInHours = 6;
 
-            } else if (shipSize == ShipSize.Medium) {
+            }
+            else if (shipSize == ShipSize.Medium)
+            {
 
                 this.ContainerCapacity = 50;
                 this.BaseWeightInTonn = 50000;
@@ -83,7 +111,8 @@ namespace harbNet
                 this.BaseDockingTimeInHours = 5;
                 this.BaseBerthingTimeInHours = 7;
 
-            } else if(shipSize == ShipSize.Large)
+            }
+            else if (shipSize == ShipSize.Large)
             {
                 this.ContainerCapacity = 100;
                 this.BaseWeightInTonn = 100000;
@@ -91,7 +120,8 @@ namespace harbNet
 
                 this.BaseDockingTimeInHours = 7;
                 this.BaseBerthingTimeInHours = 9;
-            } else
+            }
+            else
             {
                 throw new Exception("Invalid ship size given. Valid ship sizes: ShipSize.Small, ShipSize.Medium, ShipSize.Large");
             }
@@ -102,16 +132,36 @@ namespace harbNet
             {
                 currentWeight += container.WeightInTonn;
             }
-            
+
             if (currentWeight > MaxWeightInTonn)
             {
                 throw new Exception("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)");
-            } else if (shipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
+            }
+            else if (shipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
             {
                 throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
             };
-
         }
+
+        private void AddContainersOnBoard(int numberOfcontainersOnBoard)
+        {
+            for (int i = 0; i < numberOfcontainersOnBoard; i++)
+            {
+                if (i % 3 == 0)
+                {
+                    ContainersOnBoard.Add(new Container(ContainerSize.Small, 10, this.ID));
+                }
+                if (i % 3 == 1)
+                {
+                    ContainersOnBoard.Add(new Container(ContainerSize.Medium, 15, this.ID));
+                }
+                if (i % 3 == 2)
+                {
+                    ContainersOnBoard.Add(new Container(ContainerSize.Large, 15, this.ID));
+                }
+            }
+        }
+
 
         internal Event AddHistoryEvent (DateTime currentTime, Guid currentLocation, Status status)
         {
@@ -133,7 +183,6 @@ namespace harbNet
             }
             return null;
         }
-
 
 
         internal int GetNumberOfContainersOnBoard (ContainerSize containerSize)
@@ -179,6 +228,17 @@ namespace harbNet
         internal bool GetNextStepCheck()
         {
             return NextStepCheck;
+        }
+
+        public void PrintHistory()
+        {
+            Console.WriteLine($"ShipId: {ID}");
+            foreach (Event his in History)
+            {
+
+                Console.WriteLine($"ShipId: {his.Subject}Date: {his.PointInTime}|Status: {his.Status}|\n");
+
+            }
         }
     }
 }

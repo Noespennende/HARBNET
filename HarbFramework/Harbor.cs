@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,23 +92,26 @@ namespace harbNet
                 ship.CurrentLocation = AnchorageID;
             }
 
+            freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
         }
 
         internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime) //omskriv til å sende inn størrelse. 
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
+            
             ShipSize size = shipToBeDocked.ShipSize;
             Dock dock;
 
             if (FreeLoadingDockExists(size))
             {
                 dock = GetFreeLoadingDock(size);
+
                 dock.DockedShip = shipToBeDocked.ID;
                 dock.Free = false;
 
                 shipToBeDocked.CurrentLocation = dock.ID;
-                
+
                 shipsInLoadingDock.Add(shipToBeDocked, dock);
 
                 RemoveShipFromAnchorage(shipToBeDocked.ID);
@@ -119,31 +123,85 @@ namespace harbNet
             return Guid.Empty; //returnerer en Guid med verdi "00000000-0000-0000-0000-000000000000" hvis han ikke finner noen ledige docker.
         }//returnerer Guid til docken skipet docker til
 
-        internal Guid DockShipToShipDock(Guid shipID, DateTime currentTime)
+        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime) //omskriv til å sende inn størrelse. 
+        {
+            Ship shipToBeDocked = GetShipFromShipDock(shipID);
+
+            ShipSize size = shipToBeDocked.ShipSize;
+            Dock dock;
+
+            if (FreeLoadingDockExists(size))
+            {
+                dock = GetFreeLoadingDock(size);
+
+                dock.DockedShip = shipToBeDocked.ID;
+                dock.Free = false;
+
+                shipToBeDocked.CurrentLocation = dock.ID;
+
+                shipsInLoadingDock.Add(shipToBeDocked, dock);
+
+                UnDockShipFromShipDockToLoadingDock(shipID);
+
+                RemoveLoadingDockFromFreeLoadingDocks(dock.ID);
+                
+                return dock.ID;
+            }
+
+            return Guid.Empty; //returnerer en Guid med verdi "00000000-0000-0000-0000-000000000000" hvis han ikke finner noen ledige docker.
+        }//returnerer Guid til docken skipet docker til
+
+
+        internal Guid DockShipToShipDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromLoadingDock(shipID);
             Dock loadingDock = GetLoadingDockContainingShip(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
             Dock dock;
 
-            if (FreeLoadingDockExists(size))
+            if (FreeShipDockExists(size))
             {
+                
                 dock = GetFreeShipDock(size);
                 dock.DockedShip = shipToBeDocked.ID;
                 dock.Free = false;
 
                 shipToBeDocked.CurrentLocation = dock.ID;
-                shipToBeDocked.AddHistoryEvent(currentTime, dock.ID, Status.DockingToShipDock);
-
+                
                 shipsInShipDock.Add(shipToBeDocked, dock);
                 shipsInLoadingDock.Remove(shipToBeDocked);
                 freeLoadingDocks.Add(loadingDock);
                 freeShipDocks.Remove(dock);
 
                 return dock.ID;
+                
             }
 
             return Guid.Empty;
+        }
+
+        internal Guid StartShipInShipDock(Guid shipID)
+        {
+            Ship shipToBeDocked = GetShipFromAnchorage(shipID);
+            ShipSize size = shipToBeDocked.ShipSize;
+            Dock dock;
+
+            if (FreeShipDockExists(size))
+            {
+                dock = GetFreeShipDock(size);
+                dock.DockedShip = shipToBeDocked.ID;
+                dock.Free = false;
+                shipToBeDocked.CurrentLocation = dock.ID;
+
+                shipsInShipDock.Add(shipToBeDocked, dock);
+                freeShipDocks.Remove(dock);
+
+                return dock.ID;
+                
+            }
+
+            return Guid.Empty;
+
         }
 
         internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime)
@@ -197,6 +255,21 @@ namespace harbNet
             }
             return null;
         }
+
+        internal Ship GetShipFromShipDock(Guid shipID)
+        {
+
+            foreach (Ship ship in shipsInShipDock.Keys)
+            {
+                if (ship.ID.Equals(shipID))
+                {
+                    return ship;
+                }
+            }
+
+            return null;
+        }
+
         internal Dock GetLoadingDockContainingShip(Guid shipID)
         {
             foreach (var item in shipsInLoadingDock)
@@ -283,6 +356,62 @@ namespace harbNet
             }
             return false;
         }
+
+        internal Guid UnDockShipFromLoadingDockToShipDock(Guid shipID)
+        {
+            Ship shipToBeUndocked = GetShipFromLoadingDock(shipID);
+
+            if (shipToBeUndocked != null)
+            {
+                Dock oldDock = (Dock)shipsInLoadingDock[shipToBeUndocked];
+
+                oldDock.DockedShip = Guid.Empty;
+                oldDock.Free = true;
+
+                Dock newDock = GetFreeShipDock(shipToBeUndocked.ShipSize);
+
+                shipToBeUndocked.CurrentLocation = newDock.ID;
+                shipsInLoadingDock.Remove(shipToBeUndocked);
+                freeLoadingDocks.Add(oldDock);
+                if (!shipsInShipDock.ContainsKey(shipToBeUndocked))
+                {
+                    shipsInShipDock.Add(shipToBeUndocked, newDock);
+                }
+
+                return oldDock.ID;
+            }
+
+            return Guid.Empty;
+        } //returnerer Guid til docken skipet docket fra
+
+
+        internal Guid UnDockShipFromShipDockToLoadingDock(Guid shipID)
+        {
+            Ship shipToBeUndocked = GetShipFromShipDock(shipID);
+
+            if (shipToBeUndocked != null)
+            {
+                Dock oldDock = (Dock)shipsInShipDock[shipToBeUndocked];
+
+                oldDock.DockedShip = Guid.Empty;
+                oldDock.Free = true;
+
+                Dock newDock = GetFreeLoadingDock(shipToBeUndocked.ShipSize);
+
+                shipToBeUndocked.CurrentLocation = newDock.ID;
+                shipsInShipDock.Remove(shipToBeUndocked);
+                freeShipDocks.Add(oldDock);
+                if (!shipsInLoadingDock.ContainsKey(shipToBeUndocked))
+                {
+                    shipsInLoadingDock.Add(shipToBeUndocked, newDock);
+                }
+
+                return oldDock.ID;
+            }
+
+            return Guid.Empty;
+        } //returnerer Guid til docken skipet docket fra
+
         internal bool RemoveLoadingDockFromFreeLoadingDocks(Guid dockID)
         {
             foreach (Dock dock in freeLoadingDocks)
@@ -594,6 +723,42 @@ namespace harbNet
         IDictionary<Ship, Status> IHarbor.GetStatusAllShips()
         {
             throw new NotImplementedException();
+        }
+
+        internal void AddContainersToHarbor(int numberOfcontainers, DateTime currentTime)
+        {
+
+            for (int i = 0; i < numberOfcontainers; i++)
+            {
+                Container containerToBeStored = new Container(ContainerSize.Small, 10, this.ID);
+
+                if (i % 3 == 0)
+                {
+                    containerToBeStored = new Container(ContainerSize.Small, 10, this.ID);
+                }
+                if (i % 3 == 1)
+                {
+                    containerToBeStored = new Container(ContainerSize.Medium, 15, this.ID);
+                }
+                if (i % 3 == 2)
+                {
+                    containerToBeStored = new Container(ContainerSize.Large, 15, this.ID);
+                }
+
+                ContainerSize containerSize = containerToBeStored.Size;
+                ContainerSpace containerSpace = GetFreeContainerSpace(containerSize);
+
+                freeContainerSpaces[containerSize].Remove(containerSpace);
+
+                storedContainers.Add(containerToBeStored, containerSpace);
+
+                containerSpace.storedContainer = containerToBeStored.ID;
+                containerSpace.Free = false;
+
+                containerToBeStored.CurrentPosition = containerSpace.ID;
+                containerToBeStored.AddHistoryEvent(Status.InStorage, currentTime);
+            }
+                
         }
     }
 }
