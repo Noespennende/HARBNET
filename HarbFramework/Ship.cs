@@ -27,12 +27,12 @@ namespace harbNet
         internal int ContainersLoadedPerHour { get; set; }
         internal int BaseBerthingTimeInHours { get; set; }
         internal int BaseDockingTimeInHours { get; set; }
+
+        internal bool IsForASingleTrip { get; set; } = false;
         internal bool NextStepCheck = false;
 
-        internal TripFrequency TripFrequency { get; set; } = TripFrequency.None;
 
-        
-        public Ship (String ShipName, ShipSize shipSize, DateTime StartDate, int roundTripInDays, int numberOfcontainersOnBoard)
+        public Ship (String ShipName, ShipSize shipSize, DateTime StartDate, bool IsForASingleTrip, int roundTripInDays, int numberOfcontainersOnBoard)
         {
             this.ShipName = ShipName;
             this.ShipSize = shipSize;
@@ -54,35 +54,8 @@ namespace harbNet
             }
             this.History = new List<Event>();
 
-            AddContainersOnBoard(numberOfcontainersOnBoard);
-
-            SetBaseShipInformation(shipSize);
-
-        }
-
-        public Ship (String ShipName, ShipSize shipSize, DateTime startDate, TripFrequency tripFrequency, int roundTripInDays, int numberOfcontainersOnBoard)
-        {
-            this.ShipName = ShipName;
-            this.ShipSize = shipSize;
-            this.StartDate = startDate;
-            this.RoundTripInDays = roundTripInDays;
-            this.TripFrequency = tripFrequency;
-            this.ContainersOnBoard = new List<Container>();
-
-            if (shipSize == ShipSize.Large)
-            {
-                ContainersLoadedPerHour = 10;
-            }
-            else if (shipSize == ShipSize.Medium)
-            {
-                ContainersLoadedPerHour = 8;
-            }
-            else
-            {
-                ContainersLoadedPerHour = 6;
-            }
-            this.History = new List<Event>();
-
+            if(!IsForASingleTrip)
+                AddContainersOnBoard(numberOfcontainersOnBoard);
 
             SetBaseShipInformation(shipSize);
 

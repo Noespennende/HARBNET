@@ -15,7 +15,6 @@ namespace harbNet
         public int MaxWeightInTonn { get; }
         public int BaseWeightInTonn { get; }
         public int CurrentWeightInTonn { get; }
-
         public void PrintHistory();
     }
 }
