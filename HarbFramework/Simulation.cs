@@ -64,7 +64,7 @@ namespace HarbFramework
 
                 // Resetter nextStepCheck for alle Ship før neste runde
                 foreach (Ship ship in harbor.AllShips) {
-                    ship.NextStepCheck = false;
+                    ship.HasBeenAlteredThisHour = false;
                     
                 }
 
@@ -146,11 +146,11 @@ namespace HarbFramework
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
 
 
-                if (!ship.NextStepCheck && lastEvent != null && lastEvent.Status == Status.Anchoring)
+                if (!ship.HasBeenAlteredThisHour && lastEvent != null && lastEvent.Status == Status.Anchoring)
                 {
 
                     harbor.AddNewShipToAnchorage(ship);
-                    ship.NextStepCheck = true;
+                    ship.HasBeenAlteredThisHour = true;
 
                     ship.AddHistoryEvent(currentTime, harbor.AnchorageID, Status.Anchored);
                     
@@ -173,7 +173,7 @@ namespace HarbFramework
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
 
 
-                if (!ship.NextStepCheck && lastEvent != null && 
+                if (!ship.HasBeenAlteredThisHour && lastEvent != null && 
                     (lastEvent.Status == Status.Anchored || 
                     lastEvent.Status == Status.DockedToShipDock || 
                     lastEvent.Status == Status.DockingToLoadingDock ||
@@ -233,7 +233,7 @@ namespace HarbFramework
 
                     }
 
-                ship.NextStepCheck = true;
+                ship.HasBeenAlteredThisHour = true;
 
 
                 }
@@ -247,7 +247,7 @@ namespace HarbFramework
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
 
 
-                if (!ship.NextStepCheck && lastEvent != null && (lastEvent.Status == Status.Unloading || lastEvent.Status == Status.DockedToLoadingDock))
+                if (!ship.HasBeenAlteredThisHour && lastEvent != null && (lastEvent.Status == Status.Unloading || lastEvent.Status == Status.DockedToLoadingDock))
                 {
                     Guid currentPosition = lastEvent.SubjectLocation;
 
@@ -286,7 +286,7 @@ namespace HarbFramework
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.DockingToShipDock);
                     }
 
-                    ship.NextStepCheck = true;
+                    ship.HasBeenAlteredThisHour = true;
 
                 }
             }
@@ -300,7 +300,7 @@ namespace HarbFramework
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
 
                 
-                if (ship.NextStepCheck == false && lastEvent != null && (lastEvent.Status == Status.Undocking || lastEvent.Status == Status.LoadingDone && (lastEvent.Status == Status.UnloadingDone && ContainsTransitStatus(ship))))
+                if (ship.HasBeenAlteredThisHour == false && lastEvent != null && (lastEvent.Status == Status.Undocking || lastEvent.Status == Status.LoadingDone && (lastEvent.Status == Status.UnloadingDone && ContainsTransitStatus(ship))))
                 {
                     bool containsTransitStatus = ContainsTransitStatus(ship);
 
@@ -326,7 +326,7 @@ namespace HarbFramework
                     
 
 
-                    ship.NextStepCheck = true;
+                    ship.HasBeenAlteredThisHour = true;
 
                 }
             }
@@ -355,7 +355,7 @@ namespace HarbFramework
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
                 Event secondLastEvent = ship.History[ship.History.Count - 2]; // event før lastEvent
 
-                if (!ship.NextStepCheck && lastEvent != null &&
+                if (!ship.HasBeenAlteredThisHour && lastEvent != null &&
                     ((lastEvent.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true)) ||
                      (lastEvent.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && !ContainsTransitStatus(ship))) ||
                      (lastEvent.Status == Status.Loading) ||
@@ -425,7 +425,7 @@ namespace HarbFramework
                         
                     }
 
-                    ship.NextStepCheck = true;
+                    ship.HasBeenAlteredThisHour = true;
 
                 }
             }
@@ -440,7 +440,7 @@ namespace HarbFramework
 
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
 
-                if (ship.NextStepCheck == false && lastEvent != null && lastEvent.Status == Status.Transit)
+                if (ship.HasBeenAlteredThisHour == false && lastEvent != null && lastEvent.Status == Status.Transit)
                 {
 
                     Guid CurrentPosition = lastEvent.SubjectLocation;
@@ -456,7 +456,7 @@ namespace HarbFramework
                         
                     }
 
-                    ship.NextStepCheck = true;
+                    ship.HasBeenAlteredThisHour = true;
 
                 }
             }

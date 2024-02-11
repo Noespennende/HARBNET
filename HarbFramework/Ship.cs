@@ -29,7 +29,7 @@ namespace harbNet
         internal int BaseDockingTimeInHours { get; set; }
 
         internal bool IsForASingleTrip { get; set; } = false;
-        internal bool NextStepCheck = false;
+        internal bool HasBeenAlteredThisHour = false;
 
 
         public Ship (String ShipName, ShipSize shipSize, DateTime StartDate, bool IsForASingleTrip, int roundTripInDays, int numberOfcontainersOnBoard)
@@ -192,15 +192,15 @@ namespace harbNet
         }
         internal void SetNextStepCheckFalse()
         {
-            NextStepCheck = false;
+            HasBeenAlteredThisHour = false;
         }
         internal void SetNextStepCheckTrue()
         {
-            NextStepCheck = true;
+            HasBeenAlteredThisHour = true;
         }
         internal bool GetNextStepCheck()
         {
-            return NextStepCheck;
+            return HasBeenAlteredThisHour;
         }
 
         public void PrintHistory()
