@@ -132,6 +132,22 @@ namespace HarbFramework
 
         }
 
+        public void PrintShipHistory()
+        {
+            foreach (Log log in History)
+            {
+                log.PrintInfoForAllShips();
+            }
+        }
+
+        public void PrintContainerHistory()
+        {
+            foreach (Log log in History)
+            {
+                log.PrintInfoForAllContainers();
+            }
+        }
+
         private void AnchoringShips()
         {
 

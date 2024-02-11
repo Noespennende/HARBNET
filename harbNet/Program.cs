@@ -35,16 +35,14 @@ namespace harbNet
 
             IList<Log> historyList = simulation.Run();
 
-            testShip.PrintHistory();
-            oneTripShip.PrintHistory();
-            Log loger = historyList[2];
 
 
 
 
-            Console.WriteLine("------------------------------------");
-            loger.PrintInfoForAllShips();
-            Console.WriteLine("------------------------------------");
+
+            Console.WriteLine("-------------------------");
+
+            simulation.PrintContainerHistory();
 
 
 

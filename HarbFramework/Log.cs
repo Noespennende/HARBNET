@@ -11,7 +11,7 @@ namespace HarbFramework
 {
     public class Log : ILog
     {
-        public DateTime Time { get; set; }
+        public DateTime Time { get; internal set; }
         public IList<Ship> ShipsInAnchorage { get; internal set; }
         public IList<Ship> ShipsInTransit { get; internal set; }
         public IList<Container> ContainersInHarbour { get; internal set; }
@@ -42,12 +42,12 @@ namespace HarbFramework
             {
                 foreach (Ship ship in ShipsInAnchorage)
                 {
-                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + "STATUS: " + ship.getCurrentStatus() +
+                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
             } else
             {
-                Console.WriteLine("\n NO SHIPS IN ANCHORAGE");
+                Console.WriteLine("\nNO SHIPS IN ANCHORAGE");
             }
 
             if (ShipsInTransit.Count > 0) 
@@ -55,12 +55,12 @@ namespace HarbFramework
                     Console.WriteLine("\nSHIPS IN TRANSIT:");
                     foreach (Ship ship in ShipsInTransit)
                     {
-                        Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + "STATUS: " + ship.getCurrentStatus() +
+                        Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
                             ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                     }
                 } else
             {
-                Console.WriteLine("\n NO SHIPS IN TRANSIT");
+                Console.WriteLine("\nNO SHIPS IN TRANSIT");
             }
 
             if (ShipsDockedInLoadingDocks.Count > 0)
@@ -68,12 +68,12 @@ namespace HarbFramework
                 Console.WriteLine("\nSHIPS IN LOADING DOCK:");
                 foreach (Ship ship in ShipsInTransit)
                 {
-                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + "STATUS: " + ship.getCurrentStatus() +
+                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
             } else
             {
-                Console.WriteLine("\n NO SHIPS DOCKED IN LOADING DOCKS");
+                Console.WriteLine("\nNO SHIPS DOCKED IN LOADING DOCKS");
             }
 
             
@@ -82,12 +82,12 @@ namespace HarbFramework
                 Console.WriteLine("\nSHIPS IN SHIP DOCK:");
                 foreach (Ship ship in ShipsDockedInShipDocks)
                 {
-                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + "STATUS: " + ship.getCurrentStatus() +
+                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
             } else
             {
-                Console.WriteLine("\n NO SHIPS DOCKED IN SHIP DOCKS");
+                Console.WriteLine("\nNO SHIPS DOCKED IN SHIP DOCKS");
             }
 
         }
@@ -101,7 +101,7 @@ namespace HarbFramework
 
             if (ShipsInAnchorage.Count > 0)
             {
-                Console.WriteLine("\n CONTAINERS ONBOARD SHIPS IN ANCHORAGE:");
+                Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN ANCHORAGE:");
                 bool infoPrinted = false;
                 foreach (Ship ship in ShipsInAnchorage)
                 {
@@ -124,13 +124,13 @@ namespace HarbFramework
             }
             else
             {
-                Console.WriteLine("\n NO CONTAINERS ONBOARD SHIPS IN ANCHORAGE");
+                Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN ANCHORAGE");
             }
 
 
             if (ShipsInTransit.Count > 0)
             {
-                Console.WriteLine("\n CONTAINERS ONBOARD SHIPS IN TRANSIT:");
+                Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN TRANSIT:");
                 bool infoPrinted = false;
                 foreach (Ship ship in ShipsDockedInLoadingDocks)
                 {
@@ -153,12 +153,12 @@ namespace HarbFramework
             }
             else
             {
-                Console.WriteLine("\n NO CONTAINERS ONBOARD SHIPS IN TRANSIT");
+                Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN TRANSIT");
             }
 
             if (ShipsDockedInLoadingDocks.Count > 0)
             {
-                Console.WriteLine("\n CONTAINERS ONBOARD SHIPS IN LOADING DOCKS:");
+                Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN LOADING DOCKS:");
                 bool infoPrinted = false;
                 foreach (Ship ship in ShipsDockedInLoadingDocks)
                 {
@@ -181,12 +181,12 @@ namespace HarbFramework
             }
             else
             {
-                Console.WriteLine("\n NO CONTAINERS ONBOARD SHIPS IN LOADING DOCKS");
+                Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN LOADING DOCKS");
             }
 
             if (ContainersInHarbour.Count > 0)
             {
-                Console.WriteLine("\n CONTAINERS IN HARBOR STORAGE:");
+                Console.WriteLine("\nCONTAINERS IN HARBOR STORAGE:");
 
                 foreach (Container container in ContainersInHarbour)
                 {
@@ -196,7 +196,7 @@ namespace HarbFramework
             }
             else
             {
-                Console.WriteLine("\n NO CONTAINERS IN HARBOR STORAGE");
+                Console.WriteLine("\nNO CONTAINERS IN HARBOR STORAGE");
             }
         }
 
