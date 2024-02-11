@@ -21,8 +21,8 @@ namespace harbNet
         internal IList<Dock> freeShipDocks = new List<Dock>();
         internal IDictionary<Ship,Dock> shipsInShipDock = new Dictionary<Ship, Dock>(); // Ship : Dock
 
-        internal IList<Ship> Anchorage = new List<Ship>();
-        internal Hashtable shipsInTransit = new Hashtable(); // ship: int number of days until return
+        internal IList<Ship> Anchorage { get; set; } = new List<Ship>();
+        internal IDictionary<Ship, int> ShipsInTransit { get; set; } = new Dictionary<Ship, int>(); // ship: int number of days until return
         internal IList<Ship> AllShips { get; set; } = new List<Ship>(); // Sikkert midlertidig, til vi kan regne på det
         internal IDictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
 
@@ -220,9 +220,9 @@ namespace harbNet
 
                 shipsInLoadingDock.Remove(shipToBeUndocked);
                 freeLoadingDocks.Add(dock);
-                if (!shipsInTransit.ContainsKey(shipToBeUndocked))
+                if (!ShipsInTransit.ContainsKey(shipToBeUndocked))
                 {
-                    shipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
+                    ShipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
                 }
                 return dock.ID;
             }
@@ -558,7 +558,7 @@ namespace harbNet
 
         }
 
-        internal void AddNewShipToHarbourQueue(Ship ship)
+        internal void AddNewShipToAnchorage(Ship ship)
         {
             Anchorage.Add(ship);
         }
@@ -759,6 +759,50 @@ namespace harbNet
                 containerToBeStored.AddHistoryEvent(Status.InStorage, currentTime);
             }
                 
+        }
+
+        internal IList<Container> GetContainersStoredInHarbour()
+        {
+            IList<Container> list = new List<Container>();
+
+            foreach (Container container in storedContainers.Keys)
+            {
+                list.Add(container);
+            }
+
+            return list;
+        }
+
+        internal IList<Ship> GetShipsInLoadingDock()
+        {
+            IList<Ship> list = new List<Ship>();
+
+            foreach (Ship ship in shipsInLoadingDock.Keys)
+            {
+                list.Add(ship);
+            }
+            return list;
+        }
+
+        internal IList<Ship> GetShipsInShipDock()
+        {
+            IList<Ship> list = new List<Ship>();
+
+            foreach (Ship ship in shipsInShipDock.Keys)
+            {
+                list.Add(ship);
+            }
+            return list;
+        }
+
+        internal IList<Ship> GetShipsInTransit()
+        {
+            IList<Ship> list = new List<Ship>();
+            foreach (Ship ship in ShipsInTransit.Keys)
+            {
+                list.Add(ship);
+            }
+            return list;
         }
     }
 }

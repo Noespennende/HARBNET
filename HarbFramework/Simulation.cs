@@ -34,10 +34,10 @@ namespace HarbFramework
         }
 
 
-        public void Run()
+        public IList<Log> Run()
         {
-            Log harborLog = new Log();
             this.currentTime = startTime;
+            History.Add(new Log(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.GetShipsInLoadingDock(),harbor.GetShipsInShipDock()));
 
             Console.WriteLine("Simulation starting ...");
             Thread.Sleep(2000);
@@ -86,6 +86,7 @@ namespace HarbFramework
                 {
                     Console.WriteLine("\nDay over");
                     Console.WriteLine("Current time: " + currentTime);
+                    History.Add(new Log(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
                     if (currentTime.Hour == 0)
                     {
 
@@ -127,6 +128,8 @@ namespace HarbFramework
             Console.WriteLine("----------------\n");
             Thread.Sleep(1000);
 
+            return History;
+
         }
 
         private void AnchoringShips()
@@ -146,7 +149,7 @@ namespace HarbFramework
                 if (!ship.NextStepCheck && lastEvent != null && lastEvent.Status == Status.Anchoring)
                 {
 
-                    harbor.AddNewShipToHarbourQueue(ship);
+                    harbor.AddNewShipToAnchorage(ship);
                     ship.NextStepCheck = true;
 
                     ship.AddHistoryEvent(currentTime, harbor.AnchorageID, Status.Anchored);
@@ -432,7 +435,7 @@ namespace HarbFramework
 
         private void InTransitShips()
         {
-            foreach (Ship ship in harbor.shipsInTransit.Keys)
+            foreach (Ship ship in harbor.ShipsInTransit.Keys)
             {
 
                 Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
@@ -449,7 +452,7 @@ namespace HarbFramework
                     if (DaysSinceTransitStart >= ship.RoundTripInDays)
                     {
                         ship.AddHistoryEvent(currentTime, CurrentPosition, Status.Anchoring);
-                        harbor.AddNewShipToHarbourQueue(ship);
+                        harbor.AddNewShipToAnchorage(ship);
                         
                     }
 
@@ -458,7 +461,6 @@ namespace HarbFramework
                 }
             }
         }
-  
     }
 
 }

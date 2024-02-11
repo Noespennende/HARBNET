@@ -11,37 +11,21 @@ namespace HarbFramework
     public class Log : ILog
     {
         public DateTime Time { get; set; }
-        public IList<Ship> DockedShips { get; set; }
         public IList<Ship> ShipsInAnchorage { get; internal set; }
         public IList<Ship> ShipsInTransit { get; internal set; }
-        public IList<Guid> ContainersInHarbour { get; set;}
-        //la de til for kompilering
-        public IList<Ship> ShipsDockedInLoadingDocks => throw new NotImplementedException();
+        public IList<Container> ContainersInHarbour { get; internal set; }
+        public IList<Ship> ShipsDockedInLoadingDocks { get; internal set; }
+        public IList<Ship> ShipsDockedInShippingDocks { get; internal set; }
 
-        public IList<Ship> ShipsDockedInShippingDocks => throw new NotImplementedException();
-
-        IList<Container> ILog.ContainersInHarbour => throw new NotImplementedException();
-
-        /*
-        IList<Ship> DockedShips()
+        internal Log(DateTime time, IList<Ship> shipsInAnchorage, IList<Ship> shipsInTransit, IList<Container> containersInHarbour, IList<Ship> shipsDockedInLoadingDocks, IList<Ship> ShipsDockedInShippingDocks)
         {
-            List<Ship> dockedShipsList = new List<Ship>();
-            foreach (var ship in DockedShips.Values)
-            {
-                dockedShipsList.Add((Ship)ship);
-            }
-            return dockedShipsList;
+            this.Time = time;
+            this.ShipsDockedInLoadingDocks = shipsDockedInLoadingDocks;
+            this.ShipsInTransit = shipsInTransit;
+            this.ContainersInHarbour = containersInHarbour;
+            this.ShipsDockedInLoadingDocks = shipsDockedInLoadingDocks;
+            this.ShipsDockedInShippingDocks = ShipsDockedInShippingDocks;
         }
 
-        IList<Guid> ILog.ContainersInHarbour()
-        {
-            List<Guid> containersList = new List<Guid>();
-            foreach(Container container in ContainersInHarbour.Values)
-            {
-                containersList.Add(container.ID);
-            }
-            return containersList;
-        }
-        */
     }
 }

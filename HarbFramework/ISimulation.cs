@@ -3,6 +3,6 @@
     public interface ISimulation
     {
         public IList<Log> History { get; }
-        public void Run();
+        public IList<Log> Run();
     }
 }

@@ -27,16 +27,20 @@ namespace harbNet
             ships.Add(oneTripShip);
 
 
-            Harbor harbor = new Harbor(ships, 10, 10, 10, 300, 300, 300,300,300,300);
+            Harbor harbor = new Harbor(ships, 10, 10, 10, 300, 300, 300, 300, 300, 300);
 
 
             Simulation simulation = new Simulation(harbor, startTime, endTime);
 
-            
+
             simulation.Run();
 
             testShip.PrintHistory();
             oneTripShip.PrintHistory();
+
+
+            IList<Log> logs = simulation.Run();
+
 
 
 
