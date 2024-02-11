@@ -39,6 +39,7 @@ namespace harbNet
             this.StartDate = StartDate;
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
+            this.IsForASingleTrip = IsForASingleTrip;
 
             if (shipSize == ShipSize.Large)
             {
@@ -54,10 +55,11 @@ namespace harbNet
             }
             this.History = new List<Event>();
 
-            if(!IsForASingleTrip)
+            SetBaseShipInformation(shipSize);
+
+            if (!IsForASingleTrip)
                 AddContainersOnBoard(numberOfcontainersOnBoard);
 
-            SetBaseShipInformation(shipSize);
 
         }
 
