@@ -66,7 +66,7 @@ namespace HarbFramework
             if (ShipsDockedInLoadingDocks.Count > 0)
             {
                 Console.WriteLine("\nSHIPS IN LOADING DOCK:");
-                foreach (Ship ship in ShipsInTransit)
+                foreach (Ship ship in ShipsDockedInLoadingDocks)
                 {
                     Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);

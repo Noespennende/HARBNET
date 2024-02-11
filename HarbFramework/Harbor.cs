@@ -195,6 +195,7 @@ namespace harbNet
 
                 shipsInShipDock.Add(shipToBeDocked, dock);
                 freeShipDocks.Remove(dock);
+                RemoveShipFromAnchorage(shipID);
 
                 return dock.ID;
                 
@@ -561,6 +562,10 @@ namespace harbNet
         internal void AddNewShipToAnchorage(Ship ship)
         {
             Anchorage.Add(ship);
+            if (ShipsInTransit.ContainsKey(ship))
+                ShipsInTransit.Remove(ship);
+
+
         }
 
         /* ** Interface implementasjon som må gjøres ** */
