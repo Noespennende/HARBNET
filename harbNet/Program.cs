@@ -14,7 +14,7 @@ namespace harbNet
             DateTime endTime = startTime + TimeSpan.FromDays(30);
             List<Ship> ships = new List<Ship>();
 
-            Ship testShip = new("SS MonkeyPaw", ShipSize.Large, startTime, false, 10, 100);
+            Ship testShip = new("SS MonkeyPaw", ShipSize.Large, startTime, false, 10, 50);
             ships.Add(testShip);
 
             //Ship testShip2 = new("SS WeTheBestMusic",ShipSize.Medium, startTime + TimeSpan.FromHours(1), false, 5, 50);
@@ -33,13 +33,18 @@ namespace harbNet
             Simulation simulation = new Simulation(harbor, startTime, endTime);
 
 
-            simulation.Run();
+            IList<Log> historyList = simulation.Run();
 
             testShip.PrintHistory();
             oneTripShip.PrintHistory();
+            Log loger = historyList[2];
 
 
-            IList<Log> logs = simulation.Run();
+
+
+            Console.WriteLine("------------------------------------");
+            loger.PrintInfoForAllShips();
+            Console.WriteLine("------------------------------------");
 
 
 

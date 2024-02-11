@@ -106,14 +106,7 @@ namespace harbNet
                 currentWeight += container.WeightInTonn;
             }
 
-            if (currentWeight > MaxWeightInTonn)
-            {
-                throw new Exception("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)");
-            }
-            else if (shipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
-            {
-                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
-            };
+            CheckForValidWeight();
         }
 
         private void AddContainersOnBoard(int numberOfcontainersOnBoard)
@@ -122,16 +115,47 @@ namespace harbNet
             {
                 if (i % 3 == 0)
                 {
-                    ContainersOnBoard.Add(new Container(ContainerSize.Small, 10, this.ID));
+                    Container smallContainer = new Container(ContainerSize.Small, 10, this.ID);
+                    ContainersOnBoard.Add(smallContainer);
+                    CurrentWeightInTonn += smallContainer.WeightInTonn;
+                    CheckForValidWeight();
+
                 }
                 if (i % 3 == 1)
                 {
-                    ContainersOnBoard.Add(new Container(ContainerSize.Medium, 15, this.ID));
+                    Container mediumContainer = new Container(ContainerSize.Medium, 15, this.ID);
+                    ContainersOnBoard.Add(mediumContainer);
+                    CurrentWeightInTonn += mediumContainer.WeightInTonn;
+                    CheckForValidWeight();
                 }
                 if (i % 3 == 2)
                 {
-                    ContainersOnBoard.Add(new Container(ContainerSize.Large, 15, this.ID));
+
+                    Container largeContainer = new Container(ContainerSize.Large, 15, this.ID);
+                    ContainersOnBoard.Add(largeContainer);
+                    CurrentWeightInTonn += largeContainer.WeightInTonn;
+                    CheckForValidWeight();
                 }
+            }
+        }
+
+        private void CheckForValidWeight()
+        {
+            if (CurrentWeightInTonn > MaxWeightInTonn)
+            {
+                throw new Exception("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)");
+            }
+            else if (this.ShipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
+            {
+                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
+            }
+            else if (this.ShipSize == ShipSize.Medium && ContainersOnBoard.Count > ContainerCapacity)
+            {
+                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 50 containers");
+            }
+            else if (this.ShipSize == ShipSize.Large && ContainersOnBoard.Count > ContainerCapacity)
+            {
+                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 100 containers");
             }
         }
 
@@ -190,17 +214,22 @@ namespace harbNet
             ContainersOnBoard.Add(container);
             CurrentWeightInTonn += container.WeightInTonn;
         }
-        internal void SetNextStepCheckFalse()
+        internal void SetHasBeenAlteredThisHourToFalse()
         {
             HasBeenAlteredThisHour = false;
         }
-        internal void SetNextStepCheckTrue()
+        internal void SetHasBeenAlteredThisHourToTrue()
         {
             HasBeenAlteredThisHour = true;
         }
-        internal bool GetNextStepCheck()
+        internal bool GetHasBeenAlteredThisHour()
         {
             return HasBeenAlteredThisHour;
+        }
+
+        internal Status getCurrentStatus()
+        {
+            return History.Last().Status;
         }
 
         public void PrintHistory()

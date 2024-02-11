@@ -15,6 +15,8 @@ namespace HarbFramework
         public IList<Ship> ShipsDockedInLoadingDocks { get; }
         public IList<Ship> ShipsDockedInShippingDocks { get; }
         public IList<Container> ContainersInHarbour { get; }
-        
+        public void PrintInfoForAllShips();
+
+
     }
 }
