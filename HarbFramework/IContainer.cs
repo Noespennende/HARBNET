@@ -13,5 +13,7 @@ namespace HarbFramework
         public ContainerSize Size { get; }
         public int WeightInTonn { get;  }
         public Guid CurrentPosition { get; }
+
+        public Status GetStatus();
     }
 }

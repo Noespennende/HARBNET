@@ -431,8 +431,6 @@ namespace HarbFramework
             }
         }
 
-
-
         private void InTransitShips()
         {
             foreach (Ship ship in harbor.ShipsInTransit.Keys)

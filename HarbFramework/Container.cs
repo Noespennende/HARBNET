@@ -27,5 +27,10 @@ namespace harbNet
         {
             History.Add(new Event(ID, CurrentPosition, currentTime, status));
         }
+
+        public Status GetStatus()
+        {
+            return History.Last().Status;
+        }
     }
 }
