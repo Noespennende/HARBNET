@@ -4,6 +4,9 @@ using harbNet;
 
 namespace harbNet
 {
+    /// <summary>
+    /// Interface defining the contract for the public API of the Harbor class.
+    /// </summary>
     public interface IHarbor
     {
         /// <summary>

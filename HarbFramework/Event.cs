@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
+    /// <summary>
+    /// Event to be stored in a ships or containers history holding information about the subjects wereabouts and status.
+    /// </summary>
     public class Event : IEvent
     {
         /// <summary>

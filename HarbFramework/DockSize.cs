@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
+
+    //Enum basert på første utkastet til APIet. Denne enumen endte opp med å ikke brukes.
     internal enum DockSize
     {
         None,

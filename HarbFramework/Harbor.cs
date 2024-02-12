@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
+    /// <summary>
+    /// Harbor to be used in a simulation
+    /// </summary>
     public class Harbor : IHarbor
     {
         /// <summary>

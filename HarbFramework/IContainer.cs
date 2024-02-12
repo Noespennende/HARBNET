@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
+    /// <summary>
+    /// Interface defining the contract the public API of the container class
+    /// </summary>
     internal interface IContainer
     {
         /// <summary>

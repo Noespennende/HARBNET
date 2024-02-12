@@ -1,5 +1,8 @@
 ﻿namespace HarbFramework
 {
+    /// <summary>
+    /// Interface defining the public API of the Simulation class
+    /// </summary>
     public interface ISimulation
     {   
         /// <summary>
