@@ -289,7 +289,6 @@ namespace harbNet
             }
         }
 
-
         /// <summary>
         /// Generates a new event and adds it to the ships history.
         /// </summary>
