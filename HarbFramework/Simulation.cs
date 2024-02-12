@@ -4,6 +4,7 @@ using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection;
@@ -25,7 +26,12 @@ namespace HarbFramework
 
         public IList<Log> History {  get; private set; } = new List<Log>();
 
-
+        /// <summary>
+        /// Simulation constructor.
+        /// </summary>
+        /// <param name="harbor">A harbor object</param>
+        /// <param name="simulationStartTime">The start time of the simulation</param>
+        /// <param name="simulationEndTime">The end time of simulation</param>
         public Simulation (Harbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
         {
             this.harbor = harbor;
@@ -70,7 +76,6 @@ namespace HarbFramework
 
 
 
-                // Resetter HasBeenAlteredThisHour for alle Ship før neste runde
                 foreach (Ship ship in harbor.AllShips) {
                     ship.HasBeenAlteredThisHour = false;
                     
@@ -105,6 +110,7 @@ namespace HarbFramework
 
                                 if (his.PointInTime >= teset && his.PointInTime <= currentTime)
                                 {
+ 
 
                                     if (his.Status == Status.Transit)
                                     {
@@ -125,7 +131,6 @@ namespace HarbFramework
                 }
                 
 
-                // Runden er over
                 currentTime = currentTime.AddHours(1);
 
                 continue;
@@ -140,6 +145,13 @@ namespace HarbFramework
 
         }
 
+        public void PrintShipHistoryPreviousDay() { 
+        }
+
+
+        /// <summary>
+        /// Printing Log information for each ship into the terminal.
+        /// </summary>
         public void PrintShipHistory()
         {
             foreach (Log log in History)
@@ -148,6 +160,9 @@ namespace HarbFramework
             }
         }
 
+        /// <summary>
+        /// Printing Log information for each container into the terminal.
+        /// </summary>
         public void PrintContainerHistory()
         {
             foreach (Log log in History)
@@ -156,18 +171,19 @@ namespace HarbFramework
             }
         }
 
+        /// <summary>
+        /// Goes through all the ships in anchorage and then finds their Status. If that status is anchoring and the ship has not done 
+        /// anything in the loop round, The ship status is set to "Anchored".
+        /// </summary>
         private void AnchoringShips()
-        {
-
-            // Uten lokal Anchorage fungerer ikke foreach, fordi endringer blir gjort i ShipsInHarbourQueInn
-            // mens man går gjennom den (skip blir tatt ut mens foreach går gjennom)
+        { 
             List<Ship> Anchorage = harbor.Anchorage.ToList();
 
             foreach (Ship ship in Anchorage)
             {
 
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
+                Event lastEvent = ship.History.Last(); 
 
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null && lastEvent.Status == Status.Anchoring)
@@ -182,11 +198,16 @@ namespace HarbFramework
             }
         }
 
+
+        /// <summary>
+        /// First it goes through all the ships that are in the docks. Checks the Statuses of the ships. If the Status isDocked to 
+        /// shipdock, the new status is docking to loading docks.
+        /// next it goes through all the ships in loading docks. If the status is dockingToLoadingDock the dockId is set to the current dock
+        /// Then a historyEvent is created for the ship
+        /// </summary>
         private void DockingShips()
         {
 
-            // Uten lokal Anchorage fungerer ikke foreach, fordi endringer blir gjort i ShipsInHarbourQueInn
-            // mens man går gjennom den (skip blir tatt ut mens foreach går gjennom)
             List<Ship> Anchorage = harbor.Anchorage.ToList();
             List<Ship> ShipsInShipDock = new(harbor.shipsInShipDock.Keys);
             List<Ship> ShipsInLoadingDock = new(harbor.shipsInLoadingDock.Keys);
@@ -294,19 +315,27 @@ namespace HarbFramework
 
 
         }
-
+        /// <summary>
+        /// Goes through all ships in the dictionary shipsInLoadingDocks, it then finds the last event in a ships history.
+        /// checks if it has been altered, there is a last event and that status is either unloading or loading.
+        /// It the updates the ships location. and finds the secondLastEvent.
+        /// when this is done it checks if there are containers onboard and the same shipstatus as before.
+        /// if tthe ship status is dockedToLoadingDock it then adds a new history event and set the status to unloading and starts unloading continers.
+        /// then it checks if the number of containers on board is 0, if so the status changes from unloading to unloadingDone.
+        /// when all of this is finished the hasBeenAlteredThisHour variable is set to true.
+        /// </summary>
         private void UnloadingShips()
         {
             foreach (Ship ship in harbor.shipsInLoadingDock.Keys)
             {
-                Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
+                Event lastEvent = ship.History.Last();
 
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null && (lastEvent.Status == Status.Unloading || lastEvent.Status == Status.DockedToLoadingDock))
                 {
                     Guid currentPosition = lastEvent.SubjectLocation;
 
-                    Event secondLastEvent = ship.History[ship.History.Count - 2]; // event før lastEvent
+                    Event secondLastEvent = ship.History[ship.History.Count - 2];
 
 
                     if (ship.ContainersOnBoard.Count != 0 && lastEvent.Status == Status.DockedToLoadingDock || lastEvent.Status == Status.Unloading)
@@ -316,7 +345,7 @@ namespace HarbFramework
 
                         for (int i = 0; i < ship.ContainersLoadedPerHour && ship.ContainersOnBoard.Count > 0; i++)
                         {
-                            Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last(); // Logisk riktig rekkefølge
+                            Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last();
 
                             harbor.UnloadContainer(ContainerToBeUnloaded.Size, ship, currentTime);
                         }
@@ -346,12 +375,18 @@ namespace HarbFramework
             }
         }
 
+
+        /// <summary>
+        /// Goes through all the ships in the loadingdocks. then checks the status and if it has been altered.
+        /// Checks if the ship is a singleTrip ship, if that's the case it adds a new history event to the shiplog. 
+        /// if the status is LoadingDone the new status is set to undocking.
+        /// </summary>
         private void UndockingShips()
         {
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
+                Event lastEvent = ship.History.Last();
 
                 
                 if (ship.HasBeenAlteredThisHour == false && lastEvent != null && 
@@ -391,7 +426,11 @@ namespace HarbFramework
                 }
             }
         }
-
+        /// <summary>
+        /// Simple check wheter or not the ship has the Status "Transit".
+        /// </summary>
+        /// <param name="ship"> A ship object</param>
+        /// <returns></returns>
         private static bool ContainsTransitStatus(Ship ship)
         {
             bool containsTransitStatus = false;
@@ -400,20 +439,28 @@ namespace HarbFramework
                 if (his.Status == Status.Transit)
                 {
                     containsTransitStatus = true;
-                    break; // Avslutter løkken tidlig siden vi har funnet det vi leter etter
+                    break; 
                 }
             }
 
             return containsTransitStatus;
         }
 
+        /// <summary>
+        /// This method lets the ship Load new containers on board. 
+        /// It goes through all the events of the ship and wheter or not the ship has been altered this last loop.
+        /// then it checks if the amount of containers on board is less than the ships total container capacity. If this is true it checks
+        /// if the different sizes capacity is less than the total containter capacity per size of the ship. if that is true it starts loading
+        /// containers onto the ship of the right sizes. when all of the loading is done it's logged and the status changes to loadingDone
+        /// and then to Undocking
+        /// </summary>
         private void LoadingShips()
         {
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
 
-                Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
-                Event secondLastEvent = ship.History[ship.History.Count - 2]; // event før lastEvent
+                Event lastEvent = ship.History.Last();
+                Event secondLastEvent = ship.History[ship.History.Count - 2]; 
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null &&
                     ((lastEvent.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true)) ||
@@ -432,7 +479,7 @@ namespace HarbFramework
                         {
                             for (int i = 0; i < ship.ContainersLoadedPerHour; i++)
                             {
-                                // Try loading small container
+                                
                                 if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Large)
                                 {
                                     if (ship.CurrentWeightInTonn + (int)ContainerSize.Small <= ship.MaxWeightInTonn)
@@ -441,7 +488,7 @@ namespace HarbFramework
                                     }
                                 }
 
-                                // Try loading medium container
+                                
                                 else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Small)
                                 {
 
@@ -451,7 +498,7 @@ namespace HarbFramework
                                     }
                                 }
 
-                                // Try loading large container
+                               
                                 else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Medium)
                                 {
                                     if (ship.CurrentWeightInTonn + (int)ContainerSize.Large <= ship.MaxWeightInTonn)
@@ -478,7 +525,7 @@ namespace HarbFramework
                     }
                     else
                     {
-                        // Hvis ingen container passer til max vekten, sier seg ferdig
+                     
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.LoadingDone);
                         ship.AddHistoryEvent(currentTime, harbor.TransitLocationID, Status.Undocking);
                         
@@ -490,12 +537,17 @@ namespace HarbFramework
             }
         }
 
+        /// <summary>
+        /// This method will make sure the ships in transit returns to the harbor
+        /// It checks if the ship has been altered in the last loop, if it hasnt the transit time is reduced. when the transit time
+        /// has reached 0 it is back in the harbor and anchoring.
+        /// </summary>
         private void InTransitShips()
         {
             foreach (Ship ship in harbor.ShipsInTransit.Keys)
             {
 
-                Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
+                Event lastEvent = ship.History.Last();
 
                 if (ship.HasBeenAlteredThisHour == false && lastEvent != null && lastEvent.Status == Status.Transit)
                 {
@@ -505,7 +557,6 @@ namespace HarbFramework
 
                     double DaysSinceTransitStart = (currentTime - LastHistoryEvent.PointInTime).TotalDays;
 
-                    // Hvis roundTripInDays er større eller lik dager siden transit begynte (dagens dato - når eventet skjedde = dager siden eventet skjedde)
                     if (DaysSinceTransitStart >= ship.RoundTripInDays)
                     {
                         harbor.AddNewShipToAnchorage(ship);
@@ -520,21 +571,4 @@ namespace HarbFramework
     }
 
 }
-    //currentTime
-    //StartOfDay
-    //EndTime variabler
-    //opprett Harbour objekt (opprett kontainere til havn)
-    //opprett båter (opprett containere ombord)
-    //ArrayList Logs = new ArrayList()
-
-    //legg til en initiell logfil til historie som logger starttilstanden til simuleringen.
-
-    //while(Ikke sluttdato){
-    //En runde i while løkken er en time
-    //Undocke båter som er ferdig med lasting  (Lag en foreach som går igjennom alle båter i havna og ser om de er ferdig med jobben. hvis de er det undock båten og sett nextStepCheck til True)
-    //Sjekk hvor mange havner av de forskjellige størelsene er ledig (For løkke som går igjennom ledige havner og teller opp antallet av de forskjellige størelsene som er ledig)
-    //Docke båter fra HarbourQueueInn (For løkke som looper like mange ganger som antal skip av de forskjellige størrelsene som skal dokkes og bruker harbor funksjonen for å docke skipene hvis de er det undock båten og sett nextStepCheck til True)
-    //Laste av containere fra båten / Laste containere til båter. (For løkke som går gjennom alle skipene til kai og finner ut om de skal laste av eller på containere og laster av/på så mange containere som skipet har mulighet til basert på berthing time)
-    //Setter alle nextStepCheck til false hos alle objekter (For løkke som går gjennom alle skip i simuleringen og setter next step check til false)
-    //oppdaterer current time med +1 time}
-    //Current time == Start of day + 24 hours => Lag log fil
+  
