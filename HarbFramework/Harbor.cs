@@ -166,9 +166,9 @@ namespace harbNet
                     spaces.Add(new ContainerSpace(containerSize));
                 }
 
-                allContainerSpaces[containerSize] = spaces; // Gir allContainerSpaces de gitte opprettede spacene
-                freeContainerSpaces[containerSize] = spaces; // Gir freeContainerSpaces de gitte opperettede spaces
-                                                             // (Siden de er alle tomme ved oppstart av harbor og heller fylles opp senere med andre metodekall)
+                allContainerSpaces[containerSize] = spaces;
+                freeContainerSpaces[containerSize] = spaces;
+
             }
 
             AllShips = listOfShips.ToList();
@@ -190,7 +190,7 @@ namespace harbNet
         /// <param name="shipID">unique ID of specific ship</param>
         /// <param name="currentTime">Time the ship is docked</param>
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
-        internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime) //omskriv til å sende inn størrelse. 
+        internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime) 
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             
@@ -214,8 +214,8 @@ namespace harbNet
                 return dock.ID;
             }
 
-            return Guid.Empty; //returnerer en Guid med verdi "00000000-0000-0000-0000-000000000000" hvis han ikke finner noen ledige docker.
-        }//returnerer Guid til docken skipet docker til
+            return Guid.Empty; 
+        }
 
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace harbNet
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <param name="currentTime">Time ship is transfered</param>
         /// <returns>Returns the Guid of the loading dock the ship gets docked to</returns>
-        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime) //omskriv til å sende inn størrelse. 
+        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeDocked = GetShipFromShipDock(shipID);
 
@@ -249,8 +249,8 @@ namespace harbNet
                 return dock.ID;
             }
 
-            return Guid.Empty; //returnerer en Guid med verdi "00000000-0000-0000-0000-000000000000" hvis han ikke finner noen ledige docker.
-        }//returnerer Guid til docken skipet docker til
+            return Guid.Empty;
+        }
 
         /// <summary>
         /// Ship gets docked to dock
@@ -328,7 +328,7 @@ namespace harbNet
             if (shipToBeUndocked != null)
             {
                 Dock dock = (Dock)shipsInLoadingDock[shipToBeUndocked];
-                //need to add history event for ship
+
                 dock.DockedShip = Guid.Empty;
                 dock.Free = true;
 
@@ -345,7 +345,7 @@ namespace harbNet
             }
 
             return Guid.Empty;
-        } //returnerer Guid til docken skipet docket fra
+        }
 
         /// <summary>
         /// Gets specific ship from anchorage
@@ -430,7 +430,7 @@ namespace harbNet
 
             foreach (var item in shipsInLoadingDock)
             {
-                ships.Add(item.Key); // Legg til hvert individuelle Ship-objekt, ikke hele Hashtable
+                ships.Add(item.Key);
             }
 
             return ships;
@@ -556,7 +556,7 @@ namespace harbNet
             }
 
             return Guid.Empty;
-        } //returnerer Guid til docken skipet docket fra
+        }
 
         /// <summary>
         /// Undocks ship from ship dock to loading dock
@@ -588,7 +588,7 @@ namespace harbNet
             }
 
             return Guid.Empty;
-        } //returnerer Guid til docken skipet docket fra
+        }
 
         /// <summary>
         /// Removes loading dock from list of free loading docks
@@ -624,7 +624,7 @@ namespace harbNet
                 }
             }
             return count;
-        } //Returnerer antall ledige plasser av den gitte typen
+        }
 
         /// <summary>
         /// Counts the number of available containerspaces of specified size
@@ -644,7 +644,7 @@ namespace harbNet
             return count;
 
 
-        } //returnerer antallet ledige container plasser av den gitte typen.
+        }
 
         /// <summary>
         /// Counts the number of occupied containerspaces of specified size
@@ -665,7 +665,7 @@ namespace harbNet
         /// <returns>Returns the Guid of an avaiable containerspace of specified size</returns>
         internal ContainerSpace GetFreeContainerSpace(ContainerSize containerSize)
         {
-            foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize]) // Sto originalt storedContainers, går ut ifra det skulle stå freeContainerSpaces
+            foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
             {
 
                 if (containerSpace.Free == true && containerSpace.Size == containerSize)
@@ -752,7 +752,7 @@ namespace harbNet
 
             return containerSpace.ID;
 
-        } // returnerer Guid til container spaces containeren ble lagret, returnerer empty Guid hvis containeren ikke finnes
+        }
 
         /// <summary>
         /// Loads container from containerspace to ship
@@ -800,9 +800,6 @@ namespace harbNet
                 ShipsInTransit.Remove(ship);
         }
 
-        // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
-        // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
-
         /// <summary>
         /// Gets last registered status of specific ship
         /// </summary>
@@ -816,8 +813,6 @@ namespace harbNet
             {
                 if (ship.ID == ShipID && ship.History != null && ship.History.Count > 0)
                 {
-                    // Måtte kommentere ut for å kjøre fordi ship.History[ship.History.Count - 1] gir error
-                    // lastEvent = ship.History[ship.History.Count - 1] as Event;
                     String shipStatus = $"ShipId: {ship.ID}, Last event: {lastEvent}";
                     sb.Append(shipStatus);
                 }
@@ -825,11 +820,6 @@ namespace harbNet
             }
             return Status.None;
         }
-
-        // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
-        // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
-
-        //må kjøre denne for å se om den funker som tenkt
 
         /// <summary>
         /// Gets last registered status of all ships
@@ -864,8 +854,6 @@ namespace harbNet
             return dockStatus;
         }
 
-        //Denne kan potensielt endres
-        //må endre på toString til en representasjon som fungerer
         /// <summary>
         /// Checks if specified dock is free
         /// </summary>
@@ -888,10 +876,6 @@ namespace harbNet
 
         }
 
-        // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
-        // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
-
-        //må endre på toString til en representasjon som fungerer
         /// <summary>
         /// Gets the status of all loading docks
         /// </summary>
@@ -913,7 +897,6 @@ namespace harbNet
             return dockStatus.ToString();
         }
 
-        //må endre på toString til en representasjon som fungerer
         /// <summary>
         /// Gets the status of specified container
         /// </summary>
@@ -938,8 +921,6 @@ namespace harbNet
             return sb.ToString();
         }
 
-
-        //må endre på toString til en representasjon som fungerer
         /// <summary>
         /// Gets the last registered status of all containers
         /// </summary>
@@ -964,13 +945,12 @@ namespace harbNet
             }
             return sb.ToString();
         }
-        //La de til for kompilering
 
         /// <summary>
         /// Checks if loading dock is free/available for all dock sizes
         /// </summary>
         /// <returns>Returns all the docks or null</returns>
-        public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks() // må dobbeltsjekke om er riktig
+        public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks()
         {
             Dictionary<Guid, bool> freeLoadingDock = new Dictionary<Guid, bool>();
 
@@ -989,7 +969,7 @@ namespace harbNet
         /// </summary>
         /// <param name="dockID">Unique ID of specific dock</param>
         /// <returns>Returns true if specified dock is free, or false if not</returns>
-        bool IHarbor.LoadingDockIsFree(Guid dockID) // ferdig
+        bool IHarbor.LoadingDockIsFree(Guid dockID)
         {
             bool dockIsFree = false;
             foreach (Dock dock in allLoadingDocks)
@@ -1006,7 +986,7 @@ namespace harbNet
         /// Checks if ship dock is free/available for all dock sizes
         /// </summary>
         /// <returns>Returns true if all ship docka is free, or false if not</returns>
-        public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks() // må dobbeltsjekke om er riktig
+        public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks()
         {
             Dictionary<Guid, bool> freeShipDock = new Dictionary<Guid, bool>();
 

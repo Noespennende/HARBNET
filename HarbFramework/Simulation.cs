@@ -17,7 +17,6 @@ namespace HarbFramework
 {
     public class Simulation : ISimulation
     {
-        //StartTime variabler 
         private DateTime startTime;
         private DateTime currentTime;
         private DateTime endTime;
@@ -79,7 +78,6 @@ namespace HarbFramework
                 }
 
 
-
                 foreach (Ship ship in harbor.AllShips) {
                     ship.HasBeenAlteredThisHour = false;
                     
@@ -119,25 +117,18 @@ namespace HarbFramework
                                 if (his.PointInTime >= teset && his.PointInTime <= currentTime)
                                 {
  
-
                                     if (his.Status == Status.Transit)
                                     {
                                         Console.WriteLine(ship.Name + " in transit");
                                     }
                                     else
-
                                         Console.WriteLine($"ShipName: {ship.Name}| Date: {his.PointInTime}| Status: {his.Status}|\n");
                                 }
-
-
-
                             }
-
                         }
                         Console.WriteLine("----------------------------");
                     }
                 }
-                
 
                 currentTime = currentTime.AddHours(1);
 
@@ -218,7 +209,7 @@ namespace HarbFramework
             foreach (Ship ship in ShipsInShipDock)
             {
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
+                Event lastEvent = ship.History.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null &&
                     (lastEvent.Status == Status.Anchored ||
@@ -228,7 +219,6 @@ namespace HarbFramework
                 {
                         Guid dockID;
 
-                    // Hvis dette er første runde, og skipet er docket på ShipDock som startposisjon
                     if (currentTime == startTime && lastEvent.Status == Status.DockedToShipDock)
                     {
                         
@@ -243,7 +233,7 @@ namespace HarbFramework
             foreach (Ship ship in ShipsInLoadingDock)
             {
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
+                Event lastEvent = ship.History.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null &&
                     (lastEvent.Status == Status.DockedToShipDock ||
@@ -251,7 +241,6 @@ namespace HarbFramework
                     (lastEvent.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))))
                 {
 
-                    // Alle skip er kommet til Loading dock, ferdig med docking
                     if (lastEvent.Status == Status.DockingToLoadingDock && (currentTime - lastEvent.PointInTime).TotalHours >= 1)
                     {
                         Guid dockID = lastEvent.SubjectLocation;
@@ -273,7 +262,7 @@ namespace HarbFramework
             {
 
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last(); // Finner siste Event i history, så skipet siste status kan sjekkes
+                Event lastEvent = ship.History.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null && 
                     (lastEvent.Status == Status.Anchored || 
@@ -287,19 +276,13 @@ namespace HarbFramework
                     if (harbor.FreeLoadingDockExists(ship.ShipSize) && lastEvent.Status != Status.DockedToShipDock)
                     {
 
-                        // Alle skip kommer fra Anchored og begynner docking til loading dock
-
                         if (lastEvent.Status == Status.Anchored)
                         {
-                            //Console.WriteLine("Loading dock: " + harbor.shipsInLoadingDock.Count);
                             dockID = harbor.DockShipToLoadingDock(shipID, currentTime);
-                            //Console.WriteLine("Loading dock: " + harbor.shipsInLoadingDock.Count);
 
                             ship.AddHistoryEvent(currentTime, dockID, Status.DockingToLoadingDock);
                         }
 
-
-                        // Enkeltseiling - Kommer skipet fra Transit og er enkeltseiling, dock til shipdock
                         if (harbor.FreeShipDockExists(ship.ShipSize) && ship.IsForASingleTrip == true && ContainsTransitStatus(ship)
                             && ship.ContainersOnBoard.Count == 0 && currentTime != startTime
                             && lastEvent.Status != Status.DockingToShipDock)
@@ -460,8 +443,6 @@ namespace HarbFramework
                 {
                     Guid currentPosition = lastEvent.SubjectLocation;
 
-
-                    // Try loading containers
                     if (!ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                     {
                         if (harbor.storedContainers.Keys.Count != 0)
@@ -476,7 +457,6 @@ namespace HarbFramework
                                         harbor.LoadContainer(ContainerSize.Small, ship, currentTime);
                                     }
                                 }
-
                                 
                                 else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Small)
                                 {
@@ -487,7 +467,6 @@ namespace HarbFramework
                                     }
                                 }
 
-                               
                                 else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Medium)
                                 {
                                     if (ship.CurrentWeightInTonn + (int)ContainerSize.Large <= ship.MaxWeightInTonn)
@@ -509,7 +488,6 @@ namespace HarbFramework
                             ship.AddHistoryEvent(currentTime, currentPosition, Status.LoadingDone);
                             ship.AddHistoryEvent(currentTime, currentPosition, Status.Undocking);
                         }
-
 
                     }
                     else
@@ -612,4 +590,3 @@ namespace HarbFramework
     }
 
 }
-  
