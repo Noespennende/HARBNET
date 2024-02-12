@@ -600,7 +600,7 @@ namespace harbNet
         /// <summary>
         /// Gets the stored containers of specified size
         /// </summary>
-        /// <param name="containerSize">The size of the container in Small, Medium om Larg</param>
+        /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <returns>Returns the Guid of a stored container of specified size</returns>
         internal Container GetStoredContainer(ContainerSize containerSize)
         {
@@ -639,12 +639,12 @@ namespace harbNet
         }
 
         /// <summary>
-        /// 
+        /// Unloads container of specific size from ship to containerspace
         /// </summary>
-        /// <param name="containerSize"></param>
-        /// <param name="ship"></param>
-        /// <param name="currentTime"></param>
-        /// <returns></returns>
+        /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
+        /// <param name="ship">A ship object</param>
+        /// <param name="currentTime">Time container is unloaded</param>
+        /// <returns>Returns Guid to the containerspaces the unloaded container was stored, returns empty if container did not exist</returns>
         internal Guid UnloadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
         {
             Container containerToBeUnloaded = ship.GetContainer(containerSize);
@@ -673,6 +673,13 @@ namespace harbNet
 
         } // returnerer Guid til container spaces containeren ble lagret, returnerer empty Guid hvis containeren ikke finnes
 
+        /// <summary>
+        /// Loads container from containerspace to ship
+        /// </summary>
+        /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
+        /// <param name="ship">A ship object</param>
+        /// <param name="currentTime">Time container is unloaded</param>
+        /// <returns>Returns the guid to the ship the container was loaded on, or returns empty if container did not exist</returns>
         internal Guid LoadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
         {
             Container containerToBeLoaded = GetStoredContainer(containerSize);
@@ -701,19 +708,25 @@ namespace harbNet
 
         }
 
+        /// <summary>
+        /// Adds new ship to anchorage
+        /// </summary>
+        /// <param name="ship">A ship object</param>
         internal void AddNewShipToAnchorage(Ship ship)
         {
             Anchorage.Add(ship);
             if (ShipsInTransit.ContainsKey(ship))
                 ShipsInTransit.Remove(ship);
-
-
         }
-
-        /* ** Interface implementasjon som må gjøres ** */
 
         // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
         // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
+
+        /// <summary>
+        /// Gets last registered status of specific ship
+        /// </summary>
+        /// <param name="ShipID">Unique ID of specific ship</param>
+        /// <returns>Returns last registered status of specified ship if the ship has a history, or returns none</returns>
         public Status GetShipStatus(Guid ShipID)
         {
             Event lastEvent = null;
@@ -732,12 +745,15 @@ namespace harbNet
             return Status.None;
         }
 
-
-
         // Obs obs - sjekk kommentert ut metode i Interface (Fra nylig push av Andreas)
         // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
 
         //må kjøre denne for å se om den funker som tenkt
+
+        /// <summary>
+        /// Gets last registered status of all ships
+        /// </summary>
+        /// <returns>Returns last registered status of all ships</returns>
         public Dictionary<Ship, Status> GetStatusAllShips()
         {
             Dictionary<Ship, Status> shipStatus = new Dictionary<Ship, Status>();
@@ -753,6 +769,10 @@ namespace harbNet
             return shipStatus;
         }
 
+        /// <summary>
+        /// Gets the status of all docks
+        /// </summary>
+        /// <returns>Returns the status of all docks</returns>
         public Dictionary<Guid, bool> StatusAllDocks()
         {
             Dictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
@@ -765,6 +785,11 @@ namespace harbNet
 
         //Denne kan potensielt endres
         //må endre på toString til en representasjon som fungerer
+        /// <summary>
+        /// Checks if specified dock is free
+        /// </summary>
+        /// <param name="dockID">Unique ID of specific dock</param>
+        /// <returns>Returns string informing of specified dock and if it's free</returns>
         public string LoadingDockIsFree(Guid dockID)
         {
             StringBuilder sb = new StringBuilder();
@@ -786,6 +811,10 @@ namespace harbNet
         // De måtte kommenteres ut, kan ikke ha samme navn. Vet ikke hvilke som er riktige
 
         //må endre på toString til en representasjon som fungerer
+        /// <summary>
+        /// Gets the status of all loading docks
+        /// </summary>
+        /// <returns>Returns a string with all the dock IDs and their status</returns>
         public string GetStatusAllLoadingDocks()
         {
             StringBuilder sb = new StringBuilder();
@@ -804,6 +833,11 @@ namespace harbNet
         }
 
         //må endre på toString til en representasjon som fungerer
+        /// <summary>
+        /// Gets the status of specified container
+        /// </summary>
+        /// <param name="ContainerId">Unique ID of specific container</param>
+        /// <returns>Returns a string with the dock ID and their status</returns>
         public string GetContainerStatus(Guid ContainerId)
         {
             StringBuilder sb = new StringBuilder();
@@ -824,8 +858,11 @@ namespace harbNet
         }
 
 
-
         //må endre på toString til en representasjon som fungerer
+        /// <summary>
+        /// Gets the last registered status of all containers
+        /// </summary>
+        /// <returns>Returns a string with the container ID and their last registered status</returns>
         public string GetAllContainerStatus()
         {
             StringBuilder sb = new StringBuilder();
@@ -848,6 +885,10 @@ namespace harbNet
         }
         //La de til for kompilering
 
+        /// <summary>
+        /// Checks if loading dock is free/available for all dock sizes
+        /// </summary>
+        /// <returns>Returns all the docks or null</returns>
         public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks() // må dobbeltsjekke om er riktig
         {
             Dictionary<Guid, bool> freeLoadingDock = new Dictionary<Guid, bool>();
@@ -862,6 +903,11 @@ namespace harbNet
             return null;
         }
 
+        /// <summary>
+        /// Checks if specified dock is free
+        /// </summary>
+        /// <param name="dockID">Unique ID of specific dock</param>
+        /// <returns>Returns true if specified dock is free, or false if not</returns>
         bool IHarbor.LoadingDockIsFree(Guid dockID) // ferdig
         {
             bool dockIsFree = false;
@@ -875,6 +921,10 @@ namespace harbNet
             return dockIsFree;
         }
 
+        /// <summary>
+        /// Checks if ship dock is free/available for all dock sizes
+        /// </summary>
+        /// <returns>Returns true if all ship docka is free, or false if not</returns>
         public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks() // må dobbeltsjekke om er riktig
         {
             Dictionary<Guid, bool> freeShipDock = new Dictionary<Guid, bool>();
@@ -889,6 +939,10 @@ namespace harbNet
             return null;
         }
 
+        /// <summary>
+        /// Gets the last registered status from all ships
+        /// </summary>
+        /// <returns>Return the last registered status of all ships, if they have a status</returns>
         IDictionary<Ship, Status> IHarbor.GetStatusAllShips()
         {
             Dictionary<Ship, Status> statusOfAllShips = new Dictionary<Ship, Status>();
@@ -904,6 +958,11 @@ namespace harbNet
             return statusOfAllShips;
         }
 
+        /// <summary>
+        /// Add specified number of containers to storedcontainers in harbor
+        /// </summary>
+        /// <param name="numberOfcontainers">Specified number of containers</param>
+        /// <param name="currentTime">Time container is added to harbor</param>
         internal void AddContainersToHarbor(int numberOfcontainers, DateTime currentTime)
         {
 
@@ -940,6 +999,10 @@ namespace harbNet
                 
         }
 
+        /// <summary>
+        /// Gets all containers stored in harbor
+        /// </summary>
+        /// <returns>Returns list of all containors stored in harbor</returns>
         internal IList<Container> GetContainersStoredInHarbour()
         {
             IList<Container> list = new List<Container>();
@@ -952,6 +1015,10 @@ namespace harbNet
             return list;
         }
 
+        /// <summary>
+        /// Gets all ships in a loading dock
+        /// </summary>
+        /// <returns>Returns a list of all ships in a loading dock</returns>
         internal IList<Ship> GetShipsInLoadingDock()
         {
             IList<Ship> list = new List<Ship>();
@@ -963,6 +1030,10 @@ namespace harbNet
             return list;
         }
 
+        /// <summary>
+        /// Gets all ships in a ship dock
+        /// </summary>
+        /// <returns>Returns a list of all ships in a ship dock</returns>
         internal IList<Ship> GetShipsInShipDock()
         {
             IList<Ship> list = new List<Ship>();
@@ -974,6 +1045,10 @@ namespace harbNet
             return list;
         }
 
+        /// <summary>
+        /// Gets all ships in transit
+        /// </summary>
+        /// <returns>Returns a list of all ships in transit</returns>
         internal IList<Ship> GetShipsInTransit()
         {
             IList<Ship> list = new List<Ship>();
