@@ -2,6 +2,9 @@
 
 namespace harbNet
 {
+    /// <summary>
+    /// Interface defining the public API of the Ship class.
+    /// </summary>
     public interface IShip
     {
         /// <summary>

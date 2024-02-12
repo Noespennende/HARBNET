@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
+    /// <summary>
+    /// Class to run a simulation of a harbour.
+    /// </summary>
     public class Simulation : ISimulation
     {
         private DateTime startTime;

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
+    /// <summary>
+    /// Logs to be stored in a simulations history. Holds information about the state of the simulation at a specific point in time.
+    /// </summary>
     public class Log : ILog
     {
         /// <summary>

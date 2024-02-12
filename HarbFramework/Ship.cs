@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
+    /// <summary>
+    /// Ships to be used in a simulation.
+    /// </summary>
 
     public class Ship : IShip
     {

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace harbNet
 {
+    /// <summary>
+    /// Container to be used in the simulation
+    /// </summary>
     public class Container : IContainer
     {
         /// <summary>

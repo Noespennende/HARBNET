@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
+    /// <summary>
+    /// Interface defining the contract for the public API of the Event class.
+    /// </summary>
     public interface IEvent
     {
         /// <summary>

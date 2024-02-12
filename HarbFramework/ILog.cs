@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
+    /// <summary>
+    /// Interface defining the public API for the Log class
+    /// </summary>
     public interface ILog
     {
         /// <summary>

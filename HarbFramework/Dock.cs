@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace HarbFramework
 {
+    /// <summary>
+    /// Dock for docking ships to the harbor
+    /// </summary>
     internal class Dock
     {
         /// <summary>
