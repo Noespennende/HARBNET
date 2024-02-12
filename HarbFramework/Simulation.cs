@@ -62,8 +62,9 @@ namespace HarbFramework
                         {
                             ship.AddHistoryEvent(currentTime, harbor.AnchorageID, Status.Anchoring);
                         }
-                            
-                        History.Add(new Log(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
+
+                        History.Add(new Log(currentTime, DuplicateShipList(harbor.Anchorage), DuplicateShipList(harbor.GetShipsInTransit()), DuplicateContainerList(harbor.GetContainersStoredInHarbour()),
+                            DuplicateShipList(harbor.GetShipsInLoadingDock()), DuplicateShipList(harbor.GetShipsInShipDock())));
                     }
                     
                 }
@@ -93,7 +94,11 @@ namespace HarbFramework
                 {
                     Console.WriteLine("\nDay over");
                     Console.WriteLine("Current time: " + currentTime);
-                    History.Add(new Log(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
+
+                    
+
+                    History.Add(new Log(currentTime, DuplicateShipList(harbor.Anchorage), DuplicateShipList(harbor.GetShipsInTransit()), DuplicateContainerList(harbor.GetContainersStoredInHarbour()),
+                        DuplicateShipList(harbor.GetShipsInLoadingDock()), DuplicateShipList(harbor.GetShipsInShipDock())));
                     if (currentTime.Hour == 0)
                     {
 
@@ -108,11 +113,11 @@ namespace HarbFramework
 
                                     if (his.Status == Status.Transit)
                                     {
-                                        Console.WriteLine(ship.ShipName + " in transit");
+                                        Console.WriteLine(ship.Name + " in transit");
                                     }
                                     else
 
-                                        Console.WriteLine($"ShipName: {ship.ShipName}| Date: {his.PointInTime}| Status: {his.Status}|\n");
+                                        Console.WriteLine($"ShipName: {ship.Name}| Date: {his.PointInTime}| Status: {his.Status}|\n");
                                 }
 
 
@@ -287,7 +292,7 @@ namespace HarbFramework
                         }
 
                     }
-
+                    
                     ship.HasBeenAlteredThisHour = true;
                 }
             }
@@ -517,6 +522,51 @@ namespace HarbFramework
                 }
             }
         }
+
+        private IList<Ship> DuplicateShipList (IList<Ship> shipListToDuplicate)
+        {
+            IList<Ship> duplicatedList = new List<Ship>();
+
+            foreach (Ship ship in shipListToDuplicate)
+            {
+                IList<Container> containerList = new List<Container>();
+                IList<Event> eventList = new List<Event>();
+
+                foreach (Container container in ship.ContainersOnBoard)
+                {
+                    IList<Event> containersHistory = new List<Event>();
+                    foreach (Event containerEvent in container.History)
+                    {
+                        containersHistory.Add(new Event(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
+                    }
+                    containerList.Add(new Container(container.Size, container.WeightInTonn, ship.ID, container.ID, containersHistory));
+                }
+                foreach (Event eventObject in ship.History)
+                {
+                    eventList.Add(new Event(eventObject.Subject, eventObject.SubjectLocation, eventObject.PointInTime, eventObject.Status));
+                }
+
+                duplicatedList.Add(new Ship(ship.Name, ship.ShipSize, ship.StartDate, ship.IsForASingleTrip, ship.RoundTripInDays, ship.ID, containerList, eventList));
+            }
+            return duplicatedList;
+        }
+
+        private IList<Container> DuplicateContainerList (IList<Container> containersToDuplicate)
+        {
+            IList<Container> duplicatedList = new List<Container>();
+
+            foreach (Container container in containersToDuplicate)
+            {
+                IList<Event> eventList = new List<Event>();
+                foreach (Event containerEvent in container.History)
+                {
+                    eventList.Add(new Event(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
+                }
+                duplicatedList.Add(new Container(container.Size, container.WeightInTonn, container.CurrentPosition, container.ID, eventList));
+            }
+            return duplicatedList;
+        }
+        
     }
 
 }

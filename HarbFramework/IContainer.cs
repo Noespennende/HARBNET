@@ -14,6 +14,6 @@ namespace HarbFramework
         public int WeightInTonn { get;  }
         public Guid CurrentPosition { get; }
 
-        public Status GetStatus();
+        public Status GetCurrentStatus();
     }
 }
