@@ -445,14 +445,14 @@ namespace HarbFramework
 
                     if (!ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                     {
-                        if (harbor.storedContainers.Keys.Count != 0)
+                        if (harbor.storedContainers.Keys.Count != 0 && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                         {
                             for (int i = 0; i < ship.ContainersLoadedPerHour; i++)
                             {
                                 
                                 if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Large)
                                 {
-                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Small <= ship.MaxWeightInTonn)
+                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Small <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                                     {
                                         harbor.LoadContainer(ContainerSize.Small, ship, currentTime);
                                     }
@@ -461,7 +461,7 @@ namespace HarbFramework
                                 else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Small)
                                 {
 
-                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Medium <= ship.MaxWeightInTonn)
+                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Medium <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                                     {
                                         harbor.LoadContainer(ContainerSize.Medium, ship, currentTime);
                                     }
@@ -469,7 +469,7 @@ namespace HarbFramework
 
                                 else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Medium)
                                 {
-                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Large <= ship.MaxWeightInTonn)
+                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Large <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                                     {
                                         harbor.LoadContainer(ContainerSize.Large, ship, currentTime);
                                     }

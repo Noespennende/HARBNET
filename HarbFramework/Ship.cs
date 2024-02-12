@@ -239,29 +239,29 @@ namespace harbNet
             {
                 if (i % 3 == 0)
                 {
+                    CheckForValidWeight();
                     Container smallContainer = new Container(ContainerSize.Small, 10, this.ID);
                     smallContainer.History.Add(new Event(smallContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(smallContainer);
                     CurrentWeightInTonn += smallContainer.WeightInTonn;
-                    CheckForValidWeight();
+                    
 
                 }
                 if (i % 3 == 1)
                 {
+                    CheckForValidWeight();
                     Container mediumContainer = new Container(ContainerSize.Medium, 15, this.ID);
                     mediumContainer.History.Add(new Event(mediumContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(mediumContainer);
                     CurrentWeightInTonn += mediumContainer.WeightInTonn;
-                    CheckForValidWeight();
                 }
                 if (i % 3 == 2)
                 {
-
+                    CheckForValidWeight();
                     Container largeContainer = new Container(ContainerSize.Large, 15, this.ID);
                     largeContainer.History.Add(new Event(largeContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(largeContainer);
                     CurrentWeightInTonn += largeContainer.WeightInTonn;
-                    CheckForValidWeight();
                 }
             }
         }
