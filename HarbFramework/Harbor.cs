@@ -12,7 +12,7 @@ namespace harbNet
 {
     public class Harbor : IHarbor
     {
-        public Guid ID { get; set; } = Guid.NewGuid();
+        public Guid ID { get; internal set; } = Guid.NewGuid();
         internal IList<Dock> allLoadingDocks = new List<Dock>();
         internal IList<Dock> freeLoadingDocks = new List<Dock>();
         internal IDictionary<Ship, Dock> shipsInLoadingDock = new Dictionary<Ship, Dock>(); // Ship : Dock
