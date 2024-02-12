@@ -14,7 +14,7 @@ namespace harbNet
             DateTime endTime = startTime + TimeSpan.FromDays(40);
             List<Ship> ships = new List<Ship>();
 
-            Ship testShip = new("SS MonkeyPaw", ShipSize.Large, startTime, false, 2, 50);
+            Ship testShip = new("SS MonkeyPaw", ShipSize.Large, startTime, false, 2, 68);
             ships.Add(testShip);
 
 
