@@ -11,13 +11,45 @@ namespace HarbFramework
 {
     public class Log : ILog
     {
+        /// <summary>
+        /// Gets the date and time the logs info were logged.
+        /// </summary>
+        /// <returns>Returns a DateTime object representing the date and time the info were logged</returns>
         public DateTime Time { get; internal set; }
+        /// <summary>
+        /// Gets all ships in anchorage when the log object were created.
+        /// </summary>
+        /// <returns>Returns a an Ilist with ship object representing all the ships in anchorage when the log object was created</returns>
         public IList<Ship> ShipsInAnchorage { get; internal set; }
+        /// <summary>
+        /// Gets all the ships in transit when the log object were created
+        /// </summary>
+        /// <returns>Returns a IList with Ship object representing the ships in transit when the log object was created</returns>
         public IList<Ship> ShipsInTransit { get; internal set; }
+        /// <summary>
+        /// Gets all the containers stored in harbour when the log object were created
+        /// </summary>
+        /// <returns>Returns a IList with Container object representing the containers stored in when the log object was created</returns>
         public IList<Container> ContainersInHarbour { get; internal set; }
+        /// <summary>
+        /// Gets all the ships docked in a loading dock when the log object were created
+        /// </summary>
+        /// <returns>Returns a IList with Ship object representing the docked in a loading dock when the log object was created</returns>
         public IList<Ship> ShipsDockedInLoadingDocks { get; internal set; }
+        /// <summary>
+        /// Gets all the ships docked to ship docks when the log object were created
+        /// </summary>
+        /// <returns>Returns a IList with Ship object representing the ships docked to ship docks when the log object was created</returns>
         public IList<Ship> ShipsDockedInShipDocks { get; internal set; }
 
+        /// <summary>
+        /// Creates a log object
+        /// </summary>
+        /// <param name="time">The date and time of the information being logged</param>
+        /// <param name="shipsInTransit">All the ships in transit at the time given</param>
+        /// <param name="containersInHarbour">All the containers stored in harbour at the time given</param>
+        /// <param name="shipsDockedInLoadingDocks">All the ships docked in loading docks at the time given</param>
+        /// <param name="ShipsDockedInShipDocks">All the ships docked in ship docks at the time given</param>
         internal Log(DateTime time, IList<Ship> shipsInAnchorage, IList<Ship> shipsInTransit, IList<Container> containersInHarbour, IList<Ship> shipsDockedInLoadingDocks, IList<Ship> ShipsDockedInShipDocks)
         {
             this.Time = time;
@@ -29,6 +61,9 @@ namespace HarbFramework
             this.ShipsDockedInShipDocks = ShipsDockedInShipDocks;
         }
 
+        /// <summary>
+        /// Prints the wereabouts and info regarding all the ships in the log.
+        /// </summary>
         public void PrintInfoForAllShips()
         {
             Console.WriteLine("\n---------------------------------");
@@ -91,7 +126,9 @@ namespace HarbFramework
             }
 
         }
-
+        /// <summary>
+        /// Prints the wereabouts and info regarding all the containers in the log.
+        /// </summary>
         public void PrintInfoForAllContainers()
         {
             Console.WriteLine("\n---------------------------------");
