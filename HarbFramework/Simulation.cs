@@ -39,7 +39,10 @@ namespace HarbFramework
             this.endTime = simulationEndTime;
         }
 
-
+        /// <summary>
+        /// Running the simulation
+        /// </summary>
+        /// <returns>returns the history of the simulation</returns>
         public IList<Log> Run()
         {
             this.currentTime = startTime;
@@ -150,12 +153,10 @@ namespace HarbFramework
 
         }
 
-        public void PrintShipHistoryPreviousDay() { 
-        }
-
+       
 
         /// <summary>
-        /// Printing Log information for each ship into the terminal.
+        /// Print history for each ship .
         /// </summary>
         public void PrintShipHistory()
         {
@@ -166,7 +167,7 @@ namespace HarbFramework
         }
 
         /// <summary>
-        /// Printing Log information for each container into the terminal.
+        /// Printing conatiner history for each container.
         /// </summary>
         public void PrintContainerHistory()
         {
@@ -177,8 +178,7 @@ namespace HarbFramework
         }
 
         /// <summary>
-        /// Goes through all the ships in anchorage and then finds their Status. If that status is anchoring and the ship has not done 
-        /// anything in the loop round, The ship status is set to "Anchored".
+        /// Anchoring ship to a dock, ship.Status is set to Anchoring.
         /// </summary>
         private void AnchoringShips()
         { 
@@ -205,10 +205,7 @@ namespace HarbFramework
 
 
         /// <summary>
-        /// First it goes through all the ships that are in the docks. Checks the Statuses of the ships. If the Status isDocked to 
-        /// shipdock, the new status is docking to loading docks.
-        /// next it goes through all the ships in loading docks. If the status is dockingToLoadingDock the dockId is set to the current dock
-        /// Then a historyEvent is created for the ship
+        /// Docking ships to the harbor, the shipStatus is set to docking
         /// </summary>
         private void DockingShips()
         {
@@ -321,13 +318,7 @@ namespace HarbFramework
 
         }
         /// <summary>
-        /// Goes through all ships in the dictionary shipsInLoadingDocks, it then finds the last event in a ships history.
-        /// checks if it has been altered, there is a last event and that status is either unloading or loading.
-        /// It the updates the ships location. and finds the secondLastEvent.
-        /// when this is done it checks if there are containers onboard and the same shipstatus as before.
-        /// if tthe ship status is dockedToLoadingDock it then adds a new history event and set the status to unloading and starts unloading continers.
-        /// then it checks if the number of containers on board is 0, if so the status changes from unloading to unloadingDone.
-        /// when all of this is finished the hasBeenAlteredThisHour variable is set to true.
+        /// unload containers from ship to harbor
         /// </summary>
         private void UnloadingShips()
         {
@@ -382,9 +373,7 @@ namespace HarbFramework
 
 
         /// <summary>
-        /// Goes through all the ships in the loadingdocks. then checks the status and if it has been altered.
-        /// Checks if the ship is a singleTrip ship, if that's the case it adds a new history event to the shiplog. 
-        /// if the status is LoadingDone the new status is set to undocking.
+        /// undock ship from harbor, and set status to Transit
         /// </summary>
         private void UndockingShips()
         {
@@ -432,7 +421,7 @@ namespace HarbFramework
             }
         }
         /// <summary>
-        /// Simple check wheter or not the ship has the Status "Transit".
+        /// check to see if the ship has the Status "Transit".
         /// </summary>
         /// <param name="ship"> A ship object</param>
         /// <returns></returns>
@@ -452,12 +441,7 @@ namespace HarbFramework
         }
 
         /// <summary>
-        /// This method lets the ship Load new containers on board. 
-        /// It goes through all the events of the ship and wheter or not the ship has been altered this last loop.
-        /// then it checks if the amount of containers on board is less than the ships total container capacity. If this is true it checks
-        /// if the different sizes capacity is less than the total containter capacity per size of the ship. if that is true it starts loading
-        /// containers onto the ship of the right sizes. when all of the loading is done it's logged and the status changes to loadingDone
-        /// and then to Undocking
+        /// Loading ship with containers 
         /// </summary>
         private void LoadingShips()
         {
@@ -478,7 +462,7 @@ namespace HarbFramework
 
 
                     // Try loading containers
-                    if (ship.ContainersOnBoard.Count < ship.ContainerCapacity)
+                    if (!ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                     {
                         if (harbor.storedContainers.Keys.Count != 0)
                         {
@@ -543,9 +527,7 @@ namespace HarbFramework
         }
 
         /// <summary>
-        /// This method will make sure the ships in transit returns to the harbor
-        /// It checks if the ship has been altered in the last loop, if it hasnt the transit time is reduced. when the transit time
-        /// has reached 0 it is back in the harbor and anchoring.
+        /// Lets ships in transit return to harbor
         /// </summary>
         private void InTransitShips()
         {
@@ -573,7 +555,11 @@ namespace HarbFramework
                 }
             }
         }
-
+        /// <summary>
+        /// Duplicate a shipList
+        /// </summary>
+        /// <param name="shipListToDuplicate">list to duplicate</param>
+        /// <returns>a duplicated shiplist</returns>
         private IList<Ship> DuplicateShipList (IList<Ship> shipListToDuplicate)
         {
             IList<Ship> duplicatedList = new List<Ship>();
@@ -602,6 +588,11 @@ namespace HarbFramework
             return duplicatedList;
         }
 
+        /// <summary>
+        /// Duplicate a shipList
+        /// </summary>
+        /// <param name="containersToDuplicate">list to duplicate</param>
+        /// <returns>a duplicated containerlist</returns>
         private IList<Container> DuplicateContainerList (IList<Container> containersToDuplicate)
         {
             IList<Container> duplicatedList = new List<Container>();
