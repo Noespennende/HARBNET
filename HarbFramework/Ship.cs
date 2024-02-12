@@ -12,9 +12,9 @@ namespace harbNet
 
     public class Ship : IShip
     {
-        public Guid ID { get; } = Guid.NewGuid();
+        public Guid ID { get; }
         public ShipSize ShipSize { get; internal set; }
-        public String ShipName { get; internal set; }
+        public String Name { get; internal set; }
         public DateTime StartDate { get; internal set; }
         public int RoundTripInDays { get; internal set; }
         public Guid CurrentLocation { get; internal set; }
@@ -34,32 +34,66 @@ namespace harbNet
 
         public Ship (String ShipName, ShipSize shipSize, DateTime StartDate, bool IsForASingleTrip, int roundTripInDays, int numberOfcontainersOnBoard)
         {
-            this.ShipName = ShipName;
+            this.ID = Guid.NewGuid();
+            this.Name = ShipName;
             this.ShipSize = shipSize;
             this.StartDate = StartDate;
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
             this.IsForASingleTrip = IsForASingleTrip;
+            this.History = new List<Event>();
 
             if (shipSize == ShipSize.Large)
             {
-                ContainersLoadedPerHour = 10;
+                this.ContainersLoadedPerHour = 10;
             }
             else if (shipSize == ShipSize.Medium)
             {
-                ContainersLoadedPerHour = 8;
+                this.ContainersLoadedPerHour = 8;
             }
             else
             {
-                ContainersLoadedPerHour = 6;
+                this.ContainersLoadedPerHour = 6;
             }
-            this.History = new List<Event>();
+
+            History.Add(new Event(this.ID, Guid.Empty, StartDate, Status.Anchoring));
+            
+            SetBaseShipInformation(shipSize);
+
+            if (!IsForASingleTrip) {
+                AddContainersOnBoard(numberOfcontainersOnBoard);
+            }
+
+
+        }
+
+        internal Ship(String ShipName, ShipSize shipSize, DateTime StartDate, bool IsForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<Event> CurrentHistory)
+        {
+            this.Name = ShipName;
+            this.ShipSize = shipSize;
+            this.StartDate = StartDate;
+            this.RoundTripInDays = roundTripInDays;
+            this.IsForASingleTrip = IsForASingleTrip;
+            this.ID = id;
+            this.History = CurrentHistory;
+            this.ContainersOnBoard = containersOnboard;
+
+            if (shipSize == ShipSize.Large)
+            {
+                this.ContainersLoadedPerHour = 10;
+            }
+            else if (shipSize == ShipSize.Medium)
+            {
+                this.ContainersLoadedPerHour = 8;
+            }
+            else
+            {
+                this.ContainersLoadedPerHour = 6;
+            }
 
             SetBaseShipInformation(shipSize);
 
-            if (!IsForASingleTrip)
-                AddContainersOnBoard(numberOfcontainersOnBoard);
-
+            
 
         }
 
@@ -71,7 +105,7 @@ namespace harbNet
                 this.ContainerCapacity = 20;
                 this.BaseWeightInTonn = 5000;
                 this.MaxWeightInTonn = BaseWeightInTonn + (24 * 25);
-
+                
                 this.BaseDockingTimeInHours = 3;
                 this.BaseBerthingTimeInHours = 6;
 
@@ -101,11 +135,11 @@ namespace harbNet
                 throw new Exception("Invalid ship size given. Valid ship sizes: ShipSize.Small, ShipSize.Medium, ShipSize.Large");
             }
 
-            int currentWeight = BaseWeightInTonn;
+            this.CurrentWeightInTonn = BaseWeightInTonn;
 
             foreach (Container container in ContainersOnBoard)
             {
-                currentWeight += container.WeightInTonn;
+                this.CurrentWeightInTonn += container.WeightInTonn;
             }
 
             CheckForValidWeight();
@@ -118,6 +152,7 @@ namespace harbNet
                 if (i % 3 == 0)
                 {
                     Container smallContainer = new Container(ContainerSize.Small, 10, this.ID);
+                    smallContainer.History.Add(new Event(smallContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(smallContainer);
                     CurrentWeightInTonn += smallContainer.WeightInTonn;
                     CheckForValidWeight();
@@ -126,6 +161,7 @@ namespace harbNet
                 if (i % 3 == 1)
                 {
                     Container mediumContainer = new Container(ContainerSize.Medium, 15, this.ID);
+                    mediumContainer.History.Add(new Event(mediumContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(mediumContainer);
                     CurrentWeightInTonn += mediumContainer.WeightInTonn;
                     CheckForValidWeight();
@@ -134,6 +170,7 @@ namespace harbNet
                 {
 
                     Container largeContainer = new Container(ContainerSize.Large, 15, this.ID);
+                    largeContainer.History.Add(new Event(largeContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(largeContainer);
                     CurrentWeightInTonn += largeContainer.WeightInTonn;
                     CheckForValidWeight();
@@ -229,9 +266,32 @@ namespace harbNet
             return HasBeenAlteredThisHour;
         }
 
-        internal Status getCurrentStatus()
+        internal Status GetCurrentStatus()
         {
-            return History.Last().Status;
+            if(History.Count > 0)
+            {
+                return History.Last().Status;
+            } else
+            {
+                return Status.None;
+            }
+        }
+
+        internal Status GetStatusAtPointInTime(DateTime time)
+        {
+            Status shipStatus = new Status();
+            foreach (Event eventObject in History)
+            {
+                if (eventObject.PointInTime < time)
+                {
+                    shipStatus = eventObject.Status;
+                }
+                else if (eventObject.PointInTime > time)
+                {
+                    break;
+                }
+            }
+            return shipStatus;
         }
 
         public void PrintHistory()

@@ -45,7 +45,7 @@ namespace harbNet
 
             Console.WriteLine("-------------------------");
 
-            simulation.PrintShipHistory();
+            simulation.PrintContainerHistory();
             //simulation.PrintContainerHistory();
 
 

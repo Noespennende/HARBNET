@@ -42,7 +42,7 @@ namespace HarbFramework
             {
                 foreach (Ship ship in ShipsInAnchorage)
                 {
-                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
+                    Console.WriteLine("NAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
             } else
@@ -55,7 +55,7 @@ namespace HarbFramework
                     Console.WriteLine("\nSHIPS IN TRANSIT:");
                     foreach (Ship ship in ShipsInTransit)
                     {
-                        Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
+                        Console.WriteLine("NAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
                             ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                     }
                 } else
@@ -68,7 +68,7 @@ namespace HarbFramework
                 Console.WriteLine("\nSHIPS IN LOADING DOCK:");
                 foreach (Ship ship in ShipsDockedInLoadingDocks)
                 {
-                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
+                    Console.WriteLine("NAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
             } else
@@ -82,7 +82,7 @@ namespace HarbFramework
                 Console.WriteLine("\nSHIPS IN SHIP DOCK:");
                 foreach (Ship ship in ShipsDockedInShipDocks)
                 {
-                    Console.WriteLine("NAME: " + ship.ShipName + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.getCurrentStatus() +
+                    Console.WriteLine("NAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
             } else
@@ -108,11 +108,11 @@ namespace HarbFramework
                     if (ship.ContainersOnBoard.Count > 0)
                     {
                         infoPrinted = true;
-                        Console.WriteLine("\nSHIP NAME: " + ship.ShipName + ", SHIP ID: " + ship.ID.ToString());
+                        Console.WriteLine("\nSHIP NAME: " + ship.Name + ", SHIP ID: " + ship.ID.ToString());
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -137,11 +137,11 @@ namespace HarbFramework
                     if (ship.ContainersOnBoard.Count > 0)
                     {
                         infoPrinted = true;
-                        Console.WriteLine("\nSHIP NAME: " + ship.ShipName + ", SHIP ID: " + ship.ID.ToString());
+                        Console.WriteLine("\nSHIP NAME: " + ship.Name + ", SHIP ID: " + ship.ID.ToString());
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -165,11 +165,11 @@ namespace HarbFramework
                     if (ship.ContainersOnBoard.Count > 0)
                     {
                         infoPrinted = true;
-                        Console.WriteLine("\nSHIP NAME: " + ship.ShipName + ", SHIP ID: " + ship.ID.ToString());
+                        Console.WriteLine("\nSHIP NAME: " + ship.Name + ", SHIP ID: " + ship.ID.ToString());
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -190,7 +190,7 @@ namespace HarbFramework
 
                 foreach (Container container in ContainersInHarbour)
                 {
-                    Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetStatus() + ", ID: " + container.ID);
+                    Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                 }
                         
             }
