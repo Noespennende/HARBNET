@@ -12,28 +12,109 @@ namespace harbNet
 {
     public class Harbor : IHarbor
     {
-        public Guid ID { get; internal set; } = Guid.NewGuid();
+        /// <summary>
+        /// Unique ID for harbor
+        /// </summary>
+        /// <return>Returns the unique ID defining a specific harbor</return>
+        public Guid ID { get; internal set; } = Guid.NewGuid(); 
+
+        /// <summary>
+        /// Gets all loading docks
+        /// </summary>
+        /// <return>Returns a list of all loading docks</return>
         internal IList<Dock> allLoadingDocks = new List<Dock>();
+
+        /// <summary>
+        /// Gets all available loading docks
+        /// </summary>
+        /// <return>Returns a list of all available loading docks</return>
         internal IList<Dock> freeLoadingDocks = new List<Dock>();
+
+        /// <summary>
+        /// Gets all ships in loading dock
+        /// </summary>
+        /// <return>Returns a dictionary with all the ships that are in a loading dock</return>
         internal IDictionary<Ship, Dock> shipsInLoadingDock = new Dictionary<Ship, Dock>(); // Ship : Dock
 
+        /// <summary>
+        /// Gets all ship docks
+        /// </summary>
+        /// <return>Returns a list of all ship docks</return>
         internal IList<Dock> allShipDocks = new List<Dock>();
+
+        /// <summary>
+        /// Gets all available ship docks
+        /// </summary>
+        /// <return>Return a list of all available ship docks</return>
         internal IList<Dock> freeShipDocks = new List<Dock>();
+
+        /// <summary>
+        /// Gets all ships in ship dock
+        /// </summary>
+        /// <return>Returns a dictionary with all ships in ship dock</return>
         internal IDictionary<Ship,Dock> shipsInShipDock = new Dictionary<Ship, Dock>(); // Ship : Dock
 
+        /// <summary>
+        /// Gets all ships in anchorage
+        /// </summary>
+        /// <return>Returns a list of all ships in anchorage</return>
         internal IList<Ship> Anchorage { get; set; } = new List<Ship>();
+
+        /// <summary>
+        /// Gets all ships in transit
+        /// </summary>
+        /// <return>Returns a dictionary with all ships in transit</return>
         internal IDictionary<Ship, int> ShipsInTransit { get; set; } = new Dictionary<Ship, int>(); // ship: int number of days until return
+
+        /// <summary>
+        /// Gets all ships
+        /// </summary>
+        /// <return>Returns a list of all ships</return>
         internal IList<Ship> AllShips { get; set; } = new List<Ship>(); // Sikkert midlertidig, til vi kan regne på det
+
+        /// <summary>
+        /// Gets all container spaces
+        /// </summary>
+        /// <return>Returns a dictionary of all container spaces</return>
         internal IDictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
 
+        /// <summary>
+        /// Gets all available container spaces
+        /// </summary>
+        /// <return>Returns a dictionary of all available container spaces</return>
         internal IDictionary<ContainerSize, List<ContainerSpace>> freeContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
 
+        /// <summary>
+        /// Gets all stored containers
+        /// </summary>
+        /// <return>Returns a dictionary of all stored containers</return>
         internal IDictionary<Container, ContainerSpace> storedContainers = new Dictionary<Container, ContainerSpace>(); // Container : ContainerSpace
 
+        /// <summary>
+        /// Gets the unique ID for the transit location
+        /// </summary>
+        /// <return>Returns an unique Guid defining a specific transitlocation</return>
         public Guid TransitLocationID { get; } = Guid.NewGuid();
+
+        /// <summary>
+        /// Gets the unique ID for the anchorage
+        /// </summary>
+        /// <return>Returns the unique Guid defining a specific anchorage</return>
         public Guid AnchorageID { get; } = Guid.NewGuid();
 
-
+        /// <summary>
+        /// Constructor for Harbor, creates a new harbor object
+        /// </summary>
+        /// <param name="listOfShips">List of all ships</param>
+        /// <param name="numberOfSmallLoadingDocks">Total number of small loading docks</param>
+        /// <param name="numberOfMediumLoadingDocks">Total number of medium loading docks</param>
+        /// <param name="numberOfLargeLoadingDocks">Total number of large loading docks</param>
+        /// <param name="numberOfSmallShipDocks">Total number of small ship docks</param>
+        /// <param name="numberOfMediumShipDocks">Total number of medium ship docks</param>
+        /// <param name="numberOfLargeShipDocks">Total number of large ship docks</param>
+        /// <param name="numberOfSmallContainerSpaces">Total number of small container spaces</param>
+        /// <param name="numberOfMediumContainerSpaces">Total number of medium contrainer spaces</param>
+        /// <param name="numberOfLargeContainerSpaces">Total number of large container spaces</param>
         public Harbor(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
             int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,
             int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces, int numberOfLargeContainerSpaces)
