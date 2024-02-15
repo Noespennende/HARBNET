@@ -26,12 +26,14 @@ namespace harbNet
             Ship auroraBorealis = new("Aurora Borealis", ShipSize.Medium, startTime.AddDays(4), false, 3, 49);
             Ship skipOHoi = new("Ship O'Hoi", ShipSize.Small, startTime.AddHours(4), false, 1, 15);
             Ship ssSolitude = new("SS Solitude", ShipSize.Small, startTime, true, 14, 1);
+            Ship denSorteDame = new("Den Sorte Dame", ShipSize.Large, startTime, false, 4, 49);
 
             // Adding the ships to a list, that will be sent into the Harbor object
             ships.Add(shipHappens);
             ships.Add(ssSolitude);
             ships.Add(auroraBorealis);
             ships.Add(skipOHoi);
+            ships.Add(denSorteDame);
 
             // Creating the harbor which will be used in the simulation, using the ship list
             Harbor kjuttaviga = new Harbor(ships, 4, 3, 2, 2, 1, 1, 100, 200, 150);

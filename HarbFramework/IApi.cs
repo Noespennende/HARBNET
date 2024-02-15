@@ -11,6 +11,7 @@ namespace HarbFramework
     internal interface IApi
     {
         // Første utkastet til ett API. Denne klassen blir ikke brukt i den endelige løsningen.
+        /*
         public void Create(); //Oppretter simuleringen
         public String SetName(String name); //returnerer navnet
         public Guid CreatePort(DockSize portSize); //returnerer Guid til porten som ble laget
@@ -40,5 +41,6 @@ namespace HarbFramework
         public int GetContainersMoved(DateTime startDate, DateTime endDate);
         public int GetNumberOfDockings(); //Antall skip docket i løpet av simuleringen 
         public int GetNumDockings(DateTime startDate); //Antall skip docket i løpet av simuleringen 
+        */
     }
 }
