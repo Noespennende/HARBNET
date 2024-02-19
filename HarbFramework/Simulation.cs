@@ -26,7 +26,7 @@ namespace HarbFramework
 
         private Harbor harbor;
 
-        public IList<Log> History {  get; private set; } = new List<Log>();
+        public IList<Log> History {  get; } = new List<Log>();
 
         /// <summary>
         /// Simulation constructor.

@@ -24,7 +24,7 @@ namespace harbNet
         /// Gets the history of the container
         /// </summary>
         /// <return>Returns a list of history events the container has been through</return>
-        public IList<Event> History {  get; internal set; } = new List<Event>();
+        public IList<Event> History {  get; } = new List<Event>();
 
         /// <summary>
         /// Gets the size of the container

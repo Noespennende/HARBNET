@@ -49,12 +49,12 @@ namespace harbNet
         /// Gets all Events in the ships history.
         /// </summary>
         /// <returns>Returns an IList with Event objects with information about the ships history.</returns>
-        public IList<Event> History { get; internal set; }
+        public IList<Event> History { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>
         /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
-        public IList<Container> ContainersOnBoard {  get; set; } = new List<Container>();
+        public IList<Container> ContainersOnBoard {  get; } = new List<Container>();
         /// <summary>
         /// Gets the container capacity of the ship.
         /// </summary>

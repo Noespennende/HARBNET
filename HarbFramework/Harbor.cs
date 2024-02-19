@@ -61,19 +61,19 @@ namespace harbNet
         /// Gets all ships in anchorage
         /// </summary>
         /// <return>Returns a list of all ships in anchorage</return>
-        internal IList<Ship> Anchorage { get; set; } = new List<Ship>();
+        internal IList<Ship> Anchorage { get;} = new List<Ship>();
 
         /// <summary>
         /// Gets all ships in transit
         /// </summary>
         /// <return>Returns a dictionary with all ships in transit</return>
-        internal IDictionary<Ship, int> ShipsInTransit { get; set; } = new Dictionary<Ship, int>(); // ship: int number of days until return
+        internal IDictionary<Ship, int> ShipsInTransit { get; } = new Dictionary<Ship, int>(); // ship: int number of days until return
 
         /// <summary>
         /// Gets all ships
         /// </summary>
         /// <return>Returns a list of all ships</return>
-        internal IList<Ship> AllShips { get; set; } = new List<Ship>(); // Sikkert midlertidig, til vi kan regne på det
+        internal IList<Ship> AllShips { get;} = new List<Ship>(); // Sikkert midlertidig, til vi kan regne på det
 
         /// <summary>
         /// Gets all container spaces
