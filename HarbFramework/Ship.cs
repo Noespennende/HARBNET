@@ -15,6 +15,8 @@ namespace harbNet
 
     public class Ship : IShip
     {
+        
+
         /// <summary>
         /// Gets the unique ID for the ship
         /// </summary>
@@ -167,7 +169,7 @@ namespace harbNet
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
             this.IsForASingleTrip = isForASingleTrip;
-            this.History = new List<Event>();
+            this.History = new List<StatusLog>();
 
             if (shipSize == ShipSize.Large)
             {
@@ -182,7 +184,7 @@ namespace harbNet
                 this.ContainersLoadedPerHour = 6;
             }
 
-            History.Add(new Event(this.ID, Guid.Empty, startDate, Status.Anchoring));
+            History.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
 
             SetBaseShipInformation(shipSize);
 
@@ -345,7 +347,7 @@ namespace harbNet
                 }
                 if (ContainertoAdd != null)
                 {
-                    ContainertoAdd.History.Add(new Event(ContainertoAdd.ID, this.ID, StartDate, Status.Transit));
+                    ContainertoAdd.History.Add(new StatusLog(ContainertoAdd.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(ContainertoAdd);
                     CurrentWeightInTonn += ContainertoAdd.WeightInTonn;
                 }

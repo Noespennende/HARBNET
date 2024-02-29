@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System;
 using HarbFramework;
-
+using harbNet;
 namespace harbNet
 {
     internal class Program
@@ -35,8 +35,15 @@ namespace harbNet
             ships.Add(skipOHoi);
             ships.Add(denSorteDame);
 
+        
             // Creating the harbor which will be used in the simulation, using the ship list
             Harbor kjuttaviga = new Harbor(ships, 4, 3, 2, 2, 1, 1, 100, 200, 150);
+            kjuttaviga.ShipUnDocked += onShipUndock;
+
+            static void onShipUndock(Guid shipId)
+            {
+                Console.WriteLine($"Ship {shipId} undocked");
+            }
 
             // Creating the simulation object, of which the simulation will run from
             Simulation simulation = new Simulation(kjuttaviga, startTime, endTime);

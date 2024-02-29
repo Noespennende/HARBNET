@@ -15,6 +15,9 @@ namespace harbNet
     /// </summary>
     public class Harbor : IHarbor
     {
+
+        public delegate void ShipUndockedHandler(Guid shipId);
+        public event ShipUndockedHandler? ShipUnDocked;
         /// <summary>
         /// Unique ID for harbor
         /// </summary>
@@ -327,6 +330,7 @@ namespace harbNet
         internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeUndocked = GetShipFromLoadingDock(shipID);
+        
 
             if (shipToBeUndocked != null)
             {
@@ -343,6 +347,7 @@ namespace harbNet
                 if (!ShipsInTransit.ContainsKey(shipToBeUndocked))
                 {
                     ShipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
+                    ShipUnDocked?.Invoke(shipID); //her la jeg til denne
                 }
                 return dock.ID;
             }
