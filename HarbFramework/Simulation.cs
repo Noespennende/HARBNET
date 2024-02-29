@@ -26,7 +26,12 @@ namespace HarbFramework
 
         private Harbor harbor;
 
-        public IList<Log> History {  get; } = new List<Log>();
+
+        /// <summary>
+        /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
+        /// </summary>
+        /// <returns>returns a list of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
+        public IList<DailyLog> History {  get; } = new List<DailyLog>();
 
         /// <summary>
         /// Simulation constructor.
@@ -44,8 +49,8 @@ namespace HarbFramework
         /// <summary>
         /// Running the simulation
         /// </summary>
-        /// <returns>returns the history of the simulation</returns>
-        public IList<Log> Run()
+        /// <returns>returns the history of the simulation in the form of log objects where each object contains information about all ships and containers on one day of the simulation.</returns>
+        public IList<DailyLog> Run()
         {
             this.currentTime = startTime;
             
@@ -74,8 +79,8 @@ namespace HarbFramework
                             ship.AddHistoryEvent(currentTime, harbor.AnchorageID, Status.Anchoring);
                         }
 
-                        History.Add(new Log(currentTime, DuplicateShipList(harbor.Anchorage), DuplicateShipList(harbor.GetShipsInTransit()), DuplicateContainerList(harbor.GetContainersStoredInHarbour()),
-                            DuplicateShipList(harbor.GetShipsInLoadingDock()), DuplicateShipList(harbor.GetShipsInShipDock())));
+                        History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
+                            harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
                     }
                     
                 }
@@ -106,15 +111,15 @@ namespace HarbFramework
 
                     
 
-                    History.Add(new Log(currentTime, DuplicateShipList(harbor.Anchorage), DuplicateShipList(harbor.GetShipsInTransit()), DuplicateContainerList(harbor.GetContainersStoredInHarbour()),
-                        DuplicateShipList(harbor.GetShipsInLoadingDock()), DuplicateShipList(harbor.GetShipsInShipDock())));
+                    History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
+                        harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
                     if (currentTime.Hour == 0)
                     {
 
                         foreach (Ship ship in harbor.AllShips)
                         {
 
-                            foreach (Event his in ship.History)
+                            foreach (StatusLog his in ship.History)
                             {
 
                                 if (his.PointInTime >= teset && his.PointInTime <= currentTime)
@@ -150,14 +155,22 @@ namespace HarbFramework
        
 
         /// <summary>
-        /// Print history for each ship .
+        /// Print history for each ship in the harbor simulation.
         /// </summary>
         public void PrintShipHistory()
         {
-            foreach (Log log in History)
+            foreach (DailyLog log in History)
             {
                 log.PrintInfoForAllShips();
             }
+        }
+
+        /// <summary>
+        /// Print history for one ship in the harbor simulation.
+        /// </summary>
+        public void PrintShipHistory(Ship shipToBePrinted)
+        {
+            shipToBePrinted.PrintHistory();
         }
 
         /// <summary>
@@ -165,7 +178,7 @@ namespace HarbFramework
         /// </summary>
         public void PrintContainerHistory()
         {
-            foreach (Log log in History)
+            foreach (DailyLog log in History)
             {
                 log.PrintInfoForAllContainers();
             }
@@ -182,7 +195,7 @@ namespace HarbFramework
             {
 
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last(); 
+                StatusLog lastEvent = ship.History.Last(); 
 
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null && lastEvent.Status == Status.Anchoring)
@@ -212,7 +225,7 @@ namespace HarbFramework
             foreach (Ship ship in ShipsInShipDock)
             {
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last();
+                StatusLog lastEvent = ship.History.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null &&
                     (lastEvent.Status == Status.Anchored ||
@@ -236,7 +249,7 @@ namespace HarbFramework
             foreach (Ship ship in ShipsInLoadingDock)
             {
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last();
+                StatusLog lastEvent = ship.History.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null &&
                     (lastEvent.Status == Status.DockedToShipDock ||
@@ -265,7 +278,7 @@ namespace HarbFramework
             {
 
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last();
+                StatusLog lastEvent = ship.History.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null && 
                     (lastEvent.Status == Status.Anchored || 
@@ -310,14 +323,14 @@ namespace HarbFramework
         {
             foreach (Ship ship in harbor.shipsInLoadingDock.Keys)
             {
-                Event lastEvent = ship.History.Last();
+                StatusLog lastEvent = ship.History.Last();
 
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null && (lastEvent.Status == Status.Unloading || lastEvent.Status == Status.DockedToLoadingDock))
                 {
                     Guid currentPosition = lastEvent.SubjectLocation;
 
-                    Event secondLastEvent = ship.History[ship.History.Count - 2];
+                    StatusLog secondLastEvent = ship.History[ship.History.Count - 2];
 
 
                     if (ship.ContainersOnBoard.Count != 0 && lastEvent.Status == Status.DockedToLoadingDock || lastEvent.Status == Status.Unloading)
@@ -366,7 +379,7 @@ namespace HarbFramework
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
                 Guid shipID = ship.ID;
-                Event lastEvent = ship.History.Last();
+                StatusLog lastEvent = ship.History.Last();
 
                 
                 if (ship.HasBeenAlteredThisHour == false && lastEvent != null && 
@@ -414,7 +427,7 @@ namespace HarbFramework
         private static bool ContainsTransitStatus(Ship ship)
         {
             bool containsTransitStatus = false;
-            foreach (Event his in ship.History)
+            foreach (StatusLog his in ship.History)
             {
                 if (his.Status == Status.Transit)
                 {
@@ -434,8 +447,8 @@ namespace HarbFramework
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
 
-                Event lastEvent = ship.History.Last();
-                Event secondLastEvent = ship.History[ship.History.Count - 2]; 
+                StatusLog lastEvent = ship.History.Last();
+                StatusLog secondLastEvent = ship.History[ship.History.Count - 2]; 
 
                 if (!ship.HasBeenAlteredThisHour && lastEvent != null &&
                     ((lastEvent.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true)) ||
@@ -515,13 +528,13 @@ namespace HarbFramework
             foreach (Ship ship in harbor.ShipsInTransit.Keys)
             {
 
-                Event lastEvent = ship.History.Last();
+                StatusLog lastEvent = ship.History.Last();
 
                 if (ship.HasBeenAlteredThisHour == false && lastEvent != null && lastEvent.Status == Status.Transit)
                 {
 
                     Guid CurrentPosition = lastEvent.SubjectLocation;
-                    Event LastHistoryEvent = ship.History.Last();
+                    StatusLog LastHistoryEvent = ship.History.Last();
 
                     double DaysSinceTransitStart = (currentTime - LastHistoryEvent.PointInTime).TotalDays;
 
@@ -536,60 +549,66 @@ namespace HarbFramework
                 }
             }
         }
+
         /// <summary>
-        /// Duplicate a shipList
+        /// Returns a string that contains information about all ships in the previous simulation.
         /// </summary>
-        /// <param name="shipListToDuplicate">list to duplicate</param>
-        /// <returns>a duplicated shiplist</returns>
-        private IList<Ship> DuplicateShipList (IList<Ship> shipListToDuplicate)
+        /// <returns> a string that contains information about all ships in the previous simulation. Returns empty string if no simulation has been run.</returns>
+        override public String ToString()
         {
-            IList<Ship> duplicatedList = new List<Ship>();
-
-            foreach (Ship ship in shipListToDuplicate)
+            if (History.Count > 0)
             {
-                IList<Container> containerList = new List<Container>();
-                IList<Event> eventList = new List<Event>();
+                StringBuilder sb = new StringBuilder();
 
-                foreach (Container container in ship.ContainersOnBoard)
+                foreach (DailyLog log in History)
                 {
-                    IList<Event> containersHistory = new List<Event>();
-                    foreach (Event containerEvent in container.History)
+                    sb.Append(log.ToString());
+                }
+                return sb.ToString();
+            } else { return "";  }
+        }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <param name="ShipsOrContainers">Sending in the value "ships" returns information on all ships, sending in "containers" return information on all containers</param>
+        /// <returns>Returns a String containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
+        public String ToString(String ShipsOrContainers)
+        {
+            if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
+            {
+                return ToString();
+            }
+            else if (ShipsOrContainers.ToLower().Equals("containers") || ShipsOrContainers.ToLower().Equals("container"))
+            {
+                if (History.Count > 0)
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    foreach (DailyLog log in History)
                     {
-                        containersHistory.Add(new Event(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
+                        sb.Append(log.ToString("containers"));
                     }
-                    containerList.Add(new Container(container.Size, container.WeightInTonn, ship.ID, container.ID, containersHistory));
+                    return sb.ToString();
                 }
-                foreach (Event eventObject in ship.History)
-                {
-                    eventList.Add(new Event(eventObject.Subject, eventObject.SubjectLocation, eventObject.PointInTime, eventObject.Status));
-                }
-
-                duplicatedList.Add(new Ship(ship.Name, ship.ShipSize, ship.StartDate, ship.IsForASingleTrip, ship.RoundTripInDays, ship.ID, containerList, eventList));
+                else { return ""; }
             }
-            return duplicatedList;
+            else
+            {
+                return "";
+            }
+
         }
 
         /// <summary>
-        /// Duplicate a shipList
+        /// Returns a string that represents the information about one ship in the simulation.
         /// </summary>
-        /// <param name="containersToDuplicate">list to duplicate</param>
-        /// <returns>a duplicated containerlist</returns>
-        private IList<Container> DuplicateContainerList (IList<Container> containersToDuplicate)
+        /// <param name="ship">The ship you want information on</param>
+        /// <returns>Returns a String containing information about the given ship in the simulation</returns>
+        public String ToString(Ship ship)
         {
-            IList<Container> duplicatedList = new List<Container>();
-
-            foreach (Container container in containersToDuplicate)
-            {
-                IList<Event> eventList = new List<Event>();
-                foreach (Event containerEvent in container.History)
-                {
-                    eventList.Add(new Event(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
-                }
-                duplicatedList.Add(new Container(container.Size, container.WeightInTonn, container.CurrentPosition, container.ID, eventList));
-            }
-            return duplicatedList;
+            return ship.HistoryToString();
         }
-        
     }
 
 }

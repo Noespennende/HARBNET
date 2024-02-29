@@ -41,7 +41,7 @@ namespace harbNet
         /// Gets all Events in the ships history.
         /// </summary>
         /// <returns>Returns an IList with Event objects with information about the ships history.</returns>
-        public IList<Event> History { get; }
+        public IList<StatusLog> History { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>
@@ -71,5 +71,12 @@ namespace harbNet
         /// Prints the ships entire history to consol.
         /// </summary>
         public void PrintHistory();
+        /// <summary>
+        /// Returns the ships entire history in the form of a string.
+        /// </summary>
+        /// <returns> a String containing the ships entire history </returns>
+        public String HistoryToString();
+
+        public String ToString();
     }
 }

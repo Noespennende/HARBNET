@@ -49,7 +49,7 @@ namespace harbNet
         /// Gets all Events in the ships history.
         /// </summary>
         /// <returns>Returns an IList with Event objects with information about the ships history.</returns>
-        public IList<Event> History { get; }
+        public IList<StatusLog> History { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>
@@ -115,7 +115,7 @@ namespace harbNet
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
             this.IsForASingleTrip = isForASingleTrip;
-            this.History = new List<Event>();
+            this.History = new List<StatusLog>();
 
             if (shipSize == ShipSize.Large)
             {
@@ -130,7 +130,7 @@ namespace harbNet
                 this.ContainersLoadedPerHour = 6;
             }
 
-            History.Add(new Event(this.ID, Guid.Empty, startDate, Status.Anchoring));
+            History.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
             
             SetBaseShipInformation(shipSize);
 
@@ -151,7 +151,7 @@ namespace harbNet
         /// <param name="roundTripInDays">Number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
         /// <param name="containersOnboard">Containers in the ships cargo.</param>
         /// <param name="currentHistory">The ships history so far.</param>
-        internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<Event> currentHistory)
+        internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<StatusLog> currentHistory)
         {
             this.Name = shipName;
             this.ShipSize = shipSize;
@@ -244,7 +244,7 @@ namespace harbNet
                 {
                     CheckForValidWeight();
                     Container smallContainer = new Container(ContainerSize.Small, 10, this.ID);
-                    smallContainer.History.Add(new Event(smallContainer.ID, this.ID, StartDate, Status.Transit));
+                    smallContainer.History.Add(new StatusLog(smallContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(smallContainer);
                     CurrentWeightInTonn += smallContainer.WeightInTonn;
                     
@@ -254,7 +254,7 @@ namespace harbNet
                 {
                     CheckForValidWeight();
                     Container mediumContainer = new Container(ContainerSize.Medium, 15, this.ID);
-                    mediumContainer.History.Add(new Event(mediumContainer.ID, this.ID, StartDate, Status.Transit));
+                    mediumContainer.History.Add(new StatusLog(mediumContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(mediumContainer);
                     CurrentWeightInTonn += mediumContainer.WeightInTonn;
                 }
@@ -262,7 +262,7 @@ namespace harbNet
                 {
                     CheckForValidWeight();
                     Container largeContainer = new Container(ContainerSize.Large, 15, this.ID);
-                    largeContainer.History.Add(new Event(largeContainer.ID, this.ID, StartDate, Status.Transit));
+                    largeContainer.History.Add(new StatusLog(largeContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(largeContainer);
                     CurrentWeightInTonn += largeContainer.WeightInTonn;
                 }
@@ -299,9 +299,9 @@ namespace harbNet
         /// <param name="currentLocation">ID for the location the ship is located when the event occured</param>
         /// <param name="status">Status the ship had when the event occured</param>
         /// <returns>Returns Event object containing information about the ship at the time the event were created</returns>
-        internal Event AddHistoryEvent (DateTime currentTime, Guid currentLocation, Status status)
+        internal StatusLog AddHistoryEvent (DateTime currentTime, Guid currentLocation, Status status)
         {
-            Event currentEvent = new Event(ID,currentLocation, currentTime, status);
+            StatusLog currentEvent = new StatusLog(ID,currentLocation, currentTime, status);
             History.Add(currentEvent);
             return currentEvent;
         }
@@ -416,7 +416,7 @@ namespace harbNet
         internal Status GetStatusAtPointInTime(DateTime time)
         {
             Status shipStatus = new Status();
-            foreach (Event eventObject in History)
+            foreach (StatusLog eventObject in History)
             {
                 if (eventObject.PointInTime < time)
                 {
@@ -435,13 +435,61 @@ namespace harbNet
         /// </summary>
         public void PrintHistory()
         {
-            Console.WriteLine($"ShipId: {ID}");
-            foreach (Event his in History)
+            Console.WriteLine($"Ship ID: {ID}");
+            foreach (StatusLog his in History)
             {
 
-                Console.WriteLine($"ShipId: {his.Subject}Date: {his.PointInTime}|Status: {his.Status}|\n");
+                Console.WriteLine($"ShipId: {his.Subject} Date: {his.PointInTime} Status: {his.Status}|\n");
 
             }
+        }
+
+        /// <summary>
+        /// Returns the ships entire history in the form of a string.
+        /// </summary>
+        /// <returns> a String containing the ships entire history </returns>
+
+        public String HistoryToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"Ship ID: {ID}" + "\n");
+
+            foreach (StatusLog his in History)
+            {
+
+                sb.Append($"ShipId: {his.Subject} Date: {his.PointInTime} Status: {his.Status}\n");
+
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Returns a string containing information about the ship
+        /// </summary>
+        /// <returns> a String containing information about the ship </returns>
+        public override string ToString()
+        {
+            int large = 0;
+            int medium = 0;
+            int small = 0;
+
+            foreach (Container container in ContainersOnBoard)
+            {
+                if (container.Size == ContainerSize.Small)
+                {
+                    small++;
+                } else if (container.Size == ContainerSize.Medium)
+                {
+                    medium++;
+                } else
+                {
+                    large++;
+                }
+            }
+
+            return ($"ID: {ID}, Navn: {Name}, Size: {ShipSize}, Start date: {StartDate.ToString()}, Round trip time: {RoundTripInDays} days, Containers on board: {small} small," +
+                $" {medium} medium, {large} large, {ContainersOnBoard.Count} total, Base weight: {BaseWeightInTonn} tonnes, Current weight: {CurrentWeightInTonn} tonnes, Max weight: {MaxWeightInTonn} tonnes.");
         }
     }
 }

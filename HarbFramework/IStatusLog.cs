@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace HarbFramework
 {
     /// <summary>
-    /// Interface defining the contract for the public API of the Event class.
+    /// Interface defining the contract for the public API of the StatusLog class.
     /// </summary>
-    public interface IEvent
+    public interface IStatusLog
     {
         /// <summary>
         /// Gets the subject ID
@@ -27,5 +27,11 @@ namespace HarbFramework
         /// gets the status of the event IE: undocking, unloading.
         /// </summary>
         public Status Status { get; }
+
+        /// <summary>
+        /// Returns a string conraining information about the subject on a given point in time
+        /// </summary>
+        /// <returns> a String containing information about the subject on a given point in time.</returns>
+        public String ToString();
     }
 }

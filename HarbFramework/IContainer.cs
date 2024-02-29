@@ -21,7 +21,7 @@ namespace HarbFramework
         /// Gets the history of the container
         /// </summary>
         /// <return>Returns a list of history events the container has been through</return>
-        public IList<Event> History { get; }
+        public IList<StatusLog> History { get; }
 
         /// <summary>
         /// Gets the size of the container
@@ -46,5 +46,20 @@ namespace HarbFramework
         /// </summary>
         /// <returns>Returns last history event of container if they have a history, or returns none if there is no history registered</returns>
         public Status GetCurrentStatus();
+
+        /// <summary>
+        /// Prints the containers entire history to console 
+        /// </summary>
+        public void PrintHistory();
+        /// <summary>
+        /// Returns a String representing the history of the container. 
+        /// </summary>
+        /// <returns>String representing the history of a the container</returns>
+        public String HistoryToString();
+        /// <summary>
+        /// Returns a String containing information about the container. 
+        /// </summary>
+        /// <returns>String containing information about the container.</returns>
+        public string ToString();
     }
 }

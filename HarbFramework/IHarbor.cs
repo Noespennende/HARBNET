@@ -58,5 +58,11 @@ namespace harbNet
         /// </summary>
         /// <return>Returns an unique Guid defining a specific transitlocation</return>
         public Guid TransitLocationID { get; }
+
+        /// <summary>
+        /// Returns a string value containing information about the harbour, its ships and container spaces.
+        /// </summary>
+        /// <returns>String value containing information about the harbour, its ships and container spaces.</returns>
+        public string ToString();
     }
 }

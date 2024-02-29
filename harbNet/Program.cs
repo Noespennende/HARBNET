@@ -59,10 +59,6 @@ namespace harbNet
             //Prints the history for all ships in the simulation
             simulation.PrintShipHistory();
 
-           
-
-
-
         }
     }
 }

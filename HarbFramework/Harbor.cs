@@ -810,7 +810,7 @@ namespace harbNet
         /// <returns>Returns last registered status of specified ship if the ship has a history, or returns none</returns>
         public Status GetShipStatus(Guid ShipID)
         {
-            Event lastEvent = null;
+            StatusLog lastEvent = null;
             StringBuilder sb = new StringBuilder();
             foreach (Ship ship in AllShips)
             {
@@ -834,7 +834,7 @@ namespace harbNet
             
             foreach (Ship ship in AllShips)
             {
-                Event test = ship.History.Last();
+                StatusLog test = ship.History.Last();
                 if (test != null)
                 {
                     shipStatus[ship] = test.Status;
@@ -1013,7 +1013,7 @@ namespace harbNet
 
             foreach (Ship ship in AllShips)
             {
-                Event test = ship.History.Last();
+                StatusLog test = ship.History.Last();
                 if (test != null)
                 {
                     statusOfAllShips[ship] = test.Status;
@@ -1121,6 +1121,16 @@ namespace harbNet
                 list.Add(ship);
             }
             return list;
+        }
+
+        /// <summary>
+        /// Returns a string value containing information about the harbour, its ships and container spaces.
+        /// </summary>
+        /// <returns>String value containing information about the harbour, its ships and container spaces.</returns>
+        public override string ToString()
+        {
+            return ($"ID: {ID}, Ships in loading docks: {shipsInLoadingDock.Count}, Free loading docks: {freeLoadingDocks.Count}, Total loading docks: {allLoadingDocks.Count}, Ships in ship docks: {shipsInShipDock.Count}, Free ship docks: {freeShipDocks.Count}, " +
+                $"Total ship docks: {allShipDocks.Count}, Ships in anchorage: {Anchorage.Count}, Ships in transit: {ShipsInTransit.Count}, Containers stored in harbor: {storedContainers.Count}, Free harbor container spaces: {freeContainerSpaces.Count}, Total harbor container spaces: {allContainerSpaces.Count}");
         }
     }
 }

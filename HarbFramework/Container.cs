@@ -24,7 +24,7 @@ namespace harbNet
         /// Gets the history of the container
         /// </summary>
         /// <return>Returns a list of history events the container has been through</return>
-        public IList<Event> History {  get; } = new List<Event>();
+        public IList<StatusLog> History {  get; } = new List<StatusLog>();
 
         /// <summary>
         /// Gets the size of the container
@@ -65,7 +65,7 @@ namespace harbNet
         /// <param name="currentPosition">Current position of container</param>
         /// <param name="id">Unique ID defining the container</param>
         /// <param name="containerHistory">History of event container has been through</param>
-        internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition, Guid id, IList<Event> containerHistory)
+        internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition, Guid id, IList<StatusLog> containerHistory)
         {
             this.ID = id;
             this.Size = size;
@@ -81,13 +81,13 @@ namespace harbNet
         /// <param name="currentTime">Time history event is added to container</param>
         internal void AddHistoryEvent (Status status, DateTime currentTime)
         {
-            History.Add(new Event(ID, CurrentPosition, currentTime, status));
+            History.Add(new StatusLog(ID, CurrentPosition, currentTime, status));
         }
 
         /// <summary>
         /// Gets current status of container
         /// </summary>
-        /// <returns>Returns last history event of container if they have a history, or returns none if there is no history registered</returns>
+        /// <returns>Last history event of container if they have a history, or returns none if there is no history registered</returns>
         public Status GetCurrentStatus()
         {
             if (History.Count > 0)
@@ -99,6 +99,42 @@ namespace harbNet
                 return Status.None;
             }
             
+        }
+
+        /// <summary>
+        /// Prints the containers entire history to console 
+        /// </summary>
+        public void PrintHistory()
+        {
+            Console.WriteLine($"Container ID: {ID.ToString()}"); 
+            foreach (StatusLog sl in History)
+            {
+                Console.WriteLine($"Date: {sl.PointInTime} Status: {sl.Status}\n");
+            }
+        }
+
+        /// <summary>
+        /// Returns a String representing the history of the container. 
+        /// </summary>
+        /// <returns>String representing the history of a the container</returns>
+        public String HistoryToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"Container ID: {ID.ToString()}\n");
+            foreach (StatusLog sl in History) {
+                sb.Append($"Container Id: {sl.Subject} Date: {sl.PointInTime} Status: {sl.Status}\n");
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Returns a String containing information about the container. 
+        /// </summary>
+        /// <returns>String containing information about the container.</returns>
+        public override string ToString()
+        {
+            return ($"ID: {ID.ToString()}, Size: {Size}, Weight: {WeightInTonn} tonnes");
         }
     }
 }

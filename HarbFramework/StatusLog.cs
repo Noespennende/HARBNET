@@ -9,7 +9,7 @@ namespace HarbFramework
     /// <summary>
     /// Event to be stored in a ships or containers history holding information about the subjects wereabouts and status.
     /// </summary>
-    public class Event : IEvent
+    public class StatusLog : IStatusLog
     {
         /// <summary>
         /// Gets an unique Id of the subject
@@ -35,12 +35,21 @@ namespace HarbFramework
         /// <param name="subjectLocation">The location of the subject</param>
         /// <param name="pointInTime">The point in time for this event</param>
         /// <param name="status">The status of the event, f.eks Undocking, Loading, Unloading</param>
-        internal Event (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
+        internal StatusLog (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
         {
             this.Subject = subject;
             this.SubjectLocation = subjectLocation;
             this.PointInTime = pointInTime;
             this.Status = status;
+        }
+
+        /// <summary>
+        /// Returns a string conraining information about the subject on a given point in time
+        /// </summary>
+        /// <returns> a String containing information about the subject on a given point in time</returns>
+        override public string ToString()
+        {
+            return ("Date: " + PointInTime.ToString() + ", Subject ID: " + Subject.ToString() + ", Location: " + SubjectLocation.ToString() + ", Status: " + Status.ToString());
         }
     }
 }
