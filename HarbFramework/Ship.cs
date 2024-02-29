@@ -59,6 +59,20 @@ namespace harbNet
         /// Gets the container capacity of the ship.
         /// </summary>
         /// <returns>Returns an int value representing the max number of containers the ship can store.</returns>
+
+        public int numberOfSmallContainersOnBoard { get; internal set; }
+        /// <summary>
+        /// Gets the number of small containers on board
+        /// </summary>
+        public int numberOfMediumContainersOnBoard { get; internal set; }
+        /// <summary>
+        /// gets the number of medium containers on boar
+        /// </summary>
+        public int numberOfLargeContainersOnBoard { get; internal set; }
+        /// <summary>
+        /// gets the number of Large containers on board
+        /// </summary>
+
         public int ContainerCapacity { get; internal set; }
         /// <summary>
         /// Gets the ships max weight the ship in tonns can be before it sinks
@@ -114,6 +128,7 @@ namespace harbNet
             this.StartDate = startDate;
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
+            
             this.IsForASingleTrip = isForASingleTrip;
             this.History = new List<StatusLog>();
 
@@ -141,6 +156,43 @@ namespace harbNet
 
         }
 
+        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
+             int numberOfSmallContainersOnBoard, int numberOfMediumContainersOnBoard,
+             int numberOfLargeContainersOnBoard)
+        {
+            this.ID = Guid.NewGuid();
+            this.Name = shipName;
+            this.ShipSize = shipSize;
+            this.StartDate = startDate;
+            this.RoundTripInDays = roundTripInDays;
+            this.ContainersOnBoard = new List<Container>();
+            this.IsForASingleTrip = isForASingleTrip;
+            this.History = new List<Event>();
+
+            if (shipSize == ShipSize.Large)
+            {
+                this.ContainersLoadedPerHour = 10;
+            }
+            else if (shipSize == ShipSize.Medium)
+            {
+                this.ContainersLoadedPerHour = 8;
+            }
+            else
+            {
+                this.ContainersLoadedPerHour = 6;
+            }
+
+            History.Add(new Event(this.ID, Guid.Empty, startDate, Status.Anchoring));
+
+            SetBaseShipInformation(shipSize);
+
+            if (!isForASingleTrip)
+            {
+                AddContainersOnBoard(ContainerSize.Small, numberOfSmallContainersOnBoard);
+                AddContainersOnBoard(ContainerSize.Medium, numberOfMediumContainersOnBoard);
+                AddContainersOnBoard(ContainerSize.Large, numberOfLargeContainersOnBoard);
+            }
+        }
         /// <summary>
         /// Creates a new ship object.
         /// </summary>
@@ -265,6 +317,37 @@ namespace harbNet
                     largeContainer.History.Add(new StatusLog(largeContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(largeContainer);
                     CurrentWeightInTonn += largeContainer.WeightInTonn;
+                }
+            }
+        }
+        /// <summary>
+        /// Adds numbers of different size containers on board
+        /// </summary>
+        /// <param name="containerSize">Size of the container</param>
+        /// <param name="numberOfcontainersOnBoard">Number of containers</param>
+        private void AddContainersOnBoard(ContainerSize containerSize, int numberOfcontainersOnBoard)
+        {
+            for (int i = 0; i < numberOfcontainersOnBoard; i++)
+            { 
+                CheckForValidWeight();
+                Container ContainertoAdd = null;
+            
+                if(containerSize == ContainerSize.Small) { 
+                   ContainertoAdd = new Container(ContainerSize.Small, 10, this.ID);
+                }
+                if (containerSize == ContainerSize.Medium)
+                {
+                    ContainertoAdd = new Container(ContainerSize.Medium, 15, this.ID);
+                }
+                if (containerSize == ContainerSize.Large)
+                {
+                    ContainertoAdd = new Container(ContainerSize.Large, 20, this.ID);
+                }
+                if (ContainertoAdd != null)
+                {
+                    ContainertoAdd.History.Add(new Event(ContainertoAdd.ID, this.ID, StartDate, Status.Transit));
+                    ContainersOnBoard.Add(ContainertoAdd);
+                    CurrentWeightInTonn += ContainertoAdd.WeightInTonn;
                 }
             }
         }
