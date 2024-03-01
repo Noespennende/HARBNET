@@ -38,9 +38,9 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid object representing the ID of the ships current location</returns>
         public Guid CurrentLocation { get; }
         /// <summary>
-        /// Gets all Events in the ships history.
+        /// Gets all StatusLog objects in the ships history.
         /// </summary>
-        /// <returns>Returns an IList with Event objects with information about the ships history.</returns>
+        /// <returns>Returns an IList with StatusLog objects with information about changes in the ships status throughout its history.</returns>
         public IList<StatusLog> History { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.

@@ -756,7 +756,7 @@ namespace Gruppe8.HarbNet
             containerSpace.Free = false;
 
             containerToBeUnloaded.CurrentPosition = containerSpace.ID;
-            containerToBeUnloaded.AddHistoryEvent(Status.InStorage, currentTime);
+            containerToBeUnloaded.AddStatusChangeToHistory(Status.InStorage, currentTime);
 
             return containerSpace.ID;
 
@@ -785,7 +785,7 @@ namespace Gruppe8.HarbNet
             ship.AddContainer(containerToBeLoaded);
             containerToBeLoaded.CurrentPosition = ship.ID;
 
-            containerToBeLoaded.AddHistoryEvent(Status.Transit, currentTime);
+            containerToBeLoaded.AddStatusChangeToHistory(Status.Transit, currentTime);
 
             containerSpace.Free = true;
             containerSpace.storedContainer = Guid.Empty;
@@ -815,13 +815,13 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns last registered status of specified ship if the ship has a history, or returns none</returns>
         public Status GetShipStatus(Guid ShipID)
         {
-            StatusLog lastEvent = null;
+            StatusLog lastStatusChange = null;
             StringBuilder sb = new StringBuilder();
             foreach (Ship ship in AllShips)
             {
                 if (ship.ID == ShipID && ship.History != null && ship.History.Count > 0)
                 {
-                    String shipStatus = $"ShipId: {ship.ID}, Last event: {lastEvent}";
+                    String shipStatus = $"ShipId: {ship.ID}, Last status Change: {lastStatusChange}";
                     sb.Append(shipStatus);
                 }
 
@@ -937,13 +937,13 @@ namespace Gruppe8.HarbNet
         {
             StringBuilder sb = new StringBuilder();
             Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
-            Status lastEventStatus = Status.None;
+            Status lastStatus = Status.None;
             foreach (Container container in storedContainers.Keys)
             {
                 if (container != null && container.History != null && container.History.Count > 0)
                 {
-                    lastEventStatus = container.History.Last().Status;
-                    containerStatus[container] = lastEventStatus;
+                    lastStatus = container.History.Last().Status;
+                    containerStatus[container] = lastStatus;
 
                     foreach (var keyvalue in containerStatus)
                     {
@@ -1063,7 +1063,7 @@ namespace Gruppe8.HarbNet
                 containerSpace.Free = false;
 
                 containerToBeStored.CurrentPosition = containerSpace.ID;
-                containerToBeStored.AddHistoryEvent(Status.InStorage, currentTime);
+                containerToBeStored.AddStatusChangeToHistory(Status.InStorage, currentTime);
             }
                 
         }
