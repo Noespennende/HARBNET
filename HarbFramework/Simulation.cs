@@ -26,6 +26,23 @@ namespace HarbFramework
 
         private Harbor harbor;
 
+        public delegate void SimulationEndHandler(String message);
+        public event SimulationEndHandler SimulationEnd;
+
+        public delegate void DayOverEventHandler(String message, DateTime currentTime);
+        public event DayOverEventHandler? DayOverEvent;
+
+        public delegate void ShipStatusEventHandler(string message);
+        public event ShipStatusEventHandler? ShipStatusEvent;
+
+        public delegate void ShipUndockedHandler(Ship ship);
+        public event ShipUndockedHandler? ShipUnDocked;
+
+        public delegate void shipDockedToShipDockHandler(Ship ship);
+        public event shipDockedToShipDockHandler? shipDockedShipDock;
+
+        public delegate void shipLoadingContainerHandler(Ship ship);
+        public event shipLoadingContainerHandler? shipLoadingContainer;
 
         /// <summary>
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
@@ -106,11 +123,9 @@ namespace HarbFramework
                 DateTime teset = currentTime.AddHours(-24);
                 if (currentTime.Hour == 0)
                 {
-                    Console.WriteLine("\nDay over");
-                    Console.WriteLine("Current time: " + currentTime);
-
+                    DayOverEvent.Invoke($"\nDay over\n Current Time: ", currentTime);
                     
-
+                                                      
                     History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
                         harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
                     if (currentTime.Hour == 0)
@@ -118,19 +133,20 @@ namespace HarbFramework
 
                         foreach (Ship ship in harbor.AllShips)
                         {
-
+                            
                             foreach (StatusLog his in ship.History)
                             {
 
                                 if (his.PointInTime >= teset && his.PointInTime <= currentTime)
                                 {
- 
+
                                     if (his.Status == Status.Transit)
                                     {
-                                        Console.WriteLine(ship.Name + " in transit");
+                                        ShipStatusEvent?.Invoke($"{ship.Name} in transit");
                                     }
                                     else
-                                        Console.WriteLine($"ShipName: {ship.Name}| Date: {his.PointInTime}| Status: {his.Status}|\n");
+                                        ShipStatusEvent?.Invoke($"ShipName: {ship.Name}| Date: {his.PointInTime}| Status: {his.Status}|\n");
+                                    
                                 }
                             }
                         }
@@ -142,10 +158,7 @@ namespace HarbFramework
 
                 continue;
             }
-
-            Console.WriteLine("\n----------------");
-            Console.WriteLine("Simulation over!");
-            Console.WriteLine("----------------\n");
+            SimulationEnd?.Invoke($"\n----------------\nSimulation over!\n----------------\n");
             Thread.Sleep(1000);
 
             return History;
@@ -204,7 +217,7 @@ namespace HarbFramework
                     ship.HasBeenAlteredThisHour = true;
 
                     ship.AddHistoryEvent(currentTime, harbor.AnchorageID, Status.Anchored);
-                    
+                    shipDockedShipDock?.Invoke(ship);
 
                 }
             }
@@ -241,6 +254,7 @@ namespace HarbFramework
                         dockID = harbor.DockShipFromShipDockToLoadingDock(ship.ID, currentTime);
 
                         ship.AddHistoryEvent(currentTime, dockID, Status.DockingToLoadingDock);
+                        shipDockedShipDock?.Invoke(ship);
 
                     }
                 }
@@ -265,6 +279,7 @@ namespace HarbFramework
                         if (ship.IsForASingleTrip && !ContainsTransitStatus(ship))
                         {
                             ship.AddHistoryEvent(currentTime, dockID, Status.Loading);
+                            shipLoadingContainer.Invoke(ship);
                         }
                         else
                         {
@@ -309,7 +324,7 @@ namespace HarbFramework
                         }
 
                     }
-                    
+                   
                     ship.HasBeenAlteredThisHour = true;
                 }
             }
@@ -446,7 +461,7 @@ namespace HarbFramework
         {
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
-
+                
                 StatusLog lastEvent = ship.History.Last();
                 StatusLog secondLastEvent = ship.History[ship.History.Count - 2]; 
 
@@ -458,13 +473,15 @@ namespace HarbFramework
                      (ship.IsForASingleTrip == true && !ContainsTransitStatus(ship))))
                 {
                     Guid currentPosition = lastEvent.SubjectLocation;
-
+                    
                     if (!ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                     {
                         if (harbor.storedContainers.Keys.Count != 0 && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                         {
+                           
                             for (int i = 0; i < ship.ContainersLoadedPerHour; i++)
                             {
+                                
                                 
                                 if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Large)
                                 {
@@ -495,6 +512,7 @@ namespace HarbFramework
                             if (lastEvent.Status != Status.Loading)
                             {
                                 ship.AddHistoryEvent(currentTime, currentPosition, Status.Loading);
+                                shipLoadingContainer.Invoke(ship);
                             }
 
                         }
@@ -503,6 +521,7 @@ namespace HarbFramework
                         {
                             ship.AddHistoryEvent(currentTime, currentPosition, Status.LoadingDone);
                             ship.AddHistoryEvent(currentTime, currentPosition, Status.Undocking);
+                            ShipUnDocked.Invoke(ship);
                         }
 
                     }
@@ -511,7 +530,8 @@ namespace HarbFramework
                      
                         ship.AddHistoryEvent(currentTime, currentPosition, Status.LoadingDone);
                         ship.AddHistoryEvent(currentTime, harbor.TransitLocationID, Status.Undocking);
-                        
+                        ShipUnDocked.Invoke(ship);
+
                     }
 
                     ship.HasBeenAlteredThisHour = true;

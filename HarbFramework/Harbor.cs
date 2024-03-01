@@ -16,8 +16,8 @@ namespace harbNet
     public class Harbor : IHarbor
     {
 
-        public delegate void ShipUndockedHandler(Guid shipId);
-        public event ShipUndockedHandler? ShipUnDocked;
+        
+
         /// <summary>
         /// Unique ID for harbor
         /// </summary>
@@ -216,7 +216,7 @@ namespace harbNet
 
                 RemoveShipFromAnchorage(shipToBeDocked.ID);
                 RemoveLoadingDockFromFreeLoadingDocks(dock.ID);
-
+               
                 return dock.ID;
             }
 
@@ -269,7 +269,7 @@ namespace harbNet
             Dock loadingDock = GetLoadingDockContainingShip(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
             Dock dock;
-
+            
             if (FreeShipDockExists(size))
             {
                 
@@ -347,7 +347,7 @@ namespace harbNet
                 if (!ShipsInTransit.ContainsKey(shipToBeUndocked))
                 {
                     ShipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
-                    ShipUnDocked?.Invoke(shipID); //her la jeg til denne
+                  
                 }
                 return dock.ID;
             }
