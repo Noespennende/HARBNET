@@ -1,4 +1,4 @@
-﻿using HarbFramework;
+﻿using Gruppe8.HarbNet;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace harbNet
+namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Harbor to be used in a simulation

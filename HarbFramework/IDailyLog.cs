@@ -1,4 +1,4 @@
-﻿using harbNet;
+﻿using Gruppe8.HarbNet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HarbFramework
+namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Interface defining the public API for the Log class
@@ -57,14 +57,11 @@ namespace HarbFramework
         /// </summary>
         /// <returns>Returns a String containing information about all ships on the given day of a simulation</returns>
         public String ToString();
-
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <param name="ShipsOrContainers">"ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers on the given day of a simulation.</returns>
         public String ToString(String ShipsOrContainers);
-        
-
     }
 }
