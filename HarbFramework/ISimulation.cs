@@ -1,7 +1,7 @@
-﻿using harbNet;
+﻿using Gruppe8.HarbNet;
 using System.Text;
 
-namespace HarbFramework
+namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Interface defining the public API of the Simulation class

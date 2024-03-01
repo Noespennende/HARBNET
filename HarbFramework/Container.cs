@@ -1,4 +1,4 @@
-﻿using HarbFramework;
+﻿using Gruppe8.HarbNet;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace harbNet
+namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Container to be used in the simulation
@@ -25,7 +25,6 @@ namespace harbNet
         /// </summary>
         /// <return>Returns a list of history events the container has been through</return>
         public IList<StatusLog> History {  get; } = new List<StatusLog>();
-
         /// <summary>
         /// Gets the size of the container
         /// </summary>

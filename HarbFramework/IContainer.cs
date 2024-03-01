@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HarbFramework
+namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Interface defining the contract the public API of the container class

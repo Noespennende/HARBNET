@@ -1,6 +1,6 @@
-﻿using HarbFramework;
+﻿using Gruppe8.HarbNet;
 
-namespace harbNet
+namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Interface defining the public API of the Ship class.
@@ -76,7 +76,10 @@ namespace harbNet
         /// </summary>
         /// <returns> a String containing the ships entire history </returns>
         public String HistoryToString();
-
+        /// <summary>
+        /// Returns a string containing information about the ship
+        /// </summary>
+        /// <returns> a String containing information about the ship </returns>
         public String ToString();
     }
 }
