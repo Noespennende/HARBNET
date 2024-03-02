@@ -51,7 +51,7 @@ namespace TestProgram
 
             simulation.ShipDockingtoLoadingDock += (ship) =>
             {
-                Console.WriteLine($"\nShip {ship.Name} docking to loading dock .");
+                Console.WriteLine($"\nShip {ship.Name} docking to loading dock");
             };
 
             simulation.ShipDockedtoLoadingDock += (ship) =>
