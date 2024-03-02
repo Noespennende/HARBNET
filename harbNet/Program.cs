@@ -23,21 +23,19 @@ namespace TestProgram
             DateTime endTime = startTime + TimeSpan.FromDays(30);
             List<Ship> ships = new List<Ship>();
 
-            
-
             // Creating ships that will be simulated in the Simulation
             Ship shipHappens = new("Ship Happens", ShipSize.Large, startTime, false, 7, 50);
-            //Ship auroraBorealis = new("Aurora Borealis", ShipSize.Medium, startTime.AddDays(4), false, 3, 49);
+            Ship auroraBorealis = new("Aurora Borealis", ShipSize.Medium, startTime.AddDays(4), false, 3, 49);
             Ship skipOHoi = new("Ship O'Hoi", ShipSize.Small, startTime.AddHours(4), false, 1, 15);
-            Ship ssSolitude = new("SS Solitude", ShipSize.Small, startTime.AddDays(6), true, 14, 1);
-            //Ship denSorteDame = new("Den Sorte Dame", ShipSize.Large, startTime, false, 4, 49);
+            Ship ssSolitude = new("SS Solitude", ShipSize.Small, startTime, true, 14, 1);
+            Ship denSorteDame = new("Den Sorte Dame", ShipSize.Large, startTime, false, 4, 49);
 
             // Adding the ships to a list, that will be sent into the Harbor object
             ships.Add(shipHappens);
             ships.Add(ssSolitude);
-            //ships.Add(auroraBorealis);
+            ships.Add(auroraBorealis);
             ships.Add(skipOHoi);
-            //ships.Add(denSorteDame);
+            ships.Add(denSorteDame);
 
         
             // Creating the harbor which will be used in the simulation, using the ship list
@@ -48,17 +46,6 @@ namespace TestProgram
             simulation.ShipUnDocked += onShipUndock;
             simulation.shipDockedShipDock += onShipDockedToDock;
             simulation.shipLoadingContainer += onshipLoadingContainer;
-
-            simulation.ShipDockingtoLoadingDock += (ship) =>
-            {
-                Console.WriteLine($"\nShip {ship.Name} docking to loading dock");
-            };
-
-            simulation.ShipDockedtoLoadingDock += (ship) =>
-            {
-                Console.WriteLine($"\nShip {ship.Name} docked to loading dock");
-            };
-
             simulation.DayOverEvent += (message, currentTime) =>
             {
                 Console.WriteLine("\nDay over");
@@ -75,32 +62,19 @@ namespace TestProgram
                 Console.WriteLine(message);
             };
 
-            simulation.shipAnchored += (Ship ship) =>
-            {
-                Console.WriteLine($"\nShip {ship.Name} has anchored");
-            };
-            simulation.shipUnloadingContainer += (ship) =>
-            {
-                Console.WriteLine($"{ship.Name} unloading containers");
-            };
-
-            simulation.shipAnchoring += (Ship ship) =>
-            {
-                Console.WriteLine($"\nShip {ship.Name} is anchoring");
-            };
 
             static void onShipUndock(Ship ship)
             {
-                Console.WriteLine($"\nShip {ship.Name} undocked");
+                Console.WriteLine($"Ship {ship.Name} undocked");
             }
 
             static void onShipDockedToDock(Ship ship)
             {
-                Console.WriteLine($"\nShip {ship.Name} docked to Loading dock");
+                Console.WriteLine($"Ship {ship.Name} docked to Loading dock");
             }
             static void onshipLoadingContainer(Ship ship)
             {
-                Console.WriteLine($"\nShip {ship.Name} Loading Containers");
+                Console.WriteLine($"Ship {ship.Name} Loading Containers");
             }
 
             /* Running/starting the Simulation. Run() outputs a list of logs that is created during the simulation. It's worth noting that simulation.Run() will also print
@@ -110,7 +84,7 @@ namespace TestProgram
           
 
             Console.WriteLine("\n-------------------------\n");
-            
+
             //Prints the history for a single ship
             ssSolitude.PrintHistory();
 
