@@ -9,21 +9,21 @@ namespace Gruppe8.HarbNet
     public interface ISimulation
     {   
         /// <summary>
-        /// A list of DailyLog objects containing information about the status of the harbour troughout the duration of a simulation.
+        /// A list of log history
         /// </summary>
         public IList<DailyLog> History { get; }
 
         /// <summary>
         /// Starting the simulation
         /// </summary>
-        /// <returns>a IList of DailyLog objects each containing information about the state of the harbour on a given day.</returns>
+        /// <returns>The simulation results</returns>
         public IList<DailyLog> Run();
         /// <summary>
-        /// Prints the ships history to console
+        /// Prints the ships history
         /// </summary>
         public void PrintShipHistory();
         /// <summary>
-        /// prints the containers history to console
+        /// prints the containers history
         /// </summary>
         public void PrintContainerHistory();
 
@@ -36,7 +36,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
-        /// <param name="ShipsOrContainers">Sending inn "ships" returns information on all ships, sending inn "containers" return information on all containers</param>
+        /// <param name="ShipsOrContainers">"ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
         public String ToString(String ShipsOrContainers);
 

@@ -20,7 +20,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets the history of the container
         /// </summary>
-        /// <return>Returns a list of StatusLog objects containing information about the status changes the container has been trough</return>
+        /// <return>Returns a list of history events the container has been through</return>
         public IList<StatusLog> History { get; }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets current status of container
         /// </summary>
-        /// <returns>Returns last status change of container if they have a history. Returns a none status if there is no history registered</returns>
+        /// <returns>Returns last history event of container if they have a history, or returns none if there is no history registered</returns>
         public Status GetCurrentStatus();
 
         /// <summary>

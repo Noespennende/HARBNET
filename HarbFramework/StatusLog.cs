@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// StatusLogs to be stored in a ships or containers history. Each object containing information about the subject at the time the subject went trough a status change.
+    /// Event to be stored in a ships or containers history holding information about the subjects wereabouts and status.
     /// </summary>
     public class StatusLog : IStatusLog
     {
@@ -20,21 +20,21 @@ namespace Gruppe8.HarbNet
         /// </summary>
         public Guid SubjectLocation { get; internal set; }
         /// <summary>
-        /// gets the point in time the status change occured. 
+        /// gets the point in time of an event or action. 
         /// </summary>
         public DateTime PointInTime { get; internal set; }
         /// <summary>
-        /// gets the new status of the subject after the status change
+        /// gets The status of the subject
         /// </summary>
         public Status Status { get; internal set; }
 
         /// <summary>
-        /// Constructor for a StatusLog object. Each object holds information about its subject at the time it went trough a status change.
+        /// Constructor for an Event
         /// </summary>
-        /// <param name="subject">The subject that went trough the status change</param>
-        /// <param name="subjectLocation">The location of the subject at the time the subject changed status</param>
-        /// <param name="pointInTime">The point in time the subject changed status</param>
-        /// <param name="status">The new status of the subject, f.eks Undocking, Loading, Unloading</param>
+        /// <param name="subject">The subject of the event</param>
+        /// <param name="subjectLocation">The location of the subject</param>
+        /// <param name="pointInTime">The point in time for this event</param>
+        /// <param name="status">The status of the event, f.eks Undocking, Loading, Unloading</param>
         internal StatusLog (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
         {
             this.Subject = subject;

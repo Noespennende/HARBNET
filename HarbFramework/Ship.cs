@@ -46,9 +46,9 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid object representing the ID of the ships current location</returns>
         public Guid CurrentLocation { get; internal set; }
         /// <summary>
-        /// Gets a IList of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
+        /// Gets all Events in the ships history.
         /// </summary>
-        /// <returns>Returns an IList with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
+        /// <returns>Returns an IList with Event objects with information about the ships history.</returns>
         public IList<StatusLog> History { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
@@ -369,17 +369,17 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Generates a new StatusLog object and adds it to the ships history.
+        /// Generates a new event and adds it to the ships history.
         /// </summary>
-        /// <param name="currentTime">Date and time the status change occured.</param>
-        /// <param name="currentLocation">ID for the location the ship is located when the status change occured</param>
-        /// <param name="status">Status the ship had when the status change occured</param>
-        /// <returns>Returns StatusLog object containing information about the ship at the time the StatusLog were created</returns>
-        internal StatusLog AddStatusChangeToHistory (DateTime currentTime, Guid currentLocation, Status status)
+        /// <param name="currentTime">Date and time the event occured.</param>
+        /// <param name="currentLocation">ID for the location the ship is located when the event occured</param>
+        /// <param name="status">Status the ship had when the event occured</param>
+        /// <returns>Returns Event object containing information about the ship at the time the event were created</returns>
+        internal StatusLog AddHistoryEvent (DateTime currentTime, Guid currentLocation, Status status)
         {
-            StatusLog currentStatusChange = new StatusLog(ID,currentLocation, currentTime, status);
-            History.Add(currentStatusChange);
-            return currentStatusChange;
+            StatusLog currentEvent = new StatusLog(ID,currentLocation, currentTime, status);
+            History.Add(currentEvent);
+            return currentEvent;
         }
 
         /// <summary>
@@ -492,13 +492,13 @@ namespace Gruppe8.HarbNet
         internal Status GetStatusAtPointInTime(DateTime time)
         {
             Status shipStatus = new Status();
-            foreach (StatusLog statusLogObject in History)
+            foreach (StatusLog eventObject in History)
             {
-                if (statusLogObject.PointInTime < time)
+                if (eventObject.PointInTime < time)
                 {
-                    shipStatus = statusLogObject.Status;
+                    shipStatus = eventObject.Status;
                 }
-                else if (statusLogObject.PointInTime > time)
+                else if (eventObject.PointInTime > time)
                 {
                     break;
                 }

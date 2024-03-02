@@ -23,7 +23,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets the history of the container
         /// </summary>
-        /// <return>Returns a list of StatusLog objects that contains informations on the status changes the container has been through</return>
+        /// <return>Returns a list of history events the container has been through</return>
         public IList<StatusLog> History {  get; } = new List<StatusLog>();
         /// <summary>
         /// Gets the size of the container
@@ -63,7 +63,7 @@ namespace Gruppe8.HarbNet
         /// <param name="WeightInTonn">weight of container in tonn</param>
         /// <param name="currentPosition">Current position of container</param>
         /// <param name="id">Unique ID defining the container</param>
-        /// <param name="containerHistory">History of status changes the container has been through stored in StatusLog objects.</param>
+        /// <param name="containerHistory">History of event container has been through</param>
         internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition, Guid id, IList<StatusLog> containerHistory)
         {
             this.ID = id;
@@ -74,11 +74,11 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Adds a StatusLog object to the containers history.
+        /// Adds history event to container
         /// </summary>
         /// <param name="status">current status of container</param>
-        /// <param name="currentTime">The time the status change to the container happened</param>
-        internal void AddStatusChangeToHistory (Status status, DateTime currentTime)
+        /// <param name="currentTime">Time history event is added to container</param>
+        internal void AddHistoryEvent (Status status, DateTime currentTime)
         {
             History.Add(new StatusLog(ID, CurrentPosition, currentTime, status));
         }
@@ -86,7 +86,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets current status of container
         /// </summary>
-        /// <returns>StatusLog with information about the latest status change of container. Returns none if there is no history registered</returns>
+        /// <returns>Last history event of container if they have a history, or returns none if there is no history registered</returns>
         public Status GetCurrentStatus()
         {
             if (History.Count > 0)
