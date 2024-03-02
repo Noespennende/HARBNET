@@ -231,7 +231,7 @@ namespace Gruppe8.HarbNet
         /// Sets container capacity, Base Weight (in tonn) and Max weight based on the ships size.
         /// </summary>
         /// <param name="shipSize">Size of the ship</param>
-        private void SetBaseShipInformation(ShipSize shipSize)
+        private void SetBaseShipInformation(ShipSize shipSize) // exception implemented, specify it more?
         {
             if (shipSize == ShipSize.Small)
             {
@@ -349,7 +349,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if the ships current weight does not exeede its maxweight and that the ships container capacity is not exeeded. Throws exeptions if they are.
         /// </summary>
-        private void CheckForValidWeight()
+        private void CheckForValidWeight() // exception implemented, specify more?
         {
             if (CurrentWeightInTonn > MaxWeightInTonn)
             {
@@ -388,7 +388,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">Size of the container to be returned.</param>
         /// <returns>Returns a container of the given size from the ships storage if one exists. Else returns Null</returns>
-        internal Container GetContainer(ContainerSize containerSize)
+        internal Container GetContainer(ContainerSize containerSize) // exception invalid containerSize, catch - program stopped
         {
             foreach (Container container in ContainersOnBoard)
             {
@@ -490,7 +490,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         ///  <param name="time">Date and time to be checked</param>
         /// <returns>Returns a status enum with the status of the ship had at the given date time</returns>
-        internal Status GetStatusAtPointInTime(DateTime time)
+        internal Status GetStatusAtPointInTime(DateTime time) // exception invalid time, catch - program stopped
         {
             Status shipStatus = new Status();
             foreach (StatusLog statusLogObject in History)
