@@ -52,7 +52,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Simulation constructor.
         /// </summary>
-        /// <param name="harbor">The harbor which will be used in the simulation</param>
+        /// <param name="harbor">A harbor object</param>
         /// <param name="simulationStartTime">The start time of the simulation</param>
         /// <param name="simulationEndTime">The end time of simulation</param>
         public Simulation (Harbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
@@ -167,7 +167,7 @@ namespace Gruppe8.HarbNet
        
 
         /// <summary>
-        /// Prints history for each ship in the harbor simulation to console.
+        /// Print history for each ship in the harbor simulation.
         /// </summary>
         public void PrintShipHistory()
         {
@@ -178,8 +178,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Prints the history of a given ship to console.
-        /// <param name="shipToBePrinted">The ship who's history will be printed</param>
+        /// Print history for one ship in the harbor simulation.
         /// </summary>
         public void PrintShipHistory(Ship shipToBePrinted)
         {
@@ -187,7 +186,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Printing each container in the simulations entire history to console.
+        /// Printing conatiner history for each container.
         /// </summary>
         public void PrintContainerHistory()
         {
@@ -438,7 +437,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// check to see if the ship has the Status "Transit".
         /// </summary>
-        /// <param name="ship"> The ship to be checked</param>
+        /// <param name="ship"> A ship object</param>
+        /// <returns></returns>
         private static bool ContainsTransitStatus(Ship ship)
         {
             bool containsTransitStatus = false;
@@ -455,7 +455,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loading containers onboard ships
+        /// Loading ship with containers 
         /// </summary>
         private void LoadingShips()
         {
@@ -541,7 +541,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns ships in transit to harbor.
+        /// Lets ships in transit return to harbor
         /// </summary>
         private void InTransitShips()
         {
@@ -589,7 +589,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string containing information about the history of all ships or all containers in the simulation.
+        /// Returns a string that represents the current object.
         /// </summary>
         /// <param name="ShipsOrContainers">Sending in the value "ships" returns information on all ships, sending in "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
