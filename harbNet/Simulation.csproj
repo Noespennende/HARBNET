@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HarbFramework\Gruppe8.HarbNet.csproj" />
+    <ProjectReference Include="..\HarbFramework\HarbFramework.csproj" />
   </ItemGroup>
 
 </Project>

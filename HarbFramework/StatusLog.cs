@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet
+namespace HarbFramework
 {
     /// <summary>
     /// Event to be stored in a ships or containers history holding information about the subjects wereabouts and status.

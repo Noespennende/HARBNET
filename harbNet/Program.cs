@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
 using System;
-using Gruppe8.HarbNet;
-
-
-namespace TestProgram
+using HarbFramework;
+using harbNet;
+namespace harbNet
 {
     internal class Program
     {

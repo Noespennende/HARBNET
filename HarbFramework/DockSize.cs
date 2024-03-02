@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet
+namespace HarbFramework
 {
 
     //Enum basert på første utkastet til APIet. Denne enumen endte opp med å ikke brukes.

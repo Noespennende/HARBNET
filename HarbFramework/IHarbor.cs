@@ -1,7 +1,8 @@
 ﻿using System;
-using Gruppe8.HarbNet;
+using HarbFramework;
+using harbNet;
 
-namespace Gruppe8.HarbNet
+namespace harbNet
 {
     /// <summary>
     /// Interface defining the contract for the public API of the Harbor class.

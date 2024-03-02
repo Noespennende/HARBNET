@@ -1,4 +1,4 @@
-﻿using Gruppe8.HarbNet;
+﻿using HarbFramework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet
+namespace harbNet
 {
     /// <summary>
     /// Ships to be used in a simulation.
@@ -15,6 +15,8 @@ namespace Gruppe8.HarbNet
 
     public class Ship : IShip
     {
+        
+
         /// <summary>
         /// Gets the unique ID for the ship
         /// </summary>
@@ -59,6 +61,7 @@ namespace Gruppe8.HarbNet
         /// Gets the container capacity of the ship.
         /// </summary>
         /// <returns>Returns an int value representing the max number of containers the ship can store.</returns>
+
         public int numberOfSmallContainersOnBoard { get; internal set; }
         /// <summary>
         /// Gets the number of small containers on board
@@ -151,6 +154,8 @@ namespace Gruppe8.HarbNet
             if (!isForASingleTrip) {
                 AddContainersOnBoard(numberOfContainersOnBoard);
             }
+
+
         }
 
         public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
@@ -225,7 +230,11 @@ namespace Gruppe8.HarbNet
             }
 
             SetBaseShipInformation(shipSize);
+
+            
+
         }
+
         /// <summary>
         /// Sets container capacity, Base Weight (in tonn) and Max weight based on the ships size.
         /// </summary>

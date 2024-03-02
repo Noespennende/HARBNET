@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet
+namespace HarbFramework
 {
     /// <summary>
     /// Storage space for containers in harbour

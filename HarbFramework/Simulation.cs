@@ -1,4 +1,5 @@
-﻿using System;
+﻿using harbNet;
+using System;
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet
+namespace HarbFramework
 {
     /// <summary>
     /// Class to run a simulation of a harbour.

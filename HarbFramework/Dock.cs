@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet
+namespace HarbFramework
 {
     /// <summary>
     /// Dock for docking ships to the harbor
@@ -32,6 +32,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Guid representing the unique ID of the ship docked to this dock</returns>
         internal Guid DockedShip {  get; set; }
+
         /// <summary>
         /// Creates a new dock object
         /// </summary>
