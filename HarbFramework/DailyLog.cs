@@ -10,39 +10,39 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Logs to be stored in a simulations history. Holds information about the state of the simulation at a specific day.
+    /// Daily logs to be stored in a simulations history. Holds information about the state of the harbor on a specific day of a simulation.
     /// </summary>
     public class DailyLog : IDailyLog
     {
         /// <summary>
-        /// Gets the date and time the logs info were logged.
+        /// Gets the date and time the DailyLog's info were logged.
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the info were logged</returns>
         public DateTime Time { get; internal set; }
         /// <summary>
-        /// Gets all ships in anchorage when the log object were created.
+        /// Gets all ships in anchorage at the date and time when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a an Ilist with ship object representing all the ships in anchorage when the log object was created</returns>
+        /// <returns>Returns a an Ilist with ship object representing all the ships in anchorage when the DailyLog object was created</returns>
         public ReadOnlyCollection<Ship> ShipsInAnchorage { get; }
         /// <summary>
-        /// Gets all the ships in transit when the log object were created
+        /// Gets all the ships in transit when the DailyLog object were created
         /// </summary>
-        /// <returns>Returns a IList with Ship object representing the ships in transit when the log object was created</returns>
+        /// <returns>Returns a IList with Ship object representing the ships in transit when the DailyLog object was created</returns>
         public ReadOnlyCollection<Ship> ShipsInTransit { get; }
         /// <summary>
-        /// Gets all the containers stored in harbour when the log object were created
+        /// Gets all the containers stored in harbour when the DailyLog object were created
         /// </summary>
-        /// <returns>Returns a IList with Container object representing the containers stored in when the log object was created</returns>
+        /// <returns>Returns a IList with Container object representing the containers stored in when the DailyLog object was created</returns>
         public ReadOnlyCollection<Container> ContainersInHarbour { get; }
         /// <summary>
-        /// Gets all the ships docked in a loading dock when the log object were created
+        /// Gets all the ships docked in a loading dock when the DailyLog object were created
         /// </summary>
-        /// <returns>Returns a IList with Ship object representing the docked in a loading dock when the log object was created</returns>
+        /// <returns>Returns a IList with Ship object representing the docked in a loading dock when the DailyLog object was created</returns>
         public ReadOnlyCollection<Ship> ShipsDockedInLoadingDocks { get; }
         /// <summary>
-        /// Gets all the ships docked to ship docks when the log object were created
+        /// Gets all the ships docked to ship docks when the DailyLog object were created
         /// </summary>
-        /// <returns>Returns a IList with Ship object representing the ships docked to ship docks when the log object was created</returns>
+        /// <returns>Returns a IList with Ship object representing the ships docked to ship docks when the DailyLog object was created</returns>
         public ReadOnlyCollection<Ship> ShipsDockedInShipDocks { get; }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Prints the wereabouts and info regarding all the ships in the log.
+        /// Prints the wereabouts and info regarding all the ships in the DailyLog.
         /// </summary>
         public void PrintInfoForAllShips()
         {
@@ -189,7 +189,7 @@ namespace Gruppe8.HarbNet
 
         }
         /// <summary>
-        /// Prints the wereabouts and info regarding all the containers in the log.
+        /// Prints the wereabouts and info regarding all the containers in the DailyLog.
         /// </summary>
         public void PrintInfoForAllContainers()
         {

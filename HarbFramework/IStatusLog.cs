@@ -20,11 +20,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         public Guid SubjectLocation { get; }
         /// <summary>
-        /// gets the point in time for the event
+        /// gets the point in time the status change occured to the subject.
         /// </summary>
         public DateTime PointInTime { get; }
         /// <summary>
-        /// gets the status of the event IE: undocking, unloading.
+        /// gets the new status of the subject at the time the status change occured. IE: undocking, unloading.
         /// </summary>
         public Status Status { get; }
 
