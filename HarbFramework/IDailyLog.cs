@@ -56,18 +56,12 @@ namespace Gruppe8.HarbNet
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>Returns a String containing information about all ships on the given day of a simulation</returns>
-        public String HistoryToString();
+        public String ToString();
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <param name="ShipsOrContainers">"ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers on the given day of a simulation.</returns>
-        public String HistoryToString(String ShipsOrContainers);
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>Returns a String containing the time the DailyLog object represents and the number of ships in all locations.</returns>
-        public String ToString();
+        public String ToString(String ShipsOrContainers);
     }
 }

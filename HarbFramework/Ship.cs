@@ -565,7 +565,7 @@ namespace Gruppe8.HarbNet
             }
 
             return ($"ID: {ID}, Navn: {Name}, Size: {ShipSize}, Start date: {StartDate.ToString()}, Round trip time: {RoundTripInDays} days, Containers on board: {small} small," +
-                $" {medium} medium, {large} large, Base weight: {BaseWeightInTonn} tonnes, Current weight: {CurrentWeightInTonn} tonnes, Max weight: {MaxWeightInTonn} tonnes.");
+                $" {medium} medium, {large} large, {ContainersOnBoard.Count} total, Base weight: {BaseWeightInTonn} tonnes, Current weight: {CurrentWeightInTonn} tonnes, Max weight: {MaxWeightInTonn} tonnes.");
         }
     }
 }

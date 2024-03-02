@@ -300,10 +300,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string that contains information about all ships on the given day of a simulation
+        /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>Returns a String containing information about all ships on the given day of a simulation</returns>
-        public String HistoryToString()
+        override public String ToString()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -375,15 +375,15 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string that contains information about all ships or containers on the given day of a simulation.
+        /// Returns a string that represents the current object.
         /// </summary>
         /// <param name="ShipsOrContainers">"ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers on the given day of a simulation.</returns>
-        public String HistoryToString(String ShipsOrContainers)
+        public String ToString(String ShipsOrContainers)
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
             {
-                return HistoryToString();
+                return ToString();
             }
             else if (ShipsOrContainers.ToLower().Equals("containers") || ShipsOrContainers.ToLower().Equals("container"))
             {
@@ -500,16 +500,6 @@ namespace Gruppe8.HarbNet
                 return "";
             }
   
-        }
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>Returns a String containing the time the DailyLog object represents and the number of ships in all locations.</returns>
-        public override string ToString()
-        {
-            return ($"Time: {Time.ToString()}, Ships in anchorage {ShipsInAnchorage.Count}, Ships in loading docks: {ShipsDockedInLoadingDocks.Count}, Ships in ship dock: {ShipsDockedInShipDocks.Count}, Ships in transit: " +
-                $"{ShipsInTransit.Count}, Containers in harbor: {ContainersInHarbour.Count}");
         }
 
     }

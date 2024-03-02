@@ -574,7 +574,7 @@ namespace Gruppe8.HarbNet
         /// Returns a string that contains information about all ships in the previous simulation.
         /// </summary>
         /// <returns> a string that contains information about all ships in the previous simulation. Returns empty string if no simulation has been run.</returns>
-        public String HistoryToString()
+        override public String ToString()
         {
             if (History.Count > 0)
             {
@@ -582,7 +582,7 @@ namespace Gruppe8.HarbNet
 
                 foreach (DailyLog log in History)
                 {
-                    sb.Append(log.HistoryToString());
+                    sb.Append(log.ToString());
                 }
                 return sb.ToString();
             } else { return "";  }
@@ -593,11 +593,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ShipsOrContainers">Sending in the value "ships" returns information on all ships, sending in "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
-        public String HistoryToString(String ShipsOrContainers)
+        public String ToString(String ShipsOrContainers)
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
             {
-                return HistoryToString();
+                return ToString();
             }
             else if (ShipsOrContainers.ToLower().Equals("containers") || ShipsOrContainers.ToLower().Equals("container"))
             {
@@ -607,7 +607,7 @@ namespace Gruppe8.HarbNet
 
                     foreach (DailyLog log in History)
                     {
-                        sb.Append(log.HistoryToString("containers"));
+                        sb.Append(log.ToString("containers"));
                     }
                     return sb.ToString();
                 }
@@ -625,18 +625,9 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ship">The ship you want information on</param>
         /// <returns>Returns a String containing information about the given ship in the simulation</returns>
-        public String HistoryToString(Ship ship)
+        public String ToString(Ship ship)
         {
             return ship.HistoryToString();
-        }
-
-        /// <summary>
-        /// Returns a string that contains information about the start time, end time of the simulation and the ID of the harbour used.
-        /// </summary>
-        /// <returns> a string that contains information about the start time, end time of the simulation and the ID of the harbour used.</returns>
-        public override string ToString()
-        {
-            return ($"Simulation start time: {startTime.ToString()}, end time: {endTime.ToString()}, harbor ID: {harbor.ID}");
         }
     }
 
