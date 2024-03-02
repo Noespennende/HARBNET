@@ -1,5 +1,4 @@
-﻿using harbNet;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HarbFramework
+namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Logs to be stored in a simulations history. Holds information about the state of the simulation at a specific day.

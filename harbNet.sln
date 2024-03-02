@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Simulation", "harbNet\Simulation.csproj", "{D89BFBC0-E391-4691-A636-5FA0EF9E7A32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarbFramework", "HarbFramework\HarbFramework.csproj", "{CE1EE829-273C-4A4E-8879-FBED26EF683B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gruppe8.HarbNet", "HarbFramework\Gruppe8.HarbNet.csproj", "{CE1EE829-273C-4A4E-8879-FBED26EF683B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
