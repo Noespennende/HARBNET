@@ -39,20 +39,48 @@ namespace TestProgram
         
             // Creating the harbor which will be used in the simulation, using the ship list
             Harbor kjuttaviga = new Harbor(ships, 4, 3, 2, 2, 1, 1, 100, 200, 150);
-            kjuttaviga.ShipUnDocked += onShipUndock;
-
-            static void onShipUndock(Guid shipId)
-            {
-                Console.WriteLine($"Ship {shipId} undocked");
-            }
-
+            
             // Creating the simulation object, of which the simulation will run from
             Simulation simulation = new Simulation(kjuttaviga, startTime, endTime);
+            simulation.ShipUnDocked += onShipUndock;
+            simulation.shipDockedShipDock += onShipDockedToDock;
+            simulation.shipLoadingContainer += onshipLoadingContainer;
+            simulation.DayOverEvent += (message, currentTime) =>
+            {
+                Console.WriteLine("\nDay over");
+                Console.WriteLine("Current time: " + currentTime);
+            };
+
+            simulation.SimulationEnd += (message) =>
+            {
+                Console.WriteLine(message);
+            };
+
+            simulation.ShipStatusEvent += (message) =>
+            {
+                Console.WriteLine(message);
+            };
+
+
+            static void onShipUndock(Ship ship)
+            {
+                Console.WriteLine($"Ship {ship.Name} undocked");
+            }
+
+            static void onShipDockedToDock(Ship ship)
+            {
+                Console.WriteLine($"Ship {ship.Name} docked to Loading dock");
+            }
+            static void onshipLoadingContainer(Ship ship)
+            {
+                Console.WriteLine($"Ship {ship.Name} Loading Containers");
+            }
 
             /* Running/starting the Simulation. Run() outputs a list of logs that is created during the simulation. It's worth noting that simulation.Run() will also print
             updates on all ships during the simulation*/
             simulation.Run();
 
+           
 
             Console.WriteLine("\n-------------------------\n");
 
@@ -61,12 +89,14 @@ namespace TestProgram
 
             Console.WriteLine("\n-------------------------\n");
             //Prints the history for all containers in the simulation
-            simulation.PrintContainerHistory();
+            //simulation.PrintContainerHistory();
 
             Console.WriteLine("\n-------------------------\n");
             //Prints the history for all ships in the simulation
-            simulation.PrintShipHistory();
+            //simulation.PrintShipHistory();
 
         }
+
+        
     }
 }
