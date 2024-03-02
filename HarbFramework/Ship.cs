@@ -133,15 +133,15 @@ namespace Gruppe8.HarbNet
 
             if (shipSize == ShipSize.Large)
             {
-                this.ContainersLoadedPerHour = 8;
+                this.ContainersLoadedPerHour = 10;
             }
             else if (shipSize == ShipSize.Medium)
             {
-                this.ContainersLoadedPerHour = 6;
+                this.ContainersLoadedPerHour = 8;
             }
             else
             {
-                this.ContainersLoadedPerHour = 4;
+                this.ContainersLoadedPerHour = 6;
             }
 
             History.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
@@ -168,19 +168,18 @@ namespace Gruppe8.HarbNet
 
             if (shipSize == ShipSize.Large)
             {
-                this.ContainersLoadedPerHour = 8;
+                this.ContainersLoadedPerHour = 10;
             }
             else if (shipSize == ShipSize.Medium)
             {
-                this.ContainersLoadedPerHour = 6;
+                this.ContainersLoadedPerHour = 8;
             }
             else
             {
-                this.ContainersLoadedPerHour = 4;
+                this.ContainersLoadedPerHour = 6;
             }
 
             History.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
-            
 
             SetBaseShipInformation(shipSize);
 
