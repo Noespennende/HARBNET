@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System;
 using Gruppe8.HarbNet;
+using System.Text;
 
 
 namespace TestProgram
@@ -80,7 +81,7 @@ namespace TestProgram
             updates on all ships during the simulation*/
             simulation.Run();
 
-           
+          
 
             Console.WriteLine("\n-------------------------\n");
 
@@ -94,6 +95,10 @@ namespace TestProgram
             Console.WriteLine("\n-------------------------\n");
             //Prints the history for all ships in the simulation
             //simulation.PrintShipHistory();
+
+            StringBuilder sb = new StringBuilder();
+
+            Console.WriteLine($"{sb.ToString()}");
 
         }
 

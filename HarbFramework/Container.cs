@@ -131,7 +131,7 @@ namespace Gruppe8.HarbNet
         /// Returns a String containing information about the container. 
         /// </summary>
         /// <returns>String containing information about the container.</returns>
-        public override string ToString()
+        public override String ToString()
         {
             return ($"ID: {ID.ToString()}, Size: {Size}, Weight: {WeightInTonn} tonnes");
         }
