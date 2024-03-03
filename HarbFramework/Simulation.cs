@@ -92,29 +92,31 @@ namespace Gruppe8.HarbNet
             while (currentTime < endTime)
             {
 
-                if (currentTime == startTime)
+              
+                foreach (Ship ship in harbor.AllShips)
                 {
+                    if (ship.StartDate == currentTime) { 
 
-                    foreach (Ship ship in harbor.AllShips)
-                    {
-                        if (ship.IsForASingleTrip == true)
-                        {
-                            DateTime time = currentTime;
-                            Guid shipDock = harbor.StartShipInShipDock(ship.ID);
-                            harbor.AddContainersToHarbor(ship.ContainerCapacity, time);
+                        harbor.AddNewShipToAnchorage(ship);
 
-                            ship.AddStatusChangeToHistory(currentTime, shipDock, Status.DockedToShipDock);
-                        }
-                        else
-                        {
-                            ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
-                        }
+                            if (ship.IsForASingleTrip == true)
+                            {
+                                Guid shipDock = harbor.StartShipInShipDock(ship.ID);
+                                harbor.AddContainersToHarbor(ship.ContainerCapacity, currentTime);
 
-                        History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
-                            harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
+                                ship.AddStatusChangeToHistory(currentTime, shipDock, Status.DockedToShipDock);
+                            }
+                            else
+                            {
+                                ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
+                                shipAnchoring?.Invoke(ship);
+                            }
+
+                            History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), 
+                                harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
                     }
-                    
                 }
+
 
 
                 foreach (Ship ship in harbor.AllShips) {

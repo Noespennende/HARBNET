@@ -35,9 +35,9 @@ namespace TestProgram
             // Adding the ships to a list, that will be sent into the Harbor object
             ships.Add(shipHappens);
             ships.Add(ssSolitude);
-            //ships.Add(auroraBorealis);
+            ships.Add(auroraBorealis);
             ships.Add(skipOHoi);
-            //ships.Add(denSorteDame);
+            ships.Add(denSorteDame);
 
         
             // Creating the harbor which will be used in the simulation, using the ship list
