@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Gruppe8.HarbNet
 {
@@ -194,7 +195,7 @@ namespace Gruppe8.HarbNet
         /// <param name="shipID">unique ID of specific ship</param>
         /// <param name="currentTime">Time the ship is docked</param>
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
-        internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime) 
+        internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime) // invalid input exception, catch - stops program. Exception in GetshipFromAnchorage instead?
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             
@@ -228,7 +229,7 @@ namespace Gruppe8.HarbNet
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <param name="currentTime">Time ship is transfered</param>
         /// <returns>Returns the Guid of the loading dock the ship gets docked to</returns>
-        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime)
+        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime) // invalid input exception, catch - stops program.Exception in GetshipFromDock instead?
         {
             Ship shipToBeDocked = GetShipFromShipDock(shipID);
 
@@ -261,7 +262,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
-        internal Guid DockShipToShipDock(Guid shipID)
+        internal Guid DockShipToShipDock(Guid shipID) // exception in GetShipFromLoadingDock and GetLoadingDockContainingShip
         {
             Ship shipToBeDocked = GetShipFromLoadingDock(shipID);
             Dock loadingDock = GetLoadingDockContainingShip(shipID);
@@ -294,7 +295,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
-        internal Guid StartShipInShipDock(Guid shipID)
+        internal Guid StartShipInShipDock(Guid shipID) // Exception in GetShipFromAnchorage
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
@@ -325,7 +326,7 @@ namespace Gruppe8.HarbNet
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <param name="currentTime">Time ship is transfered</param>
         /// <returns>Returns the Guid of the dock the ship gets docked from</returns>
-        internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime)
+        internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime) // exception in GetShipFromLoadingDock
         {
             Ship shipToBeUndocked = GetShipFromLoadingDock(shipID);
         
@@ -358,7 +359,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns ship with the unique ID</returns>
-        internal Ship GetShipFromAnchorage(Guid shipID)
+        internal Ship GetShipFromAnchorage(Guid shipID) // exception if shipID is invalid/does not exist, catch - program is stopped
         {
             foreach (Ship ship in Anchorage)
             {
@@ -376,7 +377,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns ship with the unique ID</returns>
-        internal Ship GetShipFromLoadingDock(Guid shipID)
+        internal Ship GetShipFromLoadingDock(Guid shipID) // exception if shipID is invalid/does not exist, catch - program is stopped
         {
 
             foreach (Ship ship in shipsInLoadingDock.Keys)
@@ -394,7 +395,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns ship with the unique ID</returns>
-        internal Ship GetShipFromShipDock(Guid shipID)
+        internal Ship GetShipFromShipDock(Guid shipID) // exception if shipID is invalid/does not exist, catch - program is stopped
         {
 
             foreach (Ship ship in shipsInShipDock.Keys)
@@ -413,7 +414,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Loading dock that contains docked ships</returns>
-        internal Dock GetLoadingDockContainingShip(Guid shipID)
+        internal Dock GetLoadingDockContainingShip(Guid shipID) // exception if shipID is invalid/does not exist, catch - program is stopped
         {
             foreach (var item in shipsInLoadingDock)
             {
@@ -481,7 +482,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The size of the ship in Small, Medium om Large</param>
         /// <returns>Returns available loading docks</returns>
-        internal Dock GetFreeLoadingDock(ShipSize shipSize)
+        internal Dock GetFreeLoadingDock(ShipSize shipSize) // exception if shipSize input is invalid, catch?
         {
 
             foreach (Dock dock in freeLoadingDocks)
@@ -500,7 +501,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The size of the ship in Small, Medium om Large</param>
         /// <returns>Returns available ship docks</returns>
-        internal Dock GetFreeShipDock(ShipSize shipSize)
+        internal Dock GetFreeShipDock(ShipSize shipSize) // exception if shipSize input is invalid, catch?
         {
 
             foreach (Dock dock in freeShipDocks)
@@ -619,7 +620,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The size of the ship in Small, Medium om Large</param>
         /// <returns>Returns the total amount of available loading docks of specified size</returns>
-        internal int NumberOfFreeLoadingDocks(ShipSize shipSize)
+        internal int NumberOfFreeLoadingDocks(ShipSize shipSize) // exception if shipSize is invalid?
         {
             int count = 0;
             foreach (Dock dock in freeLoadingDocks)
@@ -637,7 +638,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <returns>Returns the total number of available loading containerspaces of specified size</returns>
-        internal int NumberOfFreeContainerSpaces(ContainerSize containerSize)
+        internal int NumberOfFreeContainerSpaces(ContainerSize containerSize) // exception if containerSize is invalid?
         {
             int count = 0;
             foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
@@ -669,7 +670,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <returns>Returns the Guid of an avaiable containerspace of specified size</returns>
-        internal ContainerSpace GetFreeContainerSpace(ContainerSize containerSize)
+        internal ContainerSpace GetFreeContainerSpace(ContainerSize containerSize) // exception if containerSize is invalid?
         {
             foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
             {
@@ -689,7 +690,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <returns>Returns the Guid of a stored container of specified size</returns>
-        internal Container GetStoredContainer(ContainerSize containerSize)
+        internal Container GetStoredContainer(ContainerSize containerSize) // exception if containerSize is invalid?
         {
             foreach (Container container in storedContainers.Keys)
             {
@@ -865,7 +866,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="dockID">Unique ID of specific dock</param>
         /// <returns>Returns string informing of specified dock and if it's free</returns>
-        public string LoadingDockIsFree(Guid dockID)
+        public string LoadingDockIsFree(Guid dockID) // exception invalid dockID?
         {
             StringBuilder sb = new StringBuilder();
             bool dockFree = false;
@@ -908,7 +909,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ContainerId">Unique ID of specific container</param>
         /// <returns>Returns a string with the dock ID and their status</returns>
-        public string GetContainerStatus(Guid ContainerId)
+        public string GetContainerStatus(Guid ContainerId) // exception invalid containerID
         {
             StringBuilder sb = new StringBuilder();
             Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();

@@ -16,14 +16,16 @@ namespace Gruppe8.HarbNet
         }
 
         public TestException(string message) 
+            : base(message)
         { 
         }
 
         public TestException(string message, Exception inner) 
+            : base(message, inner)
         { 
         }
 
-
+        //Constructor is needed for serialization
         protected TestException(SerializationInfo info, StreamingContext context) 
         { 
         }
