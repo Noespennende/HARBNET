@@ -31,7 +31,7 @@ namespace Gruppe8.HarbNet
         public delegate void DayOverEventHandler(String message, DateTime currentTime);
         public event DayOverEventHandler? DayOverEvent;
 
-        public delegate void ShipStatusEventHandler(string message);
+        public delegate void ShipStatusEventHandler(Ship ship, StatusLog his);
         public event ShipStatusEventHandler? ShipStatusEvent;
 
         public delegate void ShipUndockedHandler(Ship ship);
@@ -138,7 +138,7 @@ namespace Gruppe8.HarbNet
                 DateTime teset = currentTime.AddHours(-24);
                 if (currentTime.Hour == 0)
                 {
-                    DayOverEvent.Invoke($"\nDay over\n Current Time: ", teset);
+                    DayOverEvent.Invoke($"\nDay over\n Current Time: ", currentTime);
                     
                                                       
                     History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
@@ -156,11 +156,11 @@ namespace Gruppe8.HarbNet
 
                                     if (his.Status == Status.Transit)
                                     {
-                                        ShipStatusEvent?.Invoke($"{ship.Name} in transit");
+                                        ShipStatusEvent?.Invoke(ship,his);
                                     }
                                     else
                                         
-                                        ShipStatusEvent?.Invoke($"ShipName: {ship.Name}| Date: {his.PointInTime}| Status: {his.Status}|\n");
+                                        ShipStatusEvent?.Invoke(ship,his);
                                     
                                 }
                             }

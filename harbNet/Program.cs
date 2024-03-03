@@ -70,9 +70,9 @@ namespace TestProgram
                 Console.WriteLine(message);
             };
 
-            simulation.ShipStatusEvent += (message) =>
+            simulation.ShipStatusEvent += (ship, his) =>
             {
-                Console.WriteLine(message);
+                Console.WriteLine($"ShipName: {ship.Name}| Date: {his.PointInTime}| Status: {his.Status}|\n");
             };
 
             simulation.shipAnchored += (Ship ship) =>
