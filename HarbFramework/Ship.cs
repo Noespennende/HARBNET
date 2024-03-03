@@ -124,6 +124,46 @@ namespace Gruppe8.HarbNet
         /// <param name="startDate">Date and time for when the ship will start its first voyage</param>
         /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
         /// <param name="roundTripInDays">Number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
+        /// <param name="containersToBeStoredInCargo">How many small containers will be in the ships storage when it enters the harbor for the first time.</param>
+        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,IList<Container> containersToBeStoredInCargo)
+        {
+            this.ID = Guid.NewGuid();
+            this.Name = shipName;
+            this.ShipSize = shipSize;
+            this.StartDate = startDate;
+            this.RoundTripInDays = roundTripInDays;
+            this.IsForASingleTrip = isForASingleTrip;
+            this.HistoryIList = new List<StatusLog>();
+
+            if (shipSize == ShipSize.Large)
+            {
+                this.ContainersLoadedPerHour = 8;
+            }
+            else if (shipSize == ShipSize.Medium)
+            {
+                this.ContainersLoadedPerHour = 6;
+            }
+            else
+            {
+                this.ContainersLoadedPerHour = 4;
+            }
+
+            this.ContainersOnBoard = containersToBeStoredInCargo;
+           
+            HistoryIList.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
+
+            SetBaseShipInformation(shipSize);
+
+        }
+
+        /// <summary>
+        /// Creates a new ship object.
+        /// </summary>
+        /// <param name="shipName">Name of the ship to be created</param>
+        /// <param name="shipSize">Size of the ship to be created</param>
+        /// <param name="startDate">Date and time for when the ship will start its first voyage</param>
+        /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
+        /// <param name="roundTripInDays">Number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
         /// <param name="numberOfSmallContainersOnBoard">How many small containers will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="numberOfMediumContainersOnBoard">How many medium containers will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="numberOfLargeContainersOnBoard">How many Large containers will be in the ships storage when it enters the harbor for the first time.</param>
@@ -157,13 +197,11 @@ namespace Gruppe8.HarbNet
 
             SetBaseShipInformation(shipSize);
 
-            if (!isForASingleTrip)
-            {
-                AddContainersOnBoard(ContainerSize.Small, numberOfSmallContainersOnBoard);
-                AddContainersOnBoard(ContainerSize.Medium, numberOfMediumContainersOnBoard);
-                AddContainersOnBoard(ContainerSize.Large, numberOfLargeContainersOnBoard);
-            }
+            AddContainersOnBoard(ContainerSize.Small, numberOfSmallContainersOnBoard);
+            AddContainersOnBoard(ContainerSize.Medium, numberOfMediumContainersOnBoard);
+            AddContainersOnBoard(ContainerSize.Large, numberOfLargeContainersOnBoard);
         }
+
         /// <summary>
         /// Creates a new ship object.
         /// </summary>
