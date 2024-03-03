@@ -177,14 +177,7 @@ namespace Gruppe8.HarbNet
             }
 
             AllShips = listOfShips.ToList();
-            Anchorage = listOfShips.ToList();
-
-
-            foreach (Ship ship in Anchorage)
-            {
-                ship.CurrentLocation = AnchorageID;
-            }
-
+            
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
         }
@@ -264,7 +257,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
         internal Guid DockShipToShipDock(Guid shipID) // exception in GetShipFromLoadingDock and GetLoadingDockContainingShip
         {
-            Ship shipToBeDocked = GetShipFromLoadingDock(shipID);
+            Ship shipToBeDocked = GetShipFromLoadingDock(shipID) ?? GetShipFromAnchorage(shipID);
             Dock loadingDock = GetLoadingDockContainingShip(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
             Dock dock;

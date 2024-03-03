@@ -193,8 +193,6 @@ namespace Gruppe8.HarbNet
                 this.ContainersLoadedPerHour = 4;
             }
 
-            HistoryIList.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
-
             SetBaseShipInformation(shipSize);
 
             AddContainersOnBoard(ContainerSize.Small, numberOfSmallContainersOnBoard);
@@ -238,6 +236,7 @@ namespace Gruppe8.HarbNet
 
             SetBaseShipInformation(shipSize);
         }
+
         /// <summary>
         /// Sets container capacity, Base Weight (in tonn) and Max weight based on the ships size.
         /// </summary>
