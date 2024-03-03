@@ -1,4 +1,5 @@
 ﻿using Gruppe8.HarbNet;
+using System.Collections.ObjectModel;
 
 namespace Gruppe8.HarbNet
 {
@@ -40,8 +41,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets all StatusLog objects in the ships history.
         /// </summary>
-        /// <returns>Returns an IList with StatusLog objects with information about changes in the ships status throughout its history.</returns>
-        public IList<StatusLog> History { get; }
+        /// <returns>Returns an ReadOnlyCollection with StatusLog objects, each object containing information about one status change of the subject in a simulation.</returns>
+        public ReadOnlyCollection<StatusLog> History { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>

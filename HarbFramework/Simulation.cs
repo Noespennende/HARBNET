@@ -133,7 +133,7 @@ namespace Gruppe8.HarbNet
                         foreach (Ship ship in harbor.AllShips)
                         {
                             
-                            foreach (StatusLog his in ship.History)
+                            foreach (StatusLog his in ship.HistoryIList)
                             {
 
                                 if (his.PointInTime >= teset && his.PointInTime <= currentTime)
@@ -208,7 +208,7 @@ namespace Gruppe8.HarbNet
             {
 
                 Guid shipID = ship.ID;
-                StatusLog lastStatusLog = ship.History.Last(); 
+                StatusLog lastStatusLog = ship.HistoryIList.Last(); 
 
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null && lastStatusLog.Status == Status.Anchoring)
@@ -239,7 +239,7 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in ShipsInShipDock)
             {
                 Guid shipID = ship.ID;
-                StatusLog lastStatusLog = ship.History.Last();
+                StatusLog lastStatusLog = ship.HistoryIList.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
                     (lastStatusLog.Status == Status.Anchored ||
@@ -264,7 +264,7 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in ShipsInLoadingDock)
             {
                 Guid shipID = ship.ID;
-                StatusLog lastStatusLog = ship.History.Last();
+                StatusLog lastStatusLog = ship.HistoryIList.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
                     (lastStatusLog.Status == Status.DockedToShipDock ||
@@ -294,7 +294,7 @@ namespace Gruppe8.HarbNet
             {
 
                 Guid shipID = ship.ID;
-                StatusLog lastStatusLog = ship.History.Last();
+                StatusLog lastStatusLog = ship.HistoryIList.Last();
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null && 
                     (lastStatusLog.Status == Status.Anchored || 
@@ -339,14 +339,14 @@ namespace Gruppe8.HarbNet
         {
             foreach (Ship ship in harbor.shipsInLoadingDock.Keys)
             {
-                StatusLog lastStatusLog = ship.History.Last();
+                StatusLog lastStatusLog = ship.HistoryIList.Last();
 
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null && (lastStatusLog.Status == Status.Unloading || lastStatusLog.Status == Status.DockedToLoadingDock))
                 {
                     Guid currentPosition = lastStatusLog.SubjectLocation;
 
-                    StatusLog secondLastStatusLog = ship.History[ship.History.Count - 2];
+                    StatusLog secondLastStatusLog = ship.HistoryIList[ship.HistoryIList.Count - 2];
 
 
                     if (ship.ContainersOnBoard.Count != 0 && lastStatusLog.Status == Status.DockedToLoadingDock || lastStatusLog.Status == Status.Unloading)
@@ -395,7 +395,7 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
                 Guid shipID = ship.ID;
-                StatusLog lastStatusLog = ship.History.Last();
+                StatusLog lastStatusLog = ship.HistoryIList.Last();
 
                 
                 if (ship.HasBeenAlteredThisHour == false && lastStatusLog != null && 
@@ -442,7 +442,7 @@ namespace Gruppe8.HarbNet
         private static bool ContainsTransitStatus(Ship ship)
         {
             bool containsTransitStatus = false;
-            foreach (StatusLog his in ship.History)
+            foreach (StatusLog his in ship.HistoryIList)
             {
                 if (his.Status == Status.Transit)
                 {
@@ -462,8 +462,8 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
 
-                StatusLog lastStatusLog = ship.History.Last();
-                StatusLog secondLastStatusLog = ship.History[ship.History.Count - 2]; 
+                StatusLog lastStatusLog = ship.HistoryIList.Last();
+                StatusLog secondLastStatusLog = ship.HistoryIList[ship.HistoryIList.Count - 2]; 
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
                     ((lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true)) ||
@@ -548,13 +548,13 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in harbor.ShipsInTransit.Keys)
             {
 
-                StatusLog lastStatusLog = ship.History.Last();
+                StatusLog lastStatusLog = ship.HistoryIList.Last();
 
                 if (ship.HasBeenAlteredThisHour == false && lastStatusLog != null && lastStatusLog.Status == Status.Transit)
                 {
 
                     Guid CurrentPosition = lastStatusLog.SubjectLocation;
-                    StatusLog LastHistoryStatusLog = ship.History.Last();
+                    StatusLog LastHistoryStatusLog = ship.HistoryIList.Last();
 
                     double DaysSinceTransitStart = (currentTime - LastHistoryStatusLog.PointInTime).TotalDays;
 

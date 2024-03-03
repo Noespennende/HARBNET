@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,12 +17,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns the unique ID defining a specific container</return>
         public Guid ID { get; }
-
         /// <summary>
         /// Gets the history of the container
         /// </summary>
-        /// <return>Returns a list of StatusLog objects containing information about the status changes the container has been trough</return>
-        public IList<StatusLog> History { get; }
+        /// <return>Returns a ReadOnlyCollection of StatusLog objects,each object containing information about one status change of the subject in a simulation.</return>
+        public ReadOnlyCollection<StatusLog> History { get; }
 
         /// <summary>
         /// Gets the size of the container

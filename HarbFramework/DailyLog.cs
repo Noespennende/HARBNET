@@ -86,13 +86,13 @@ namespace Gruppe8.HarbNet
                 foreach (Container container in ship.ContainersOnBoard)
                 {
                     IList<StatusLog> containersHistory = new List<StatusLog>();
-                    foreach (StatusLog containerEvent in container.History)
+                    foreach (StatusLog containerEvent in container.HistoryIList)
                     {
                         containersHistory.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
                     }
                     containerList.Add(new Container(container.Size, container.WeightInTonn, ship.ID, container.ID, containersHistory));
                 }
-                foreach (StatusLog eventObject in ship.History)
+                foreach (StatusLog eventObject in ship.HistoryIList)
                 {
                     eventList.Add(new StatusLog(eventObject.Subject, eventObject.SubjectLocation, eventObject.PointInTime, eventObject.Status));
                 }
@@ -114,7 +114,7 @@ namespace Gruppe8.HarbNet
             foreach (Container container in containersToDuplicate)
             {
                 IList<StatusLog> eventList = new List<StatusLog>();
-                foreach (StatusLog containerEvent in container.History)
+                foreach (StatusLog containerEvent in container.HistoryIList)
                 {
                     eventList.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
                 }

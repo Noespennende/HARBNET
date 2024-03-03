@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -19,12 +20,16 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns the unique ID defining a specific container</return>
         public Guid ID { get; }
-
+        /// <summary>
+        /// Gets the history of the container
+        /// </summary>
+        /// <return>Returns a ReadOnlyCollection of StatusLog objects, each object containing information about one status change of the subject in a simulation.</return>
+        public ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
         /// <summary>
         /// Gets the history of the container
         /// </summary>
         /// <return>Returns a list of StatusLog objects that contains informations on the status changes the container has been through</return>
-        public IList<StatusLog> History {  get; } = new List<StatusLog>();
+        internal IList<StatusLog> HistoryIList {  get; } = new List<StatusLog>();
         /// <summary>
         /// Gets the size of the container
         /// </summary>
@@ -70,7 +75,7 @@ namespace Gruppe8.HarbNet
             this.Size = size;
             this.CurrentPosition = currentPosition;
             this.WeightInTonn = WeightInTonn;
-            this.History = containerHistory;
+            this.HistoryIList = containerHistory;
         }
 
         /// <summary>
@@ -80,7 +85,7 @@ namespace Gruppe8.HarbNet
         /// <param name="currentTime">The time the status change to the container happened</param>
         internal void AddStatusChangeToHistory (Status status, DateTime currentTime)
         {
-            History.Add(new StatusLog(ID, CurrentPosition, currentTime, status));
+            HistoryIList.Add(new StatusLog(ID, CurrentPosition, currentTime, status));
         }
 
         /// <summary>
@@ -89,9 +94,9 @@ namespace Gruppe8.HarbNet
         /// <returns>StatusLog with information about the latest status change of container. Returns none if there is no history registered</returns>
         public Status GetCurrentStatus()
         {
-            if (History.Count > 0)
+            if (HistoryIList.Count > 0)
             {
-                return History.Last().Status;
+                return HistoryIList.Last().Status;
             }
             else
             {
@@ -106,7 +111,7 @@ namespace Gruppe8.HarbNet
         public void PrintHistory()
         {
             Console.WriteLine($"Container ID: {ID.ToString()}"); 
-            foreach (StatusLog sl in History)
+            foreach (StatusLog sl in HistoryIList)
             {
                 Console.WriteLine($"Date: {sl.PointInTime} Status: {sl.Status}\n");
             }
@@ -121,7 +126,7 @@ namespace Gruppe8.HarbNet
             StringBuilder sb = new StringBuilder();
 
             sb.Append($"Container ID: {ID.ToString()}\n");
-            foreach (StatusLog sl in History) {
+            foreach (StatusLog sl in HistoryIList) {
                 sb.Append($"Container Id: {sl.Subject} Date: {sl.PointInTime} Status: {sl.Status}\n");
             }
             return sb.ToString();

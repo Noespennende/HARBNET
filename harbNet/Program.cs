@@ -24,11 +24,11 @@ namespace TestProgram
             List<Ship> ships = new List<Ship>();
 
             // Creating ships that will be simulated in the Simulation
-            Ship shipHappens = new("Ship Happens", ShipSize.Large, startTime, false, 7, 50);
-            Ship auroraBorealis = new("Aurora Borealis", ShipSize.Medium, startTime.AddDays(4), false, 3, 49);
-            Ship skipOHoi = new("Ship O'Hoi", ShipSize.Small, startTime.AddHours(4), false, 1, 15);
-            Ship ssSolitude = new("SS Solitude", ShipSize.Small, startTime, true, 14, 1);
-            Ship denSorteDame = new("Den Sorte Dame", ShipSize.Large, startTime, false, 4, 49);
+            Ship shipHappens = new("Ship Happens", ShipSize.Large, startTime, false, 7, 25, 10, 15);
+            Ship auroraBorealis = new("Aurora Borealis", ShipSize.Medium, startTime.AddDays(4), false, 3, 5, 20, 15);
+            Ship skipOHoi = new("Ship O'Hoi", ShipSize.Small, startTime.AddHours(4), false, 1, 5, 5, 5);
+            Ship ssSolitude = new("SS Solitude", ShipSize.Small, startTime, true, 1, 1, 10, 4);
+            Ship denSorteDame = new("Den Sorte Dame", ShipSize.Large, startTime, false, 4, 20, 15, 5);
 
             // Adding the ships to a list, that will be sent into the Harbor object
             ships.Add(shipHappens);
@@ -82,7 +82,7 @@ namespace TestProgram
             simulation.Run();
 
           
-
+            /*
             Console.WriteLine("\n-------------------------\n");
 
             //Prints the history for a single ship
@@ -98,7 +98,7 @@ namespace TestProgram
 
             StringBuilder sb = new StringBuilder();
 
-            Console.WriteLine($"{sb.ToString()}");
+            Console.WriteLine($"{sb.ToString()}");*/
 
         }
 

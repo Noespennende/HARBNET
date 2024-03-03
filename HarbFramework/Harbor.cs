@@ -16,8 +16,6 @@ namespace Gruppe8.HarbNet
     public class Harbor : IHarbor
     {
 
-        
-
         /// <summary>
         /// Unique ID for harbor
         /// </summary>
@@ -819,7 +817,7 @@ namespace Gruppe8.HarbNet
             StringBuilder sb = new StringBuilder();
             foreach (Ship ship in AllShips)
             {
-                if (ship.ID == ShipID && ship.History != null && ship.History.Count > 0)
+                if (ship.ID == ShipID && ship.HistoryIList != null && ship.HistoryIList.Count > 0)
                 {
                     String shipStatus = $"ShipId: {ship.ID}, Last status Change: {lastStatusChange}";
                     sb.Append(shipStatus);
@@ -839,7 +837,7 @@ namespace Gruppe8.HarbNet
             
             foreach (Ship ship in AllShips)
             {
-                StatusLog test = ship.History.Last();
+                StatusLog test = ship.HistoryIList.Last();
                 if (test != null)
                 {
                     shipStatus[ship] = test.Status;
@@ -918,7 +916,7 @@ namespace Gruppe8.HarbNet
             {
                 if (container.ID == ContainerId)
                 {
-                    containerStatus[container] = container.History.Last().Status;
+                    containerStatus[container] = container.HistoryIList.Last().Status;
 
                     foreach (var keyvalue in containerStatus)
                     {
@@ -940,9 +938,9 @@ namespace Gruppe8.HarbNet
             Status lastStatus = Status.None;
             foreach (Container container in storedContainers.Keys)
             {
-                if (container != null && container.History != null && container.History.Count > 0)
+                if (container != null && container.HistoryIList != null && container.HistoryIList.Count > 0)
                 {
-                    lastStatus = container.History.Last().Status;
+                    lastStatus = container.HistoryIList.Last().Status;
                     containerStatus[container] = lastStatus;
 
                     foreach (var keyvalue in containerStatus)
@@ -1018,7 +1016,7 @@ namespace Gruppe8.HarbNet
 
             foreach (Ship ship in AllShips)
             {
-                StatusLog test = ship.History.Last();
+                StatusLog test = ship.HistoryIList.Last();
                 if (test != null)
                 {
                     statusOfAllShips[ship] = test.Status;

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -46,10 +47,15 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid object representing the ID of the ships current location</returns>
         public Guid CurrentLocation { get; internal set; }
         /// <summary>
+        /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
+        /// </summary>
+        /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
+        public ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
+        /// <summary>
         /// Gets a IList of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
-        public IList<StatusLog> History { get; }
+        internal IList<StatusLog> HistoryIList { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>
@@ -118,41 +124,9 @@ namespace Gruppe8.HarbNet
         /// <param name="startDate">Date and time for when the ship will start its first voyage</param>
         /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
         /// <param name="roundTripInDays">Number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
-        /// <param name="numberOfContainersOnBoard">How many containers will be in the ships storage when it enters the harbor for the first time.</param>
-        public Ship (String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, int numberOfContainersOnBoard)
-        {
-            this.ID = Guid.NewGuid();
-            this.Name = shipName;
-            this.ShipSize = shipSize;
-            this.StartDate = startDate;
-            this.RoundTripInDays = roundTripInDays;
-            this.ContainersOnBoard = new List<Container>();
-            
-            this.IsForASingleTrip = isForASingleTrip;
-            this.History = new List<StatusLog>();
-
-            if (shipSize == ShipSize.Large)
-            {
-                this.ContainersLoadedPerHour = 10;
-            }
-            else if (shipSize == ShipSize.Medium)
-            {
-                this.ContainersLoadedPerHour = 8;
-            }
-            else
-            {
-                this.ContainersLoadedPerHour = 6;
-            }
-
-            History.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
-            
-            SetBaseShipInformation(shipSize);
-
-            if (!isForASingleTrip) {
-                AddContainersOnBoard(numberOfContainersOnBoard);
-            }
-        }
-
+        /// <param name="numberOfSmallContainersOnBoard">How many small containers will be in the ships storage when it enters the harbor for the first time.</param>
+        /// <param name="numberOfMediumContainersOnBoard">How many medium containers will be in the ships storage when it enters the harbor for the first time.</param>
+        /// <param name="numberOfLargeContainersOnBoard">How many Large containers will be in the ships storage when it enters the harbor for the first time.</param>
         public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
              int numberOfSmallContainersOnBoard, int numberOfMediumContainersOnBoard,
              int numberOfLargeContainersOnBoard)
@@ -164,7 +138,7 @@ namespace Gruppe8.HarbNet
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
             this.IsForASingleTrip = isForASingleTrip;
-            this.History = new List<StatusLog>();
+            this.HistoryIList = new List<StatusLog>();
 
             if (shipSize == ShipSize.Large)
             {
@@ -179,7 +153,7 @@ namespace Gruppe8.HarbNet
                 this.ContainersLoadedPerHour = 6;
             }
 
-            History.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
+            HistoryIList.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
 
             SetBaseShipInformation(shipSize);
 
@@ -208,7 +182,7 @@ namespace Gruppe8.HarbNet
             this.RoundTripInDays = roundTripInDays;
             this.IsForASingleTrip = isForASingleTrip;
             this.ID = id;
-            this.History = currentHistory;
+            this.HistoryIList = currentHistory;
             this.ContainersOnBoard = containersOnboard;
 
             if (shipSize == ShipSize.Large)
@@ -289,7 +263,7 @@ namespace Gruppe8.HarbNet
                 {
                     CheckForValidWeight();
                     Container smallContainer = new Container(ContainerSize.Small, 10, this.ID);
-                    smallContainer.History.Add(new StatusLog(smallContainer.ID, this.ID, StartDate, Status.Transit));
+                    smallContainer.HistoryIList.Add(new StatusLog(smallContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(smallContainer);
                     CurrentWeightInTonn += smallContainer.WeightInTonn;
                     
@@ -299,7 +273,7 @@ namespace Gruppe8.HarbNet
                 {
                     CheckForValidWeight();
                     Container mediumContainer = new Container(ContainerSize.Medium, 15, this.ID);
-                    mediumContainer.History.Add(new StatusLog(mediumContainer.ID, this.ID, StartDate, Status.Transit));
+                    mediumContainer.HistoryIList.Add(new StatusLog(mediumContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(mediumContainer);
                     CurrentWeightInTonn += mediumContainer.WeightInTonn;
                 }
@@ -307,7 +281,7 @@ namespace Gruppe8.HarbNet
                 {
                     CheckForValidWeight();
                     Container largeContainer = new Container(ContainerSize.Large, 15, this.ID);
-                    largeContainer.History.Add(new StatusLog(largeContainer.ID, this.ID, StartDate, Status.Transit));
+                    largeContainer.HistoryIList.Add(new StatusLog(largeContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(largeContainer);
                     CurrentWeightInTonn += largeContainer.WeightInTonn;
                 }
@@ -338,7 +312,7 @@ namespace Gruppe8.HarbNet
                 }
                 if (ContainertoAdd != null)
                 {
-                    ContainertoAdd.History.Add(new StatusLog(ContainertoAdd.ID, this.ID, StartDate, Status.Transit));
+                    ContainertoAdd.HistoryIList.Add(new StatusLog(ContainertoAdd.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(ContainertoAdd);
                     CurrentWeightInTonn += ContainertoAdd.WeightInTonn;
                 }
@@ -378,7 +352,7 @@ namespace Gruppe8.HarbNet
         internal StatusLog AddStatusChangeToHistory (DateTime currentTime, Guid currentLocation, Status status)
         {
             StatusLog currentStatusChange = new StatusLog(ID,currentLocation, currentTime, status);
-            History.Add(currentStatusChange);
+            HistoryIList.Add(currentStatusChange);
             return currentStatusChange;
         }
 
@@ -475,9 +449,9 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a status enum with the current status of the ship</returns>
         internal Status GetCurrentStatus()
         {
-            if(History.Count > 0)
+            if(HistoryIList.Count > 0)
             {
-                return History.Last().Status;
+                return HistoryIList.Last().Status;
             } else
             {
                 return Status.None;
@@ -492,7 +466,7 @@ namespace Gruppe8.HarbNet
         internal Status GetStatusAtPointInTime(DateTime time)
         {
             Status shipStatus = new Status();
-            foreach (StatusLog statusLogObject in History)
+            foreach (StatusLog statusLogObject in HistoryIList)
             {
                 if (statusLogObject.PointInTime < time)
                 {
@@ -511,11 +485,12 @@ namespace Gruppe8.HarbNet
         /// </summary>
         public void PrintHistory()
         {
-            Console.WriteLine($"Ship ID: {ID}");
-            foreach (StatusLog his in History)
+            Console.WriteLine($"Ship name: {Name}, Ship ID {ID}");
+            Console.WriteLine("------------------------------------");
+            foreach (StatusLog his in HistoryIList)
             {
 
-                Console.WriteLine($"ShipId: {his.Subject} Date: {his.PointInTime} Status: {his.Status}|\n");
+                Console.WriteLine($"Date: {his.PointInTime} Status: {his.Status}|\n");
 
             }
         }
@@ -529,13 +504,12 @@ namespace Gruppe8.HarbNet
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append($"Ship ID: {ID}" + "\n");
+            sb.Append($"Ship name: {Name}, Ship ID {ID}" + "\n");
+            sb.Append("------------------------------------\n");
 
-            foreach (StatusLog his in History)
+            foreach (StatusLog his in HistoryIList)
             {
-
-                sb.Append($"ShipId: {his.Subject} Date: {his.PointInTime} Status: {his.Status}\n");
-
+                sb.Append($"Date: {his.PointInTime} Status: {his.Status}\n");
             }
             return sb.ToString();
         }
