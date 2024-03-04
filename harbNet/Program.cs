@@ -36,7 +36,7 @@ namespace TestProgram
             ships.Add(shipHappens);
             //ships.Add(ssSolitude);
             //ships.Add(auroraBorealis);
-            //ships.Add(skipOHoi);
+            ships.Add(skipOHoi);
             //ships.Add(denSorteDame);
 
         
@@ -45,33 +45,69 @@ namespace TestProgram
             
             // Creating the simulation object, of which the simulation will run from
             Simulation simulation = new Simulation(kjuttaviga, startTime, endTime);
-            simulation.ShipUnDocked += (sender, e) =>
+
+
+            simulation.simulationStarting += (sender, e) =>
             {
-                ShipUndockedEventArgs args = (ShipUndockedEventArgs)e;
-                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
+                SimulationStartingEventArgs args = (SimulationStartingEventArgs)e;
+                Console.WriteLine("Simulation starting ...");
+                Console.WriteLine($"Simulating {args.harborToBeSimulated.ID} from {args.startDate}\n");
+                Thread.Sleep(2000);
             };
-            simulation.shipDockedShipDock += (sender, e) =>
+
+            simulation.shipAnchoring += (sender, e) =>
             {
-                shipDockedToShipDockEventArgs args = (shipDockedToShipDockEventArgs)e;
-                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
+                shipAnchoringEventArgs args = (shipAnchoringEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' anchoring to anchorage with ID {args.anchorageID}\n");
+            };
+
+            simulation.shipAnchored += (sender, e) =>
+            {
+                shipAnchoredEventArgs args = (shipAnchoredEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' anchored to anchorage with ID {args.anchorageID}\n");
             };
 
             simulation.ShipDockingtoLoadingDock += (sender, e) =>
             {
                 shipDockingToLoadingDockEventArgs args = (shipDockingToLoadingDockEventArgs)e;
-                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' starting docking to dock with ID {args.dockId}\n");
             };
 
             simulation.ShipDockedtoLoadingDock += (sender, e) =>
             {
                 shipDockedToLoadingDockEventArgs args = (shipDockedToLoadingDockEventArgs)e;
-                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' has docked to dock with ID {args.dockId}\n");
+            };
+
+            simulation.shipUnloadedContainer += (sender, e) =>
+            {
+                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' unloaded container of size '{args.Container.Size}'\n");
             };
 
             simulation.shipLoadedContainer += (sender, e) =>
             {
                 shipLoadedContainerEventArgs args = (shipLoadedContainerEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' loaded container of size '{args.Container.Size}'\n");
                 Console.WriteLine($"{args.ship.Name}, {args.Container}, {args.currentTime}\n");
+            };
+
+            simulation.ShipUndocking += (sender, e) =>
+            {
+                ShipUndockingEventArgs args = (ShipUndockingEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' undocking from '{args.dockId}'\n");
+            };
+
+            simulation.ShipInTransit += (sender, e) =>
+            {
+                ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' is in transit at ID '{args.transitLocationID}'\n");
+            };
+
+            simulation.shipDockedShipDock += (sender, e) =>
+            {
+                shipDockedToShipDockEventArgs args = (shipDockedToShipDockEventArgs)e;
+                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
             };
 
             simulation.DayEnded += (sender, e) =>
@@ -80,36 +116,29 @@ namespace TestProgram
                 Console.WriteLine($"{args.currentTime}, {args.todaysLog}");
             };
 
-            simulation.simulationEnd += (sender, e) =>
+
+            simulation.DayLoggedToSimulationHistory += (sender, e) =>
+            {
+                DayLoggedEventArgs args = (DayLoggedEventArgs)e;
+                Console.WriteLine($"{args.currentTime}, {args.message}");
+            };
+
+            simulation.simulationEnded += (sender, e) =>
             {
                 SimulationEndedEventArgs args = (SimulationEndedEventArgs)e;
                 Console.WriteLine($"{args.message}, {args.simulationHistory}");
             };
 
-            simulation.DayLoggedToSimulationHistory += (sender, e) =>   
-                {
-                    DayLoggedEventArgs args =(DayLoggedEventArgs)e;
-                    Console.WriteLine($"{args.currentTime}, {args.message}");
-                };
-
-            simulation.shipAnchoring += (sender, e) =>
-            {
-                shipAnchoringEventArgs args = (shipAnchoringEventArgs)e;
-                Console.WriteLine($"test her: {args.ship}, {args.anchorageID}, {args.currentTime}\n");
-            };
-
-            simulation.shipAnchored += (sender, e) =>
-            {
-                shipAnchoredEventArgs args = (shipAnchoredEventArgs)e;
-                Console.WriteLine($"test her: {args.ship}, {args.anchorageID}, {args.currentTime}\n");
-            };
 
 
-            simulation.shipUnloadedContainer += (sender, e) =>
-            {
-                shipUnloadedContainerEventArgs args = (shipUnloadedContainerEventArgs)e;
-                Console.WriteLine($"{args.ship}, {args.Container}, {args.currentTime}");
-            };
+
+
+            
+
+            
+
+
+            
 
             
 
