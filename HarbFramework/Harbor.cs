@@ -2,11 +2,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.Tracing;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Gruppe8.HarbNet
@@ -188,7 +190,7 @@ namespace Gruppe8.HarbNet
         /// <param name="shipID">unique ID of specific ship</param>
         /// <param name="currentTime">Time the ship is docked</param>
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
-        internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime) // invalid input exception, catch - stops program. Exception in GetshipFromAnchorage instead?
+        internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             
@@ -222,7 +224,7 @@ namespace Gruppe8.HarbNet
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <param name="currentTime">Time ship is transfered</param>
         /// <returns>Returns the Guid of the loading dock the ship gets docked to</returns>
-        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime) // invalid input exception, catch - stops program.Exception in GetshipFromDock instead?
+        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeDocked = GetShipFromShipDock(shipID);
 
@@ -255,7 +257,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
-        internal Guid DockShipToShipDock(Guid shipID) // exception in GetShipFromLoadingDock and GetLoadingDockContainingShip
+        internal Guid DockShipToShipDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromLoadingDock(shipID) ?? GetShipFromAnchorage(shipID);
             Dock loadingDock = GetLoadingDockContainingShip(shipID);
@@ -288,7 +290,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
-        internal Guid StartShipInShipDock(Guid shipID) // Exception in GetShipFromAnchorage
+        internal Guid StartShipInShipDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
@@ -319,7 +321,7 @@ namespace Gruppe8.HarbNet
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <param name="currentTime">Time ship is transfered</param>
         /// <returns>Returns the Guid of the dock the ship gets docked from</returns>
-        internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime) // exception in GetShipFromLoadingDock
+        internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeUndocked = GetShipFromLoadingDock(shipID);
         
@@ -352,7 +354,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns ship with the unique ID</returns>
-        internal Ship GetShipFromAnchorage(Guid shipID) // exception if shipID is invalid/does not exist, catch - program is stopped
+        internal Ship GetShipFromAnchorage(Guid shipID)
         {
             foreach (Ship ship in Anchorage)
             {
@@ -362,15 +364,17 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            return null;
-        }
+            throw new InvalidParameterException("Invalid input. That shipID does not exist.");
+                    
+            }
+
 
         /// <summary>
         /// Gets specific ship from loading dock
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns ship with the unique ID</returns>
-        internal Ship GetShipFromLoadingDock(Guid shipID) // exception if shipID is invalid/does not exist, catch - program is stopped
+        internal Ship GetShipFromLoadingDock(Guid shipID)
         {
 
             foreach (Ship ship in shipsInLoadingDock.Keys)
@@ -380,7 +384,7 @@ namespace Gruppe8.HarbNet
                     return ship;
                 }
             }
-            return null;
+            throw new InvalidParameterException("Invalid input. That shipID does not exist.");
         }
 
         /// <summary>
@@ -388,7 +392,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns ship with the unique ID</returns>
-        internal Ship GetShipFromShipDock(Guid shipID) // exception if shipID is invalid/does not exist, catch - program is stopped
+        internal Ship GetShipFromShipDock(Guid shipID)
         {
 
             foreach (Ship ship in shipsInShipDock.Keys)
@@ -398,8 +402,7 @@ namespace Gruppe8.HarbNet
                     return ship;
                 }
             }
-
-            return null;
+            throw new InvalidParameterException("Invalid input. That shipID does not exist.");
         }
 
         /// <summary>
@@ -407,7 +410,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Loading dock that contains docked ships</returns>
-        internal Dock GetLoadingDockContainingShip(Guid shipID) // exception if shipID is invalid/does not exist, catch - program is stopped
+        internal Dock GetLoadingDockContainingShip(Guid shipID)
         {
             foreach (var item in shipsInLoadingDock)
             {
@@ -417,7 +420,7 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            return null;
+            throw new InvalidParameterException("Invalid input. That shipID does not exist.");
         }
 
         /// <summary>
@@ -475,7 +478,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The size of the ship in Small, Medium om Large</param>
         /// <returns>Returns available loading docks</returns>
-        internal Dock GetFreeLoadingDock(ShipSize shipSize) // exception if shipSize input is invalid, catch?
+        internal Dock GetFreeLoadingDock(ShipSize shipSize)
         {
 
             foreach (Dock dock in freeLoadingDocks)
@@ -484,9 +487,9 @@ namespace Gruppe8.HarbNet
                 {
                     return dock;
                 }
-            }
 
-            return null;
+            }
+            throw new InvalidParameterException("Invalid input. That shipSize does not exist. Choose between small, medium or large.");
         }
 
         /// <summary>
@@ -494,7 +497,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The size of the ship in Small, Medium om Large</param>
         /// <returns>Returns available ship docks</returns>
-        internal Dock GetFreeShipDock(ShipSize shipSize) // exception if shipSize input is invalid, catch?
+        internal Dock GetFreeShipDock(ShipSize shipSize)
         {
 
             foreach (Dock dock in freeShipDocks)
@@ -505,7 +508,7 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            return null;
+            throw new InvalidParameterException("Invalid input. That shipSize does not exist. Choose between small, medium or large.");
         }
 
         /// <summary>
@@ -613,7 +616,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The size of the ship in Small, Medium om Large</param>
         /// <returns>Returns the total amount of available loading docks of specified size</returns>
-        internal int NumberOfFreeLoadingDocks(ShipSize shipSize) // exception if shipSize is invalid?
+        internal int NumberOfFreeLoadingDocks(ShipSize shipSize)
         {
             int count = 0;
             foreach (Dock dock in freeLoadingDocks)
@@ -631,7 +634,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <returns>Returns the total number of available loading containerspaces of specified size</returns>
-        internal int NumberOfFreeContainerSpaces(ContainerSize containerSize) // exception if containerSize is invalid?
+        internal int NumberOfFreeContainerSpaces(ContainerSize containerSize)
         {
             int count = 0;
             foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
@@ -641,9 +644,7 @@ namespace Gruppe8.HarbNet
                     count++;
                 }
             }
-            return count;
-
-
+            throw new InvalidParameterException("Invalid input. That containerSize does not exist. Choose between small, medium or large.");
         }
 
         /// <summary>
@@ -663,7 +664,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <returns>Returns the Guid of an avaiable containerspace of specified size</returns>
-        internal ContainerSpace GetFreeContainerSpace(ContainerSize containerSize) // exception if containerSize is invalid?
+        internal ContainerSpace GetFreeContainerSpace(ContainerSize containerSize)
         {
             foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
             {
@@ -671,10 +672,9 @@ namespace Gruppe8.HarbNet
                 if (containerSpace.Free == true && containerSpace.Size == containerSize)
                 {
                     return containerSpace;
-
                 }
             }
-            return null;
+            throw new InvalidParameterException("Invalid input. That containersize does not exist. Choose between small, medium or large.");
 
         } //returnerer en Guid til en ledig plass av den gitte typen
 
@@ -683,7 +683,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <returns>Returns the Guid of a stored container of specified size</returns>
-        internal Container GetStoredContainer(ContainerSize containerSize) // exception if containerSize is invalid?
+        internal Container GetStoredContainer(ContainerSize containerSize)
         {
             foreach (Container container in storedContainers.Keys)
             {
@@ -693,7 +693,6 @@ namespace Gruppe8.HarbNet
                 }
             }
             return null;
-
         }
 
         /// <summary>
@@ -859,7 +858,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="dockID">Unique ID of specific dock</param>
         /// <returns>Returns string informing of specified dock and if it's free</returns>
-        public string LoadingDockIsFree(Guid dockID) // exception invalid dockID?
+        public string LoadingDockIsFree(Guid dockID)
         {
             StringBuilder sb = new StringBuilder();
             bool dockFree = false;
@@ -902,7 +901,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ContainerId">Unique ID of specific container</param>
         /// <returns>Returns a string with the dock ID and their status</returns>
-        public string GetContainerStatus(Guid ContainerId) // exception invalid containerID
+        public string GetContainerStatus(Guid ContainerId)
         {
             StringBuilder sb = new StringBuilder();
             Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
@@ -917,8 +916,14 @@ namespace Gruppe8.HarbNet
                         sb.Append($"ContainerId: {keyvalue.Key}, containerStatus: {keyvalue.Value}");
                     }
                 }
+                else if (container.ID != ContainerId)
+                {
+                    throw new InvalidParameterException("Invalid input. Container with that ID does not exist");
+                }
             }
             return sb.ToString();
+
+
         }
 
         /// <summary>
