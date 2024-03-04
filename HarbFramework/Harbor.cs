@@ -182,10 +182,12 @@ namespace Gruppe8.HarbNet
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
             
-            if (allShipDocks.Count != allLoadingDocks.Count)
+            /*
+            if (allLoadingDocks < )
             {
                 throw new InvalidOperationException("Invalid object creation. There is not an equal amount of ShipDocks and LoadingDocks.");
             } 
+            */
             
         }
 
@@ -427,7 +429,7 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            throw new InvalidParameterException("Invalid input. That shipID does not exist.");
+            throw new InvalidParameterException("Invalid input. That shipID does not exist, can't retrieve loadingDock.");
         }
 
         /// <summary>
