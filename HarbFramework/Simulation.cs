@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
@@ -25,7 +26,7 @@ namespace Gruppe8.HarbNet
 
         private Harbor harbor;
 
-        public delegate void SimulationEndedHandler(String message);
+        public delegate void SimulationEndedHandler(Object sender, EventArgs e);
         public event SimulationEndedHandler SimulationEnded;
 
         public delegate void DayOverEventHandler(String message, DateTime currentTime);
@@ -672,4 +673,102 @@ namespace Gruppe8.HarbNet
         }
     }
 
+    public class SimulationEndedEventArgs : EventArgs
+    {
+
+        public ReadOnlyCollection<Ship> simulationHistory { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class DayOverEventArgs : EventArgs
+    {
+
+        public DailyLog todaysLog { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class DayLoggedEventArgs : EventArgs
+    {
+        public DailyLog todaysLog { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class ShipUndockedEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Guid dockId { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class shipDockingToShipDockEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Guid dockId { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class shipDockedToShipDockEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Guid dockId { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class shipDockingToLoadingDockEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Guid dockId { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class shipDockedToLoadingDockEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Guid dockId { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class shipLoadedContainerEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Container Container { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class shipUnloadedContainerEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Container Container { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class shipAnchoredEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Guid anchorageID { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+    public class shipAnchoringEventArgs : EventArgs
+    {
+        public Ship ship { get; internal set; }
+        public DateTime currentTime { get; internal set; }
+        public Guid anchorageID { get; internal set; }
+        public String message { get; internal set; }
+    }
+
+
+
+
 }
+
