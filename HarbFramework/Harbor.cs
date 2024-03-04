@@ -125,6 +125,37 @@ namespace Gruppe8.HarbNet
             int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,
             int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces, int numberOfLargeContainerSpaces)
         {
+
+            int smallSingleTripShipCount = 0;
+            int mediumSingleTripShipCount = 0;
+            int largeSingleTripShipCount = 0;
+            foreach (Ship ship in listOfShips)
+            {
+                if (ship.IsForASingleTrip)
+                {
+                    if (ship.ShipSize == ShipSize.Small) { smallSingleTripShipCount++; }
+                    else if (ship.ShipSize == ShipSize.Medium) { mediumSingleTripShipCount++; }
+                    else if (ship.ShipSize == ShipSize.Large) { largeSingleTripShipCount++; }
+                }
+            }
+
+            if (smallSingleTripShipCount > numberOfSmallLoadingDocks)
+            {
+                throw new ArgumentException("There are fewer smallLoadingDocks than there are single-trip ships of the size small in the listOfShips given." +
+                    "Single trip ships needs a loading dock of similar size to start their trip from. Make sure numberOfSmallLoadingDocks is equal to or larger than the number of small sized singletrip ships in your list.");
+            }
+            if (mediumSingleTripShipCount > numberOfMediumLoadingDocks)
+            {
+                throw new ArgumentException("There are fewer medium loading docks than there are single-trip ships of the size medium in the listOfShips given." +
+                    "Single trip ships needs a loading dock of similar size to start their trip from. Make sure numberOfMediumlLoadingDocks is equal to or larger than the number of medium sized singletrip ships in your list.");
+            }
+            if (largeSingleTripShipCount > numberOfLargeLoadingDocks)
+            {
+                throw new ArgumentException("There are fewer large loading docks than there are single-trip ships of the size large in the listOfShips given." +
+                    "Single trip ships needs a loading dock of similar size to start their trip from. Make sure numberOfLargelLoadingDocks is equal to or larger than the number of large sized singletrip ships in your list.");
+            }
+
+
             for (int i = 0; i < numberOfSmallLoadingDocks; i++)
             {
                 allLoadingDocks.Add(new Dock(ShipSize.Small));
@@ -157,40 +188,34 @@ namespace Gruppe8.HarbNet
             CreateContainerSpaces(ContainerSize.Medium, numberOfMediumContainerSpaces);
             CreateContainerSpaces(ContainerSize.Large, numberOfLargeContainerSpaces);
 
-
-            /// <summary>
-            /// Creates what size and number of containers a harbor can hold
-            /// </summary>
-            /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
-            /// <param name="numberOfSpaces">The number of containers the harbor can hold</param>
-            /// <return>Returns nothing</return>
-            void CreateContainerSpaces(ContainerSize containerSize, int numberOfSpaces)
-            {
-                List<ContainerSpace> spaces = new List<ContainerSpace>();
-                for (int j = 0; j < numberOfSpaces; j++)
-                {
-                    spaces.Add(new ContainerSpace(containerSize));
-                }
-
-                allContainerSpaces[containerSize] = spaces;
-                freeContainerSpaces[containerSize] = spaces;
-
-            }
-
             AllShips = listOfShips.ToList();
             
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
 
-
-            /*
-            if (allLoadingDocks < )
-            {
-                throw new InvalidOperationException("Invalid object creation. There is not an equal amount of ShipDocks and LoadingDocks.");
-            } 
-            */
+            
 
         }
+
+        /// <summary>
+        /// Creates what size and number of containers a harbor can hold
+        /// </summary>
+        /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
+        /// <param name="numberOfSpaces">The number of containers the harbor can hold</param>
+        /// <return>Returns nothing</return>
+        internal void CreateContainerSpaces(ContainerSize containerSize, int numberOfSpaces)
+        {
+            List<ContainerSpace> spaces = new List<ContainerSpace>();
+            for (int j = 0; j < numberOfSpaces; j++)
+            {
+                spaces.Add(new ContainerSpace(containerSize));
+            }
+
+            allContainerSpaces[containerSize] = spaces;
+            freeContainerSpaces[containerSize] = spaces;
+
+        }
+
 
         /// <summary>
         /// Docks ship to loading dock
