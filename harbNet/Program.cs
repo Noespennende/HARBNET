@@ -95,13 +95,13 @@ namespace TestProgram
             simulation.shipAnchoring += (sender, e) =>
             {
                 shipAnchoringEventArgs args = (shipAnchoringEventArgs)e;
-                Console.WriteLine($"{args.ship}, {args.anchorageID}, {args.currentTime}\n");
+                Console.WriteLine($"test her: {args.ship}, {args.anchorageID}, {args.currentTime}\n");
             };
 
             simulation.shipAnchored += (sender, e) =>
             {
                 shipAnchoredEventArgs args = (shipAnchoredEventArgs)e;
-                Console.WriteLine($"{args.ship}, {args.anchorageID}, {args.currentTime}\n");
+                Console.WriteLine($"test her: {args.ship}, {args.anchorageID}, {args.currentTime}\n");
             };
 
 
