@@ -351,13 +351,13 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in Anchorage)
             {
                 shipDockingToShipDockEventArgs shipdockevent = new shipDockingToShipDockEventArgs();
-                shipDockingToLoadingDockEventArgs shipLoaddockevent = new shipDockingToLoadingDockEventArgs();
+                shipDockingToLoadingDockEventArgs ShipDockingToLoadingDockEventArgs = new shipDockingToLoadingDockEventArgs();
 
                 shipdockevent.ship = ship;
                 shipdockevent.currentTime = currentTime;
 
-                shipLoaddockevent.ship = ship;
-                shipLoaddockevent.currentTime = currentTime;
+                ShipDockingToLoadingDockEventArgs.ship = ship;
+                ShipDockingToLoadingDockEventArgs.currentTime = currentTime;
 
                 Guid shipID = ship.ID;
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
@@ -373,14 +373,16 @@ namespace Gruppe8.HarbNet
                     Guid dockID;
                     if (harbor.FreeLoadingDockExists(ship.ShipSize) && lastStatusLog.Status != Status.DockedToShipDock)
                     {
+                        
 
                         if (lastStatusLog.Status == Status.Anchored)
                         {
                             dockID = harbor.DockShipToLoadingDock(shipID, currentTime);
                             shipdockevent.dockId = dockID;
+                            ShipDockingToLoadingDockEventArgs.dockId = dockID;
 
                             ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
-                            ShipDockingtoLoadingDock?.Invoke(this, shipLoaddockevent);
+                            ShipDockingtoLoadingDock?.Invoke(this, ShipDockingToLoadingDockEventArgs);
                         }
 
                         if (harbor.FreeShipDockExists(ship.ShipSize) && ship.IsForASingleTrip == true && ContainsTransitStatus(ship)
@@ -388,9 +390,9 @@ namespace Gruppe8.HarbNet
                             && lastStatusLog.Status != Status.DockingToShipDock)
                         {
                             dockID = harbor.DockShipToShipDock(shipID);
-                            shipLoaddockevent.dockId = dockID;
+                            ShipDockingToLoadingDockEventArgs.dockId = dockID;
                             ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToShipDock);
-                            ShipDockingtoLoadingDock?.Invoke(this, shipLoaddockevent);
+                            ShipDockingtoLoadingDock?.Invoke(this, ShipDockingToLoadingDockEventArgs);
 
                         }
 
@@ -537,13 +539,15 @@ namespace Gruppe8.HarbNet
 
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
                 StatusLog secondLastStatusLog = ship.HistoryIList[ship.HistoryIList.Count - 2];
-                shipLoadedContainerEventArgs e = new shipLoadedContainerEventArgs();
+                shipLoadedContainerEventArgs shipLoadedContainerEventArgs = new shipLoadedContainerEventArgs();
                 ShipUndockedEventArgs shipUndockedEventArgs = new ShipUndockedEventArgs();
 
                 shipUndockedEventArgs.ship = ship;
                 shipUndockedEventArgs.currentTime = currentTime;
-                e.ship = ship;
-                e.currentTime = currentTime;
+                
+                shipLoadedContainerEventArgs.ship = ship;
+                shipLoadedContainerEventArgs.currentTime = currentTime;
+
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
                     ((lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true)) ||
                      (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && !ContainsTransitStatus(ship))) ||
@@ -552,6 +556,8 @@ namespace Gruppe8.HarbNet
                      (ship.IsForASingleTrip == true && !ContainsTransitStatus(ship))))
                 {
                     Guid currentPosition = lastStatusLog.SubjectLocation;
+
+                    shipUndockedEventArgs.dockId = currentPosition;
 
                     if (ship.ContainersOnBoard.Count < ship.ContainerCapacity && ship.CurrentWeightInTonn < ship.MaxWeightInTonn)
                     {
