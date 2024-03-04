@@ -25,11 +25,11 @@ namespace Gruppe8.HarbNet
 
         private Harbor harbor;
 
-        public delegate void SimulationEndHandler(String message);
-        public event SimulationEndHandler SimulationEnd;
+        public delegate void SimulationEndedHandler(String message);
+        public event SimulationEndedHandler SimulationEnded;
 
         public delegate void DayOverEventHandler(String message, DateTime currentTime);
-        public event DayOverEventHandler? DayOverEvent;
+        public event DayOverEventHandler? DayEnded;
 
         public delegate void ShipStatusEventHandler(string message);
         public event ShipStatusEventHandler? ShipStatusEvent;
@@ -139,7 +139,7 @@ namespace Gruppe8.HarbNet
                 DateTime teset = currentTime.AddHours(-24);
                 if (currentTime.Hour == 0)
                 {
-                    DayOverEvent.Invoke($"\nDay over\n Current Time: ", teset);
+                    DayEnded.Invoke($"\nDay over\n Current Time: ", teset);
                     
                                                       
                     History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
@@ -174,7 +174,7 @@ namespace Gruppe8.HarbNet
 
                 continue;
             }
-            SimulationEnd?.Invoke($"\n----------------\nSimulation over!\n----------------\n");
+            SimulationEnded?.Invoke($"\n----------------\nSimulation over!\n----------------\n");
             Thread.Sleep(1000);
 
             return History;

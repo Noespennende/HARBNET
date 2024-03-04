@@ -16,7 +16,6 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class Harbor : IHarbor
     {
-
         /// <summary>
         /// Unique ID for harbor
         /// </summary>

@@ -59,13 +59,13 @@ namespace TestProgram
                 Console.WriteLine($"\nShip {ship.Name} docked to loading dock");
             };
 
-            simulation.DayOverEvent += (message, currentTime) =>
+            simulation.DayEnded += (message, currentTime) =>
             {
                 Console.WriteLine("\nDay over");
                 Console.WriteLine("Current time: " + currentTime);
             };
 
-            simulation.SimulationEnd += (message) =>
+            simulation.SimulationEnded += (message) =>
             {
                 Console.WriteLine(message);
             };
@@ -108,23 +108,19 @@ namespace TestProgram
             simulation.Run();
 
           
-            /*
-            Console.WriteLine("\n-------------------------\n");
+            
+            Console.WriteLine("\n-----------PRINTING HISTORY OF A SINGLE SHIP--------------\n");
             
             //Prints the history for a single ship
             ssSolitude.PrintHistory();
 
-            Console.WriteLine("\n-------------------------\n");
+            Console.WriteLine("\n-----------PRINTING HISTORY OF ALL CONTAINERS IN THE SIMULATION--------------\n");
             //Prints the history for all containers in the simulation
-            //simulation.PrintContainerHistory();
+            simulation.PrintContainerHistory();
 
-            Console.WriteLine("\n-------------------------\n");
+            Console.WriteLine("\n-----------PRINTING HISTORY OF ALL SHIPS IN THE SIMULATION--------------\n");
             //Prints the history for all ships in the simulation
-            //simulation.PrintShipHistory();
-
-            StringBuilder sb = new StringBuilder();
-
-            Console.WriteLine($"{sb.ToString()}");*/
+            simulation.PrintShipHistory();
 
         }
 
