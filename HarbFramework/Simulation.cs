@@ -675,8 +675,12 @@ namespace Gruppe8.HarbNet
 
     public class SimulationEndedEventArgs : EventArgs
     {
-
-        public ReadOnlyCollection<Ship> simulationHistory { get; internal set; }
+        /// <summary>
+        /// Returns a ReadOnlyCollection of DailyLog
+        /// </summary>
+        /// <param name="ship">The ship you want information on</param>
+        /// <returns>Returns a String containing information about the given ship in the simulation</returns>
+        public ReadOnlyCollection<DailyLog> simulationHistory { get; internal set; }
         public String message { get; internal set; }
     }
 
