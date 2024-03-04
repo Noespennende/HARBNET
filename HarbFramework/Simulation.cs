@@ -22,7 +22,7 @@ namespace Gruppe8.HarbNet
         public EventHandler? ShipUndocking;
         public EventHandler? ShipInTransit;
         public EventHandler? ShipDockingToShipDock;
-        public EventHandler? ShipDockedShipDock;
+        public EventHandler? ShipDockedToShipDock;
         public EventHandler? ShipDockingtoLoadingDock;
         public EventHandler? ShipDockedtoLoadingDock;
         public EventHandler? ShipLoadedContainer;

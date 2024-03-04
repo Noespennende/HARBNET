@@ -106,7 +106,7 @@ namespace TestProgram
                 Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' is in transit at transit ID '{args.transitLocationID}'\n");
             };
 
-            simulation.ShipDockedShipDock += (sender, e) =>
+            simulation.ShipDockedToShipDock += (sender, e) =>
             {
                 shipDockedToShipDockEventArgs args = (shipDockedToShipDockEventArgs)e;
                 Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' has docked to ship dock with ID '{args.dockId}'\n");
@@ -229,7 +229,7 @@ namespace TestProgram
                 Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' is in transit at transit ID '{args.transitLocationID}'\n");
             };
 
-            simulation.ShipDockedShipDock -= (sender, e) =>
+            simulation.ShipDockedToShipDock -= (sender, e) =>
             {
                 shipDockedToShipDockEventArgs args = (shipDockedToShipDockEventArgs)e;
                 Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' has docked to ship dock with ID '{args.dockId}'\n");
