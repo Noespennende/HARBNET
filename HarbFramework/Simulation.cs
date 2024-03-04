@@ -13,20 +13,20 @@ namespace Gruppe8.HarbNet
         private DateTime endTime;
 
         private Harbor harbor;
-        public EventHandler SimulationEnded;
-        public EventHandler simulationStarting;
-        public EventHandler DayEnded;
-        public EventHandler DayLoggedToSimulationHistory;
-        public EventHandler ShipUndocking;
-        public EventHandler ShipInTransit;
-        public EventHandler shipDockingToShipDock;
-        public EventHandler ShipDockedShipDock;
-        public EventHandler ShipDockingtoLoadingDock;
-        public EventHandler ShipDockedtoLoadingDock;
-        public EventHandler ShipLoadedContainer;
-        public EventHandler ShipUnloadedContainer;
-        public EventHandler ShipAnchored;
-        public EventHandler ShipAnchoring;
+        public EventHandler? SimulationEnded;
+        public EventHandler? simulationStarting;
+        public EventHandler? DayEnded;
+        public EventHandler? DayLoggedToSimulationHistory;
+        public EventHandler? ShipUndocking;
+        public EventHandler? ShipInTransit;
+        public EventHandler? shipDockingToShipDock;
+        public EventHandler? ShipDockedShipDock;
+        public EventHandler? ShipDockingtoLoadingDock;
+        public EventHandler? ShipDockedtoLoadingDock;
+        public EventHandler? ShipLoadedContainer;
+        public EventHandler? ShipUnloadedContainer;
+        public EventHandler? ShipAnchored;
+        public EventHandler? ShipAnchoring;
 
         /// <summary>
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.

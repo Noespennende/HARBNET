@@ -46,7 +46,7 @@ namespace TestProgram
             // Creating the simulation object, of which the simulation will run from
             Simulation simulation = new Simulation(kjuttaviga, startTime, endTime);
 
-
+            //subscribing to events
             simulation.simulationStarting += (sender, e) =>
             {
                 SimulationStartingEventArgs args = (SimulationStartingEventArgs)e;
@@ -127,63 +127,105 @@ namespace TestProgram
                 ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
                 Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' is in transit at ID '{args.transitLocationID}'\n");
             };
-
             
-
-            
-
-
-            
-
-            
-
-
-
-
-
-            
-
-            
-
-
-            
-
-            
-
-            
-            /*
-            static void onShipUndock(Ship ship)
-            {
-                Console.WriteLine($"\nShip {ship.Name} undocked");
-            }
-
-            static void onShipDockedToDock(Ship ship)
-            {
-                Console.WriteLine($"\nShip {ship.Name} docked to Loading dock");
-            }
-            static void onshipLoadingContainer(Ship ship)
-            {
-                Console.WriteLine($"\nShip {ship.Name} Loading Containers");
-            }*/
 
             /* Running/starting the Simulation. Run() outputs a list of logs that is created during the simulation. It's worth noting that simulation.Run() will also print
             updates on all ships during the simulation*/
             simulation.Run();
 
-          
-            
+            //unsubscribing to events
+            simulation.simulationStarting -= (sender, e) =>
+            {
+                SimulationStartingEventArgs args = (SimulationStartingEventArgs)e;
+                Console.WriteLine("Simulation starting ...");
+                Console.WriteLine($"Simulating {args.harborToBeSimulated.ID} from {args.startDate}\n");
+                Thread.Sleep(2000);
+            };
+
+            simulation.SimulationEnded -= (sender, e) =>
+            {
+                SimulationEndedEventArgs args = (SimulationEndedEventArgs)e;
+                Console.WriteLine($"{args.message}, {args.simulationHistory}");
+            };
+
+            simulation.DayEnded -= (sender, e) =>
+            {
+                DayLoggedEventArgs args = (DayLoggedEventArgs)e;
+                Console.WriteLine($"{args.currentTime}, {args.todaysLog}");
+            };
+
+            simulation.DayLoggedToSimulationHistory -= (sender, e) =>
+            {
+                DayLoggedEventArgs args = (DayLoggedEventArgs)e;
+                Console.WriteLine($"{args.currentTime}, {args.message}");
+            };
+
+            simulation.ShipUndocking -= (sender, e) =>
+            {
+                ShipUndockingEventArgs args = (ShipUndockingEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' undocking from '{args.dockId}'\n");
+            };
+
+            simulation.ShipDockedShipDock -= (sender, e) =>
+            {
+                shipDockedToShipDockEventArgs args = (shipDockedToShipDockEventArgs)e;
+                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
+            };
+
+            simulation.ShipDockingtoLoadingDock -= (sender, e) =>
+            {
+                shipDockingToLoadingDockEventArgs args = (shipDockingToLoadingDockEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' starting docking to dock with ID {args.dockId}\n");
+            };
+
+            simulation.ShipDockingtoLoadingDock -= (sender, e) =>
+            {
+                shipDockingToLoadingDockEventArgs args = (shipDockingToLoadingDockEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' starting docking to dock with ID {args.dockId}\n");
+            };
+
+            simulation.ShipLoadedContainer -= (sender, e) =>
+            {
+                shipLoadedContainerEventArgs args = (shipLoadedContainerEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' loaded container of size '{args.Container.Size}'\n");
+                Console.WriteLine($"{args.ship.Name}, {args.Container}, {args.currentTime}\n");
+            };
+
+            simulation.ShipUnloadedContainer -= (sender, e) =>
+            {
+                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+            };
+
+            simulation.ShipAnchored -= (sender, e) =>
+            {
+                shipAnchoredEventArgs args = (shipAnchoredEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' anchored to anchorage with ID {args.anchorageID}\n");
+            };
+
+            simulation.ShipAnchoring -= (sender, e) =>
+            {
+                shipAnchoringEventArgs args = (shipAnchoringEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' anchoring to anchorage with ID {args.anchorageID}\n");
+            };
+
+            simulation.ShipInTransit -= (sender, e) =>
+            {
+                ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' is in transit at ID '{args.transitLocationID}'\n");
+            };
             Console.WriteLine("\n-----------PRINTING HISTORY OF A SINGLE SHIP--------------\n");
             
             //Prints the history for a single ship
-            //ssSolitude.PrintHistory();
+            ssSolitude.PrintHistory();
 
             Console.WriteLine("\n-----------PRINTING HISTORY OF ALL CONTAINERS IN THE SIMULATION--------------\n");
             //Prints the history for all containers in the simulation
-            //simulation.PrintContainerHistory();
+            simulation.PrintContainerHistory();
 
             Console.WriteLine("\n-----------PRINTING HISTORY OF ALL SHIPS IN THE SIMULATION--------------\n");
             //Prints the history for all ships in the simulation
-            //simulation.PrintShipHistory();
+            simulation.PrintShipHistory();
 
         }
 
