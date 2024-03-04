@@ -182,12 +182,7 @@ namespace Gruppe8.HarbNet
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
             
-            /*
-            if (allLoadingDocks < )
-            {
-                throw new InvalidOperationException("Invalid object creation. There is not an equal amount of ShipDocks and LoadingDocks.");
-            } 
-            */
+
             
         }
 
