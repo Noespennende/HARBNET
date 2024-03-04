@@ -141,17 +141,17 @@ namespace Gruppe8.HarbNet
 
             if (smallSingleTripShipCount > numberOfSmallLoadingDocks)
             {
-                throw new ArgumentException("There are fewer smallLoadingDocks than there are single-trip ships of the size small in the listOfShips given." +
+                throw new ArgumentOutOfRangeException("There are fewer smallLoadingDocks than there are single-trip ships of the size small in the listOfShips given." +
                     "Single trip ships needs a loading dock of similar size to start their trip from. Make sure numberOfSmallLoadingDocks is equal to or larger than the number of small sized singletrip ships in your list.");
             }
             if (mediumSingleTripShipCount > numberOfMediumLoadingDocks)
             {
-                throw new ArgumentException("There are fewer medium loading docks than there are single-trip ships of the size medium in the listOfShips given." +
+                throw new ArgumentOutOfRangeException("There are fewer medium loading docks than there are single-trip ships of the size medium in the listOfShips given." +
                     "Single trip ships needs a loading dock of similar size to start their trip from. Make sure numberOfMediumlLoadingDocks is equal to or larger than the number of medium sized singletrip ships in your list.");
             }
             if (largeSingleTripShipCount > numberOfLargeLoadingDocks)
             {
-                throw new ArgumentException("There are fewer large loading docks than there are single-trip ships of the size large in the listOfShips given." +
+                throw new ArgumentOutOfRangeException("There are fewer large loading docks than there are single-trip ships of the size large in the listOfShips given." +
                     "Single trip ships needs a loading dock of similar size to start their trip from. Make sure numberOfLargelLoadingDocks is equal to or larger than the number of large sized singletrip ships in your list.");
             }
 
