@@ -674,6 +674,28 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
+    /// The EventArgs class for the SimulationStarting event.
+    /// </summary>
+    public class SimulationStartingEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Returns a ReadOnlyCollection of DailyLog objects that together represent the history of the simulation.
+        /// </summary>
+        /// <returns>ReadOnlyCollection of DailyLog objects. Each one contains information about a single day of the simulation.</returns>
+        public Harbor harborToBeSimulated { get; internal set; }
+        /// <summary>
+        /// The time the simulation will start from
+        /// </summary>
+        /// <returns>Datetime object representing the simulations start time</returns>
+        public DateTime startDate { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that was raised</returns>
+        public String message { get; internal set; }
+    }
+
+    /// <summary>
     /// The EventArgs class for the SimulationEnded event.
     /// </summary>
     public class SimulationEndedEventArgs : EventArgs
@@ -686,7 +708,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -700,14 +722,14 @@ namespace Gruppe8.HarbNet
         /// <returns>DailyLog object containing information about the state of the simulation at the time the object was created</returns>
         public DailyLog todaysLog { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -717,14 +739,14 @@ namespace Gruppe8.HarbNet
     {
         public DailyLog todaysLog { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -734,9 +756,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised.</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The unique ID of the dock the ship undocked from.
@@ -746,7 +768,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -756,9 +778,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The unique ID of the dock the ship is docking to.
@@ -768,7 +790,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -778,9 +800,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The unique ID of the dock the ship docked to.
@@ -790,7 +812,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -800,9 +822,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The unique ID of the dock the ship is docking to.
@@ -812,7 +834,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -822,9 +844,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The unique ID of the dock the ship docked to.
@@ -834,7 +856,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -844,9 +866,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The container loaded omboard the ship
@@ -856,7 +878,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -866,9 +888,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The container unloaded from the ship and on to the harbor.
@@ -878,7 +900,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -888,9 +910,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The ID of the anchorage
@@ -900,7 +922,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that just was raised</returns>
         public String message { get; internal set; }
     }
     /// <summary>
@@ -910,9 +932,9 @@ namespace Gruppe8.HarbNet
     {
         public Ship ship { get; internal set; }
         /// <summary>
-        /// The time in the simulation the event occured.
+        /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
+        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime currentTime { get; internal set; }
         /// <summary>
         /// The ID of the anchorage
@@ -922,7 +944,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string representing the event.
         /// </summary>
-        /// <returns>String representing the event that just occured</returns>
+        /// <returns>String representing the event that just was raised</returns>
         public String message { get; internal set; }
     }
 
