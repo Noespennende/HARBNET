@@ -25,7 +25,21 @@ namespace Gruppe8.HarbNet
         private DateTime endTime;
 
         private Harbor harbor;
+        public EventHandler simulationEnd;
+        public EventHandler simulationStart;
+        public EventHandler DayEnded;
+        public EventHandler DayLoggedToSimulationHistory;
+        public EventHandler ShipUnDocked;
+        public EventHandler shipDockingToShipDock;
+        public EventHandler shipDockedShipDock;
+        public EventHandler ShipDockingtoLoadingDock;
+        public EventHandler ShipDockedtoLoadingDock;
+        public EventHandler shipLoadedContainer;
+        public EventHandler shipUnloadedContainer;
+        public EventHandler shipAnchored;
+        public EventHandler shipAnchoring;
 
+        /*
         public delegate void SimulationEndedHandler(Object sender, EventArgs e);
         public event SimulationEndedHandler SimulationEnded;
 
@@ -59,6 +73,7 @@ namespace Gruppe8.HarbNet
         public delegate void shipAnchoringHandler(Ship ship);
         public event shipAnchoringHandler? shipAnchoring;
 
+    */
         /// <summary>
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
@@ -265,14 +280,16 @@ namespace Gruppe8.HarbNet
                     (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))))
                 {
                     Guid dockID;
-
+                    shipDockedToShipDockEventArgs e = new shipDockedToShipDockEventArgs();
+                    e.ship = ship;
+                    e.currentTime = currentTime;
                     if (currentTime == startTime && lastStatusLog.Status == Status.DockedToShipDock)
                     {
                         
                         dockID = harbor.DockShipFromShipDockToLoadingDock(ship.ID, currentTime);
-
+                        e.dockId = dockID;
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
-                        ShipDockingtoLoadingDock?.Invoke(ship);
+                        ShipDockingtoLoadingDock?.Invoke(ship, e); ;
 
                     }
                 }
@@ -731,6 +748,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>String representing the event that was raised</returns>
         public String message { get; internal set; }
+
     }
     /// <summary>
     /// The EventArgs class for the DayLogged event

@@ -49,14 +49,25 @@ namespace TestProgram
             simulation.shipDockedShipDock += onShipDockedToDock;
             simulation.shipLoadeadContainer += onshipLoadingContainer;
 
-            simulation.ShipDockingtoLoadingDock += (ship) =>
+            simulation.ShipDockingtoLoadingDock += (sender, e) =>
             {
-                Console.WriteLine($"\nShip {ship.Name} docking to loading dock");
+                // Sjekk om e er av riktig type før du bruker dens egenskaper
+                if (e is shipDockingToLoadingDockEventArgs dockEventArgs)
+                {
+                    Console.WriteLine($"Ship {dockEventArgs.ship.ID} docking to loading dock");
+                    Console.WriteLine($"Dock ID: {dockEventArgs.dockId}");
+                    Console.WriteLine($"Current time: {dockEventArgs.currentTime}");
+                }
             };
 
-            simulation.ShipDockedtoLoadingDock += (ship) =>
+            simulation.ShipDockingtoLoadingDock += (ship, e) =>
             {
-                Console.WriteLine($"\nShip {ship.Name} docked to loading dock");
+                Console.WriteLine($"\nShip {ship} {e}docking to loading dock");
+            };
+
+            simulation.ShipDockedtoLoadingDock += (ship, e) =>
+            {
+                Console.WriteLine($"\nShip {ship} {e} docked to loading dock");
             };
 
             simulation.DayEnded += (message, currentTime) =>
