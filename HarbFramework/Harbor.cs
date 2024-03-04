@@ -286,34 +286,36 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Ship in anchorage gets moved to dock
+        /// Ship in anchorage gets moved to loading dock
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Returns the Guid of the dock the ship gets docked to</returns>
-        internal Guid StartShipInShipDock(Guid shipID)
+
+        internal Guid StartShipInLoadingDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
             Dock dock;
 
-            if (FreeShipDockExists(size))
+            if (FreeLoadingDockExists(size))
             {
-                dock = GetFreeShipDock(size);
+                dock = GetFreeLoadingDock(size);
                 dock.DockedShip = shipToBeDocked.ID;
                 dock.Free = false;
                 shipToBeDocked.CurrentLocation = dock.ID;
 
-                shipsInShipDock.Add(shipToBeDocked, dock);
-                freeShipDocks.Remove(dock);
+                shipsInLoadingDock.Add(shipToBeDocked, dock);
+                freeLoadingDocks.Remove(dock);
                 RemoveShipFromAnchorage(shipID);
 
                 return dock.ID;
-                
+
             }
 
             return Guid.Empty;
 
         }
+
 
         /// <summary>
         /// Ship in loading dock got get moved to dock for ships in transit 
