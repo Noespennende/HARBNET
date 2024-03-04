@@ -498,7 +498,7 @@ namespace Gruppe8.HarbNet
 
                 return sb.ToString();
             } else {
-                throw new InvalidParameterException("Invalid input. Valid input is 'ships' or 'container'.");
+                throw new ArgumentException("Invalid input. Valid input is 'ships' or 'container'.", nameof(ShipsOrContainers));
             }
   
         }

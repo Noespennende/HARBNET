@@ -181,9 +181,15 @@ namespace Gruppe8.HarbNet
             
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
-            
 
-            
+
+            /*
+            if (allLoadingDocks < )
+            {
+                throw new InvalidOperationException("Invalid object creation. There is not an equal amount of ShipDocks and LoadingDocks.");
+            } 
+            */
+
         }
 
         /// <summary>
@@ -368,7 +374,7 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            throw new InvalidParameterException("Invalid input. That shipID does not exist.");
+            throw new ArgumentException("Invalid input. That shipID does not exist.", nameof(shipID));
                     
             }
 
@@ -388,7 +394,7 @@ namespace Gruppe8.HarbNet
                     return ship;
                 }
             }
-            throw new InvalidParameterException("Invalid input. That shipID does not exist.");
+            throw new ArgumentException("Invalid input. That shipID does not exist.", nameof(shipID));
         }
 
         /// <summary>
@@ -406,7 +412,7 @@ namespace Gruppe8.HarbNet
                     return ship;
                 }
             }
-            throw new InvalidParameterException("Invalid input. That shipID does not exist.");
+            throw new ArgumentException("Invalid input. That shipID does not exist.", nameof(shipID));
         }
 
         /// <summary>
@@ -424,7 +430,7 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            throw new InvalidParameterException("Invalid input. That shipID does not exist, can't retrieve loadingDock.");
+            throw new ArgumentException("Invalid input. That shipID does not exist, can't retrieve loadingDock.", nameof(shipID));
         }
 
         /// <summary>
@@ -493,7 +499,7 @@ namespace Gruppe8.HarbNet
                 }
 
             }
-            throw new InvalidParameterException("Invalid input. That shipSize does not exist. Choose between small, medium or large.");
+            throw new ArgumentException("Invalid input. That shipSize does not exist. Valid shipSize is: shipSize.Small, shipSize.Medium or shipSize.Large.", nameof(shipSize));
         }
 
         /// <summary>
@@ -512,7 +518,7 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            throw new InvalidParameterException("Invalid input. That shipSize does not exist. Choose between small, medium or large.");
+            throw new ArgumentException("Invalid input. That shipSize does not exist. Valid shipSize is: shipSize.Small, shipSize.Medium or shipSize.Large.", nameof(shipSize));
         }
 
         /// <summary>
@@ -648,7 +654,7 @@ namespace Gruppe8.HarbNet
                     count++;
                 }
             }
-            throw new InvalidParameterException("Invalid input. That containerSize does not exist. Choose between small, medium or large.");
+            throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: containerSize.Small, containerSize.Medium or containerSize.Large.", nameof(containerSize));
         }
 
         /// <summary>
@@ -678,7 +684,7 @@ namespace Gruppe8.HarbNet
                     return containerSpace;
                 }
             }
-            throw new InvalidParameterException("Invalid input. That containersize does not exist. Choose between small, medium or large.");
+            throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: containerSize.Small, containerSize.Medium or containerSize.Large.", nameof(containerSize));
 
         } //returnerer en Guid til en ledig plass av den gitte typen
 
@@ -922,7 +928,7 @@ namespace Gruppe8.HarbNet
                 }
                 else if (container.ID != ContainerId)
                 {
-                    throw new InvalidParameterException("Invalid input. Container with that ID does not exist");
+                    throw new ArgumentException("Invalid input. Container with that ID does not exist", nameof(ContainerId));
                 }
             }
             return sb.ToString();
