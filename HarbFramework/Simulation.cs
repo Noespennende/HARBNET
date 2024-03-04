@@ -730,8 +730,9 @@ namespace Gruppe8.HarbNet
         {
             return ($"Simulation start time: {startTime.ToString()}, end time: {endTime.ToString()}, harbor ID: {harbor.ID}");
         }
-    }
 
+        
+    }
 
     /// <summary>
     /// The EventArgs class for the SimulationStarting event.
@@ -798,6 +799,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class DayLoggedEventArgs : EventArgs
     {
+        /// <summary>
+        /// Returns a DailyLog containing information about the state of the harbor the day the event was raised
+        /// </summary>
+        /// <returns>DailyLog containing information about the state of the harbor the day the event was raised</returns>
         public DailyLog todaysLog { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -815,6 +820,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class ShipUndockedEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that undocked
+        /// </summary>
+        /// <returns>Ship object representing the ship that undocked</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -837,6 +846,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class shipDockingToShipDockEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that that is docking to the ship dock
+        /// </summary>
+        /// <returns>Ship object representing the ship that is docking to the ship dock</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -859,6 +872,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class shipDockedToShipDockEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that that docked to the ship dock
+        /// </summary>
+        /// <returns>Ship object representing the ship that docked to the ship dock</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -881,6 +898,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class shipDockingToLoadingDockEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that is docking to the loading dock
+        /// </summary>
+        /// <returns>Ship object representing the ship that is docking to the loading dock</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -903,6 +924,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class shipDockedToLoadingDockEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that has docked to the loading dock.
+        /// </summary>
+        /// <returns>Ship object representing the ship that has docked to the loading dock</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -925,6 +950,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class shipLoadedContainerEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that loaded the container in to its cargo
+        /// </summary>
+        /// <returns>Ship object representing the ship loaded the container in to its cargo</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -947,6 +976,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class shipUnloadedContainerEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that unloaded the container on to the harbor
+        /// </summary>
+        /// <returns>Ship object representing the ship that unloaded the container on to the harbor</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -969,6 +1002,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class shipAnchoredEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that anchored to the anchorage
+        /// </summary>
+        /// <returns>Ship object representing the ship that anchored to the anchorage</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -991,6 +1028,10 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class shipAnchoringEventArgs : EventArgs
     {
+        /// <summary>
+        /// The ship that is anchoring to the anchorage
+        /// </summary>
+        /// <returns>Ship object representing the ship that is anchoring to the anchorage</returns>
         public Ship ship { get; internal set; }
         /// <summary>
         /// The time in the simulation the event was raised.
@@ -1008,9 +1049,6 @@ namespace Gruppe8.HarbNet
         /// <returns>String representing the event that just was raised</returns>
         public String message { get; internal set; }
     }
-
-
-
 
 }
 
