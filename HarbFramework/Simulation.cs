@@ -21,7 +21,7 @@ namespace Gruppe8.HarbNet
         public EventHandler? DayLoggedToSimulationHistory;
         public EventHandler? ShipUndocking;
         public EventHandler? ShipInTransit;
-        public EventHandler? shipDockingToShipDock;
+        public EventHandler? ShipDockingToShipDock;
         public EventHandler? ShipDockedShipDock;
         public EventHandler? ShipDockingtoLoadingDock;
         public EventHandler? ShipDockedtoLoadingDock;
