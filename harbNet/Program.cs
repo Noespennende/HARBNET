@@ -89,6 +89,8 @@ namespace TestProgram
                 Console.WriteLine($"\nShip {ship.Name} is anchoring");
             };
 
+            
+
             static void onShipUndock(Ship ship)
             {
                 Console.WriteLine($"\nShip {ship.Name} undocked");

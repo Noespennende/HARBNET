@@ -673,101 +673,256 @@ namespace Gruppe8.HarbNet
         }
     }
 
+    /// <summary>
+    /// The EventArgs class for the SimulationEnded event.
+    /// </summary>
     public class SimulationEndedEventArgs : EventArgs
     {
         /// <summary>
-        /// Returns a ReadOnlyCollection of DailyLog
+        /// Returns a ReadOnlyCollection of DailyLog objects that together represent the history of the simulation.
         /// </summary>
-        /// <param name="ship">The ship you want information on</param>
-        /// <returns>Returns a String containing information about the given ship in the simulation</returns>
+        /// <returns>ReadOnlyCollection of DailyLog objects. Each one contains information about a single day of the simulation.</returns>
         public ReadOnlyCollection<DailyLog> simulationHistory { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the DayOver event.
+    /// </summary>
     public class DayOverEventArgs : EventArgs
     {
-
+        /// <summary>
+        /// Returns a DailyLog object containing information about the previous day in the simulation.
+        /// </summary>
+        /// <returns>DailyLog object containing information about the state of the simulation at the time the object was created</returns>
         public DailyLog todaysLog { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the DayLogged event
+    /// </summary>
     public class DayLoggedEventArgs : EventArgs
     {
         public DailyLog todaysLog { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the ShipUndocked event.
+    /// </summary>
     public class ShipUndockedEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The unique ID of the dock the ship undocked from.
+        /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship undocked from</returns>
         public Guid dockId { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the shipDockingToShipDock event.
+    /// </summary>
     public class shipDockingToShipDockEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The unique ID of the dock the ship is docking to.
+        /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship is docking to</returns>
         public Guid dockId { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the shipDockedToShipDock event.
+    /// </summary>
     public class shipDockedToShipDockEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The unique ID of the dock the ship docked to.
+        /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship docked to</returns>
         public Guid dockId { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the shipDockingToLoadingDock event.
+    /// </summary>
     public class shipDockingToLoadingDockEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The unique ID of the dock the ship is docking to.
+        /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship is docking to</returns>
         public Guid dockId { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the shipDockedToLoadingDock event.
+    /// </summary>
     public class shipDockedToLoadingDockEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The unique ID of the dock the ship docked to.
+        /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship docked to</returns>
         public Guid dockId { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the shipLoadedContainer event.
+    /// </summary>
     public class shipLoadedContainerEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The container loaded omboard the ship
+        /// </summary>
+        /// <returns>Container object representing the container loaded omboard the ship</returns>
         public Container Container { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the shipUnloadedContainer event.
+    /// </summary>
     public class shipUnloadedContainerEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The container unloaded from the ship and on to the harbor.
+        /// </summary>
+        /// <returns>Container object representing the container unloaded from the ship and on to the harbor</returns>
         public Container Container { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the shipAnchored event.
+    /// </summary>
     public class shipAnchoredEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The ID of the anchorage
+        /// </summary>
+        /// <returns>Guid object representing the ID of the anchorage</returns>
         public Guid anchorageID { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
-
+    /// <summary>
+    /// The EventArgs class for the shipAnchoring event.
+    /// </summary>
     public class shipAnchoringEventArgs : EventArgs
     {
         public Ship ship { get; internal set; }
+        /// <summary>
+        /// The time in the simulation the event occured.
+        /// </summary>
+        /// <returns>DateTime object representing the time in the simulation the event occured</returns>
         public DateTime currentTime { get; internal set; }
+        /// <summary>
+        /// The ID of the anchorage
+        /// </summary>
+        /// <returns>Guid object representing the ID of the anchorage</returns>
         public Guid anchorageID { get; internal set; }
+        /// <summary>
+        /// Returns a string representing the event.
+        /// </summary>
+        /// <returns>String representing the event that just occured</returns>
         public String message { get; internal set; }
     }
 
