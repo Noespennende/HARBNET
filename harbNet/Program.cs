@@ -55,59 +55,10 @@ namespace TestProgram
                 Thread.Sleep(2000);
             };
 
-            simulation.shipAnchoring += (sender, e) =>
+            simulation.SimulationEnded += (sender, e) =>
             {
-                shipAnchoringEventArgs args = (shipAnchoringEventArgs)e;
-                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' anchoring to anchorage with ID {args.anchorageID}\n");
-            };
-
-            simulation.shipAnchored += (sender, e) =>
-            {
-                shipAnchoredEventArgs args = (shipAnchoredEventArgs)e;
-                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' anchored to anchorage with ID {args.anchorageID}\n");
-            };
-
-            simulation.ShipDockingtoLoadingDock += (sender, e) =>
-            {
-                shipDockingToLoadingDockEventArgs args = (shipDockingToLoadingDockEventArgs)e;
-                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' starting docking to dock with ID {args.dockId}\n");
-            };
-
-            simulation.ShipDockedtoLoadingDock += (sender, e) =>
-            {
-                shipDockedToLoadingDockEventArgs args = (shipDockedToLoadingDockEventArgs)e;
-                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' has docked to dock with ID {args.dockId}\n");
-            };
-
-            simulation.shipUnloadedContainer += (sender, e) =>
-            {
-                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
-                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' unloaded container of size '{args.Container.Size}'\n");
-            };
-
-            simulation.shipLoadedContainer += (sender, e) =>
-            {
-                shipLoadedContainerEventArgs args = (shipLoadedContainerEventArgs)e;
-                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' loaded container of size '{args.Container.Size}'\n");
-                Console.WriteLine($"{args.ship.Name}, {args.Container}, {args.currentTime}\n");
-            };
-
-            simulation.ShipUndocking += (sender, e) =>
-            {
-                ShipUndockingEventArgs args = (ShipUndockingEventArgs)e;
-                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' undocking from '{args.dockId}'\n");
-            };
-
-            simulation.ShipInTransit += (sender, e) =>
-            {
-                ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
-                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' is in transit at ID '{args.transitLocationID}'\n");
-            };
-
-            simulation.shipDockedShipDock += (sender, e) =>
-            {
-                shipDockedToShipDockEventArgs args = (shipDockedToShipDockEventArgs)e;
-                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
+                SimulationEndedEventArgs args = (SimulationEndedEventArgs)e;
+                Console.WriteLine($"{args.message}, {args.simulationHistory}");
             };
 
             simulation.DayEnded += (sender, e) =>
@@ -116,18 +67,75 @@ namespace TestProgram
                 Console.WriteLine($"{args.currentTime}, {args.todaysLog}");
             };
 
-
             simulation.DayLoggedToSimulationHistory += (sender, e) =>
             {
                 DayLoggedEventArgs args = (DayLoggedEventArgs)e;
                 Console.WriteLine($"{args.currentTime}, {args.message}");
             };
 
-            simulation.simulationEnded += (sender, e) =>
+            simulation.ShipUndocking += (sender, e) =>
             {
-                SimulationEndedEventArgs args = (SimulationEndedEventArgs)e;
-                Console.WriteLine($"{args.message}, {args.simulationHistory}");
+                ShipUndockingEventArgs args = (ShipUndockingEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' undocking from '{args.dockId}'\n");
             };
+
+            simulation.ShipDockedShipDock += (sender, e) =>
+            {
+                shipDockedToShipDockEventArgs args = (shipDockedToShipDockEventArgs)e;
+                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
+            };
+
+            simulation.ShipDockingtoLoadingDock += (sender, e) =>
+            {
+                shipDockingToLoadingDockEventArgs args = (shipDockingToLoadingDockEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' starting docking to dock with ID {args.dockId}\n");
+            };
+
+            simulation.ShipDockingtoLoadingDock += (sender, e) =>
+            {
+                shipDockingToLoadingDockEventArgs args = (shipDockingToLoadingDockEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' starting docking to dock with ID {args.dockId}\n");
+            };
+
+            simulation.ShipLoadedContainer += (sender, e) =>
+            {
+                shipLoadedContainerEventArgs args = (shipLoadedContainerEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' loaded container of size '{args.Container.Size}'\n");
+                Console.WriteLine($"{args.ship.Name}, {args.Container}, {args.currentTime}\n");
+            };
+
+            simulation.ShipUnloadedContainer += (sender, e) =>
+            {
+                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+            };
+
+            simulation.ShipAnchored += (sender, e) =>
+            {
+                shipAnchoredEventArgs args = (shipAnchoredEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' anchored to anchorage with ID {args.anchorageID}\n");
+            };
+
+            simulation.ShipAnchoring += (sender, e) =>
+            {
+                shipAnchoringEventArgs args = (shipAnchoringEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' anchoring to anchorage with ID {args.anchorageID}\n");
+            };
+
+            simulation.ShipInTransit += (sender, e) =>
+            {
+                ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
+                Console.WriteLine($"| {args.currentTime} | '{args.ship.Name}' is in transit at ID '{args.transitLocationID}'\n");
+            };
+
+            
+
+            
+
+
+            
+
+            
 
 
 
