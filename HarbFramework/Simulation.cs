@@ -44,41 +44,40 @@ namespace Gruppe8.HarbNet
         public event SimulationEndedHandler SimulationEnded;
 
         public delegate void DayOverEventHandler(String message, DateTime currentTime);
-        public event DayOverEventHandler? DayEnded;
+        public event DayOverEventHandler? DayEndede;
 
         public delegate void DayLoggedEventHandler(Ship ship, StatusLog todaysLog);
-        public event DayLoggedEventHandler? DayLoggedToSimulationHistory;
+        public event DayLoggedEventHandler? DayLoggedToSimulationHistorye;
 
         public delegate void ShipUndockedHandler(Ship ship);
-        public event ShipUndockedHandler? ShipUnDocked;
+        public event ShipUndockedHandler? ShipUnDockede;
 
         public delegate void shipDockedToShipDockHandler(Ship ship);
-        public event shipDockedToShipDockHandler? shipDockedShipDock;
+        public event shipDockedToShipDockHandler? shipDockedShipDocke;
 
         public delegate void shipDockingToLoadingDockHandler(Ship ship);
-        public event shipDockingToLoadingDockHandler? ShipDockingtoLoadingDock;
+        public event shipDockingToLoadingDockHandler? ShipDockingtoLoadingDocke;
 
         public delegate void shipDockedToLoadingDockHandler(Ship ship);
-        public event shipDockedToLoadingDockHandler? ShipDockedtoLoadingDock;
+        public event shipDockedToLoadingDockHandler? ShipDockedtoLoadingDocke;
 
         public delegate void shipLoadedContainerHandler(Ship ship, Container container);
         public event shipLoadedContainerHandler? shipLoadeadContainer;
 
         public delegate void shipUnloadedContainerHandler(Ship ship, Container container);
-        public event shipUnloadedContainerHandler? shipUnloadedContainer;
+        public event shipUnloadedContainerHandler? shipUnloadedContainere;
 
         public delegate void shipAnchoredHandler(Ship ship);
-        public event shipAnchoredHandler? shipAnchored;
+        public event shipAnchoredHandler? shipAnchoreda;
 
         public delegate void shipAnchoringHandler(Ship ship);
-        public event shipAnchoringHandler? shipAnchoring;
-
-    */
+        public event shipAnchoringHandler? shipAnchoringa;
+        */
         /// <summary>
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
         /// <returns>returns a list of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
-        public IList<DailyLog> History {  get; } = new List<DailyLog>();
+        public IList<DailyLog> History { get; } = new List<DailyLog>();
 
         /// <summary>
         /// Simulation constructor.
@@ -86,7 +85,7 @@ namespace Gruppe8.HarbNet
         /// <param name="harbor">The harbor which will be used in the simulation</param>
         /// <param name="simulationStartTime">The start time of the simulation</param>
         /// <param name="simulationEndTime">The end time of simulation</param>
-        public Simulation (Harbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
+        public Simulation(Harbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
         {
             this.harbor = harbor;
             this.startTime = simulationStartTime;
@@ -100,7 +99,8 @@ namespace Gruppe8.HarbNet
         public IList<DailyLog> Run()
         {
             this.currentTime = startTime;
-            
+
+            shipAnchoringEventArgs ev = new shipAnchoringEventArgs();
 
             Console.WriteLine("Simulation starting ...");
             Thread.Sleep(2000);
@@ -108,35 +108,40 @@ namespace Gruppe8.HarbNet
             while (currentTime < endTime)
             {
 
-              
                 foreach (Ship ship in harbor.AllShips)
                 {
-                    if (ship.StartDate == currentTime) { 
+                    ev.ship = ship;
+                    ev.currentTime = currentTime;
+
+                    if (ship.StartDate == currentTime)
+                    {
 
                         harbor.AddNewShipToAnchorage(ship);
 
-                            if (ship.IsForASingleTrip == true)
-                            {
-                                Guid shipDock = harbor.StartShipInLoadingDock(ship.ID);
+                        if (ship.IsForASingleTrip == true)
+                        {
+                            Guid shipDock = harbor.StartShipInLoadingDock(ship.ID);
 
-                                ship.AddStatusChangeToHistory(currentTime, shipDock, Status.DockedToLoadingDock);
-                            }
-                            else
-                            {
-                                ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
-                                shipAnchoring?.Invoke(ship);
-                            }
+                            ship.AddStatusChangeToHistory(currentTime, shipDock, Status.DockedToLoadingDock);
+                        }
+                        else
+                        {
+                            ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
+                            ev.anchorageID = harbor.AnchorageID;
+                            shipAnchoring.Invoke(this, ev);
+                        }
 
-                            History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), 
-                                harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
+                        History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
+                            harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
                     }
                 }
 
 
 
-                foreach (Ship ship in harbor.AllShips) {
+                foreach (Ship ship in harbor.AllShips)
+                {
                     ship.HasBeenAlteredThisHour = false;
-                    
+
                 }
 
                 UndockingShips();
@@ -151,52 +156,61 @@ namespace Gruppe8.HarbNet
 
                 InTransitShips();
 
+                DayLoggedEventArgs e = new DayLoggedEventArgs();
+                e.currentTime = currentTime;
+                e.message = $"\nDay over\n Current Time: ";
+                //e.todaysLog = 
+
                 DateTime teset = currentTime.AddHours(-24);
                 if (currentTime.Hour == 0)
                 {
-                    DayEnded.Invoke($"\nDay over\n Current Time: ", teset);
-                    
-                                                      
+                    DayEnded.Invoke(this, e);
+
+
                     History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
                         harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
-                   
 
-                        foreach (Ship ship in harbor.AllShips)
+
+                    foreach (Ship ship in harbor.AllShips)
+                    {
+
+                        foreach (StatusLog his in ship.HistoryIList)
                         {
-                            
-                            foreach (StatusLog his in ship.HistoryIList)
+
+                            if (his.PointInTime >= teset && his.PointInTime <= currentTime)
                             {
 
-                                if (his.PointInTime >= teset && his.PointInTime <= currentTime)
+                                if (his.Status == Status.Transit)
                                 {
+                                    DayLoggedToSimulationHistory.Invoke(this, e);
 
-                                    if (his.Status == Status.Transit)
-                                    {
-                                        DayLogged?.Invoke(ship,his);
-                                    }
-                                    else
-                                        
-                                        DayLogged?.Invoke(ship,his);
-                                    
                                 }
+                                else
+                                    e.message = $"ShipName: {ship.Name}| Date: {his.PointInTime}| Status: {his.Status}|\n";
+                                    DayLoggedToSimulationHistory.Invoke(this, e);
+
                             }
                         }
-                        Console.WriteLine("----------------------------");
-                    
+                    }
+                    Console.WriteLine("----------------------------");
+
                 }
 
                 currentTime = currentTime.AddHours(1);
 
                 continue;
             }
-            SimulationEnded?.Invoke($"\n----------------\nSimulation over!\n----------------\n");
+            SimulationEndedEventArgs ended = new SimulationEndedEventArgs();
+
+            ended.message = $"\n----------------\nSimulation over!\n----------------\n";
+            simulationEnd.Invoke(this, ended);
             Thread.Sleep(1000);
 
             return History;
 
         }
 
-       
+
 
         /// <summary>
         /// Prints history for each ship in the harbor simulation to console.
@@ -233,15 +247,19 @@ namespace Gruppe8.HarbNet
         /// Anchoring ship to a dock, ship.Status is set to Anchoring.
         /// </summary>
         private void AnchoringShips()
-        { 
+        {
+            shipAnchoredEventArgs e = new shipAnchoredEventArgs();
             List<Ship> Anchorage = harbor.Anchorage.ToList();
 
             foreach (Ship ship in Anchorage)
             {
-                
-                Guid shipID = ship.ID;
-                StatusLog lastStatusLog = ship.HistoryIList.Last(); 
 
+
+                Guid shipID = ship.ID;
+                StatusLog lastStatusLog = ship.HistoryIList.Last();
+                e.ship = ship;
+                e.currentTime = currentTime;
+                e.message = lastStatusLog.ToString();
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null && lastStatusLog.Status == Status.Anchoring)
                 {
@@ -249,8 +267,8 @@ namespace Gruppe8.HarbNet
                     ship.HasBeenAlteredThisHour = true;
 
                     ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchored);
-                    
-                    shipAnchored?.Invoke(ship);
+
+                    shipAnchored?.Invoke(this, e);
 
                 }
             }
@@ -280,12 +298,12 @@ namespace Gruppe8.HarbNet
                     (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))))
                 {
                     Guid dockID;
-                    shipDockedToShipDockEventArgs e = new shipDockedToShipDockEventArgs();
+                    shipDockingToShipDockEventArgs e = new shipDockingToShipDockEventArgs();
                     e.ship = ship;
                     e.currentTime = currentTime;
                     if (currentTime == startTime && lastStatusLog.Status == Status.DockedToShipDock)
                     {
-                        
+
                         dockID = harbor.DockShipFromShipDockToLoadingDock(ship.ID, currentTime);
                         e.dockId = dockID;
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
@@ -299,6 +317,8 @@ namespace Gruppe8.HarbNet
             {
                 Guid shipID = ship.ID;
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
+                shipDockedToShipDockEventArgs eventArgs = new shipDockedToShipDockEventArgs();
+
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
                     (lastStatusLog.Status == Status.DockedToShipDock ||
@@ -311,11 +331,14 @@ namespace Gruppe8.HarbNet
                         Guid dockID = lastStatusLog.SubjectLocation;
 
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToLoadingDock);
-                        shipDockedShipDock?.Invoke(ship);
+                        eventArgs.dockId = dockID;
+                        eventArgs.ship = ship;
+                        eventArgs.currentTime = currentTime;
+                        shipDockedShipDock.Invoke(this, eventArgs);
                         if (ship.IsForASingleTrip && !ContainsTransitStatus(ship))
                         {
                             ship.AddStatusChangeToHistory(currentTime, dockID, Status.Loading);
-                            shipLoadeadContainer.Invoke(ship);
+                            //shipLoadeadContainer.Invoke(ship);
                         }
                         else
                         {
@@ -327,28 +350,37 @@ namespace Gruppe8.HarbNet
 
             foreach (Ship ship in Anchorage)
             {
+                shipDockingToShipDockEventArgs shipdockevent = new shipDockingToShipDockEventArgs();
+                shipDockingToLoadingDockEventArgs shipLoaddockevent = new shipDockingToLoadingDockEventArgs();
+
+                shipdockevent.ship = ship;
+                shipdockevent.currentTime = currentTime;
+
+                shipLoaddockevent.ship = ship;
+                shipLoaddockevent.currentTime = currentTime;
 
                 Guid shipID = ship.ID;
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
 
-                if (!ship.HasBeenAlteredThisHour && lastStatusLog != null && 
-                    (lastStatusLog.Status == Status.Anchored || 
-                    lastStatusLog.Status == Status.DockedToShipDock || 
+
+                if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
+                    (lastStatusLog.Status == Status.Anchored ||
+                    lastStatusLog.Status == Status.DockedToShipDock ||
                     lastStatusLog.Status == Status.DockingToLoadingDock ||
                     lastStatusLog.Status == Status.DockingToShipDock ||
-                    (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship))))) 
+                    (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))))
                 {
                     Guid dockID;
-
                     if (harbor.FreeLoadingDockExists(ship.ShipSize) && lastStatusLog.Status != Status.DockedToShipDock)
                     {
 
                         if (lastStatusLog.Status == Status.Anchored)
                         {
                             dockID = harbor.DockShipToLoadingDock(shipID, currentTime);
+                            shipdockevent.dockId = dockID;
 
                             ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
-                            ShipDockingtoLoadingDock?.Invoke(ship);
+                            ShipDockingtoLoadingDock?.Invoke(this, shipdockevent);
                         }
 
                         if (harbor.FreeShipDockExists(ship.ShipSize) && ship.IsForASingleTrip == true && ContainsTransitStatus(ship)
@@ -356,13 +388,14 @@ namespace Gruppe8.HarbNet
                             && lastStatusLog.Status != Status.DockingToShipDock)
                         {
                             dockID = harbor.DockShipToShipDock(shipID);
+                            shipLoaddockevent.dockId = dockID;
                             ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToShipDock);
-                            ShipDockingtoLoadingDock?.Invoke(ship);
+                            ShipDockingtoLoadingDock?.Invoke(this, shipLoaddockevent);
 
                         }
 
                     }
-                   
+
                     ship.HasBeenAlteredThisHour = true;
                 }
             }
@@ -386,14 +419,14 @@ namespace Gruppe8.HarbNet
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null && secondLastStatusLog != null &&
                     (lastStatusLog.Status == Status.Unloading || lastStatusLog.Status == Status.DockedToLoadingDock && secondLastStatusLog != null))
                 {
-                    
+
                     Guid currentPosition = lastStatusLog.SubjectLocation;
 
                     if (ship.ContainersOnBoard.Count != 0 && lastStatusLog.Status == Status.DockedToLoadingDock || lastStatusLog.Status == Status.Unloading)
                     {
                         if (lastStatusLog.Status == Status.DockedToLoadingDock)
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Unloading);
-                            
+
                         for (int i = 0; i < ship.ContainersLoadedPerHour && ship.ContainersOnBoard.Count > 0; i++)
                         {
                             Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last();
@@ -410,13 +443,13 @@ namespace Gruppe8.HarbNet
                     else if (ship.ContainersOnBoard.Count == 0 && !(ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))
                     {
                         ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.UnloadingDone);
-                       
+
                         ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
                     }
                     else if (ship.ContainersOnBoard.Count == 0 && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))
                     {
                         ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.UnloadingDone);
-                        
+
                         ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.DockingToShipDock);
                     }
 
@@ -437,9 +470,9 @@ namespace Gruppe8.HarbNet
                 Guid shipID = ship.ID;
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
 
-                
-                if (ship.HasBeenAlteredThisHour == false && lastStatusLog != null && 
-                    (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock || 
+
+                if (ship.HasBeenAlteredThisHour == false && lastStatusLog != null &&
+                    (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock ||
                     (lastStatusLog.Status == Status.UnloadingDone && ContainsTransitStatus(ship)) || lastStatusLog.Status == Status.DockingToShipDock))
                 {
                     bool containsTransitStatus = ContainsTransitStatus(ship);
@@ -487,7 +520,7 @@ namespace Gruppe8.HarbNet
                 if (his.Status == Status.Transit)
                 {
                     containsTransitStatus = true;
-                    break; 
+                    break;
                 }
             }
 
@@ -504,8 +537,13 @@ namespace Gruppe8.HarbNet
 
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
                 StatusLog secondLastStatusLog = ship.HistoryIList[ship.HistoryIList.Count - 2];
+                shipLoadedContainerEventArgs e = new shipLoadedContainerEventArgs();
+                ShipUndockedEventArgs shipUndockedEventArgs = new ShipUndockedEventArgs();
 
-
+                shipUndockedEventArgs.ship = ship;
+                shipUndockedEventArgs.currentTime = currentTime;
+                e.ship = ship;
+                e.currentTime = currentTime;
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
                     ((lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true)) ||
                      (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && !ContainsTransitStatus(ship))) ||
@@ -519,19 +557,20 @@ namespace Gruppe8.HarbNet
                     {
                         if (harbor.storedContainers.Keys.Count != 0 && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                         {
-                           
+
                             for (int i = 0; i < ship.ContainersLoadedPerHour; i++)
                             {
-                                
-                                
+
+
                                 if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Large && harbor.GetStoredContainer(ContainerSize.Small) != null)
                                 {
                                     if (ship.CurrentWeightInTonn + (int)ContainerSize.Small <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                                     {
                                         harbor.LoadContainer(ContainerSize.Small, ship, currentTime);
+
                                     }
                                 }
-                                
+
                                 else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Small && harbor.GetStoredContainer(ContainerSize.Medium) != null)
                                 {
 
@@ -548,12 +587,12 @@ namespace Gruppe8.HarbNet
                                         harbor.LoadContainer(ContainerSize.Large, ship, currentTime);
                                     }
                                 }
-                                
+
                                 else
                                 {
                                     ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
                                     ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Undocking);
-                                    ShipUnDocked?.Invoke(ship);
+                                    ShipUnDocked?.Invoke(this, shipUndockedEventArgs);
                                     break;
                                 }
                             }
@@ -561,7 +600,7 @@ namespace Gruppe8.HarbNet
                             if (lastStatusLog.Status != Status.Loading)
                             {
                                 ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
-                                shipLoadeadContainer.Invoke(ship);
+                                //shipLoadeadContainer.Invoke(ship);
                             }
 
                         }
@@ -570,16 +609,16 @@ namespace Gruppe8.HarbNet
                         {
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Undocking);
-                            ShipUnDocked.Invoke(ship);
+                            ShipUnDocked?.Invoke(this, shipUndockedEventArgs);
                         }
 
                     }
                     else
                     {
-                     
+
                         ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
-                        ShipUnDocked.Invoke(ship);
+                        ShipUnDocked?.Invoke(this, shipUndockedEventArgs);
 
                     }
 
@@ -594,9 +633,10 @@ namespace Gruppe8.HarbNet
         /// </summary>
         private void InTransitShips()
         {
+            shipAnchoringEventArgs e = new shipAnchoringEventArgs();
             foreach (Ship ship in harbor.ShipsInTransit.Keys)
             {
-
+                e.ship = ship;
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
 
                 if (ship.HasBeenAlteredThisHour == false && lastStatusLog != null && lastStatusLog.Status == Status.Transit)
@@ -604,14 +644,15 @@ namespace Gruppe8.HarbNet
 
                     Guid CurrentPosition = lastStatusLog.SubjectLocation;
                     StatusLog LastHistoryStatusLog = ship.HistoryIList.Last();
-
+                    e.currentTime = currentTime;
                     double DaysSinceTransitStart = (currentTime - LastHistoryStatusLog.PointInTime).TotalDays;
 
                     if (DaysSinceTransitStart >= ship.RoundTripInDays)
                     {
                         harbor.AddNewShipToAnchorage(ship);
                         ship.AddStatusChangeToHistory(currentTime, CurrentPosition, Status.Anchoring);
-                        shipAnchoring?.Invoke(ship);
+
+                        shipAnchoring?.Invoke(this, e);
                     }
 
                     ship.HasBeenAlteredThisHour = true;
@@ -635,7 +676,8 @@ namespace Gruppe8.HarbNet
                     sb.Append(log.HistoryToString());
                 }
                 return sb.ToString();
-            } else { return "";  }
+            }
+            else { return ""; }
         }
 
         /// <summary>
@@ -689,6 +731,7 @@ namespace Gruppe8.HarbNet
             return ($"Simulation start time: {startTime.ToString()}, end time: {endTime.ToString()}, harbor ID: {harbor.ID}");
         }
     }
+
 
     /// <summary>
     /// The EventArgs class for the SimulationStarting event.
