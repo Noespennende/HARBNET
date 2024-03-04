@@ -363,19 +363,19 @@ namespace Gruppe8.HarbNet
         {
             if (CurrentWeightInTonn > MaxWeightInTonn)
             {
-                throw new Exception("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)");
+                throw new ParameterOutOfRangeException("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)");
             }
             else if (this.ShipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
             {
-                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
+                throw new ParameterOutOfRangeException("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
             }
             else if (this.ShipSize == ShipSize.Medium && ContainersOnBoard.Count > ContainerCapacity)
             {
-                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 50 containers");
+                throw new ParameterOutOfRangeException("The ship has too many containers on board. The container capacity for small ships is max 50 containers");
             }
             else if (this.ShipSize == ShipSize.Large && ContainersOnBoard.Count > ContainerCapacity)
             {
-                throw new Exception("The ship has too many containers on board. The container capacity for small ships is max 100 containers");
+                throw new ParameterOutOfRangeException("The ship has too many containers on board. The container capacity for small ships is max 100 containers");
             }
         }
 
@@ -407,7 +407,7 @@ namespace Gruppe8.HarbNet
                     return container;
                 }
             }
-            return null;
+            throw new InvalidParameterException("Invalid input. Container in that size does not exist. Choose between small, medium or large");
         }
 
         /// <summary>

@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
-    public class TestException : Exception
+    public class InvalidParameterException : Exception
     {
 
-        public TestException() 
+        public InvalidParameterException() 
         { 
         }
 
-        public TestException(string message) 
+        public InvalidParameterException(string message) 
             : base(message)
         { 
         }
 
-        public TestException(string message, Exception inner) 
+        public InvalidParameterException(string message, Exception inner) 
             : base(message, inner)
         { 
         }
 
         //Constructor is needed for serialization
-        protected TestException(SerializationInfo info, StreamingContext context) 
+        protected InvalidParameterException(SerializationInfo info, StreamingContext context) 
         { 
         }
         
