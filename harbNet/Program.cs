@@ -20,7 +20,7 @@ namespace TestProgram
             DateTime startTime = new DateTime(2024, 3, 1, 8, 0, 0);
 
             // Setting a time for the simulation's end, which will be used in the creation of Simulation object
-            DateTime endTime = startTime + TimeSpan.FromDays(50);
+            DateTime endTime = startTime + TimeSpan.FromDays(30);
             List<Ship> ships = new List<Ship>();
 
             
@@ -34,10 +34,10 @@ namespace TestProgram
 
             // Adding the ships to a list, that will be sent into the Harbor object
             ships.Add(shipHappens);
-            ships.Add(ssSolitude);
-            ships.Add(auroraBorealis);
+            //ships.Add(ssSolitude);
+            //ships.Add(auroraBorealis);
             //ships.Add(skipOHoi);
-            ships.Add(denSorteDame);
+            //ships.Add(denSorteDame);
 
         
             // Creating the harbor which will be used in the simulation, using the ship list
@@ -58,14 +58,7 @@ namespace TestProgram
 
             simulation.ShipDockingtoLoadingDock += (sender, e) =>
             {
-                // Sjekk om e er av riktig type før du bruker dens egenskaper
                 shipDockingToLoadingDockEventArgs args = (shipDockingToLoadingDockEventArgs)e;
-                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
-            };
-
-            simulation.ShipDockingtoLoadingDock += (sender, e) =>
-            {
-                shipDockingToLoadingDockEventArgs args = ( shipDockingToLoadingDockEventArgs)e;
                 Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
             };
 

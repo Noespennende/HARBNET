@@ -298,7 +298,7 @@ namespace Gruppe8.HarbNet
                     (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))))
                 {
                     Guid dockID;
-                    shipDockingToShipDockEventArgs e = new shipDockingToShipDockEventArgs();
+                    shipDockingToLoadingDockEventArgs e = new shipDockingToLoadingDockEventArgs();
                     e.ship = ship;
                     e.currentTime = currentTime;
                     if (currentTime == startTime && lastStatusLog.Status == Status.DockedToShipDock)
@@ -307,7 +307,7 @@ namespace Gruppe8.HarbNet
                         dockID = harbor.DockShipFromShipDockToLoadingDock(ship.ID, currentTime);
                         e.dockId = dockID;
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
-                        ShipDockingtoLoadingDock?.Invoke(ship, e); ;
+                        ShipDockingtoLoadingDock?.Invoke(this, e); ;
 
                     }
                 }
@@ -380,7 +380,7 @@ namespace Gruppe8.HarbNet
                             shipdockevent.dockId = dockID;
 
                             ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
-                            ShipDockingtoLoadingDock?.Invoke(this, shipdockevent);
+                            ShipDockingtoLoadingDock?.Invoke(this, shipLoaddockevent);
                         }
 
                         if (harbor.FreeShipDockExists(ship.ShipSize) && ship.IsForASingleTrip == true && ContainsTransitStatus(ship)
