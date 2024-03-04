@@ -47,7 +47,7 @@ namespace TestProgram
             Simulation simulation = new Simulation(kjuttaviga, startTime, endTime);
             simulation.ShipUnDocked += onShipUndock;
             simulation.shipDockedShipDock += onShipDockedToDock;
-            simulation.shipLoadingContainer += onshipLoadingContainer;
+            simulation.shipLoadeadContainer += onshipLoadingContainer;
 
             simulation.ShipDockingtoLoadingDock += (ship) =>
             {
@@ -70,7 +70,7 @@ namespace TestProgram
                 Console.WriteLine(message);
             };
 
-            simulation.ShipStatusEvent += (ship, his) =>
+            simulation.DayLogged += (ship, his) =>
             {
                 Console.WriteLine($"ShipName: {ship.Name}| Date: {his.PointInTime}| Status: {his.Status}|\n");
             };
@@ -79,7 +79,7 @@ namespace TestProgram
             {
                 Console.WriteLine($"\nShip {ship.Name} has anchored");
             };
-            simulation.shipUnloadingContainer += (ship) =>
+            simulation.shipUnloadedContainer += (ship) =>
             {
                 Console.WriteLine($"{ship.Name} unloading containers");
             };

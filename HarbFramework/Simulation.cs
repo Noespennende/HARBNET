@@ -31,8 +31,8 @@ namespace Gruppe8.HarbNet
         public delegate void DayOverEventHandler(String message, DateTime currentTime);
         public event DayOverEventHandler? DayEnded;
 
-        public delegate void ShipStatusEventHandler(Ship ship, StatusLog his);
-        public event ShipStatusEventHandler? ShipStatusEvent;
+        public delegate void DayLoggedEventHandler(Ship ship, StatusLog todaysLog);
+        public event DayLoggedEventHandler? DayLoggedToSimulationHistory;
 
         public delegate void ShipUndockedHandler(Ship ship);
         public event ShipUndockedHandler? ShipUnDocked;
@@ -46,11 +46,11 @@ namespace Gruppe8.HarbNet
         public delegate void shipDockedToLoadingDockHandler(Ship ship);
         public event shipDockedToLoadingDockHandler? ShipDockedtoLoadingDock;
 
-        public delegate void shipLoadingContainerHandler(Ship ship);
-        public event shipLoadingContainerHandler? shipLoadingContainer;
+        public delegate void shipLoadedContainerHandler(Ship ship, Container container);
+        public event shipLoadedContainerHandler? shipLoadeadContainer;
 
-        public delegate void shipUnloadingContainerHandler(Ship ship);
-        public event shipUnloadingContainerHandler? shipUnloadingContainer;
+        public delegate void shipUnloadedContainerHandler(Ship ship, Container container);
+        public event shipUnloadedContainerHandler? shipUnloadedContainer;
 
         public delegate void shipAnchoredHandler(Ship ship);
         public event shipAnchoredHandler? shipAnchored;
@@ -156,11 +156,11 @@ namespace Gruppe8.HarbNet
 
                                     if (his.Status == Status.Transit)
                                     {
-                                        ShipStatusEvent?.Invoke(ship,his);
+                                        DayLogged?.Invoke(ship,his);
                                     }
                                     else
                                         
-                                        ShipStatusEvent?.Invoke(ship,his);
+                                        DayLogged?.Invoke(ship,his);
                                     
                                 }
                             }
@@ -297,7 +297,7 @@ namespace Gruppe8.HarbNet
                         if (ship.IsForASingleTrip && !ContainsTransitStatus(ship))
                         {
                             ship.AddStatusChangeToHistory(currentTime, dockID, Status.Loading);
-                            shipLoadingContainer.Invoke(ship);
+                            shipLoadeadContainer.Invoke(ship);
                         }
                         else
                         {
@@ -543,7 +543,7 @@ namespace Gruppe8.HarbNet
                             if (lastStatusLog.Status != Status.Loading)
                             {
                                 ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
-                                shipLoadingContainer.Invoke(ship);
+                                shipLoadeadContainer.Invoke(ship);
                             }
 
                         }
