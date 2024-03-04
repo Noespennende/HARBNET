@@ -56,19 +56,6 @@ namespace TestProgram
                 Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
             };
 
-            simulation.ShipDockingtoLoadingDock += (sender, e) =>
-            {
-                // Sjekk om e er av riktig type før du bruker dens egenskaper
-                shipDockingToLoadingDockEventArgs args = (shipDockingToLoadingDockEventArgs)e;
-                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
-            };
-
-            simulation.ShipDockingtoLoadingDock += (sender, e) =>
-            {
-                shipDockingToLoadingDockEventArgs args = ( shipDockingToLoadingDockEventArgs)e;
-                Console.WriteLine($"{args.ship.Name}, {args.dockId}, {args.currentTime}\n");
-            };
-
             simulation.ShipDockedtoLoadingDock += (sender, e) =>
             {
                 shipDockedToLoadingDockEventArgs args = (shipDockedToLoadingDockEventArgs)e;
