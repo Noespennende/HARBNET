@@ -86,7 +86,7 @@ namespace Gruppe8.HarbNet
 
         internal String[,,] listInts = new String[,,] { { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } }, { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } }, { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } } };
 
-        internal List<List<List<ContainerSpace>>> foo3D = new List<List<List<ContainerSpace>>>
+        internal IList<List<List<ContainerSpace>>> foo3D = new List<List<List<ContainerSpace>>>
     {
         new List<List<ContainerSpace>>
         {
@@ -144,6 +144,10 @@ namespace Gruppe8.HarbNet
             int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,
             int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces, int numberOfLargeContainerSpaces)
         {
+
+            //Her går jeg inn i den første 2D listen, deretter inn i den andre 1D listen inni 2D listen, og deretter i første index i 1D listen;
+            //listeNavn[2DListe][1D Liste][Index]
+            foo3D[0][1][0] = 1;
 
             int smallSingleTripShipCount = 0;
             int mediumSingleTripShipCount = 0;
