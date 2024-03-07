@@ -22,7 +22,7 @@ namespace Gruppe8.HarbNet
         /// Unique ID for harbor
         /// </summary>
         /// <return>Returns the unique ID defining a specific harbor</return>
-        public Guid ID { get; internal set; } = Guid.NewGuid(); 
+        public Guid ID { get; internal set; } = Guid.NewGuid();
 
         /// <summary>
         /// Gets all loading docks
@@ -58,13 +58,13 @@ namespace Gruppe8.HarbNet
         /// Gets all ships in ship dock
         /// </summary>
         /// <return>Returns a dictionary with all ships in ship dock</return>
-        internal IDictionary<Ship,Dock> shipsInShipDock = new Dictionary<Ship, Dock>(); // Ship : Dock
+        internal IDictionary<Ship, Dock> shipsInShipDock = new Dictionary<Ship, Dock>(); // Ship : Dock
 
         /// <summary>
         /// Gets all ships in anchorage
         /// </summary>
         /// <return>Returns a list of all ships in anchorage</return>
-        internal IList<Ship> Anchorage { get;} = new List<Ship>();
+        internal IList<Ship> Anchorage { get; } = new List<Ship>();
 
         /// <summary>
         /// Gets all ships in transit
@@ -76,13 +76,32 @@ namespace Gruppe8.HarbNet
         /// Gets all ships
         /// </summary>
         /// <return>Returns a list of all ships</return>
-        internal IList<Ship> AllShips { get;} = new List<Ship>(); // Sikkert midlertidig, til vi kan regne på det
+        internal IList<Ship> AllShips { get; } = new List<Ship>(); // Sikkert midlertidig, til vi kan regne på det
 
         /// <summary>
         /// Gets all container spaces
         /// </summary>
         /// <return>Returns a dictionary of all container spaces</return>
-        internal IDictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
+        internal ContainerSpace[,,] liste3D = new ContainerSpace[,,] { { { } }  };
+
+        internal String[,,] listInts = new String[,,] { { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } }, { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } }, { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } } };
+
+        internal List<List<List<ContainerSpace>>> foo3D = new List<List<List<ContainerSpace>>>
+    {
+        new List<List<ContainerSpace>>
+        {
+            new List<ContainerSpace> {},
+            new List<ContainerSpace> {}
+        },
+        new List<List<ContainerSpace>>
+        {
+            new List<ContainerSpace> {},
+            new List<ContainerSpace> {}
+        }
+    };
+
+
+        //internal IDictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
 
         /// <summary>
         /// Gets all available container spaces
