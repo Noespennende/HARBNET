@@ -82,26 +82,7 @@ namespace Gruppe8.HarbNet
         /// Gets all container spaces
         /// </summary>
         /// <return>Returns a dictionary of all container spaces</return>
-        internal ContainerSpace[,,] liste3D = new ContainerSpace[,,] { { { } }  };
-
-        internal String[,,] listInts = new String[,,] { { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } }, { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } }, { { "bredde 1", "Bredde 2", "Bredde 3" }, { "Høyde 1", "Høyde 2", "Høyde 3" } } };
-
-        internal IList<List<List<ContainerSpace>>> foo3D = new List<List<List<ContainerSpace>>>
-    {
-        new List<List<ContainerSpace>>
-        {
-            new List<ContainerSpace> {},
-            new List<ContainerSpace> {}
-        },
-        new List<List<ContainerSpace>>
-        {
-            new List<ContainerSpace> {},
-            new List<ContainerSpace> {}
-        }
-    };
-
-
-        //internal IDictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
+        internal IDictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
 
         /// <summary>
         /// Gets all available container spaces
