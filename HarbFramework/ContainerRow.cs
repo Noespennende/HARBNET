@@ -31,6 +31,7 @@ namespace Gruppe8.HarbNet
             }
         }
 
+        internal ContainerSpace GetContainerSpaceContainingContainer (Container container)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
             {
