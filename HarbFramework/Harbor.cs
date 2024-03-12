@@ -241,14 +241,23 @@ namespace Gruppe8.HarbNet
             }
         }
 
-        internal void CraneToTruck(Crane crane, Truck truck, Container container, DateTime currentTime)
+        internal void CraneToTruck(Crane crane, Truck truck, Ship ship, Container container, DateTime currentTime)
         {
-            crane.UnloadContainer();
-            if(crane.Container == null)
+            int NumberOfContainersToLoad = (int)Math.Round(ship.GetNumberOfContainersOnBoard(container.Size) * 0.15);
+            if (crane.Container != null)
+            {
+                crane.UnloadContainer();
+            }
+
+            if (crane.Container == null && NumberOfContainersToLoad > 0 && truck.Container == null)
             {
                 truck.LoadContainer(container);
                 container.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
+                NumberOfContainersToLoad--;
             }
+
+         
+
         }
 
         /// <summary>
