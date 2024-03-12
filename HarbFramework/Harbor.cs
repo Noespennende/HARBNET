@@ -185,18 +185,20 @@ namespace Gruppe8.HarbNet
                 allShipDocks.Add(new Dock(ShipSize.Large));
             }
 
-            CreateContainerSpaces(ContainerSize.Small, numberOfSmallContainerSpaces);
+            CreateContainerSpaces(ContainerSize.Half, numberOfSmallContainerSpaces);
             CreateContainerSpaces(ContainerSize.Medium, numberOfMediumContainerSpaces);
-            CreateContainerSpaces(ContainerSize.Large, numberOfLargeContainerSpaces);
+            CreateContainerSpaces(ContainerSize.Full, numberOfLargeContainerSpaces);
 
             AllShips = listOfShips.ToList();
-            
+
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
 
-            
+
 
         }
+
+           
 
         /// <summary>
         /// Creates what size and number of containers a harbor can hold
@@ -216,7 +218,38 @@ namespace Gruppe8.HarbNet
             freeContainerSpaces[containerSize] = spaces;
 
         }
+        
+        internal void ShipToCrane(Ship ship, Crane crane, Container container, DateTime currentTime)
+        {
+            
+            crane.LoadContainer(container);
 
+            if (crane.Container == container)
+            {
+                ship.RemoveContainer(container.ID);
+                container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
+            }
+        }
+
+        internal void CraneToShip(Crane crane, Ship ship, Container container, DateTime currentTime)
+        {
+            crane.UnloadContainer();
+            if (crane.Container == null)
+            {
+                ship.AddContainer(container);
+                container.AddStatusChangeToHistory(Status.UnloadingFromCraneToShip, currentTime);
+            }
+        }
+
+        internal void CraneToTruck(Crane crane, Truck truck, Container container, DateTime currentTime)
+        {
+            crane.UnloadContainer();
+            if(crane.Container == null)
+            {
+                truck.LoadContainer(container);
+                container.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
+            }
+        }
 
         /// <summary>
         /// Docks ship to loading dock
@@ -810,6 +843,7 @@ namespace Gruppe8.HarbNet
             ContainerSpace containerSpace = storedContainers[containerToBeLoaded];
 
             ship.AddContainer(containerToBeLoaded);
+            containerToBeLoaded.DaysInStorage = 0;
             containerToBeLoaded.CurrentPosition = ship.ID;
 
             containerToBeLoaded.AddStatusChangeToHistory(Status.Transit, currentTime);
@@ -1070,11 +1104,11 @@ namespace Gruppe8.HarbNet
 
             for (int i = 0; i < numberOfcontainers; i++)
             {
-                Container containerToBeStored = new Container(ContainerSize.Small, 10, this.ID);
+                Container containerToBeStored = new Container(ContainerSize.Half, 10, this.ID);
 
                 if (i % 3 == 0)
                 {
-                    containerToBeStored = new Container(ContainerSize.Small, 10, this.ID);
+                    containerToBeStored = new Container(ContainerSize.Half, 10, this.ID);
                 }
                 if (i % 3 == 1)
                 {
@@ -1082,7 +1116,7 @@ namespace Gruppe8.HarbNet
                 }
                 if (i % 3 == 2)
                 {
-                    containerToBeStored = new Container(ContainerSize.Large, 15, this.ID);
+                    containerToBeStored = new Container(ContainerSize.Full, 15, this.ID);
                 }
 
                 ContainerSize containerSize = containerToBeStored.Size;
