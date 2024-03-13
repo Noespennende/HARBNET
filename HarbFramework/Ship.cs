@@ -196,7 +196,7 @@ namespace Gruppe8.HarbNet
             SetBaseShipInformation(shipSize);
 
             AddContainersOnBoard(ContainerSize.Half, numberOfSmallContainersOnBoard);
-            AddContainersOnBoard(ContainerSize.Medium, numberOfMediumContainersOnBoard);
+            //AddContainersOnBoard(ContainerSize.Medium, numberOfMediumContainersOnBoard);
             AddContainersOnBoard(ContainerSize.Full, numberOfLargeContainersOnBoard);
         }
 
@@ -288,6 +288,8 @@ namespace Gruppe8.HarbNet
             CheckForValidWeight();
         }
 
+
+
         /// <summary>
         /// Generate new containers and adds them to the ship storage.
         /// </summary>
@@ -309,10 +311,10 @@ namespace Gruppe8.HarbNet
                 if (i % 3 == 1)
                 {
                     CheckForValidWeight();
-                    Container mediumContainer = new Container(ContainerSize.Medium, 15, this.ID);
-                    mediumContainer.HistoryIList.Add(new StatusLog(mediumContainer.ID, this.ID, StartDate, Status.Transit));
-                    ContainersOnBoard.Add(mediumContainer);
-                    CurrentWeightInTonn += mediumContainer.WeightInTonn;
+                   // Container mediumContainer = new Container(ContainerSize.Medium, 15, this.ID);
+                    //mediumContainer.HistoryIList.Add(new StatusLog(mediumContainer.ID, this.ID, StartDate, Status.Transit));
+                    //ContainersOnBoard.Add(mediumContainer);
+                    //CurrentWeightInTonn += mediumContainer.WeightInTonn;
                 }
                 if (i % 3 == 2)
                 {
@@ -339,10 +341,10 @@ namespace Gruppe8.HarbNet
                 if(containerSize == ContainerSize.Half) { 
                    ContainertoAdd = new Container(ContainerSize.Half, 10, this.ID);
                 }
-                if (containerSize == ContainerSize.Medium)
+                /*if (containerSize == ContainerSize.Medium)
                 {
                     ContainertoAdd = new Container(ContainerSize.Medium, 15, this.ID);
-                }
+                }*/
                 if (containerSize == ContainerSize.Full)
                 {
                     ContainertoAdd = new Container(ContainerSize.Full, 20, this.ID);
@@ -551,10 +553,25 @@ namespace Gruppe8.HarbNet
             return sb.ToString();
         }
 
+        public Container? UnloadContainer()
+        {
+            if(ContainersOnBoard.Count <= 0)
+            {
+                return null;
+            }
+
+            Container containertoUnload = ContainersOnBoard[0];
+            ContainersOnBoard.RemoveAt(0);
+
+            return containertoUnload;
+        }
+
         /// <summary>
         /// Returns a string containing information about the ship
         /// </summary>
         /// <returns> a String containing information about the ship </returns>
+        /// 
+
         public override string ToString()
         {
             int large = 0;
@@ -566,10 +583,7 @@ namespace Gruppe8.HarbNet
                 if (container.Size == ContainerSize.Half)
                 {
                     small++;
-                } else if (container.Size == ContainerSize.Medium)
-                {
-                    medium++;
-                } else
+                }  else
                 {
                     large++;
                 }
