@@ -66,7 +66,19 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Container stored on land in harbour.
         /// </summary>
-        InStorage
+        InStorage,
+        /// <summary>
+        /// Container being loaded to crane
+        /// </summary>
+        LoadingToCrane,
+        /// <summary>
+        /// Unloading container from crane to ship
+        /// </summary>
+        UnloadingFromCraneToShip,
+        /// <summary>
+        /// Loading Container to Truck
+        /// </summary>
+        LoadingToTruck,
 
 
     }

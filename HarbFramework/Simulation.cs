@@ -132,6 +132,11 @@ namespace Gruppe8.HarbNet
                     History.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
                         harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
 
+                    foreach(Container container in harbor.GetContainersStoredInHarbour())
+                    {
+                        container.AddAnotherDayInStorage();
+                    }
+
                     foreach (Ship ship in harbor.AllShips)
                     {
                         List<StatusLog> DayReviewShipLogs = new();
@@ -539,21 +544,21 @@ namespace Gruppe8.HarbNet
                             {
 
 
-                                if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Large && harbor.GetStoredContainer(ContainerSize.Small) != null)
+                                if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null)
                                 {
-                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Small <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
+                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Half <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                                     {
 
-                                        Container container = harbor.GetStoredContainer(ContainerSize.Small);
+                                        Container container = harbor.GetStoredContainer(ContainerSize.Half);
 
-                                        harbor.LoadContainer(ContainerSize.Small, ship, currentTime);
+                                        harbor.LoadContainer(ContainerSize.Half, ship, currentTime);
 
                                         shipLoadedContainerEventArgs.Container = container;
                                         ShipLoadedContainer?.Invoke(this, shipLoadedContainerEventArgs);
                                     }
                                 }
 
-                                else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Small && harbor.GetStoredContainer(ContainerSize.Medium) != null)
+                                else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Medium) != null)
                                 {
 
                                     if (ship.CurrentWeightInTonn + (int)ContainerSize.Medium <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
@@ -568,14 +573,14 @@ namespace Gruppe8.HarbNet
                                     }
                                 }
 
-                                else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Medium && harbor.GetStoredContainer(ContainerSize.Large) != null)
+                                else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Medium && harbor.GetStoredContainer(ContainerSize.Full) != null)
                                 {
-                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Large <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
+                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Full <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                                     {
 
-                                        Container container = harbor.GetStoredContainer(ContainerSize.Large);
+                                        Container container = harbor.GetStoredContainer(ContainerSize.Full);
 
-                                        harbor.LoadContainer(ContainerSize.Large, ship, currentTime);
+                                        harbor.LoadContainer(ContainerSize.Full, ship, currentTime);
 
                                         shipLoadedContainerEventArgs.Container = container;
                                         ShipLoadedContainer?.Invoke(this, shipLoadedContainerEventArgs);

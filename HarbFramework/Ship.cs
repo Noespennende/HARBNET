@@ -195,9 +195,9 @@ namespace Gruppe8.HarbNet
 
             SetBaseShipInformation(shipSize);
 
-            AddContainersOnBoard(ContainerSize.Small, numberOfSmallContainersOnBoard);
+            AddContainersOnBoard(ContainerSize.Half, numberOfSmallContainersOnBoard);
             AddContainersOnBoard(ContainerSize.Medium, numberOfMediumContainersOnBoard);
-            AddContainersOnBoard(ContainerSize.Large, numberOfLargeContainersOnBoard);
+            AddContainersOnBoard(ContainerSize.Full, numberOfLargeContainersOnBoard);
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace Gruppe8.HarbNet
                 if (i % 3 == 0)
                 {
                     CheckForValidWeight();
-                    Container smallContainer = new Container(ContainerSize.Small, 10, this.ID);
+                    Container smallContainer = new Container(ContainerSize.Half, 10, this.ID);
                     smallContainer.HistoryIList.Add(new StatusLog(smallContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(smallContainer);
                     CurrentWeightInTonn += smallContainer.WeightInTonn;
@@ -317,7 +317,7 @@ namespace Gruppe8.HarbNet
                 if (i % 3 == 2)
                 {
                     CheckForValidWeight();
-                    Container largeContainer = new Container(ContainerSize.Large, 15, this.ID);
+                    Container largeContainer = new Container(ContainerSize.Full, 15, this.ID);
                     largeContainer.HistoryIList.Add(new StatusLog(largeContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(largeContainer);
                     CurrentWeightInTonn += largeContainer.WeightInTonn;
@@ -336,16 +336,16 @@ namespace Gruppe8.HarbNet
                 CheckForValidWeight();
                 Container ContainertoAdd = null;
             
-                if(containerSize == ContainerSize.Small) { 
-                   ContainertoAdd = new Container(ContainerSize.Small, 10, this.ID);
+                if(containerSize == ContainerSize.Half) { 
+                   ContainertoAdd = new Container(ContainerSize.Half, 10, this.ID);
                 }
                 if (containerSize == ContainerSize.Medium)
                 {
                     ContainertoAdd = new Container(ContainerSize.Medium, 15, this.ID);
                 }
-                if (containerSize == ContainerSize.Large)
+                if (containerSize == ContainerSize.Full)
                 {
-                    ContainertoAdd = new Container(ContainerSize.Large, 20, this.ID);
+                    ContainertoAdd = new Container(ContainerSize.Full, 20, this.ID);
                 }
                 if (ContainertoAdd != null)
                 {
@@ -563,7 +563,7 @@ namespace Gruppe8.HarbNet
 
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.Size == ContainerSize.Small)
+                if (container.Size == ContainerSize.Half)
                 {
                     small++;
                 } else if (container.Size == ContainerSize.Medium)

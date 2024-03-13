@@ -47,6 +47,10 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns the Guid for the current position of container</return>
         public Guid CurrentPosition { get; internal set; }
+        /// <summary>
+        /// numbers of days the container has been in storage
+        /// </summary>
+        public int DaysInStorage { get; internal set; }
 
         /// <summary>
         /// Constructor for Container, creates a new container object
@@ -103,6 +107,11 @@ namespace Gruppe8.HarbNet
                 return Status.None;
             }
             
+        }
+
+        public void AddAnotherDayInStorage()
+        {
+            DaysInStorage++;
         }
 
         /// <summary>
