@@ -22,7 +22,6 @@ namespace Gruppe8.HarbNet
             this.Container = null;
             this.Location = location;
             this.HistoryIList = new List<StatusLog>();
-            //this.status =
         }
 
         internal Guid LoadContainer(Container containerToBeLoaded)

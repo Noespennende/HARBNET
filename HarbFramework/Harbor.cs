@@ -82,19 +82,13 @@ namespace Gruppe8.HarbNet
         /// Gets all container spaces
         /// </summary>
         /// <return>Returns a dictionary of all container spaces</return>
-        internal IDictionary<ContainerSize, List<ContainerSpace>> allContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
-
-        /// <summary>
-        /// Gets all available container spaces
-        /// </summary>
-        /// <return>Returns a dictionary of all available container spaces</return>
-        internal IDictionary<ContainerSize, List<ContainerSpace>> freeContainerSpaces = new Dictionary<ContainerSize, List<ContainerSpace>>();
+        internal IList<ContainerRow> allContainerRows { get; set; }
 
         /// <summary>
         /// Gets all stored containers
         /// </summary>
         /// <return>Returns a dictionary of all stored containers</return>
-        internal IDictionary<Container, ContainerSpace> storedContainers = new Dictionary<Container, ContainerSpace>(); // Container : ContainerSpace
+        internal IDictionary<Container, ContainerRow> storedContainers = new Dictionary<Container, ContainerRow>(); // Container : ContainerRow
 
         /// <summary>
         /// Gets the unique ID for the transit location
@@ -109,6 +103,7 @@ namespace Gruppe8.HarbNet
         public Guid AnchorageID { get; } = Guid.NewGuid();
 
         /// <summary>
+        /// OPPDATER DENNE!
         /// Constructor for Harbor, creates a new harbor object
         /// </summary>
         /// <param name="listOfShips">List of all ships</param>
@@ -123,7 +118,7 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfLargeContainerSpaces">Total number of large container spaces</param>
         public Harbor(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
             int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,
-            int numberOfSmallContainerSpaces, int numberOfMediumContainerSpaces, int numberOfLargeContainerSpaces)
+            int numberOfContainerRows, int numberOfHalfSizeContainersInEachRow, int numberOfFullSizeContainersInEachRow)
         {
 
 
@@ -185,9 +180,7 @@ namespace Gruppe8.HarbNet
                 allShipDocks.Add(new Dock(ShipSize.Large));
             }
 
-            CreateContainerSpaces(ContainerSize.Half, numberOfSmallContainerSpaces);
-            CreateContainerSpaces(ContainerSize.Medium, numberOfMediumContainerSpaces);
-            CreateContainerSpaces(ContainerSize.Full, numberOfLargeContainerSpaces);
+            CreateContainerSpaces(numberOfFullSizeContainersInEachRow, numberOfHalfSizeContainersInEachRow, numberOfContainerRows);
 
             AllShips = listOfShips.ToList();
 
@@ -201,22 +194,22 @@ namespace Gruppe8.HarbNet
            
 
         /// <summary>
+        /// OPPDATER DENNE
         /// Creates what size and number of containers a harbor can hold
         /// </summary>
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <param name="numberOfSpaces">The number of containers the harbor can hold</param>
         /// <return>Returns nothing</return>
-        internal void CreateContainerSpaces(ContainerSize containerSize, int numberOfSpaces)
+        internal void CreateContainerSpaces(int numberOfFullSizeContainerSpaces, int numberOfHalfSizeContainerSpaces, int numberOfContainerRows)
         {
-            List<ContainerSpace> spaces = new List<ContainerSpace>();
-            for (int j = 0; j < numberOfSpaces; j++)
+            IList <ContainerRow> containerRows = new List <ContainerRow>();
+
+            for (int j = 0; j < numberOfContainerRows; j++)
             {
-                spaces.Add(new ContainerSpace(containerSize));
+                containerRows.Add(new ContainerRow(numberOfFullSizeContainerSpaces, numberOfHalfSizeContainerSpaces));
             }
 
-            allContainerSpaces[containerSize] = spaces;
-            freeContainerSpaces[containerSize] = spaces;
-
+            this.allContainerRows = containerRows;
         }
         
         internal void ShipToCrane(Ship ship, Crane crane, Container container, DateTime currentTime)
@@ -258,6 +251,47 @@ namespace Gruppe8.HarbNet
 
          
 
+        }
+
+        internal void CraneToAdv(Crane crane, Adv adv)
+        {
+            adv.LoadContainer(crane.UnloadContainer());
+        }
+
+        internal void AdvToCrane(Crane crane, Adv adv)
+        {
+            crane.LoadContainer(adv.UnloadContainer());
+        }
+
+        internal bool CraneToContainerRow(Crane crane)
+        {
+            Container container = crane.UnloadContainer();
+
+            foreach (ContainerRow CR in allContainerRows)
+            {
+                if (CR.CheckIfFreeContainerSpaceExists(container.Size))
+                {
+                    CR.AddContainerToFreeSpace(container);
+                    storedContainers.Add(container, CR);
+                    return true;
+                }
+            }
+
+            crane.LoadContainer(container);
+            return false;
+        }
+
+        internal bool ContainerRowToCrane(ContainerSize size, Crane crane)
+        {
+            foreach (Container container in storedContainers.Keys){
+                if (container.Size == size)
+                {
+                    crane.LoadContainer(container);
+                    storedContainers[container].RemoveContainerFromContainerRow(container);
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

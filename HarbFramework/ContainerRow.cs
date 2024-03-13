@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,6 +70,18 @@ namespace Gruppe8.HarbNet
             }
 
             return null;
+        }
+
+        internal bool CheckIfFreeContainerSpaceExists (ContainerSize size)
+        {
+            foreach (ContainerSpace space in RowOfContainerSpaces)
+            {
+                if (space.Size == size && space.Free == true)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         internal ContainerSpace AddContainerToFreeSpace(Guid containerID, ContainerSize sizeOfContainer)
