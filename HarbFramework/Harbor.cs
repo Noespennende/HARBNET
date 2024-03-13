@@ -212,30 +212,38 @@ namespace Gruppe8.HarbNet
             this.allContainerRows = containerRows;
         }
         
-        internal void ShipToCrane(Ship ship, Crane crane, Container container, DateTime currentTime)
+        internal void ShipToCrane(Ship ship, Crane crane)
         {
             
-            crane.LoadContainer(container);
+           //crane.LoadContainer(ship.RemoveContainer() usikker på håndtering av denne.
+            
+        }
+
+    /*  crane.LoadContainer(container);
 
             if (crane.Container == container)
             {
                 ship.RemoveContainer(container.ID);
-                container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
-            }
+                container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime); */
+
+    internal void CraneToShip(Crane crane, Ship ship, Container container, DateTime currentTime)
+        {
+            ship.AddContainer(crane.UnloadContainer());
         }
 
-        internal void CraneToShip(Crane crane, Ship ship, Container container, DateTime currentTime)
-        {
-            crane.UnloadContainer();
+        /* crane.UnloadContainer();
             if (crane.Container == null)
             {
                 ship.AddContainer(container);
                 container.AddStatusChangeToHistory(Status.UnloadingFromCraneToShip, currentTime);
-            }
+            } */
+
+        internal void CraneToTruck(Crane crane, Truck truck, Container container)
+        {
+            truck.LoadContainer(crane.UnloadContainer());
         }
 
-        internal void CraneToTruck(Crane crane, Truck truck, Ship ship, Container container, DateTime currentTime)
-        {
+        /* 
             int NumberOfContainersToLoad = (int)Math.Round(ship.GetNumberOfContainersOnBoard(container.Size) * 0.15);
             if (crane.Container != null)
             {
@@ -247,11 +255,7 @@ namespace Gruppe8.HarbNet
                 truck.LoadContainer(container);
                 container.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
                 NumberOfContainersToLoad--;
-            }
-
-         
-
-        }
+            }*/
 
         internal void CraneToAdv(Crane crane, Adv adv)
         {
