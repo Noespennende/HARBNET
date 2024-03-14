@@ -125,6 +125,19 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
+        internal int numberOfFreeContainerSpaces ()
+        {
+            int count = 0;
+            foreach (ContainerSpace space in RowOfContainerSpaces)
+            {
+                if (space.Free)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
     }
 
 }

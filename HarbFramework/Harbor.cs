@@ -298,6 +298,18 @@ namespace Gruppe8.HarbNet
             return false;
         }
 
+        internal int numberOfFreeContainerSpaces ()
+        {
+            int count = 0;
+
+            foreach (ContainerRow containerRow in allContainerRows)
+            {
+                count += containerRow.numberOfFreeContainerSpaces();
+            }
+
+            return count;
+        }
+
         /// <summary>
         /// Docks ship to loading dock
         /// </summary>
