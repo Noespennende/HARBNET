@@ -369,14 +369,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         private void UnloadingShips()
         {
+
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
+
                 StatusLog? lastStatusLog = ship.HistoryIList?.Last();
 
                 StatusLog? secondLastStatusLog = ship.HistoryIList?[ship.HistoryIList.Count - 2];
-
-
-
 
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null && secondLastStatusLog != null &&
                     (lastStatusLog.Status == Status.Unloading || lastStatusLog.Status == Status.DockedToLoadingDock && secondLastStatusLog != null))
@@ -384,24 +383,34 @@ namespace Gruppe8.HarbNet
 
                     Guid currentPosition = lastStatusLog.SubjectLocation;
 
+                    // Unloading container
                     if (ship.ContainersOnBoard.Count != 0 && lastStatusLog.Status == Status.DockedToLoadingDock || lastStatusLog.Status == Status.Unloading)
                     {
                         if (lastStatusLog.Status == Status.DockedToLoadingDock)
+                        { 
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Unloading);
 
+                            ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks();
+                        }
+
+                        int containersForTrucks = ship.GetNumberOfContainersToTrucks();
+                        int containersForStorage = ship.GetNumberOfContainersToStorage();
+
+
+                        // Unloading
                         for (int i = 0; i < ship.ContainersLoadedPerHour && ship.ContainersOnBoard.Count > 0; i++)
                         {
-                            Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last();
 
-                            harbor.UnloadContainer(ContainerToBeUnloaded.Size, ship, currentTime);
+                            /*if (containersForTrucks != 0 && harbor.trucksWaitingForLoadingSpot != 0) // trucksWaitingToLoad er en liste over trucks som venter på å laste på containere
+                            {
+                                LoadContainerFromShipToTruck(ship);
+                                ship.ContainersLeftForTrucks--;
+                            }*/
 
-
-                            ShipUnloadedContainerEventArgs shipUnloadedContainerEventArgs = new();
-                            shipUnloadedContainerEventArgs.currentTime = currentTime;
-                            shipUnloadedContainerEventArgs.ship = ship;
-                            shipUnloadedContainerEventArgs.Container = ContainerToBeUnloaded;
-                            
-                            ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs);
+                            if (containersForStorage != 0 && (ship.ContainersOnBoard.Count() - ship.ContainersLeftForTrucks) > 0) // ?? Lage advsWaitingToLoad også?
+                            {
+                                LoadContainerFromShipToAdv(ship);
+                            }
                         }
                     }
 
@@ -426,7 +435,66 @@ namespace Gruppe8.HarbNet
                     ship.HasBeenAlteredThisHour = true;
 
                 }
+
             }
+        }
+
+
+        private void LoadContainerFromShipToAdv(Ship ship)
+        {
+            // Skal Simulation håndtere "hvilken" container, eller skal ShipToCrane og CraneToAdv osv?
+            // Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last(); // Ikke nødvendig?
+
+            Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
+            Crane crane = loadingDock.GetFreeLoadingDockCrane(); // Må implementere GetFreeLoadingDockCrane
+            Adv adv = harbor.getFreeAdv();
+
+            harbor.ShipToCrane(ship, crane, currentTime);
+            harbor.CraneToAdv(crane, adv, currentTime);
+
+            /*harbor.UnloadContainer(containerToBeUnloaded.Size, ship, currentTime)*/
+
+
+            // Event og status håndtering kommer //
+            /*ShipUnloadedContainerEventArgs shipUnloadedContainerEventArgs = new();
+            shipUnloadedContainerEventArgs.currentTime = currentTime;
+            shipUnloadedContainerEventArgs.ship = ship;
+            shipUnloadedContainerEventArgs.Container = containerToBeUnloaded;
+
+            ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs); */
+        }
+
+        /// <summary>
+        /// Loads container on Adv. from Ship to Crane to Adv.
+        /// </summary>
+        /// <param name="ship"> The ship the container is unloaded from.</param>
+        private void LoadContainerFromShipToTruck(Ship ship)
+        {
+            // Skal Simulation håndtere "hvilken" container, eller skal ShipToCrane og CraneToAdv osv?
+            // Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last(); // Ikke nødvendig?
+
+            Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
+            Crane crane = loadingDock.GetFreeLoadingDockCrane(); // Må implementere GetFreeLoadingDockCrane
+            Truck? truck = loadingDock.GetTruckInTruckLoadingSpot();
+
+            if (truck == null)
+            {
+                return;
+            }
+
+            harbor.ShipToCrane(ship, crane, currentTime);
+            harbor.CraneToTruck(crane, truck, containerToBeUnloaded, currentTime);
+
+            /*harbor.UnloadContainer(containerToBeUnloaded.Size, ship, currentTime)*/
+
+
+            // Event og status håndtering kommer //
+            /*ShipUnloadedContainerEventArgs shipUnloadedContainerEventArgs = new();
+            shipUnloadedContainerEventArgs.currentTime = currentTime;
+            shipUnloadedContainerEventArgs.ship = ship;
+            shipUnloadedContainerEventArgs.Container = containerToBeUnloaded;
+
+            ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs);*/ 
         }
 
 
@@ -486,6 +554,7 @@ namespace Gruppe8.HarbNet
                 }
             }
         }
+
         /// <summary>
         /// check to see if the ship has the Status "Transit".
         /// </summary>
@@ -539,67 +608,31 @@ namespace Gruppe8.HarbNet
                     {
                         if (harbor.storedContainers.Keys.Count != 0 && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                         {
+                            if (lastStatusLog.Status != Status.Loading)
+                            {
+                                ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
+                                //shipLoadeadContainer.Invoke(ship);
+                            }
 
                             for (int i = 0; i < ship.ContainersLoadedPerHour; i++)
                             {
 
+                                Container? loadedContainer = LoadContainerOnShip(ship);
 
-                                if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null)
-                                {
-                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Half <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
-                                    {
-
-                                        Container container = harbor.GetStoredContainer(ContainerSize.Half);
-
-                                        harbor.LoadContainer(ContainerSize.Half, ship, currentTime);
-
-                                        shipLoadedContainerEventArgs.Container = container;
-                                        ShipLoadedContainer?.Invoke(this, shipLoadedContainerEventArgs);
-                                    }
-                                }
-
-                                else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Medium) != null)
-                                {
-
-                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Medium <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
-                                    {
-
-                                        Container container = harbor.GetStoredContainer(ContainerSize.Medium);
-
-                                        harbor.LoadContainer(ContainerSize.Medium, ship, currentTime);
-
-                                        shipLoadedContainerEventArgs.Container = container;
-                                        ShipLoadedContainer?.Invoke(this, shipLoadedContainerEventArgs);
-                                    }
-                                }
-
-                                else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Medium && harbor.GetStoredContainer(ContainerSize.Full) != null)
-                                {
-                                    if (ship.CurrentWeightInTonn + (int)ContainerSize.Full <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
-                                    {
-
-                                        Container container = harbor.GetStoredContainer(ContainerSize.Full);
-
-                                        harbor.LoadContainer(ContainerSize.Full, ship, currentTime);
-
-                                        shipLoadedContainerEventArgs.Container = container;
-                                        ShipLoadedContainer?.Invoke(this, shipLoadedContainerEventArgs);
-                                    }
-                                }
-
-                                else
+                                // Event and Status handling
+                                if (loadedContainer == null)
                                 {
                                     ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
                                     ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Undocking);
                                     ShipUndocking?.Invoke(this, shipUndockingEventArgs);
                                     break;
                                 }
-                            }
+                                else
+                                {
+                                    shipLoadedContainerEventArgs.Container = loadedContainer;
+                                    ShipLoadedContainer?.Invoke(this, shipLoadedContainerEventArgs);
+                                }   
 
-                            if (lastStatusLog.Status != Status.Loading)
-                            {
-                                ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
-                                //shipLoadeadContainer.Invoke(ship);
                             }
 
                         }
@@ -625,6 +658,47 @@ namespace Gruppe8.HarbNet
 
                 }
             }
+        }
+
+        /// <summary>
+        /// Loads one container from Adv to Ship
+        /// </summary>
+        /// <param name="ship">The ship that is loading the container onboard.</param>
+        /// <returns></returns>
+        internal Container? LoadContainerOnShip(Ship ship)
+        {
+
+            Container containerToBeLoaded;
+
+            if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null)
+            {
+                if (ship.CurrentWeightInTonn + (int)ContainerSize.Half <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
+                {
+
+                    containerToBeLoaded = harbor.GetStoredContainer(ContainerSize.Half);
+
+                    // NYE METODEKALL HER
+
+                    /*harbor.LoadContainer(ContainerSize.Half, ship, currentTime);*/
+
+                    return containerToBeLoaded;
+                }
+            }
+
+            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null)
+            {
+                if (ship.CurrentWeightInTonn + (int)ContainerSize.Full <= ship.MaxWeightInTonn && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
+                {
+
+                    containerToBeLoaded = harbor.GetStoredContainer(ContainerSize.Full);
+
+                    harbor.LoadContainer(ContainerSize.Full, ship, currentTime);
+                    return containerToBeLoaded;
+
+                }
+            }
+            
+            return null;
         }
 
         /// <summary>

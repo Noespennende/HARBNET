@@ -187,11 +187,7 @@ namespace Gruppe8.HarbNet
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
 
-
-
         }
-
-           
 
         /// <summary>
         /// OPPDATER DENNE
@@ -211,12 +207,12 @@ namespace Gruppe8.HarbNet
 
             this.allContainerRows = containerRows;
         }
-        
+
         internal void ShipToCrane(Ship ship, Crane crane)
         {
-            
-           //crane.LoadContainer(ship.RemoveContainer() usikker på håndtering av denne.
-            
+
+            crane.LoadContainer(ship.UnloadContainer());
+
         }
 
     /*  crane.LoadContainer(container);
@@ -1253,6 +1249,8 @@ namespace Gruppe8.HarbNet
             }
             return list;
         }
+
+       
 
         /// <summary>
         /// Returns a string value containing information about the harbour, its ships and container spaces.

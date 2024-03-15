@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Guid representing the unique ID of the ship docked to this dock</returns>
         internal Guid DockedShip {  get; set; }
+
+        internal IList<Crane> ListOfAssignedCranes { get; set; } = new List<Crane>();
+
+        internal IDictionary<Guid, Truck> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck>();
+
         /// <summary>
         /// Creates a new dock object
         /// </summary>
@@ -41,6 +47,31 @@ namespace Gruppe8.HarbNet
             this.Size = shipSize;
             this.Free = true;
         }
+
+        internal Truck? GetTruckInTruckLoadingSpot()
+        {
+            foreach (var spot in TruckLoadingSpots)
+            {
+                if (spot.Value != null)
+                {
+                    return spot.Value;
+                }
+            }
+            return null;
+        }
+
+        internal Crane? GetFreeLoadingDockCrane()
+        {
+            foreach (Crane crane in ListOfAssignedCranes)
+            {
+                if (crane.Container == null)
+                {
+                    return crane;
+                }
+            }
+            return null;
+        }
+
 
     }
 }

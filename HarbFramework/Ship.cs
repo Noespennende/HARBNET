@@ -116,6 +116,9 @@ namespace Gruppe8.HarbNet
         internal bool IsForASingleTrip { get; set; } = false;
         internal bool HasBeenAlteredThisHour = false;
 
+        internal int DirectDeliveryPercentage { get; set; } = 0;
+        internal int ContainersLeftForTrucks { get; set; } = 0; // Kanskje forandre logikken som trenger denne
+
         /// <summary>
         /// Creates a new ship object.
         /// </summary>
@@ -125,7 +128,7 @@ namespace Gruppe8.HarbNet
         /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
         /// <param name="roundTripInDays">Number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
         /// <param name="containersToBeStoredInCargo">How many small containers will be in the ships storage when it enters the harbor for the first time.</param>
-        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,IList<Container> containersToBeStoredInCargo)
+        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,IList<Container> containersToBeStoredInCargo, int directDeliveryPercentage)
         {
             this.ID = Guid.NewGuid();
             this.Name = shipName;
@@ -134,6 +137,7 @@ namespace Gruppe8.HarbNet
             this.RoundTripInDays = roundTripInDays;
             this.IsForASingleTrip = isForASingleTrip;
             this.HistoryIList = new List<StatusLog>();
+            this.DirectDeliveryPercentage = directDeliveryPercentage;
 
             if (shipSize == ShipSize.Large)
             {
@@ -288,7 +292,19 @@ namespace Gruppe8.HarbNet
             CheckForValidWeight();
         }
 
+        internal int GetNumberOfContainersToTrucks()
+        {
+            int numberOfContainersToTrucks = ContainersOnBoard.Count() * (DirectDeliveryPercentage / 100);
 
+            return numberOfContainersToTrucks;
+        }
+
+        internal int GetNumberOfContainersToStorage()
+        {
+            int numberOfContainersToStorage = ContainersOnBoard.Count() - GetNumberOfContainersToTrucks();
+
+            return numberOfContainersToStorage;
+        }
 
         /// <summary>
         /// Generate new containers and adds them to the ship storage.
