@@ -34,7 +34,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid representing the unique ID of the ship docked to this dock</returns>
         internal Guid DockedShip {  get; set; }
 
-        internal IList<Crane> ListOfAssignedCranes { get; set; } = new List<Crane>();
+        internal IList<Crane> AssignedCranes { get; set; } = new List<Crane>();
 
         internal IDictionary<Guid, Truck> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck>();
 
@@ -46,6 +46,25 @@ namespace Gruppe8.HarbNet
         {
             this.Size = shipSize;
             this.Free = true;
+        }
+
+        internal Truck? AssignTruckToTruckLoadingSpot(Harbor harbor)
+        {
+            
+            foreach (var spot in TruckLoadingSpots)
+            {
+                if (spot.Value == null)
+                {
+                    Truck? freeTruck = harbor.GetFreeTruck();
+                                        
+                    if (freeTruck != null)
+                    {
+                        TruckLoadingSpots.Add(spot.Key, freeTruck);
+                        return freeTruck;
+                    }
+                }
+            }
+            return null;
         }
 
         internal Truck? GetTruckInTruckLoadingSpot()
@@ -62,7 +81,7 @@ namespace Gruppe8.HarbNet
 
         internal Crane? GetFreeLoadingDockCrane()
         {
-            foreach (Crane crane in ListOfAssignedCranes)
+            foreach (Crane crane in AssignedCranes)
             {
                 if (crane.Container == null)
                 {

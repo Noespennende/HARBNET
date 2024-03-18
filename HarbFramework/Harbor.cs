@@ -474,6 +474,31 @@ namespace Gruppe8.HarbNet
             }
         }
 
+        internal Crane? GetFreeStorageAreaCrane()
+        {
+            foreach (Crane crane in HarborStorageAreaCranes)
+            {
+                if (crane.Container == null)
+                {
+                    return crane;
+                }
+            }
+            return null;
+        }
+
+        internal Adv? GetAdvContainingContainer(Container container)
+        {
+            foreach (Adv adv in AdvWorking)
+            {
+                if (adv.Container == container)
+                {
+                    return adv;
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// finds the number of free container spaces
         /// </summary>
