@@ -145,7 +145,7 @@ namespace Gruppe8.HarbNet
 
             if (percentageOfContainersDirectlyLoadedToTrucks > 100 || percentageOfContainersDirectlyLoadedToTrucks < 0)
             {
-                throw new ArgumentOutOfRangeException("percentageOfContainersDirectlyLoadedToTrucks must be a number from 0 to 100");
+                throw new ArgumentOutOfRangeException("percentageOfContainersDirectlyLoadedToTrucks must be a number between 0 and 100");
             }
 
             this.PercentOfContainersDirectlyLoaded = (percentageOfContainersDirectlyLoadedToTrucks / 100);
