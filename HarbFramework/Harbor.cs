@@ -119,6 +119,7 @@ namespace Gruppe8.HarbNet
         public Guid AnchorageID { get; } = Guid.NewGuid();
         public Guid AdvCargoID { get; } = Guid.NewGuid();
         public Guid TruckTransitLocationID { get; } = Guid.NewGuid();
+        public Guid TruckQueueLocationID { get; } = Guid.NewGuid();
         public Guid HarborStorageAreaID { get; } = Guid.NewGuid();
 
 
@@ -326,6 +327,7 @@ namespace Gruppe8.HarbNet
 
             return containerToBeLoaded;
         }
+
         /// <summary>
         /// Crane Load container to storage if there is room
         /// </summary>
@@ -371,6 +373,35 @@ namespace Gruppe8.HarbNet
             }
             return false;
         }
+
+        internal Adv GetFreeAdv()
+        {
+            if (AdvFree.Count > 0)
+            {
+                return AdvFree[0];
+            }
+
+            return null;
+        }
+
+        internal Truck GetFreeTruck()
+        {
+            if (TrucksInQueue.Count > 0)
+            {
+                return TrucksInQueue[0];
+            }
+
+            return null;
+        }
+
+        internal void GenerateTrucks()
+        {
+            for (int i = 0; i < TrucksArrivePerHour; i++)
+            {
+                TrucksInQueue.Add(new Truck(TruckQueueLocationID));
+            }
+        }
+
         /// <summary>
         /// finds the number of free container spaces
         /// </summary>
