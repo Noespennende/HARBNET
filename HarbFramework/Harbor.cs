@@ -142,6 +142,12 @@ namespace Gruppe8.HarbNet
         {
 
             this.TrucksArrivePerHour = numberOfTrucksArriveToHarborPerHour;
+
+            if (percentageOfContainersDirectlyLoadedToTrucks > 100 || percentageOfContainersDirectlyLoadedToTrucks < 0)
+            {
+                throw new ArgumentOutOfRangeException("percentageOfContainersDirectlyLoadedToTrucks must be a number from 0 to 100");
+            }
+
             this.PercentOfContainersDirectlyLoaded = (percentageOfContainersDirectlyLoadedToTrucks / 100);
             this.AdvLoadsPerHour = AdvLoadsPerHour;
 
