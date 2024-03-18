@@ -246,6 +246,7 @@ namespace Gruppe8.HarbNet
         internal Container ShipToCrane(Ship ship, Crane crane, DateTime currentTime)
         {
             Container containerToBeLoaded = ship.UnloadContainer();
+            containerToBeLoaded.CurrentPosition = ship.CurrentLocation;
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
             crane.LoadContainer(containerToBeLoaded);
 
@@ -263,9 +264,10 @@ namespace Gruppe8.HarbNet
         internal Container CraneToShip(Crane crane, Ship ship, DateTime currentTime)
         {
             Container containerToBeLoaded = crane.UnloadContainer();
+            containerToBeLoaded.CurrentPosition = crane.location;
             containerToBeLoaded.AddStatusChangeToHistory(Status.Loading, currentTime);
-            ship.AddContainer(crane.UnloadContainer());
-
+            ship.AddContainer(containerToBeLoaded);
+            
             return containerToBeLoaded;
         }
 
@@ -279,7 +281,8 @@ namespace Gruppe8.HarbNet
         internal Container CraneToTruck(Crane crane, Truck truck, DateTime currentTime)
         {
             Container containerToBeLoaded = crane.UnloadContainer();
-            truck.LoadContainer(crane.UnloadContainer());
+            containerToBeLoaded.CurrentPosition = crane.location;
+            truck.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
 
             return containerToBeLoaded;
@@ -294,7 +297,8 @@ namespace Gruppe8.HarbNet
         internal Container CraneToAdv(Crane crane, Adv adv, DateTime currentTime)
         {
             Container containerToBeLoaded = crane.UnloadContainer();
-            adv.LoadContainer(crane.UnloadContainer());
+            containerToBeLoaded.CurrentPosition = crane.location;
+            adv.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAdv, currentTime);
 
             return containerToBeLoaded;
@@ -310,7 +314,8 @@ namespace Gruppe8.HarbNet
         {
 
             Container containerToBeLoaded = adv.UnloadContainer();
-            crane.LoadContainer(adv.UnloadContainer());
+            containerToBeLoaded.CurrentPosition = adv.Location;
+            crane.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
 
             return containerToBeLoaded;
