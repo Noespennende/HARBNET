@@ -7,21 +7,18 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
-    public class Adv : IAdv
+    internal class Adv
     {
-        public Guid ID { get; internal set; }
-        public Container Container { get; internal set; }
-        public Status Status { get; internal set; }
-        public Guid Location {  get; internal set; }
-        public ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
-        internal IList<StatusLog> HistoryIList { get; set; }
+        internal Guid ID { get; set; }
+        internal Container Container { get; set; }
+        internal Status Status { get; set; }
+        internal Guid Location {  get; set; }
 
-        public Adv (Guid id, Guid location)
+        internal Adv (Guid id, Guid location)
         {
             this.ID = id;
             this.Container = null;
             this.Location = location;
-            this.HistoryIList = new List<StatusLog>();
         }
 
         internal Guid LoadContainer(Container containerToBeLoaded)

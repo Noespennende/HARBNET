@@ -90,6 +90,22 @@ namespace Gruppe8.HarbNet
         /// <return>Returns a dictionary of all stored containers</return>
         internal IDictionary<Container, ContainerRow> storedContainers = new Dictionary<Container, ContainerRow>(); // Container : ContainerRow
 
+        internal IList<Crane> HarborStorageAreaCranes { get; set; } = new List<Crane>();
+
+        internal IList<Adv> AdvWorking { get; set; } = new List<Adv>();
+
+        internal IList<Adv> AdvFree { get; set; } = new List<Adv>();
+
+        internal IList<Truck> TrucksInTransit { get; set; } = new List<Truck>();
+
+        internal IList<Truck> TrucksInQueue { get; set; } = new List<Truck>();
+
+        internal double PercentOfContainersDirectlyLoaded { get; set; }
+
+        internal int TrucksArrivePerHour { get; set; }
+
+        internal int AdvLoadsPerHour { get; set; }
+
         /// <summary>
         /// Gets the unique ID for the transit location
         /// </summary>
@@ -101,6 +117,10 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns the unique Guid defining a specific anchorage</return>
         public Guid AnchorageID { get; } = Guid.NewGuid();
+        public Guid AdvCargoID { get; } = Guid.NewGuid();
+        public Guid TruckTransitLocationID { get; } = Guid.NewGuid();
+        public Guid HarborStorageAreaID { get; } = Guid.NewGuid();
+
 
         /// <summary>
         /// OPPDATER DENNE!
@@ -116,15 +136,24 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfSmallContainerSpaces">Total number of small container spaces</param>
         /// <param name="numberOfMediumContainerSpaces">Total number of medium contrainer spaces</param>
         /// <param name="numberOfLargeContainerSpaces">Total number of large container spaces</param>
-        public Harbor(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
+        public Harbor(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks, int numberOfCranesPerLoadingDock, int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea,
             int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,
-            int numberOfContainerRows, int numberOfHalfSizeContainersInEachRow, int numberOfFullSizeContainersInEachRow)
+            int numberOfContainerRows, int numberOfHalfSizeContainersInEachRow, int numberOfFullSizeContainersInEachRow, int numberOfTrucksArriveToHarborPerHour, int percentageOfContainersDirectlyLoadedToTrucks, int AdvLoadsPerHour)
         {
 
+            this.TrucksArrivePerHour = numberOfTrucksArriveToHarborPerHour;
+            this.PercentOfContainersDirectlyLoaded = (percentageOfContainersDirectlyLoadedToTrucks / 100);
+            this.AdvLoadsPerHour = AdvLoadsPerHour;
+
+            for (int i = 0; i < numberOfCranesOnHarborStorageArea; i++)
+            {
+                HarborStorageAreaCranes.Add(new Crane(LoadsPerCranePerHour, HarborStorageAreaID));
+            }
 
             int smallSingleTripShipCount = 0;
             int mediumSingleTripShipCount = 0;
             int largeSingleTripShipCount = 0;
+
             foreach (Ship ship in listOfShips)
             {
                 if (ship.IsForASingleTrip)
@@ -154,16 +183,16 @@ namespace Gruppe8.HarbNet
 
             for (int i = 0; i < numberOfSmallLoadingDocks; i++)
             {
-                allLoadingDocks.Add(new Dock(ShipSize.Small));
+                allLoadingDocks.Add(new Dock(ShipSize.Small, numberOfCranesPerLoadingDock, LoadsPerCranePerHour));
             }
 
             for (int i = 0; i < numberOfMediumLoadingDocks; i++)
             {
-                allLoadingDocks.Add(new Dock(ShipSize.Medium));
+                allLoadingDocks.Add(new Dock(ShipSize.Medium, numberOfCranesPerLoadingDock, LoadsPerCranePerHour));
             }
             for (int i = 0; i < numberOfLargeLoadingDocks; i++)
             {
-                allLoadingDocks.Add(new Dock(ShipSize.Large));
+                allLoadingDocks.Add(new Dock(ShipSize.Large, numberOfCranesPerLoadingDock, LoadsPerCranePerHour));
             }
 
             for (int i = 0; i < numberOfSmallShipDocks; i++)
@@ -215,14 +244,14 @@ namespace Gruppe8.HarbNet
 
         }
 
-    /*  crane.LoadContainer(container);
+        /*  crane.LoadContainer(container);
 
             if (crane.Container == container)
             {
                 ship.RemoveContainer(container.ID);
                 container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime); */
 
-    internal void CraneToShip(Crane crane, Ship ship, Container container, DateTime currentTime)
+        internal void CraneToShip(Crane crane, Ship ship, Container container, DateTime currentTime)
         {
             ship.AddContainer(crane.UnloadContainer());
         }

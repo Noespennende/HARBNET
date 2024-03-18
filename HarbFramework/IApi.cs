@@ -10,7 +10,7 @@ namespace Gruppe8.HarbNet
 {
     internal interface IApi
     {
-        // Første utkastet til ett API. Denne klassen blir ikke brukt i den endelige løsningen.
+        // Første utkastet til ett API gitt i delinlevering 1. Denne klassen blir ikke brukt i den endelige løsningen.
         /*
         public void Create(); //Oppretter simuleringen
         public String SetName(String name); //returnerer navnet
