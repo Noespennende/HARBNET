@@ -236,63 +236,92 @@ namespace Gruppe8.HarbNet
 
             this.allContainerRows = containerRows;
         }
-
-        internal void ShipToCrane(Ship ship, Crane crane)
+        /// <summary>
+        /// Container unloads from the ship
+        /// </summary>
+        /// <param name="ship">Ship object</param>
+        /// <param name="crane">Crane object</param>
+        /// <param name="currentTime">The current time</param>
+        /// <returns>the container being unloaded</returns>
+        internal Container ShipToCrane(Ship ship, Crane crane, DateTime currentTime)
         {
+            Container containerToBeLoaded = ship.UnloadContainer();
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
+            crane.LoadContainer(containerToBeLoaded);
 
-            crane.LoadContainer(ship.UnloadContainer());
+            return containerToBeLoaded;
 
         }
 
-        /*  crane.LoadContainer(container);
-
-            if (crane.Container == container)
-            {
-                ship.RemoveContainer(container.ID);
-                container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime); */
-
-        internal void CraneToShip(Crane crane, Ship ship, Container container, DateTime currentTime)
+        /// <summary>
+        /// The crane loads a container to a ship
+        /// </summary>
+        /// <param name="ship">Ship object</param>
+        /// <param name="crane">Crane object</param>
+        /// <param name="currentTime">The current time</param>
+        /// <returns>the container being loaded to ship</returns>
+        internal Container CraneToShip(Crane crane, Ship ship, DateTime currentTime)
         {
+            Container containerToBeLoaded = crane.UnloadContainer();
+            containerToBeLoaded.AddStatusChangeToHistory(Status.Loading, currentTime);
             ship.AddContainer(crane.UnloadContainer());
+
+            return containerToBeLoaded;
         }
 
-        /* crane.UnloadContainer();
-            if (crane.Container == null)
-            {
-                ship.AddContainer(container);
-                container.AddStatusChangeToHistory(Status.UnloadingFromCraneToShip, currentTime);
-            } */
-
-        internal void CraneToTruck(Crane crane, Truck truck, Container container)
+          /// <summary>
+          /// Loads a container to a truck
+          /// </summary>
+          /// <param name="crane">Crane object</param>
+          /// <param name="truck">Truck object</param>
+          /// <param name="currentTime">the Current Time</param>
+          /// <returns>Container being loaded to the truck</returns>
+        internal Container CraneToTruck(Crane crane, Truck truck, DateTime currentTime)
         {
+            Container containerToBeLoaded = crane.UnloadContainer();
             truck.LoadContainer(crane.UnloadContainer());
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
+
+            return containerToBeLoaded;
         }
-
-        /* 
-            int NumberOfContainersToLoad = (int)Math.Round(ship.GetNumberOfContainersOnBoard(container.Size) * 0.15);
-            if (crane.Container != null)
-            {
-                crane.UnloadContainer();
-            }
-
-            if (crane.Container == null && NumberOfContainersToLoad > 0 && truck.Container == null)
-            {
-                truck.LoadContainer(container);
-                container.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
-                NumberOfContainersToLoad--;
-            }*/
-
-        internal void CraneToAdv(Crane crane, Adv adv)
+        /// <summary>
+        /// Loading an ADV with a container
+        /// </summary>
+        /// <param name="crane">Crane object</param>
+        /// <param name="adv">ADV object</param>
+        /// <param name="currentTime">The current time</param>
+        /// <returns>Container object being Loaded</returns>
+        internal Container CraneToAdv(Crane crane, Adv adv, DateTime currentTime)
         {
+            Container containerToBeLoaded = crane.UnloadContainer();
             adv.LoadContainer(crane.UnloadContainer());
-        }
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAdv, currentTime);
 
-        internal void AdvToCrane(Crane crane, Adv adv)
+            return containerToBeLoaded;
+        }
+        /// <summary>
+        /// Unload from ADV 
+        /// </summary>
+        /// <param name="crane">Crane object</param>
+        /// <param name="adv">ADV object</param>
+        /// <param name="currentTime">The current time</param>
+        /// <returns>Container object being unloaded</returns>
+        internal Container AdvToCrane(Crane crane, Adv adv, DateTime currentTime)
         {
-            crane.LoadContainer(adv.UnloadContainer());
-        }
 
-        internal bool CraneToContainerRow(Crane crane)
+            Container containerToBeLoaded = adv.UnloadContainer();
+            crane.LoadContainer(adv.UnloadContainer());
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
+
+            return containerToBeLoaded;
+        }
+        /// <summary>
+        /// Crane Load container to storage if there is room
+        /// </summary>
+        /// <param name="crane">Crane object</param>
+        /// <param name="currentTime">the current Time</param>
+        /// <returns>True or false</returns>
+        internal bool CraneToContainerRow(Crane crane,DateTime currentTime)
         {
             Container container = crane.UnloadContainer();
 
@@ -302,6 +331,7 @@ namespace Gruppe8.HarbNet
                 {
                     CR.AddContainerToFreeSpace(container);
                     storedContainers.Add(container, CR);
+                    container.AddStatusChangeToHistory(Status.InStorage, currentTime);
                     return true;
                 }
             }
@@ -309,20 +339,31 @@ namespace Gruppe8.HarbNet
             crane.LoadContainer(container);
             return false;
         }
-
-        internal bool ContainerRowToCrane(ContainerSize size, Crane crane)
+        /// <summary>
+        /// removes container from containerrow
+        /// </summary>
+        /// <param name="size">the size of the container</param>
+        /// <param name="crane">crane object</param>
+        /// <param name="currentTime">the current time</param>
+        /// <returns>True or false</returns>
+        internal bool ContainerRowToCrane(ContainerSize size, Crane crane,DateTime currentTime)
         {
             foreach (Container container in storedContainers.Keys){
                 if (container.Size == size)
                 {
                     crane.LoadContainer(container);
+                    container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
                     storedContainers[container].RemoveContainerFromContainerRow(container);
+                    
                     return true;
                 }
             }
             return false;
         }
-
+        /// <summary>
+        /// finds the number of free container spaces
+        /// </summary>
+        /// <returns>an int with how many free spaces there are</returns>
         internal int numberOfFreeContainerSpaces ()
         {
             int count = 0;
@@ -790,7 +831,7 @@ namespace Gruppe8.HarbNet
         internal int NumberOfFreeContainerSpaces(ContainerSize containerSize)
         {
             int count = 0;
-            foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
+            foreach (ContainerSpace containerSpace in allContainerRows)
             {
                 if (containerSpace.Size == containerSize && containerSpace.Free == true)
                 {
