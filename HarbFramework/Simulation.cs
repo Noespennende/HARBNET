@@ -68,7 +68,7 @@ namespace Gruppe8.HarbNet
 
             while (currentTime < endTime)
             {
-
+                
                 foreach (Ship ship in harbor.AllShips)
                 {
                     shipAnchoringEventArgs shipAnchoringEventArgs = new();
@@ -105,6 +105,8 @@ namespace Gruppe8.HarbNet
                     ship.HasBeenAlteredThisHour = false;
 
                 }
+
+                harbor.GenerateTrucks();
 
                 UndockingShips();
 
@@ -387,42 +389,16 @@ namespace Gruppe8.HarbNet
                     if (ship.ContainersOnBoard.Count != 0 && lastStatusLog.Status == Status.DockedToLoadingDock || lastStatusLog.Status == Status.Unloading)
                     {
                         if (lastStatusLog.Status == Status.DockedToLoadingDock)
-                        { 
+                        {
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Unloading);
 
                             ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks();
                         }
 
-                        int containersForTrucks = ship.GetNumberOfContainersToTrucks();
-                        int containersForStorage = ship.GetNumberOfContainersToStorage();
+                        // ** Unloading **
 
-                        Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
+                        UnloadShipForOneHour(ship);
 
-
-                        // Unloading
-
-                        // Før: for (int i = 0; i < ship.ContainersLoadedPerHour && ship.ContainersOnBoard.Count > 0; i++)
-                        // Hver kran på LoadingDock gjør max antall avlast - simulerer da at hver kran laster av "samtidig", da hver kran gjør hvert sitt maksimum per time
-                        foreach (Crane crane in loadingDock.AssignedCranes) {
-
-                            // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
-                            int maxLoadsPerHour = Math.Min(harbor.AdvLoadsPerHour, crane.ContainersLoadedPerHour);
-
-                            // Gjør det til maks per time er nådd, eller skipet er tomt
-                            for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)
-                            {
-                                if (containersForStorage != 0 && (ship.ContainersOnBoard.Count - ship.ContainersLeftForTrucks) > 0) // ?? Lage advsIn også?
-                                {
-                                    LoadContainerFromShipToAdv(ship, crane);
-                                }
-
-                                if (containersForTrucks != 0 && harbor.TrucksInQueue.Count != 0)
-                               {
-                                   LoadContainerFromShipToAdvToTruck(ship, crane);
-                                   ship.ContainersLeftForTrucks--;
-                               }
-                            }
-                        }
                     }
 
                     // Status oppdateringer 
@@ -451,11 +427,51 @@ namespace Gruppe8.HarbNet
             }
         }
 
-
-        private Container LoadContainerFromShipToAdv(Ship ship, Crane crane)
+        /// <summary>
+        /// Simulates the unloading of one ship, for one hour.
+        /// </summary>
+        /// <param name="ship">The ship that is being unloaded</param>
+        private void UnloadShipForOneHour(Ship ship)
         {
-            
+            int containersForTrucks = ship.GetNumberOfContainersToTrucks();
+            int containersForStorage = ship.GetNumberOfContainersToStorage();
+
             Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
+
+
+            // Før: for (int i = 0; i < ship.ContainersLoadedPerHour && ship.ContainersOnBoard.Count > 0; i++)
+            // Hver kran på LoadingDock gjør max antall avlast - simulerer da at hver kran laster av "samtidig", da hver kran gjør hvert sitt maksimum per time
+            foreach (Crane crane in loadingDock.AssignedCranes)
+            {
+
+                // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
+                int maxLoadsPerHour = Math.Min(harbor.AdvLoadsPerHour, crane.ContainersLoadedPerHour);
+
+                // Gjør det til maks per time er nådd, eller skipet er tomt
+                for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)
+                {
+                    if (containersForStorage != 0 && (ship.ContainersOnBoard.Count - ship.ContainersLeftForTrucks) > 0) // ?? Lage advsInQueue også?
+                    {
+                        Container container = MoveContainerFromShipToAdv(ship, crane);
+                        MoveContainerFromAdvToStorage(container);
+                    }
+
+                    if (containersForTrucks != 0 && harbor.TrucksInQueue.Count != 0)
+                    {
+                        MoveContainerFromShipToTruck(ship, crane);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Moves one container from ship to an ADV.
+        /// </summary>
+        /// <param name="ship">The ship the container is being unloaded from.</param>
+        /// <param name="crane">The crane at the dock that is being used for moving between ship and adv.</param>
+        /// <returns>The container that has been unloaded off ship.</returns>
+        private Container MoveContainerFromShipToAdv(Ship ship, Crane crane)
+        {
             Adv adv = harbor.GetFreeAdv();
 
             Container unloadedContainer = harbor.ShipToCrane(ship, crane, currentTime);
@@ -473,7 +489,11 @@ namespace Gruppe8.HarbNet
             ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs); */
         }
 
-        private void LoadContainerFromAdvToStorage(Container container)
+        /// <summary>
+        /// Moves one container from ADV to Storage area crane to storage space.
+        /// </summary>
+        /// <param name="container">The container that is being moved to storage</param>
+        private void MoveContainerFromAdvToStorage(Container container)
         {
             Adv? adv = harbor.GetAdvContainingContainer(container);
             if (adv == null)
@@ -504,15 +524,19 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads container on Adv. from Ship to Crane to Adv.
+        /// Moves one container from ship to crane to truck.
         /// </summary>
-        /// <param name="ship"> The ship the container is unloaded from.</param>
-        private void LoadContainerFromShipToTruck(Ship ship, Crane crane)
+        /// <param name="ship">The ship the container is unloaded from</param>
+        /// <param name="crane">The crane at the dock that is used for moving between ship and truck</param>
+        private void MoveContainerFromShipToTruck(Ship ship, Crane crane)
         {
             // Skal Simulation håndtere "hvilken" container, eller skal ShipToCrane og CraneToAdv osv?
             // Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last(); // Ikke nødvendig?
 
             Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
+
+            // Dette kan gjøres andre steder, og på andre måter. Gjør det slik nå, men er opp for forandringer senere!
+            loadingDock.AssignTruckToTruckLoadingSpot(harbor); 
 
             Truck? truck = loadingDock.GetTruckInTruckLoadingSpot();
 
@@ -529,9 +553,9 @@ namespace Gruppe8.HarbNet
 
           
             harbor.ShipToCrane(ship, crane, currentTime);
+            
             harbor.CraneToTruck(crane, truck, currentTime);
-
-            /*harbor.UnloadContainer(containerToBeUnloaded.Size, ship, currentTime)*/
+            ship.ContainersLeftForTrucks--;
 
 
             // Event og status håndtering kommer //
@@ -540,7 +564,7 @@ namespace Gruppe8.HarbNet
             shipUnloadedContainerEventArgs.ship = ship;
             shipUnloadedContainerEventArgs.Container = containerToBeUnloaded;
 
-            ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs);*/ 
+            ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs);*/
         }
 
 
