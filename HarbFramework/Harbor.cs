@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Drawing;
 using System.Linq;
@@ -252,6 +253,10 @@ namespace Gruppe8.HarbNet
         /// <returns>the container being unloaded</returns>
         internal Container ShipToCrane(Ship ship, Crane crane, DateTime currentTime)
         {
+            if (!(crane.Container == null))
+            {
+                throw new CraneCantBeLoadedExeption("The crane you are trying to load already holds a container in its cargo and therefore can not load another one from the ship.");
+            }
             Container containerToBeLoaded = ship.UnloadContainer();
             containerToBeLoaded.CurrentPosition = ship.CurrentLocation;
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
@@ -287,10 +292,30 @@ namespace Gruppe8.HarbNet
           /// <returns>Container being loaded to the truck</returns>
         internal Container CraneToTruck(Crane crane, Truck truck, DateTime currentTime)
         {
+            if (!TrucksInQueue.Contains(truck))
+            {
+                if (TrucksInTransit.Contains(truck))
+                {
+                    throw new TruckCantBeLoadedExeption("The truck you are trying to load is already in transit away from the harbor and therefore can't load the container from the crane");
+                } else
+                {
+                    throw new TruckCantBeLoadedExeption("The truck you are trying to load does not exist in the simulation and therefore can't load the container from the crane.");
+                }
+                
+            }
+
+            if (!(truck.Container == null))
+            {
+                throw new TruckCantBeLoadedExeption("The truck you are trying to load already has a container in its storage and therefore don't have room for the container from the given crane");
+            }
+
             Container containerToBeLoaded = crane.UnloadContainer();
             containerToBeLoaded.CurrentPosition = crane.location;
             truck.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
+
+            TrucksInQueue.Remove(truck);
+            TrucksInTransit.Add(truck);
 
             return containerToBeLoaded;
         }
@@ -303,10 +328,29 @@ namespace Gruppe8.HarbNet
         /// <returns>Container object being Loaded</returns>
         internal Container CraneToAdv(Crane crane, Adv adv, DateTime currentTime)
         {
+            if (!AdvFree.Contains(adv))
+            {
+                if (AdvWorking.Contains(adv))
+                {
+                    throw new AdvCantBeLoadedExeption("The ADV you are trying to load is already transporting goods and therefore can not load a container from the crane.");
+                } else
+                {
+                    throw new AdvCantBeLoadedExeption("The ADV you are trying to load does not exist in the simulation and therefore can't be loaded.");
+                }
+                
+            }
+
+            if (!(adv.Container == null))
+            {
+                throw new AdvCantBeLoadedExeption("The Adv given already has a container in its storage and therefore has no room for the container the crane is trying to load.");
+            }
             Container containerToBeLoaded = crane.UnloadContainer();
             containerToBeLoaded.CurrentPosition = crane.location;
             adv.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAdv, currentTime);
+
+            AdvFree.Remove(adv);
+            AdvWorking.Add(adv);
 
             return containerToBeLoaded;
         }
@@ -319,11 +363,34 @@ namespace Gruppe8.HarbNet
         /// <returns>Container object being unloaded</returns>
         internal Container AdvToCrane(Crane crane, Adv adv, DateTime currentTime)
         {
+            if (adv.Container == null)
+            {
+                throw new CraneCantBeLoadedExeption("The ADV you are trying to unload doesn't have a container in its storage and therefore can't unload to the crane.");
+            }
+
+            if (!AdvWorking.Contains(adv))
+            {
+                if (AdvFree.Contains(adv))
+                {
+                    throw new CraneCantBeLoadedExeption("The ADV you are trying to unload is set as free and therefore is not working to unload cargo. ADVs must be working for cargo to be unloaded.");
+                } else
+                {
+                    throw new CraneCantBeLoadedExeption("The ADV you are trying to unload does not exist within the simulation and therefore can not unload to the crane");
+                }
+            }
+
+            if (!(crane.Container == null))
+            {
+                throw new CraneCantBeLoadedExeption("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the ADV");
+            }
 
             Container containerToBeLoaded = adv.UnloadContainer();
             containerToBeLoaded.CurrentPosition = adv.Location;
             crane.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
+
+            AdvWorking.Remove(adv);
+            AdvFree.Add(adv);
 
             return containerToBeLoaded;
         }
@@ -361,6 +428,11 @@ namespace Gruppe8.HarbNet
         /// <returns>True or false</returns>
         internal bool ContainerRowToCrane(ContainerSize size, Crane crane,DateTime currentTime)
         {
+            if (!(crane.Container == null))
+            {
+                throw new CraneCantBeLoadedExeption("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the harbor storage area");
+            }
+
             foreach (Container container in storedContainers.Keys){
                 if (container.Size == size)
                 {

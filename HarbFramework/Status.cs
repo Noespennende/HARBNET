@@ -83,5 +83,9 @@ namespace Gruppe8.HarbNet
         /// Loading Container to ADV
         /// </summary>
         LoadingToAdv,
+        /// <summary>
+        /// Truck queuing
+        /// </summary>
+        Queuing,
     }
 }
