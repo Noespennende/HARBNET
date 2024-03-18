@@ -79,7 +79,9 @@ namespace Gruppe8.HarbNet
         /// Loading Container to Truck
         /// </summary>
         LoadingToTruck,
-
-
+        /// <summary>
+        /// Loading Container to ADV
+        /// </summary>
+        LoadingToAdv,
     }
 }

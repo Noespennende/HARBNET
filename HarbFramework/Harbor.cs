@@ -208,23 +208,30 @@ namespace Gruppe8.HarbNet
             this.allContainerRows = containerRows;
         }
 
-        internal void ShipToCrane(Ship ship, Crane crane)
+        internal Container ShipToCrane(Ship ship, Crane crane, DateTime currentTime)
         {
+            Container containerToBeLoaded = ship.UnloadContainer();
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
+            crane.LoadContainer(containerToBeLoaded);
 
-            crane.LoadContainer(ship.UnloadContainer());
+            return containerToBeLoaded;
 
         }
 
-    /*  crane.LoadContainer(container);
+        /*  crane.LoadContainer(container);
 
-            if (crane.Container == container)
-            {
-                ship.RemoveContainer(container.ID);
-                container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime); */
+                if (crane.Container == container)
+                {
+                    ship.RemoveContainer(container.ID);
+                    container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime); */
 
-    internal void CraneToShip(Crane crane, Ship ship, Container container, DateTime currentTime)
+        internal Container CraneToShip(Crane crane, Ship ship, DateTime currentTime)
         {
+            Container containerToBeLoaded = crane.UnloadContainer();
+            containerToBeLoaded.AddStatusChangeToHistory(Status.Loading, currentTime);
             ship.AddContainer(crane.UnloadContainer());
+
+            return containerToBeLoaded;
         }
 
         /* crane.UnloadContainer();
@@ -234,9 +241,13 @@ namespace Gruppe8.HarbNet
                 container.AddStatusChangeToHistory(Status.UnloadingFromCraneToShip, currentTime);
             } */
 
-        internal void CraneToTruck(Crane crane, Truck truck, Container container)
+        internal Container CraneToTruck(Crane crane, Truck truck, DateTime currentTime)
         {
+            Container containerToBeLoaded = crane.UnloadContainer();
             truck.LoadContainer(crane.UnloadContainer());
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
+
+            return containerToBeLoaded;
         }
 
         /* 
@@ -253,14 +264,23 @@ namespace Gruppe8.HarbNet
                 NumberOfContainersToLoad--;
             }*/
 
-        internal void CraneToAdv(Crane crane, Adv adv)
+        internal Container CraneToAdv(Crane crane, Adv adv, DateTime currentTime)
         {
+            Container containerToBeLoaded = crane.UnloadContainer();
             adv.LoadContainer(crane.UnloadContainer());
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAdv, currentTime);
+
+            return containerToBeLoaded;
         }
 
-        internal void AdvToCrane(Crane crane, Adv adv)
+        internal Container AdvToCrane(Crane crane, Adv adv, DateTime currentTime)
         {
+
+            Container containerToBeLoaded = adv.UnloadContainer();
             crane.LoadContainer(adv.UnloadContainer());
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
+
+            return containerToBeLoaded;
         }
 
         internal bool CraneToContainerRow(Crane crane)
@@ -761,7 +781,7 @@ namespace Gruppe8.HarbNet
         internal int NumberOfFreeContainerSpaces(ContainerSize containerSize)
         {
             int count = 0;
-            foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
+            foreach (ContainerSpace containerSpace in allContainerRows)
             {
                 if (containerSpace.Size == containerSize && containerSpace.Free == true)
                 {
