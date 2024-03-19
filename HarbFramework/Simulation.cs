@@ -433,8 +433,8 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">The ship that is being unloaded</param>
         private void UnloadShipForOneHour(Ship ship)
         {
-            int containersForTrucks = ship.GetNumberOfContainersToTrucks();
-            int containersForStorage = ship.GetNumberOfContainersToStorage();
+            int numberOfContainersForTrucks = ship.GetNumberOfContainersToTrucks();
+            int numberOfContainersForStorage = ship.GetNumberOfContainersToStorage();
 
             Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
 
@@ -450,15 +450,16 @@ namespace Gruppe8.HarbNet
                 // Gjør det til maks per time er nådd, eller skipet er tomt
                 for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)
                 {
-                    if (containersForStorage != 0 && (ship.ContainersOnBoard.Count - ship.ContainersLeftForTrucks) > 0) // ?? Lage advsInQueue også?
+                    if (numberOfContainersForStorage != 0 && (ship.ContainersOnBoard.Count - ship.ContainersLeftForTrucks) > 0) // ?? Lage advsInQueue også?
                     {
                         Container container = MoveContainerFromShipToAdv(ship, crane);
                         MoveContainerFromAdvToStorage(container);
                     }
 
-                    if (containersForTrucks != 0 && harbor.TrucksInQueue.Count != 0)
+                    if (numberOfContainersForTrucks != 0 && harbor.TrucksInQueue.Count != 0)
                     {
-                        MoveContainerFromShipToTruck(ship, crane);
+                        Truck? truck = MoveContainerFromShipToTruck(ship, crane);
+                        harbor.SendTruckOnTransit(loadingDock, truck);
                     }
                 }
             }
@@ -528,37 +529,34 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ship">The ship the container is unloaded from</param>
         /// <param name="crane">The crane at the dock that is used for moving between ship and truck</param>
-        private void MoveContainerFromShipToTruck(Ship ship, Crane crane)
+        private Truck? MoveContainerFromShipToTruck(Ship ship, Crane crane)
         {
-            // Skal Simulation håndtere "hvilken" container, eller skal ShipToCrane og CraneToAdv osv?
-            // Container ContainerToBeUnloaded = ship.ContainersOnBoard.Last(); // Ikke nødvendig?
 
             Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
 
-            // Dette kan gjøres andre steder, og på andre måter. Gjør det slik nå, men er opp for forandringer senere!
-            loadingDock.AssignTruckToTruckLoadingSpot(harbor); 
-
-            Truck? truck = loadingDock.GetTruckInTruckLoadingSpot();
+            Truck? truck = harbor.GetFreeTruck();
+            harbor.RemoveTruckFromQueue(truck);
+            loadingDock.AssignTruckToTruckLoadingSpot(truck);
 
             if (truck == null)
             {
                 // EXCEPTION HÅNDTERING HVOR ?
-                return;
+                return null;
             }
             if (crane == null)
             {
                 // EXCEPTION HÅNDTERING HVOR ?
-                return;
+                return null;
             }
-
-          
-            harbor.ShipToCrane(ship, crane, currentTime);
             
+            harbor.ShipToCrane(ship, crane, currentTime);
             harbor.CraneToTruck(crane, truck, currentTime);
             ship.ContainersLeftForTrucks--;
 
+            return truck;
 
             // Event og status håndtering kommer //
+
             /*ShipUnloadedContainerEventArgs shipUnloadedContainerEventArgs = new();
             shipUnloadedContainerEventArgs.currentTime = currentTime;
             shipUnloadedContainerEventArgs.ship = ship;
@@ -566,7 +564,6 @@ namespace Gruppe8.HarbNet
 
             ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs);*/
         }
-
 
         /// <summary>
         /// undock ship from harbor, and set status to Transit

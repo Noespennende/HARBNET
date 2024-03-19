@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -36,7 +37,7 @@ namespace Gruppe8.HarbNet
 
         internal IList<Crane> AssignedCranes { get; set; } = new List<Crane>();
 
-        internal IDictionary<Guid, Truck> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck>();
+        internal IDictionary<Guid, Truck?> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck?>();
 
         /// <summary>
         /// Creates a new dock object
@@ -48,32 +49,39 @@ namespace Gruppe8.HarbNet
             this.Free = true;
         }
 
-        internal Truck? AssignTruckToTruckLoadingSpot(Harbor harbor)
+        internal Truck? AssignTruckToTruckLoadingSpot(Truck truck)
         {
             
             foreach (var spot in TruckLoadingSpots)
             {
                 if (spot.Value == null)
                 {
-                    Truck? freeTruck = harbor.GetFreeTruck();
-                                        
-                    if (freeTruck != null)
-                    {
-                        TruckLoadingSpots.Add(spot.Key, freeTruck);
-                        return freeTruck;
-                    }
+                    TruckLoadingSpots.Add(spot.Key, truck);
                 }
             }
             return null;
         }
 
-        internal Truck? GetTruckInTruckLoadingSpot()
+        internal bool TruckExistsInTruckLoadingSpots(Truck truck)
         {
             foreach (var spot in TruckLoadingSpots)
             {
-                if (spot.Value != null)
+                if (spot.Value == truck)
                 {
-                    return spot.Value;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal Truck? RemoveTruckFromTruckLoadingSpot(Truck truck)
+        {
+            foreach (var spot in TruckLoadingSpots)
+            {
+                if (spot.Value == truck)
+                {
+                    TruckLoadingSpots[spot.Key] = null;
+                    return truck;
                 }
             }
             return null;

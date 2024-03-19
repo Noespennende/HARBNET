@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -314,10 +315,38 @@ namespace Gruppe8.HarbNet
             truck.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
 
-            TrucksInQueue.Remove(truck);
-            TrucksInTransit.Add(truck);
-
             return containerToBeLoaded;
+        }
+
+        internal void RemoveTruckFromQueue(Truck truck)
+        {
+            TrucksInQueue.Remove(truck);
+        }
+
+        internal void SendTruckOnTransit(Dock loadingDock, Truck? truck)
+        {
+            if (truck == null)
+            {
+                // EXCEPTION ??
+            }
+            else if (!loadingDock.TruckExistsInTruckLoadingSpots(truck))
+            {
+                if (TrucksInTransit.Contains(truck))
+                {
+                    // exception når trucken allerede er i transit ??
+
+                }
+                else
+                {
+                    // exception når trucken ikke finnes i truckloadingspot ??
+
+                }
+            }
+            else if (truck.Container != null)
+            {
+                TrucksInTransit.Add(truck);
+            }
+            
         }
         /// <summary>
         /// Loading an ADV with a container
