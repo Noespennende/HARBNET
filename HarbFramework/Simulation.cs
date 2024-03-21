@@ -10,11 +10,26 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class Simulation : ISimulation
     {
+        /// <summary>
+        /// Start time for simulation
+        /// </summary>
         private DateTime startTime;
+
+        /// <summary>
+        /// Current time in simulation
+        /// </summary>
         private DateTime currentTime;
+
+        /// <summary>
+        /// End time for simulation
+        /// </summary>
         private DateTime endTime;
 
+        /// <summary>
+        /// Gets the harbor object
+        /// </summary>
         private Harbor harbor;
+
         public EventHandler? SimulationEnded;
         public EventHandler? SimulationStarting;
         public EventHandler? DayEnded;
