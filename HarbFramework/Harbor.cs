@@ -999,11 +999,14 @@ namespace Gruppe8.HarbNet
         internal int NumberOfFreeContainerSpaces(ContainerSize containerSize)
         {
             int count = 0;
-            foreach (ContainerSpace containerSpace in allContainerRows)
+            foreach (ContainerRow containerRows in allContainerRows)
             {
-                if (containerSpace.Size == containerSize && containerSpace.Free == true)
+                foreach (ContainerSpace containerSpace in containerRows.RowOfContainerSpaces)
                 {
-                    count++;
+                    if (containerSpace.Size == containerSize && containerSpace.Free == true)
+                    {
+                        count++;
+                    }
                 }
             }
             throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: containerSize.Small, containerSize.Medium or containerSize.Large.", nameof(containerSize));
@@ -1028,12 +1031,14 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the Guid of an avaiable containerspace of specified size</returns>
         internal ContainerSpace GetFreeContainerSpace(ContainerSize containerSize)
         {
-            foreach (ContainerSpace containerSpace in freeContainerSpaces[containerSize])
+            foreach (ContainerRow containerRows in allContainerRows)
             {
-
-                if (containerSpace.Free == true && containerSpace.Size == containerSize)
+                foreach (ContainerSpace containerSpace in containerRows.RowOfContainerSpaces)
                 {
-                    return containerSpace;
+                    if (containerSpace.Free == true && containerSpace.Size == containerSize)
+                    {
+                        return containerSpace;
+                    }
                 }
             }
             throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: containerSize.Small, containerSize.Medium or containerSize.Large.", nameof(containerSize));
