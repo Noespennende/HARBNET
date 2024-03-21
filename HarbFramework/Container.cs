@@ -18,38 +18,39 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Unique ID for container
         /// </summary>
-        /// <return>Returns the unique ID defining a specific container</return>
+        /// <returns>Returns the unique ID defining a specific container</returns>
         public Guid ID { get; }
         /// <summary>
         /// Gets the history of the container
         /// </summary>
-        /// <return>Returns a ReadOnlyCollection of StatusLog objects, each object containing information about one status change of the subject in a simulation.</return>
+        /// <returns>Returns a ReadOnlyCollection of StatusLog objects, each object containing information about one status change of the subject in a simulation.</returns>
         public ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
         /// <summary>
         /// Gets the history of the container
         /// </summary>
-        /// <return>Returns a list of StatusLog objects that contains informations on the status changes the container has been through</return>
+        /// <returns>Returns a list of StatusLog objects that contains informations on the status changes the container has been through</returns>
         internal IList<StatusLog> HistoryIList {  get; } = new List<StatusLog>();
         /// <summary>
         /// Gets the size of the container
         /// </summary>
-        /// <return>Returns the size of the container</return>
+        /// <returns>Returns the size of the container</returns>
         public ContainerSize Size { get; internal set; }
 
         /// <summary>
         /// Gets the containers weight in tonn
         /// </summary>
-        /// <return>Returns the int value of the containers weight in tonn</return>
+        /// <returns>Returns the int value of the containers weight in tonn</returns>
         public int WeightInTonn { get; internal set; }
 
         /// <summary>
         /// Unique ID for the current position
         /// </summary>
-        /// <return>Returns the Guid for the current position of container</return>
+        /// <returns>Returns the Guid for the current position of container</returns>
         public Guid CurrentPosition { get; internal set; }
         /// <summary>
-        /// numbers of days the container has been in storage
+        /// The number of days the container has been in storage
         /// </summary>
+        /// <returns>Returns the int value of the days container has been in storage</returns>
         public int DaysInStorage { get; internal set; }
 
         /// <summary>
@@ -109,6 +110,9 @@ namespace Gruppe8.HarbNet
             
         }
 
+        /// <summary>
+        /// Adds another day the container is in storage
+        /// </summary>
         public void AddAnotherDayInStorage()
         {
             DaysInStorage++;
