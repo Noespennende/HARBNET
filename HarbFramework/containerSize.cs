@@ -16,7 +16,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         None = 0,
         /// <summary>
-        /// Smal container. Weight: 10 tonn.
+        /// Small container. Weight: 10 tonn.
         /// </summary>
         Half = 1,
         /// <summary>
