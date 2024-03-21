@@ -30,37 +30,37 @@ namespace Gruppe8.HarbNet
         /// Gets all loading docks
         /// </summary>
         /// <return>Returns a list of all loading docks</return>
-        internal IList<Dock> allLoadingDocks = new List<Dock>();
+        internal IList<LoadingDock> allLoadingDocks = new List<LoadingDock>();
 
         /// <summary>
         /// Gets all available loading docks
         /// </summary>
         /// <return>Returns a list of all available loading docks</return>
-        internal IList<Dock> freeLoadingDocks = new List<Dock>();
+        internal IList<LoadingDock> freeLoadingDocks = new List<LoadingDock>();
 
         /// <summary>
         /// Gets all ships in loading dock
         /// </summary>
         /// <return>Returns a dictionary with all the ships that are in a loading dock</return>
-        internal IDictionary<Ship, Dock> shipsInLoadingDock = new Dictionary<Ship, Dock>(); // Ship : Dock
+        internal IDictionary<Ship, LoadingDock> shipsInLoadingDock = new Dictionary<Ship, LoadingDock>(); // Ship : Dock
 
         /// <summary>
         /// Gets all ship docks
         /// </summary>
         /// <return>Returns a list of all ship docks</return>
-        internal IList<Dock> allShipDocks = new List<Dock>();
+        internal IList<ShipDock> allShipDocks = new List<ShipDock>();
 
         /// <summary>
         /// Gets all available ship docks
         /// </summary>
         /// <return>Return a list of all available ship docks</return>
-        internal IList<Dock> freeShipDocks = new List<Dock>();
+        internal IList<ShipDock> freeShipDocks = new List<ShipDock>();
 
         /// <summary>
         /// Gets all ships in ship dock
         /// </summary>
         /// <return>Returns a dictionary with all ships in ship dock</return>
-        internal IDictionary<Ship, Dock> shipsInShipDock = new Dictionary<Ship, Dock>(); // Ship : Dock
+        internal IDictionary<Ship, ShipDock> shipsInShipDock = new Dictionary<Ship, ShipDock>(); // Ship : Dock
 
         /// <summary>
         /// Gets all ships in anchorage
@@ -194,30 +194,30 @@ namespace Gruppe8.HarbNet
 
             for (int i = 0; i < numberOfSmallLoadingDocks; i++)
             {
-                allLoadingDocks.Add(new Dock(ShipSize.Small, numberOfCranesPerLoadingDock, LoadsPerCranePerHour));
+                allLoadingDocks.Add(new LoadingDock(ShipSize.Small));
             }
 
             for (int i = 0; i < numberOfMediumLoadingDocks; i++)
             {
-                allLoadingDocks.Add(new Dock(ShipSize.Medium, numberOfCranesPerLoadingDock, LoadsPerCranePerHour));
+                allLoadingDocks.Add(new LoadingDock(ShipSize.Medium));
             }
             for (int i = 0; i < numberOfLargeLoadingDocks; i++)
             {
-                allLoadingDocks.Add(new Dock(ShipSize.Large, numberOfCranesPerLoadingDock, LoadsPerCranePerHour));
+                allLoadingDocks.Add(new LoadingDock(ShipSize.Large));
             }
 
             for (int i = 0; i < numberOfSmallShipDocks; i++)
             {
-                allShipDocks.Add(new Dock(ShipSize.Small));
+                allShipDocks.Add(new ShipDock(ShipSize.Small));
             }
 
             for (int i = 0; i < numberOfMediumShipDocks; i++)
             {
-                allShipDocks.Add(new Dock(ShipSize.Medium));
+                allShipDocks.Add(new ShipDock(ShipSize.Medium));
             }
             for (int i = 0; i < numberOfLargeShipDocks; i++)
             {
-                allShipDocks.Add(new Dock(ShipSize.Large));
+                allShipDocks.Add(new ShipDock(ShipSize.Large));
             }
 
             CreateContainerSpaces(numberOfFullSizeContainersInEachRow, numberOfHalfSizeContainersInEachRow, numberOfContainerRows);
@@ -569,23 +569,23 @@ namespace Gruppe8.HarbNet
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             
             ShipSize size = shipToBeDocked.ShipSize;
-            Dock dock;
+            LoadingDock loadingDock;
 
             if (FreeLoadingDockExists(size))
             {
-                dock = GetFreeLoadingDock(size);
+                loadingDock = GetFreeLoadingDock(size);
 
-                dock.DockedShip = shipToBeDocked.ID;
-                dock.Free = false;
+                loadingDock.DockedShip = shipToBeDocked.ID;
+                loadingDock.Free = false;
 
-                shipToBeDocked.CurrentLocation = dock.ID;
+                shipToBeDocked.CurrentLocation = loadingDock.ID;
 
-                shipsInLoadingDock.Add(shipToBeDocked, dock);
+                shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
 
                 RemoveShipFromAnchorage(shipToBeDocked.ID);
-                RemoveLoadingDockFromFreeLoadingDocks(dock.ID);
+                RemoveLoadingDockFromFreeLoadingDocks(loadingDock.ID);
                
-                return dock.ID;
+                return loadingDock.ID;
             }
 
             return Guid.Empty; 
@@ -603,24 +603,24 @@ namespace Gruppe8.HarbNet
             Ship shipToBeDocked = GetShipFromShipDock(shipID);
 
             ShipSize size = shipToBeDocked.ShipSize;
-            Dock dock;
+            LoadingDock loadingDock;
 
             if (FreeLoadingDockExists(size))
             {
-                dock = GetFreeLoadingDock(size);
+                loadingDock = GetFreeLoadingDock(size);
 
-                dock.DockedShip = shipToBeDocked.ID;
-                dock.Free = false;
+                loadingDock.DockedShip = shipToBeDocked.ID;
+                loadingDock.Free = false;
 
-                shipToBeDocked.CurrentLocation = dock.ID;
+                shipToBeDocked.CurrentLocation = loadingDock.ID;
 
-                shipsInLoadingDock.Add(shipToBeDocked, dock);
+                shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
 
                 UnDockShipFromShipDockToLoadingDock(shipID);
 
-                RemoveLoadingDockFromFreeLoadingDocks(dock.ID);
+                RemoveLoadingDockFromFreeLoadingDocks(loadingDock.ID);
                 
-                return dock.ID;
+                return loadingDock.ID;
             }
 
             return Guid.Empty;
@@ -634,25 +634,25 @@ namespace Gruppe8.HarbNet
         internal Guid DockShipToShipDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromLoadingDock(shipID) ?? GetShipFromAnchorage(shipID);
-            Dock loadingDock = GetLoadingDockContainingShip(shipID);
+            LoadingDock loadingDock = GetLoadingDockContainingShip(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
-            Dock dock;
+            ShipDock shipDock;
             
             if (FreeShipDockExists(size))
             {
-                
-                dock = GetFreeShipDock(size);
-                dock.DockedShip = shipToBeDocked.ID;
-                dock.Free = false;
 
-                shipToBeDocked.CurrentLocation = dock.ID;
+                shipDock = GetFreeShipDock(size);
+                shipDock.DockedShip = shipToBeDocked.ID;
+                shipDock.Free = false;
+
+                shipToBeDocked.CurrentLocation = shipDock.ID;
                 
-                shipsInShipDock.Add(shipToBeDocked, dock);
+                shipsInShipDock.Add(shipToBeDocked, shipDock);
                 shipsInLoadingDock.Remove(shipToBeDocked);
                 freeLoadingDocks.Add(loadingDock);
-                freeShipDocks.Remove(dock);
+                freeShipDocks.Remove(shipDock);
 
-                return dock.ID;
+                return shipDock.ID;
                 
             }
 
@@ -669,20 +669,20 @@ namespace Gruppe8.HarbNet
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
-            Dock dock;
+            LoadingDock loadingDock;
 
             if (FreeLoadingDockExists(size))
             {
-                dock = GetFreeLoadingDock(size);
-                dock.DockedShip = shipToBeDocked.ID;
-                dock.Free = false;
-                shipToBeDocked.CurrentLocation = dock.ID;
+                loadingDock = GetFreeLoadingDock(size);
+                loadingDock.DockedShip = shipToBeDocked.ID;
+                loadingDock.Free = false;
+                shipToBeDocked.CurrentLocation = loadingDock.ID;
 
-                shipsInLoadingDock.Add(shipToBeDocked, dock);
-                freeLoadingDocks.Remove(dock);
+                shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
+                freeLoadingDocks.Remove(loadingDock);
                 RemoveShipFromAnchorage(shipID);
 
-                return dock.ID;
+                return loadingDock.ID;
 
             }
 
@@ -700,26 +700,25 @@ namespace Gruppe8.HarbNet
         internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeUndocked = GetShipFromLoadingDock(shipID);
-        
-
+       
             if (shipToBeUndocked != null)
             {
-                Dock dock = (Dock)shipsInLoadingDock[shipToBeUndocked];
+                LoadingDock loadingDock = shipsInLoadingDock[shipToBeUndocked];
 
-                dock.DockedShip = Guid.Empty;
-                dock.Free = true;
+                loadingDock.DockedShip = Guid.Empty;
+                loadingDock.Free = true;
 
                 shipToBeUndocked.CurrentLocation = TransitLocationID;
         
 
                 shipsInLoadingDock.Remove(shipToBeUndocked);
-                freeLoadingDocks.Add(dock);
+                freeLoadingDocks.Add(loadingDock);
                 if (!ShipsInTransit.ContainsKey(shipToBeUndocked))
                 {
                     ShipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
                   
                 }
-                return dock.ID;
+                return loadingDock.ID;
             }
 
             return Guid.Empty;
@@ -786,7 +785,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
         /// <returns>Loading dock that contains docked ships</returns>
-        internal Dock GetLoadingDockContainingShip(Guid shipID)
+        internal LoadingDock GetLoadingDockContainingShip(Guid shipID)
         {
             foreach (var item in shipsInLoadingDock)
             {
@@ -822,9 +821,9 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true og false depending on if a free loading dock is available</returns>
         internal bool FreeLoadingDockExists(ShipSize shipSize)
         {
-            foreach (Dock dock in freeLoadingDocks)
+            foreach (LoadingDock loadingDock in freeLoadingDocks)
             {
-                if (dock.Free == true && dock.Size == shipSize)
+                if (loadingDock.Free == true && loadingDock.Size == shipSize)
                 {
                     return true;
                 }
@@ -839,9 +838,9 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true og false depending on if a free ship dock is available</returns>
         internal bool FreeShipDockExists(ShipSize shipSize)
         {
-            foreach (Dock dock in freeShipDocks)
+            foreach (ShipDock shipDock in freeShipDocks)
             {
-                if (dock.Free == true && dock.Size == shipSize)
+                if (shipDock.Free == true && shipDock.Size == shipSize)
                 {
                     return true;
                 }
@@ -854,14 +853,14 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The size of the ship in Small, Medium om Large</param>
         /// <returns>Returns available loading docks</returns>
-        internal Dock GetFreeLoadingDock(ShipSize shipSize)
+        internal LoadingDock GetFreeLoadingDock(ShipSize shipSize)
         {
 
-            foreach (Dock dock in freeLoadingDocks)
+            foreach (LoadingDock loadingDock in freeLoadingDocks)
             {
-                if (dock.Free == true && dock.Size == shipSize)
+                if (loadingDock.Free == true && loadingDock.Size == shipSize)
                 {
-                    return dock;
+                    return loadingDock;
                 }
 
             }
@@ -873,14 +872,14 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The size of the ship in Small, Medium om Large</param>
         /// <returns>Returns available ship docks</returns>
-        internal Dock GetFreeShipDock(ShipSize shipSize)
+        internal ShipDock GetFreeShipDock(ShipSize shipSize)
         {
 
-            foreach (Dock dock in freeShipDocks)
+            foreach (ShipDock shipDock in freeShipDocks)
             {
-                if (dock.Free == true && dock.Size == shipSize)
+                if (shipDock.Free == true && shipDock.Size == shipSize)
                 {
-                    return dock;
+                    return shipDock;
                 }
             }
 
@@ -916,22 +915,22 @@ namespace Gruppe8.HarbNet
 
             if (shipToBeUndocked != null)
             {
-                Dock oldDock = (Dock)shipsInLoadingDock[shipToBeUndocked];
+                LoadingDock loadingDock = shipsInLoadingDock[shipToBeUndocked];
 
-                oldDock.DockedShip = Guid.Empty;
-                oldDock.Free = true;
+                loadingDock.DockedShip = Guid.Empty;
+                loadingDock.Free = true;
 
-                Dock newDock = GetFreeShipDock(shipToBeUndocked.ShipSize);
+                ShipDock shipDock = GetFreeShipDock(shipToBeUndocked.ShipSize);
 
-                shipToBeUndocked.CurrentLocation = newDock.ID;
+                shipToBeUndocked.CurrentLocation = shipDock.ID;
                 shipsInLoadingDock.Remove(shipToBeUndocked);
-                freeLoadingDocks.Add(oldDock);
+                freeLoadingDocks.Add(loadingDock);
                 if (!shipsInShipDock.ContainsKey(shipToBeUndocked))
                 {
-                    shipsInShipDock.Add(shipToBeUndocked, newDock);
+                    shipsInShipDock.Add(shipToBeUndocked, shipDock);
                 }
 
-                return oldDock.ID;
+                return loadingDock.ID;
             }
 
             return Guid.Empty;
@@ -948,22 +947,22 @@ namespace Gruppe8.HarbNet
 
             if (shipToBeUndocked != null)
             {
-                Dock oldDock = (Dock)shipsInShipDock[shipToBeUndocked];
+                ShipDock shipDock = shipsInShipDock[shipToBeUndocked];
 
-                oldDock.DockedShip = Guid.Empty;
-                oldDock.Free = true;
+                shipDock.DockedShip = Guid.Empty;
+                shipDock.Free = true;
 
-                Dock newDock = GetFreeLoadingDock(shipToBeUndocked.ShipSize);
+                LoadingDock loadingDock = GetFreeLoadingDock(shipToBeUndocked.ShipSize);
 
-                shipToBeUndocked.CurrentLocation = newDock.ID;
+                shipToBeUndocked.CurrentLocation = loadingDock.ID;
                 shipsInShipDock.Remove(shipToBeUndocked);
-                freeShipDocks.Add(oldDock);
+                freeShipDocks.Add(shipDock);
                 if (!shipsInLoadingDock.ContainsKey(shipToBeUndocked))
                 {
-                    shipsInLoadingDock.Add(shipToBeUndocked, newDock);
+                    shipsInLoadingDock.Add(shipToBeUndocked, loadingDock);
                 }
 
-                return oldDock.ID;
+                return shipDock.ID;
             }
 
             return Guid.Empty;
@@ -976,11 +975,11 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if specified dock was in the list of free loading docks, or false if specified dock wasn't in the list of free loading docks</returns>
         internal bool RemoveLoadingDockFromFreeLoadingDocks(Guid dockID)
         {
-            foreach (Dock dock in freeLoadingDocks)
+            foreach (LoadingDock loadingDock in freeLoadingDocks)
             {
-                if (dock.ID == dockID)
+                if (loadingDock.ID == dockID)
                 {
-                    freeLoadingDocks.Remove(dock);
+                    freeLoadingDocks.Remove(loadingDock);
                     return true;
                 }
             }
@@ -995,9 +994,9 @@ namespace Gruppe8.HarbNet
         internal int NumberOfFreeLoadingDocks(ShipSize shipSize)
         {
             int count = 0;
-            foreach (Dock dock in freeLoadingDocks)
+            foreach (LoadingDock loadingDock in freeLoadingDocks)
             {
-                if (dock.Free == true && dock.Size == shipSize)
+                if (loadingDock.Free == true && loadingDock.Size == shipSize)
                 {
                     count++;
                 }
@@ -1199,15 +1198,15 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the status of all docks
+        /// Gets the status of all shipdocks
         /// </summary>
-        /// <returns>Returns the status of all docks</returns>
-        public Dictionary<Guid, bool> StatusAllDocks()
+        /// <returns>Returns the status of all shipdocks</returns>
+        public Dictionary<Guid, bool> StatusAllShipDocks()
         {
             Dictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
-            foreach(Dock dock in allShipDocks)
+            foreach(ShipDock shipDock in allShipDocks)
             {
-                dockStatus[dock.ID] = dock.Free;
+                dockStatus[shipDock.ID] = shipDock.Free;
             }
             return dockStatus;
         }
@@ -1221,12 +1220,12 @@ namespace Gruppe8.HarbNet
         {
             StringBuilder sb = new StringBuilder();
             bool dockFree = false;
-            foreach (Dock dock in allLoadingDocks)
+            foreach (LoadingDock loadingDock in allLoadingDocks)
             {
-                if (dockID == dock.ID)
+                if (dockID == loadingDock.ID)
                 {
-                    dockFree = dock.Free;
-                    String dockStatus = $"DockId: {dock.ID}, dock free: {dockFree}";
+                    dockFree = loadingDock.Free;
+                    String dockStatus = $"DockId: {loadingDock.ID}, dock free: {dockFree}";
                     sb.Append(dockStatus);
                 }
             }
@@ -1241,11 +1240,11 @@ namespace Gruppe8.HarbNet
         public string GetStatusAllLoadingDocks()
         {
             StringBuilder sb = new StringBuilder();
-            Dictionary<Dock, bool> dockStatus = new Dictionary<Dock, bool>();
+            Dictionary<LoadingDock, bool> dockStatus = new Dictionary<LoadingDock, bool>();
 
-            foreach (Dock dock in allLoadingDocks)
+            foreach (LoadingDock loadingDock in allLoadingDocks)
             {
-                dockStatus[dock] = dock.Free;
+                dockStatus[loadingDock] = loadingDock.Free;
 
             }
             foreach (var keyValue in dockStatus)
@@ -1318,9 +1317,9 @@ namespace Gruppe8.HarbNet
         {
             Dictionary<Guid, bool> freeLoadingDock = new Dictionary<Guid, bool>();
 
-            foreach (Dock dock in allShipDocks)
+            foreach (LoadingDock loadingDock in allLoadingDocks)
             {
-                if (dock.Free == true)
+                if (loadingDock.Free == true)
                 {
                     return freeLoadingDock;
                 }
@@ -1336,9 +1335,9 @@ namespace Gruppe8.HarbNet
         bool IHarbor.LoadingDockIsFree(Guid dockID)
         {
             bool dockIsFree = false;
-            foreach (Dock dock in allLoadingDocks)
+            foreach (LoadingDock loadingDock in allLoadingDocks)
             {
-                if (dockID == dock.ID)
+                if (dockID == loadingDock.ID)
                 {
                     dockIsFree = true;
                 }
@@ -1354,9 +1353,9 @@ namespace Gruppe8.HarbNet
         {
             Dictionary<Guid, bool> freeShipDock = new Dictionary<Guid, bool>();
 
-            foreach (Dock dock in allShipDocks)
+            foreach (ShipDock shipDock in allShipDocks)
             {
-                if (dock.Free == true)
+                if (shipDock.Free == true)
                 {
                     return freeShipDock;
                 }

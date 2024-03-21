@@ -11,7 +11,7 @@ namespace Gruppe8.HarbNet
 
         internal IDictionary<Guid, Truck?> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck?>();
 
-        internal LoadingDock(ShipSize shipSize)
+        internal LoadingDock(ShipSize shipSize) : base(shipSize)
         {
             this.Size = shipSize;
         }
@@ -53,6 +53,21 @@ namespace Gruppe8.HarbNet
             }
             return null;
         }
+
+        // FIKSES ELLER FJERNES NÅR HARBOR HAR IMPLEMENTASJON FOR ALLE LOADINGDOCK-CRANER 
+        /*
+        internal Crane? GetFreeLoadingDockCrane()
+        {
+            foreach (Crane crane in AssignedCranes)
+            {
+                if (crane.Container == null)
+                {
+                    return crane;
+                }
+            }
+            return null;
+        }
+        */
 
     }
 }

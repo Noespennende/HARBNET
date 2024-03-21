@@ -140,9 +140,9 @@ namespace Gruppe8.HarbNet
 
                     if (ship.IsForASingleTrip == true)
                     {
-                        Guid shipDock = harbor.StartShipInLoadingDock(ship.ID);
+                        Guid loadingDock = harbor.StartShipInLoadingDock(ship.ID);
 
-                        ship.AddStatusChangeToHistory(currentTime, shipDock, Status.DockedToLoadingDock);
+                        ship.AddStatusChangeToHistory(currentTime, loadingDock, Status.DockedToLoadingDock);
                     }
                     else
                     {
@@ -637,7 +637,7 @@ namespace Gruppe8.HarbNet
             int numberOfContainersForTrucks = ship.GetNumberOfContainersToTrucks();
             int numberOfContainersForStorage = ship.GetNumberOfContainersToStorage();
 
-            Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
+            LoadingDock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
 
 
             // Før: for (int i = 0; i < ship.ContainersLoadedPerHour && ship.ContainersOnBoard.Count > 0; i++)
@@ -735,7 +735,7 @@ namespace Gruppe8.HarbNet
         private Truck? MoveContainerFromShipToTruck(Ship ship, Crane crane)
         {
 
-            Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
+            LoadingDock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
 
             Truck? truck = harbor.GetFreeTruck();
             harbor.RemoveTruckFromQueue(truck);

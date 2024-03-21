@@ -8,7 +8,7 @@ namespace Gruppe8.HarbNet
 {
     internal class ShipDock : Dock
     {
-        internal ShipDock(ShipSize shipSize)
+        internal ShipDock(ShipSize shipSize) : base(shipSize)
         {
             this.Size = shipSize;
             this.Free = true;
