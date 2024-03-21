@@ -18,6 +18,8 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the unique ID defining a specific containerRow</returns>
         internal Guid ID { get; } = Guid.NewGuid();
 
+        internal ContainerSize SizeOfContainersStored { get; }
+
         /// <summary>
         /// Gets the space in the containerRow
         /// </summary>
@@ -39,19 +41,31 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfFullSizeContainerSpaces">Amount of fullSize containerSpaces</param>
         /// <param name="numberOfHalfSizeContainerSpaces">Amount of halfSize containerSpaces</param>
         /// <returns>Returns the containerRow with the amount of fullSize- and halfSizeContainers</returns>
-        internal ContainerRow (int numberOfFullSizeContainerSpaces, int numberOfHalfSizeContainerSpaces)
+        internal ContainerRow (ContainerSize containerSpaceSize, int numberOfContainerSpaces)
         {
             RowOfContainerSpaces = new List<ContainerSpace>();
+            this.SizeOfContainersStored = containerSpaceSize;
 
-            for (int i = 0; i < numberOfFullSizeContainerSpaces; i++)
+            if (containerSpaceSize == ContainerSize.Full)
             {
-                RowOfContainerSpaces.Add(new ContainerSpace(ContainerSize.Full));
-            }
+                
+                for (int i = 0; i < numberOfContainerSpaces; i++)
+                {
+                    RowOfContainerSpaces.Add(new ContainerSpace(ContainerSize.Full));
+                }
+            } else if (containerSpaceSize == ContainerSize.Full)
+            {
+                for (int i = 0; i < numberOfContainerSpaces; i++)
+                {
+                    RowOfContainerSpaces.Add(new ContainerSpace(ContainerSize.Half));
+                }
 
-            for (int i = 0;i < numberOfHalfSizeContainerSpaces; i++)
+            } else
             {
-                RowOfContainerSpaces.Add(new ContainerSpace(ContainerSize.Half));
+                throw new ArgumentOutOfRangeException("The containerSpaceSize you are trying to send inn must be either Half or Full");
             }
+            
+
         }
 
         /// <summary>

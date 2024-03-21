@@ -108,6 +108,8 @@ namespace Gruppe8.HarbNet
 
         internal int AdvLoadsPerHour { get; set; }
 
+        internal IList<Crane> DockCranes { get; set; } = new List<Crane>();
+
         /// <summary>
         /// Gets the unique ID for the transit location
         /// </summary>
@@ -139,9 +141,9 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfSmallContainerSpaces">Total number of small container spaces</param>
         /// <param name="numberOfMediumContainerSpaces">Total number of medium contrainer spaces</param>
         /// <param name="numberOfLargeContainerSpaces">Total number of large container spaces</param>
-        public Harbor(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks, int numberOfCranesPerLoadingDock, int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea,
-            int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,
-            int numberOfContainerRows, int numberOfHalfSizeContainersInEachRow, int numberOfFullSizeContainersInEachRow, int numberOfTrucksArriveToHarborPerHour, int percentageOfContainersDirectlyLoadedToTrucks, int AdvLoadsPerHour)
+        public Harbor(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks, int numberOfCranesNextToLoadingDocks, int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea,
+            int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,  int numberOfContainerRowsWithHalfSizeContainerSpaces, int numberOfContainerRowsWithFullSizeContainerSpaces, int numberOfTrucksArriveToHarborPerHour,
+            int percentageOfContainersDirectlyLoadedFromShipToTrucks, int percentageOfContainerDirectlyLoadedFromHarborStorageToTrucks, int numberOfAdv, int loadsPerAdvPerHour)
         {
 
             this.TrucksArrivePerHour = numberOfTrucksArriveToHarborPerHour;
@@ -318,12 +320,24 @@ namespace Gruppe8.HarbNet
             return containerToBeLoaded;
         }
 
+        internal Crane? GetFreeLoadingDockCrane()
+        {
+            foreach (Crane crane in DockCranes)
+            {
+                if (crane.Container == null)
+                {
+                    return crane;
+                }
+            }
+            return null;
+        }
+
         internal void RemoveTruckFromQueue(Truck truck)
         {
             TrucksInQueue.Remove(truck);
         }
 
-        internal void SendTruckOnTransit(Dock loadingDock, Truck? truck)
+        internal void SendTruckOnTransit(LoadingDock loadingDock, Truck? truck)
         {
             if (truck == null)
             {
@@ -1055,29 +1069,6 @@ namespace Gruppe8.HarbNet
                 }
             }
             return null;
-        }
-
-        /// <summary>
-        /// Removes specific containerspace from free containerspace
-        /// </summary>
-        /// <param name="containerSpaceID">Unique ID of specific container</param>
-        /// <returns>Returns true if specified containerspace is succesfully removed, or returns false if containerspace is not removed</returns>
-        internal bool RemoveContainerSpaceFromFreeContainerSpaces(Guid containerSpaceID)
-        {
-            foreach (KeyValuePair<ContainerSize, List<ContainerSpace>> pair in freeContainerSpaces)
-            {
-                List<ContainerSpace> containerSpaces = pair.Value;
-                for (int i = 0; i < containerSpaces.Count; i++)
-                {
-                    ContainerSpace containerSpace = containerSpaces[i];
-                    if (containerSpace.ID == containerSpaceID)
-                    {
-                        containerSpaces.RemoveAt(i);
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         /// <summary>

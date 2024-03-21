@@ -168,12 +168,12 @@ namespace Gruppe8.HarbNet
         /// <param name="startDate">Date and time for when the ship will start its first voyage</param>
         /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
         /// <param name="roundTripInDays">Number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
-        /// <param name="numberOfSmallContainersOnBoard">How many small containers will be in the ships storage when it enters the harbor for the first time.</param>
+        /// <param name="numberOfHalfContainersOnBoard">How many small containers will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="numberOfMediumContainersOnBoard">How many medium containers will be in the ships storage when it enters the harbor for the first time.</param>
-        /// <param name="numberOfLargeContainersOnBoard">How many Large containers will be in the ships storage when it enters the harbor for the first time.</param>
+        /// <param name="numberOfFullContainersOnBoard">How many Large containers will be in the ships storage when it enters the harbor for the first time.</param>
         public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
-             int numberOfSmallContainersOnBoard, int numberOfMediumContainersOnBoard,
-             int numberOfLargeContainersOnBoard)
+             int numberOfHalfContainersOnBoard, 
+             int numberOfFullContainersOnBoard)
         {
             this.ID = Guid.NewGuid();
             this.Name = shipName;
@@ -199,9 +199,9 @@ namespace Gruppe8.HarbNet
 
             SetBaseShipInformation(shipSize);
 
-            AddContainersOnBoard(ContainerSize.Half, numberOfSmallContainersOnBoard);
+            AddContainersOnBoard(ContainerSize.Half, numberOfHalfContainersOnBoard);
             //AddContainersOnBoard(ContainerSize.Medium, numberOfMediumContainersOnBoard);
-            AddContainersOnBoard(ContainerSize.Full, numberOfLargeContainersOnBoard);
+            AddContainersOnBoard(ContainerSize.Full, numberOfFullContainersOnBoard);
         }
 
         /// <summary>
