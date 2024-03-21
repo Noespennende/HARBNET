@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
+    /// <summary>
+    /// ContainerRow used as storage space for containers in harbor
+    /// </summary>
     internal class ContainerRow
     {
         /// <summary>
@@ -25,7 +28,6 @@ namespace Gruppe8.HarbNet
         /// Gets the containerRow containing a list of containerSpace
         /// </summary>
         /// <param name="RowOfContainerSpaces">The containerSpace in a row</param>
-        /// <returns>Returns a containterRow with a list of containerSpace</returns>
         internal ContainerRow(IList<ContainerSpace> RowOfContainerSpaces)
         {
             this.RowOfContainerSpaces = RowOfContainerSpaces;
@@ -57,13 +59,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="container">unique name for container</param>
         /// <returns>Returns the containerRow that contains the specified container. If container is not found, null is returned</returns>
-        internal ContainerRow GetContainerSpaceContainingContainer (Container container)
+        internal ContainerSpace GetContainerSpaceContainingContainer(Container container)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
             {
                 if (space.storedContainer == container.ID)
                 {
-                    return new ContainerRow(new List<ContainerSpace> { space });
+                    return space;
                 }
             }
 
@@ -75,16 +77,15 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerID">Unique ID for container</param>
         /// <returns>Returns the containerRow as a containerSpace list that contains the space the specified container is in. If container is not found, null is returned</returns>
-        internal ContainerRow GetContainerSpaceContainingContainer(Guid containerID)
+        internal ContainerSpace GetContainerSpaceContainingContainer(Guid containerID)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
             {
                 if (space.storedContainer == containerID)
                 {
-                    return new ContainerRow(new List<ContainerSpace> { space });
+                    return space;
                 }
             }
-
             return null;
         }
 
@@ -93,17 +94,16 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="container">Unique name for container to be added to containerSpace</param>
         /// <returns>Returns the containerRow as a containerSpace list that contains the space the specified container was added to. If free space is not found for the container, null is returned</returns>
-        internal ContainerRow AddContainerToFreeSpace (Container container)
+        internal ContainerSpace AddContainerToFreeSpace(Container container)
         {
-            foreach(ContainerSpace space in RowOfContainerSpaces)
+            foreach (ContainerSpace space in RowOfContainerSpaces)
             {
                 if (space.Size == container.Size && space.Free == true)
                 {
                     space.storedContainer = container.ID;
-                    return new ContainerRow(new List<ContainerSpace> { space });
+                    return space;
                 }
             }
-
             return null;
         }
 
@@ -130,14 +130,14 @@ namespace Gruppe8.HarbNet
         /// <param name="containerID">Unique ID for the container to be added</param>
         /// <param name="sizeOfContainer">Size of the container to be added</param>
         /// <returns>Returns the containerRow as a containerSpace list that contains the space the container was added to, if the size of the container matched with available space size. If not, null is returned</returns>
-        internal ContainerRow AddContainerToFreeSpace(Guid containerID, ContainerSize sizeOfContainer)
+        internal ContainerSpace AddContainerToFreeSpace(Guid containerID, ContainerSize sizeOfContainer)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
             {
                 if (space.Size == sizeOfContainer && space.Free == true)
                 {
                     space.storedContainer = containerID;
-                    return new ContainerRow(new List<ContainerSpace> { space });
+                    return space;
                 }
             }
             return null;
@@ -148,14 +148,14 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerToBeRemoved">Unique name of specific container to be removed</param>
         /// <returns>Returns the containerRow as a containerSpace list that contains the space the container was removed from. If container was not found, null is returned</returns>
-        internal ContainerRow RemoveContainerFromContainerRow (Container containerToBeRemoved)
+        internal ContainerSpace RemoveContainerFromContainerRow(Container containerToBeRemoved)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
             {
                 if (containerToBeRemoved.ID == space.storedContainer)
                 {
                     space.storedContainer = Guid.Empty;
-                    return new ContainerRow(new List<ContainerSpace> { space });
+                    return space;
                 }
             }
 
@@ -167,17 +167,16 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="idOfContainerToBeRemoved">Unique ID of specific container to be removed</param>
         /// <returns>Returns the containerRow as a containerSpace list that contains the space the container was removed from. If container was not found, null is returned</returns>
-        internal ContainerRow RemoveContainerFromContainerRow(Guid idOfContainerToBeRemoved)
+        internal ContainerSpace RemoveContainerFromContainerRow(Guid idOfContainerToBeRemoved)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
             {
                 if (idOfContainerToBeRemoved == space.storedContainer)
                 {
                     space.storedContainer = Guid.Empty;
-                    return new ContainerRow(new List<ContainerSpace> { space });
+                    return space;
                 }
             }
-
             return null;
         }
 

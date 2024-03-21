@@ -455,7 +455,7 @@ namespace Gruppe8.HarbNet
         /// <param name="crane">crane object</param>
         /// <param name="currentTime">the current time</param>
         /// <returns>True or false</returns>
-        internal bool ContainerRowToCrane(ContainerSize size, Crane crane,DateTime currentTime)
+        internal Container ContainerRowToCrane(ContainerSize size, Crane crane,DateTime currentTime)
         {
             if (!(crane.Container == null))
             {
@@ -469,10 +469,10 @@ namespace Gruppe8.HarbNet
                     container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
                     storedContainers[container].RemoveContainerFromContainerRow(container);
                     
-                    return true;
+                    return container;
                 }
             }
-            return false;
+            return null;
         }
 
         internal Adv GetFreeAdv()
