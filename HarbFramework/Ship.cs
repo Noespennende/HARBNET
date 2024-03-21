@@ -117,7 +117,7 @@ namespace Gruppe8.HarbNet
         internal bool HasBeenAlteredThisHour = false;
 
         internal int DirectDeliveryPercentage { get; set; } = 0;
-        internal int ContainersLeftForTrucks { get; set; } = 0; // Kanskje forandre logikken som trenger denne
+        internal int ContainersLeftForTrucks { get; set; } = 0; // Kanskje forandre logikken som trenger denne // NB NB!! Note to Mathilde: Pass på at denne settes på nytt når skipet lastes igjen!! /kommentar slettes senere
 
         /// <summary>
         /// Creates a new ship object.

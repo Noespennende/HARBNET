@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -34,9 +35,9 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid representing the unique ID of the ship docked to this dock</returns>
         internal Guid DockedShip {  get; set; }
 
-        internal IList<Crane> ListOfAssignedCranes { get; set; } = new List<Crane>();
+        internal IList<Crane> AssignedCranes { get; set; } = new List<Crane>();
 
-        internal IDictionary<Guid, Truck> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck>();
+        internal IDictionary<Guid, Truck?> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck?>();
 
         /// <summary>
         /// Creates a new dock object
@@ -48,13 +49,39 @@ namespace Gruppe8.HarbNet
             this.Free = true;
         }
 
-        internal Truck? GetTruckInTruckLoadingSpot()
+        internal Truck? AssignTruckToTruckLoadingSpot(Truck truck)
+        {
+            
+            foreach (var spot in TruckLoadingSpots)
+            {
+                if (spot.Value == null)
+                {
+                    TruckLoadingSpots.Add(spot.Key, truck);
+                }
+            }
+            return null;
+        }
+
+        internal bool TruckExistsInTruckLoadingSpots(Truck truck)
         {
             foreach (var spot in TruckLoadingSpots)
             {
-                if (spot.Value != null)
+                if (spot.Value == truck)
                 {
-                    return spot.Value;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal Truck? RemoveTruckFromTruckLoadingSpot(Truck truck)
+        {
+            foreach (var spot in TruckLoadingSpots)
+            {
+                if (spot.Value == truck)
+                {
+                    TruckLoadingSpots[spot.Key] = null;
+                    return truck;
                 }
             }
             return null;
@@ -62,7 +89,7 @@ namespace Gruppe8.HarbNet
 
         internal Crane? GetFreeLoadingDockCrane()
         {
-            foreach (Crane crane in ListOfAssignedCranes)
+            foreach (Crane crane in AssignedCranes)
             {
                 if (crane.Container == null)
                 {
