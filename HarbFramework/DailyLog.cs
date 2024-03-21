@@ -379,7 +379,6 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ShipsOrContainers">"ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers on the given day of a simulation.</returns>
-
         public String HistoryToString(String ShipsOrContainers) 
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
