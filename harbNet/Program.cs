@@ -10,6 +10,7 @@ namespace TestProgram
     {
         static void Main(string[] args)
         {
+
             //EXAMPLE PROJECT
 
             /*This project sets up and runs a simulation using the public API. Several methods for printing information about the simulation
@@ -23,7 +24,7 @@ namespace TestProgram
             DateTime endTime = startTime + TimeSpan.FromDays(30);
             List<Ship> ships = new List<Ship>();
 
-            
+
 
             // Creating ships that will be simulated in the Simulation
             Ship shipHappens = new("Ship Happens", ShipSize.Large, startTime, false, 7, 25, 10, 15);
@@ -39,10 +40,10 @@ namespace TestProgram
             //ships.Add(skipOHoi);
             //ships.Add(denSorteDame);
 
-        
+
             // Creating the harbor which will be used in the simulation, using the ship list
             Harbor kjuttaviga = new Harbor(ships, 4, 3, 2, 2, 1, 1, 100, 200, 150);
-            
+
             // Creating the simulation object, of which the simulation will run from
             Simulation simulation = new Simulation(kjuttaviga, startTime, endTime);
 
@@ -139,7 +140,7 @@ namespace TestProgram
                 }
 
                 if (!anyLogsPrinted)
-                {  
+                {
                     if (args.ship.History.Count != 0)
                     {
                         Console.WriteLine($"Looks like today has been a pretty quiet day for {args.ship.Name} in the ol' Harbor-ino");
@@ -162,7 +163,7 @@ namespace TestProgram
                 Console.WriteLine($"|         Simulation over!         |");
                 Console.WriteLine($"-----------------------------------");
             };
-           
+
 
             /* Running/starting the Simulation. Run() outputs a list of logs that is created during the simulation. It's worth noting that simulation.Run() will also print
             updates on all ships during the simulation*/
@@ -289,7 +290,7 @@ namespace TestProgram
 
 
             Console.WriteLine("\n-----------PRINTING HISTORY OF A SINGLE SHIP--------------\n");
-            
+
             //Prints the history for a single ship
             ssSolitude.PrintHistory();
 
@@ -302,7 +303,5 @@ namespace TestProgram
             simulation.PrintShipHistory();
 
         }
-
-        
     }
 }
