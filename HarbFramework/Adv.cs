@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
+    /// <summary>
+    /// Cranes to be used in a simulation
+    /// </summary>
     internal class Adv
     {
         /// <summary>

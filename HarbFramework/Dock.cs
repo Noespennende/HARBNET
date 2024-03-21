@@ -35,8 +35,16 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid representing the unique ID of the ship docked to this dock</returns>
         internal Guid DockedShip {  get; set; }
 
+        /// <summary>
+        /// Gets all the cranes in the harbor
+        /// </summary>
+        /// <returns>Returns an IList with crane objects representing the cranes in the harbor</returns>
         internal IList<Crane> AssignedCranes { get; set; } = new List<Crane>();
 
+        /// <summary>
+        /// Gets all the truck loading spots
+        /// </summary>
+        /// <returns>Returns a dictionary with all the loading spots for trucks</returns>
         internal IDictionary<Guid, Truck?> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck?>();
 
         /// <summary>
@@ -49,6 +57,11 @@ namespace Gruppe8.HarbNet
             this.Free = true;
         }
 
+        /// <summary>
+        /// Assigns specific truck to available loading spot for trucks
+        /// </summary>
+        /// <param name="truck">name of spesific truck to be assigned loading spot</param>
+        /// <returns>Returns null</returns>
         internal Truck? AssignTruckToTruckLoadingSpot(Truck truck)
         {
             
@@ -62,6 +75,11 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
+        /// <summary>
+        /// Checks if specific truck has been assigned a loading spot
+        /// </summary>
+        /// <param name="truck">name of specific truck</param>
+        /// <returns>>Returns true if the specified truck exists in a loading spot, and returns false if the truck does not have a loading spot</returns>
         internal bool TruckExistsInTruckLoadingSpots(Truck truck)
         {
             foreach (var spot in TruckLoadingSpots)
@@ -74,6 +92,11 @@ namespace Gruppe8.HarbNet
             return false;
         }
 
+        /// <summary>
+        /// Removes truck from loading spot
+        /// </summary>
+        /// <param name="truck">name of truck to be removed from loading spot</param>
+        /// <returns>Returns the truck that was found in a loading spot and has been removed, or returns null if truck was not found in loading spot</returns>
         internal Truck? RemoveTruckFromTruckLoadingSpot(Truck truck)
         {
             foreach (var spot in TruckLoadingSpots)
@@ -87,6 +110,10 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
+        /// <summary>
+        /// Gets cranes that has free loading docks
+        /// </summary>
+        /// <returns>Returns cranes that does not load any containers, or null if they are loading any containers</returns>
         internal Crane? GetFreeLoadingDockCrane()
         {
             foreach (Crane crane in AssignedCranes)
