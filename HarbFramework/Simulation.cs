@@ -644,7 +644,7 @@ namespace Gruppe8.HarbNet
 
             // Før: for (int i = 0; i < ship.ContainersLoadedPerHour && ship.ContainersOnBoard.Count > 0; i++)
             // Hver kran på LoadingDock gjør max antall avlast - simulerer da at hver kran laster av "samtidig", da hver kran gjør hvert sitt maksimum per time
-            foreach (Crane crane in loadingDock.AssignedCranes)
+            foreach (Crane crane in harbor.DockCranes)
             {
 
                 // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
@@ -1023,7 +1023,7 @@ namespace Gruppe8.HarbNet
 
             Adv loadingDockAdv = harbor.GetFreeAdv();
             Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
-            Crane loadingDockCrane = loadingDock.GetFreeLoadingDockCrane();
+            Crane loadingDockCrane = harbor.GetFreeLoadingDockCrane();
             if (loadingDockAdv == null || loadingDockCrane == null)
             {
                 // EXCEPTION HÅNDTERING ?
