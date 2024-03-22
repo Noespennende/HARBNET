@@ -34,6 +34,7 @@ namespace Client.HarborName
             {
                 storageRows.Add(new ContainerStorageRow(15 * 6 * 4));
             }
+            
 
 
             for (int i = 0 ; i < 7; i++) {

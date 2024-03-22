@@ -40,6 +40,8 @@ namespace Gruppe8.HarbNet
         /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour.
         /// </summary>
         /// <returns>Returns an int value representing the number of days the ship uses to do a round trip at sea.</returns>
+
+        internal TransitStatus TransitStatus { get; set; } 
         public int RoundTripInDays { get; internal set; }
         /// <summary>
         /// Gets the ID of the ships current location
@@ -148,6 +150,7 @@ namespace Gruppe8.HarbNet
             this.IsForASingleTrip = isForASingleTrip;
             this.HistoryIList = new List<StatusLog>();
             this.DirectDeliveryPercentage = directDeliveryPercentage;
+            this.TransitStatus = TransitStatus.Arriving;
 
             if (shipSize == ShipSize.Large)
             {
@@ -167,6 +170,8 @@ namespace Gruppe8.HarbNet
             HistoryIList.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
 
             SetBaseShipInformation(shipSize);
+
+            
 
         }
 
