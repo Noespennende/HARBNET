@@ -88,7 +88,7 @@ namespace Client.HarborName
             {
                 SimulationStartingEventArgs args = (SimulationStartingEventArgs)e;
                 Console.WriteLine("Simulation starting ...");
-                Console.WriteLine($"Simulating {args.harborToBeSimulated.ID} from {args.startDate}\n");
+                Console.WriteLine($"Simulating {args.HarborToBeSimulated.ID} from {args.StartDate}\n");
                 Thread.Sleep(2000);
             };
 
@@ -156,7 +156,7 @@ namespace Client.HarborName
                 DayLoggedEventArgs args = (DayLoggedEventArgs)e;
 
                 Console.WriteLine($"-----------------------------------");
-                Console.WriteLine($"| {args.currentTime} | Day over! |");
+                Console.WriteLine($"| {args.CurrentTime} | Day over! |");
                 Console.WriteLine($"-----------------------------------");
 
             };
@@ -167,27 +167,27 @@ namespace Client.HarborName
 
                 bool anyLogsPrinted = false;
 
-                Console.WriteLine($"** Here is a quick summary of {args.ship.Name}'s movements today: **");
-                if (args.dayReviewShipLogs != null && args.dayReviewShipLogs.Any())
+                Console.WriteLine($"** Here is a quick summary of {args.Ship.Name}'s movements today: **");
+                if (args.DayReviewShipLogs != null && args.DayReviewShipLogs.Any())
                 {
-                    foreach (StatusLog log in args.dayReviewShipLogs)
+                    foreach (StatusLog log in args.DayReviewShipLogs)
                     {
-                        Console.WriteLine($"| {log.PointInTime} | {args.ship.Name} | Status: {log.Status} |");
+                        Console.WriteLine($"| {log.PointInTime} | {args.Ship.Name} | Status: {log.Status} |");
                         anyLogsPrinted = true;
                     }
                 }
 
                 if (!anyLogsPrinted)
                 {
-                    if (args.ship.History.Count != 0)
+                    if (args.Ship.History.Count != 0)
                     {
-                        Console.WriteLine($"Looks like today has been a pretty quiet day for {args.ship.Name} in the ol' Harbor-ino");
-                        Console.WriteLine($"Believe it or not, {args.ship.Name} is still in {args.ship.History.Last().Status}!\n");
+                        Console.WriteLine($"Looks like today has been a pretty quiet day for {args.Ship.Name} in the ol' Harbor-ino");
+                        Console.WriteLine($"Believe it or not, {args.Ship.Name} is still in {args.Ship.History.Last().Status}!\n");
                     }
                     else
                     {
-                        Console.WriteLine($"Looks like we're still waiting for {args.ship.Name} to start!");
-                        Console.WriteLine($"It's start date is {args.ship.StartDate}. It is currently {args.currentTime}\n");
+                        Console.WriteLine($"Looks like we're still waiting for {args.Ship.Name} to start!");
+                        Console.WriteLine($"It's start date is {args.Ship.StartDate}. It is currently {args.CurrentTime}\n");
                     }
                 }
                 Console.WriteLine("-----------------------------------");
@@ -209,7 +209,7 @@ namespace Client.HarborName
             {
                 SimulationStartingEventArgs args = (SimulationStartingEventArgs)e;
                 Console.WriteLine("Simulation starting ...");
-                Console.WriteLine($"Simulating {args.harborToBeSimulated.ID} from {args.startDate}\n");
+                Console.WriteLine($"Simulating {args.HarborToBeSimulated.ID} from {args.StartDate}\n");
                 Thread.Sleep(2000);
             };
 

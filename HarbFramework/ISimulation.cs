@@ -1,4 +1,5 @@
 ﻿using Gruppe8.HarbNet;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Gruppe8.HarbNet
@@ -11,7 +12,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// A list of DailyLog objects containing information about the status of the harbour troughout the duration of a simulation.
         /// </summary>
-        public IList<DailyLog> History { get; }
+        public ReadOnlyCollection<DailyLog> History { get; }
 
         /// <summary>
         /// Starting the simulation
