@@ -1113,41 +1113,7 @@ namespace Gruppe8.HarbNet
 
         }
 
-        /// <summary>
-        /// Loads container from containerspace to ship
-        /// </summary>
-        /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
-        /// <param name="ship">A ship object</param>
-        /// <param name="currentTime">Time container is unloaded</param>
-        /// <returns>Returns the guid to the ship the container was loaded on, or returns empty if container did not exist</returns>
-        internal Guid LoadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
-        {
-            Container containerToBeLoaded = GetStoredContainer(containerSize);
-            ContainerStorageRow storageRow = GETcontainer;
-
-            if (containerToBeLoaded == null || !storedContainers.ContainsKey(containerToBeLoaded))
-            {
-                return Guid.Empty;
-            }
-
-            ContainerSpace containerSpace = storedContainers[containerToBeLoaded];
-
-            ship.AddContainer(containerToBeLoaded);
-            containerToBeLoaded.DaysInStorage = 0;
-            containerToBeLoaded.CurrentPosition = ship.ID;
-
-            containerToBeLoaded.AddStatusChangeToHistory(Status.Transit, currentTime);
-
-            containerSpace.Free = true;
-            containerSpace.StoredContainerOne = Guid.Empty;
-
-            freeContainerSpaces[containerSize].Add(containerSpace);
-            storedContainers.Remove(containerToBeLoaded);
-
-            return ship.ID;
-
-        }
-
+        
         /// <summary>
         /// Adds new ship to anchorage
         /// </summary>
