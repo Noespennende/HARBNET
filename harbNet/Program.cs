@@ -23,6 +23,17 @@ namespace Client.HarborName
             int numberOfLargeShipDocks = 0;
 
             IList<Container> containerList = new List<Container>();
+            IList<ContainerStorageRow> storageRows = new List<ContainerStorageRow>();
+
+            for (int i = 0; i < 24; i++)
+            {
+                storageRows.Add(new ContainerStorageRow(18 * 6 * 4));
+            }
+
+            for (int i = 0; i < 7; i++)
+            {
+                storageRows.Add(new ContainerStorageRow(15 * 6 * 4));
+            }
 
 
             for (int i = 0 ; i < 7; i++) {
@@ -78,7 +89,9 @@ namespace Client.HarborName
                 
             }
 
-            Harbor clientHarbor = new Harbor(clientShips, 1, 1, 1, 7, (((100 * 5) / 24)/7), 10, numberOfSmallShipDocks, numberOfMediumShipDocks, numberOfLargeShipDocks,30,20,5,15,10,20, 1);
+
+
+            Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24)/7), 10, numberOfSmallShipDocks, numberOfMediumShipDocks, numberOfLargeShipDocks,30,15,10,20, 3);
 
             Simulation clientSim = new Simulation(clientHarbor, clientStartTime, clientEndTime);
 

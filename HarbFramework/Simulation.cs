@@ -648,7 +648,7 @@ namespace Gruppe8.HarbNet
             {
 
                 // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
-                int maxLoadsPerHour = Math.Min(harbor.AdvLoadsPerHour, crane.ContainersLoadedPerHour);
+                int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, crane.ContainersLoadedPerHour);
 
                 // Gjør det til maks per time er nådd, eller skipet er tomt
                 for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)

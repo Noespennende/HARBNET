@@ -33,15 +33,16 @@ namespace Gruppe8.HarbNet
         /// Gets or sets the ID of the ship docked to the dock.
         /// </summary>
         /// <returns>Returns a Guid representing the unique ID of the ship docked to this dock</returns>
-        internal Guid DockedShip {  get; set; }
+        internal Guid DockedShip { get; set; }
 
         /// <summary>
         /// Creates a new dock object
         /// </summary>
         ///  <param name="shipSize">Size of the ships that the dock will allow to dock to it</param>
-        internal Dock (ShipSize shipSize)
+        internal Dock(ShipSize shipSize)
         {
             this.Size = shipSize;
             this.Free = true;
         }
+    }
 }

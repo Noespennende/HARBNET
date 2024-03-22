@@ -84,15 +84,16 @@ namespace Gruppe8.HarbNet
         /// Gets all container spaces
         /// </summary>
         /// <return>Returns a dictionary of all container spaces</return>
-        internal IList<ContainerRow> allContainerRows { get; set; }
+        internal IList<ContainerStorageRow> allContainerRows { get; set; }
 
         /// <summary>
         /// Gets all stored containers
         /// </summary>
         /// <return>Returns a dictionary of all stored containers</return>
-        internal IDictionary<Container, ContainerRow> storedContainers = new Dictionary<Container, ContainerRow>(); // Container : ContainerRow
+        internal IDictionary<Container, ContainerStorageRow> storedContainers = new Dictionary<Container, ContainerStorageRow>(); // Container : ContainerRow
 
         internal IList<Crane> HarborStorageAreaCranes { get; set; } = new List<Crane>();
+        internal IList<Crane> DockCranes { get; set; } = new List<Crane>();
 
         internal IList<Adv> AdvWorking { get; set; } = new List<Adv>();
 
@@ -102,13 +103,12 @@ namespace Gruppe8.HarbNet
 
         internal IList<Truck> TrucksInQueue { get; set; } = new List<Truck>();
 
-        internal double PercentOfContainersDirectlyLoaded { get; set; }
+        internal double PercentOfContainersDirectlyLoadedFromShips { get; set; }
+        internal double PercentOfContainersDirectlyLoadedFromStorageArea { get; set; }
 
         internal int TrucksArrivePerHour { get; set; }
 
-        internal int AdvLoadsPerHour { get; set; }
-
-        internal IList<Crane> DockCranes { get; set; } = new List<Crane>();
+        internal int LoadsPerAdvPerHour { get; set; }
 
         /// <summary>
         /// Gets the unique ID for the transit location
@@ -125,6 +125,7 @@ namespace Gruppe8.HarbNet
         public Guid TruckTransitLocationID { get; } = Guid.NewGuid();
         public Guid TruckQueueLocationID { get; } = Guid.NewGuid();
         public Guid HarborStorageAreaID { get; } = Guid.NewGuid();
+        public Guid HarborDockAreaID { get; } = Guid.NewGuid();
 
 
         /// <summary>
@@ -141,20 +142,34 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfSmallContainerSpaces">Total number of small container spaces</param>
         /// <param name="numberOfMediumContainerSpaces">Total number of medium contrainer spaces</param>
         /// <param name="numberOfLargeContainerSpaces">Total number of large container spaces</param>
-        public Harbor(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks, int numberOfCranesNextToLoadingDocks, int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea,
-            int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks,  int numberOfContainerRowsWithHalfSizeContainerSpaces, int numberOfContainerRowsWithFullSizeContainerSpaces, int numberOfTrucksArriveToHarborPerHour,
-            int percentageOfContainersDirectlyLoadedFromShipToTrucks, int percentageOfContainerDirectlyLoadedFromHarborStorageToTrucks, int numberOfAdv, int loadsPerAdvPerHour)
+        public Harbor(IList<Ship> listOfShips, IList<ContainerStorageRow> listOfContainerStorageRows, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
+            int numberOfCranesNextToLoadingDocks, int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea,
+            int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks, int numberOfTrucksArriveToHarborPerHour,
+            int percentageOfContainersDirectlyLoadedFromShipToTrucks, int percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks,
+            int numberOfAdv, int loadsPerAdvPerHour)
         {
 
             this.TrucksArrivePerHour = numberOfTrucksArriveToHarborPerHour;
+            this.allContainerRows = listOfContainerStorageRows.ToList();
+            this.LoadsPerAdvPerHour = loadsPerAdvPerHour;
 
-            if (percentageOfContainersDirectlyLoadedToTrucks > 100 || percentageOfContainersDirectlyLoadedToTrucks < 0)
+            if (percentageOfContainersDirectlyLoadedFromShipToTrucks > 100 || percentageOfContainersDirectlyLoadedFromShipToTrucks < 0)
             {
-                throw new ArgumentOutOfRangeException("percentageOfContainersDirectlyLoadedToTrucks must be a number between 0 and 100");
+                throw new ArgumentOutOfRangeException("percentageOfContainersDirectlyLoadedFromShipToTrucks must be a number between 0 and 100");
             }
 
-            this.PercentOfContainersDirectlyLoaded = (percentageOfContainersDirectlyLoadedToTrucks / 100);
-            this.AdvLoadsPerHour = AdvLoadsPerHour;
+            if (percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks > 100 || percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks < 0)
+            {
+                throw new ArgumentOutOfRangeException("percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks must be a number between 0 and 100");
+            }
+
+            this.PercentOfContainersDirectlyLoadedFromShips = (percentageOfContainersDirectlyLoadedFromShipToTrucks / 100);
+            this.PercentOfContainersDirectlyLoadedFromStorageArea = (percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks / 100);
+
+            for (int i = 0; i < numberOfCranesNextToLoadingDocks; i++)
+            {
+                DockCranes.Add(new Crane(LoadsPerCranePerHour, HarborDockAreaID));
+            }
 
             for (int i = 0; i < numberOfCranesOnHarborStorageArea; i++)
             {
@@ -220,8 +235,6 @@ namespace Gruppe8.HarbNet
                 allShipDocks.Add(new ShipDock(ShipSize.Large));
             }
 
-            CreateContainerSpaces(numberOfFullSizeContainersInEachRow, numberOfHalfSizeContainersInEachRow, numberOfContainerRows);
-
             AllShips = listOfShips.ToList();
 
             freeShipDocks = allShipDocks.ToList();
@@ -236,13 +249,13 @@ namespace Gruppe8.HarbNet
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <param name="numberOfSpaces">The number of containers the harbor can hold</param>
         /// <return>Returns nothing</return>
-        internal void CreateContainerSpaces(int numberOfFullSizeContainerSpaces, int numberOfHalfSizeContainerSpaces, int numberOfContainerRows)
+        internal void CreateContainerSpaces(int numberOfContainerSpaces, int numberOfContainerRows)
         {
-            IList <ContainerRow> containerRows = new List <ContainerRow>();
+            IList <ContainerStorageRow> containerRows = new List <ContainerStorageRow>();
 
             for (int j = 0; j < numberOfContainerRows; j++)
             {
-                containerRows.Add(new ContainerRow(numberOfFullSizeContainerSpaces, numberOfHalfSizeContainerSpaces));
+                containerRows.Add(new ContainerStorageRow(numberOfContainerSpaces));
             }
 
             this.allContainerRows = containerRows;
@@ -448,7 +461,7 @@ namespace Gruppe8.HarbNet
         {
             Container container = crane.UnloadContainer();
 
-            foreach (ContainerRow CR in allContainerRows)
+            foreach (ContainerStorageRow CR in allContainerRows)
             {
                 if (CR.CheckIfFreeContainerSpaceExists(container.Size))
                 {
@@ -546,13 +559,13 @@ namespace Gruppe8.HarbNet
         /// finds the number of free container spaces
         /// </summary>
         /// <returns>an int with how many free spaces there are</returns>
-        internal int numberOfFreeContainerSpaces ()
+        internal int numberOfFreeContainerSpaces (ContainerSize size)
         {
             int count = 0;
 
-            foreach (ContainerRow containerRow in allContainerRows)
+            foreach (ContainerStorageRow containerRow in allContainerRows)
             {
-                count += containerRow.numberOfFreeContainerSpaces();
+                count += containerRow.numberOfFreeContainerSpaces(size);
             }
 
             return count;
@@ -1011,18 +1024,18 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the total number of available loading containerspaces of specified size</returns>
         internal int NumberOfFreeContainerSpaces(ContainerSize containerSize)
         {
-            int count = 0;
-            foreach (ContainerRow containerRows in allContainerRows)
+            if (containerSize == ContainerSize.None)
             {
-                foreach (ContainerSpace containerSpace in containerRows.RowOfContainerSpaces)
-                {
-                    if (containerSpace.Size == containerSize && containerSpace.Free == true)
-                    {
-                        count++;
-                    }
-                }
+                throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: ContainerSize.Half or ContainerSize.Full", nameof(containerSize));
             }
-            throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: containerSize.Small, containerSize.Medium or containerSize.Large.", nameof(containerSize));
+
+            int count = 0;
+            foreach (ContainerStorageRow containerRow in allContainerRows)
+            {
+                count += containerRow.numberOfFreeContainerSpaces(containerSize);
+            }
+
+            return count;
         }
 
         /// <summary>
@@ -1042,16 +1055,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">The size of the container in Small, Medium om Large</param>
         /// <returns>Returns the Guid of an avaiable containerspace of specified size</returns>
-        internal ContainerSpace GetFreeContainerSpace(ContainerSize containerSize)
+        internal ContainerStorageRow GetContainerRowWithFreeSpace(ContainerSize containerSize)
         {
-            foreach (ContainerRow containerRows in allContainerRows)
+            foreach (ContainerStorageRow containerRow in allContainerRows)
             {
-                foreach (ContainerSpace containerSpace in containerRows.RowOfContainerSpaces)
+                if (containerRow.CheckIfFreeContainerSpaceExists(containerSize))
                 {
-                    if (containerSpace.Free == true && containerSpace.Size == containerSize)
-                    {
-                        return containerSpace;
-                    }
+                    return containerRow;
                 }
             }
             throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: containerSize.Small, containerSize.Medium or containerSize.Large.", nameof(containerSize));
@@ -1085,24 +1095,17 @@ namespace Gruppe8.HarbNet
         internal Guid UnloadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
         {
             Container containerToBeUnloaded = ship.GetContainer(containerSize);
-            ContainerSpace containerSpace = GetFreeContainerSpace(containerSize);
-
-            if (containerToBeUnloaded == null || containerSpace == null)
+            ContainerStorageRow containerRow = GetContainerRowWithFreeSpace(containerSize);
+            
+            if (containerToBeUnloaded == null || containerRow == null)
             {
-
                 return Guid.Empty;
-
             }
 
             ship.RemoveContainer(containerToBeUnloaded.ID);
+            storedContainers.Add(containerToBeUnloaded, containerRow);
 
-            freeContainerSpaces[containerSize].Remove(containerSpace);
-
-            storedContainers.Add(containerToBeUnloaded, containerSpace);
-
-            containerSpace.storedContainer = containerToBeUnloaded.ID;
-            containerSpace.Free = false;
-
+            ContainerSpace containerSpace = containerRow.AddContainerToFreeSpace(containerToBeUnloaded);
             containerToBeUnloaded.CurrentPosition = containerSpace.ID;
             containerToBeUnloaded.AddStatusChangeToHistory(Status.InStorage, currentTime);
 
@@ -1120,12 +1123,11 @@ namespace Gruppe8.HarbNet
         internal Guid LoadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
         {
             Container containerToBeLoaded = GetStoredContainer(containerSize);
+            ContainerStorageRow storageRow = GETcontainer;
 
             if (containerToBeLoaded == null || !storedContainers.ContainsKey(containerToBeLoaded))
             {
-
                 return Guid.Empty;
-
             }
 
             ContainerSpace containerSpace = storedContainers[containerToBeLoaded];
@@ -1137,7 +1139,7 @@ namespace Gruppe8.HarbNet
             containerToBeLoaded.AddStatusChangeToHistory(Status.Transit, currentTime);
 
             containerSpace.Free = true;
-            containerSpace.storedContainer = Guid.Empty;
+            containerSpace.StoredContainerOne = Guid.Empty;
 
             freeContainerSpaces[containerSize].Add(containerSpace);
             storedContainers.Remove(containerToBeLoaded);
@@ -1382,46 +1384,7 @@ namespace Gruppe8.HarbNet
             return statusOfAllShips;
         }
 
-        /// <summary>
-        /// Add specified number of containers to storedcontainers in harbor
-        /// </summary>
-        /// <param name="numberOfcontainers">Specified number of containers</param>
-        /// <param name="currentTime">Time container is added to harbor</param>
-        internal void AddContainersToHarbor(int numberOfcontainers, DateTime currentTime)
-        {
-
-            for (int i = 0; i < numberOfcontainers; i++)
-            {
-                Container containerToBeStored = new Container(ContainerSize.Half, 10, this.ID);
-
-                if (i % 3 == 0)
-                {
-                    containerToBeStored = new Container(ContainerSize.Half, 10, this.ID);
-                }
-                if (i % 3 == 1)
-                {
-                    containerToBeStored = new Container(ContainerSize.Medium, 15, this.ID);
-                }
-                if (i % 3 == 2)
-                {
-                    containerToBeStored = new Container(ContainerSize.Full, 15, this.ID);
-                }
-
-                ContainerSize containerSize = containerToBeStored.Size;
-                ContainerSpace containerSpace = GetFreeContainerSpace(containerSize);
-
-                freeContainerSpaces[containerSize].Remove(containerSpace);
-
-                storedContainers.Add(containerToBeStored, containerSpace);
-
-                containerSpace.storedContainer = containerToBeStored.ID;
-                containerSpace.Free = false;
-
-                containerToBeStored.CurrentPosition = containerSpace.ID;
-                containerToBeStored.AddStatusChangeToHistory(Status.InStorage, currentTime);
-            }
-                
-        }
+       
 
         /// <summary>
         /// Gets all containers stored in harbor
@@ -1492,7 +1455,7 @@ namespace Gruppe8.HarbNet
         public override string ToString()
         {
             return ($"ID: {ID}, Ships in loading docks: {shipsInLoadingDock.Count}, Free loading docks: {freeLoadingDocks.Count}, Ships in ship docks: {shipsInShipDock.Count}, Free ship docks: {freeShipDocks.Count}, " +
-                $", Ships in anchorage: {Anchorage.Count}, Ships in transit: {ShipsInTransit.Count}, Containers stored in harbor: {storedContainers.Count}, Free harbor container spaces: {freeContainerSpaces.Count}");
+                $", Ships in anchorage: {Anchorage.Count}, Ships in transit: {ShipsInTransit.Count}, Containers stored in harbor: {storedContainers.Count}");
         }
     }
 }
