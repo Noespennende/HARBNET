@@ -15,12 +15,16 @@ namespace Client.HarborName
             DateTime clientStartTime = new DateTime(2024, 3, 1, 8, 0, 0);
             DateTime clientEndTime = clientStartTime + TimeSpan.FromDays(7);
 
+            ShipNames shipNames = new ShipNames();
+
             IList<Ship> clientShips = new List<Ship>();
 
             Random rand = new Random();
             int numberOfSmallShipDocks= 0;
             int numberOfMediumShipDocks = 0;
             int numberOfLargeShipDocks = 0;
+
+            int count = 0;
 
             IList<Container> containerList = new List<Container>();
             IList<ContainerStorageRow> storageRows = new List<ContainerStorageRow>();
@@ -85,7 +89,8 @@ namespace Client.HarborName
                     DateTime startDate = clientStartTime.AddDays(rand.Next(0, 7));
 
 
-                    clientShips.Add(new Ship(("ShipNumber " + i + " - " + j), shipSize, startDate ,singleTrip, rand.Next(0, 6), rand.Next(1, (containerCount / 2)), rand.Next(1, (containerCount / 2))));
+                    clientShips.Add(new Ship((shipNames.Names[count]), shipSize, startDate ,singleTrip, rand.Next(0, 6), rand.Next(1, (containerCount / 2)), rand.Next(1, (containerCount / 2))));
+                    count++;
                 }
                 
             }
