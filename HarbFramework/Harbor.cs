@@ -339,13 +339,26 @@ namespace Gruppe8.HarbNet
             TrucksInQueue.Remove(truck);
         }
 
-        internal void SendTruckOnTransit(LoadingDock loadingDock, Truck? truck)
+        internal void SendTruckOnTransit(LoadingDock loadingDock, Container container)
         {
+            Truck? truck = null;
+
+            foreach (var pair in loadingDock.TruckLoadingSpots)
+            {
+                if (pair.Value.Container == container)
+                {
+                    truck = pair.Value; 
+                    break; 
+                }
+            }
+            
             if (truck == null)
             {
-                // EXCEPTION ??
+                throw new NullReferenceException("Did not find truck containing the given container");
+                // EXCEPTION?
             }
-            else if (!loadingDock.TruckExistsInTruckLoadingSpots(truck))
+
+            if (!loadingDock.TruckExistsInTruckLoadingSpots(truck))
             {
                 if (TrucksInTransit.Contains(truck))
                 {

@@ -704,9 +704,10 @@ namespace Gruppe8.HarbNet
 
                         ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.DockingToShipDock);
                     }
+                    */
 
                     ship.HasBeenAlteredThisHour = true;
-                    */
+                    
                 }
 
             }
@@ -781,12 +782,17 @@ namespace Gruppe8.HarbNet
                         {
                             Container container = MoveContainerFromShipToAdv(ship, crane);
                             MoveContainerFromAdvToStorage(container);
+                            Console.WriteLine("Unloading " + ship.Name + " " + container.ID);
                         }
 
                         if (numberOfContainersForTrucks != 0 && harbor.TrucksInQueue.Count != 0)
                         {
-                            Truck? truck = MoveContainerFromShipToTruck(ship, crane);
-                            harbor.SendTruckOnTransit(loadingDock, truck);
+                            Container? container = MoveContainerFromShipToTruck(ship, crane);
+                            if (container != null)
+                            {
+                                harbor.SendTruckOnTransit(loadingDock, container);
+                            }
+                            Console.WriteLine("Unloading " + ship.Name + " " + container.ID);
                         }
                     }
                 }
@@ -860,7 +866,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ship">The ship the container is unloaded from</param>
         /// <param name="crane">The crane at the dock that is used for moving between ship and truck</param>
-        private Truck? MoveContainerFromShipToTruck(Ship ship, Crane crane)
+        private Container? MoveContainerFromShipToTruck(Ship ship, Crane crane)
         {
 
             LoadingDock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
@@ -880,11 +886,12 @@ namespace Gruppe8.HarbNet
                 return null;
             }
             
-            harbor.ShipToCrane(ship, crane, currentTime);
+            Container container = harbor.ShipToCrane(ship, crane, currentTime);
             harbor.CraneToTruck(crane, truck, currentTime);
             ship.ContainersLeftForTrucks--;
 
-            return truck;
+            return container;
+            //return truck;
 
             // Event og status håndtering kommer //
 
@@ -1105,7 +1112,7 @@ namespace Gruppe8.HarbNet
 
                 bool exceedsMaxWeight = ship.CurrentWeightInTonn + (int)ContainerSize.Half > ship.MaxWeightInTonn;
                 bool exceedsMaxCapacity = ship.ContainersOnBoard.Count + 1 > ship.ContainerCapacity;
-                if (!(exceedsMaxWeight && exceedsMaxCapacity))
+                if (!(exceedsMaxWeight || exceedsMaxCapacity))
                 {
                     containerToBeLoaded = MoveOneContainerFromContainerRowToShip(ContainerSize.Half, ship);
                     return containerToBeLoaded;
@@ -1117,7 +1124,7 @@ namespace Gruppe8.HarbNet
                 bool exceedsMaxWeight = ship.CurrentWeightInTonn + (int)ContainerSize.Full > ship.MaxWeightInTonn;
                 bool exceedsMaxCapacity = ship.ContainersOnBoard.Count + 1 > ship.ContainerCapacity;
 
-                if (!(exceedsMaxWeight && exceedsMaxCapacity))
+                if (!(exceedsMaxWeight || exceedsMaxCapacity))
                 {
 
                     containerToBeLoaded = MoveOneContainerFromContainerRowToShip(ContainerSize.Full, ship);
@@ -1156,7 +1163,8 @@ namespace Gruppe8.HarbNet
                 return null;
             }
             harbor.AdvToCrane(loadingDockCrane, adv, currentTime);
-
+            harbor.CraneToShip(loadingDockCrane, ship, currentTime);
+            Console.WriteLine("Loading, crane: " + loadingDockCrane.Container);
             return container;
 
         }
