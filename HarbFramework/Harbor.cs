@@ -190,6 +190,11 @@ namespace Gruppe8.HarbNet
                 }
             }
 
+            for (int i = 0; i < numberOfAdv; i++)
+            {
+                AdvFree.Add(new(HarborDockAreaID));
+            }
+
             
             for (int i = 0; i < numberOfSmallLoadingDocks; i++)
             {

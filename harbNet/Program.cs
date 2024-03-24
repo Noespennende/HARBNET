@@ -13,7 +13,7 @@ namespace Client.HarborName
 
             //CLIENT HARBOR 
             DateTime clientStartTime = new DateTime(2024, 3, 1, 8, 0, 0);
-            DateTime clientEndTime = clientStartTime + TimeSpan.FromDays(7);
+            DateTime clientEndTime = clientStartTime + TimeSpan.FromDays(20);
 
             ShipNames shipNames = new ShipNames();
 
@@ -38,9 +38,9 @@ namespace Client.HarborName
             {
                 storageRows.Add(new ContainerStorageRow(15 * 6 * 4));
             }
-            
 
-
+            // Kommentert ut for enklere testing. Fjerner kommentering når alt er OK
+            /*
             for (int i = 0 ; i < 7; i++) {
                 for (int j = 0 ; j < 20; j++) {
                     ShipSize shipSize;
@@ -94,13 +94,16 @@ namespace Client.HarborName
                 }
                 
             }
+            */
+            
 
+            clientShips.Add(new Ship(("Ship solo"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2))));
 
+            clientShips.Add(new Ship(("Ship requring"), ShipSize.Large, clientStartTime, false, rand.Next(0, 6), rand.Next(1, (99 / 2)), rand.Next(1, (99 / 2))));
 
             Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24)/7), 10, numberOfSmallShipDocks, numberOfMediumShipDocks, numberOfLargeShipDocks,30,15,10,20, 3);
 
             Simulation clientSim = new Simulation(clientHarbor, clientStartTime, clientEndTime);
-
 
             //subscribing to events
             clientSim.SimulationStarting += (sender, e) =>
@@ -172,7 +175,7 @@ namespace Client.HarborName
 
             clientSim.DayEnded += (sender, e) =>
             {
-                DayLoggedEventArgs args = (DayLoggedEventArgs)e;
+                DayOverEventArgs args = (DayOverEventArgs)e;
 
                 Console.WriteLine($"-----------------------------------");
                 Console.WriteLine($"| {args.CurrentTime} | Day over! |");
@@ -222,6 +225,7 @@ namespace Client.HarborName
             };
 
 
+            clientSim.Run();
 
             //unsubscribing to events
             clientSim.SimulationStarting -= (sender, e) =>
