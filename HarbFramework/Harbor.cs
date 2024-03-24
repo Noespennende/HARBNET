@@ -497,6 +497,7 @@ namespace Gruppe8.HarbNet
                     crane.LoadContainer(container);
                     container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
                     storedContainers[container].RemoveContainerFromContainerRow(container);
+                    storedContainers.Remove(container);
                     
                     return container;
                 }
@@ -665,6 +666,9 @@ namespace Gruppe8.HarbNet
                 shipsInShipDock.Add(shipToBeDocked, shipDock);
                 shipsInLoadingDock.Remove(shipToBeDocked);
                 freeLoadingDocks.Add(loadingDock);
+                loadingDock.DockedShip = Guid.Empty;
+                loadingDock.Free = true;
+
                 freeShipDocks.Remove(shipDock);
 
                 return shipDock.ID;
@@ -879,7 +883,8 @@ namespace Gruppe8.HarbNet
                 }
 
             }
-            throw new ArgumentException("Invalid input. That shipSize does not exist. Valid shipSize is: shipSize.Small, shipSize.Medium or shipSize.Large.", nameof(shipSize));
+            return null;
+            //throw new ArgumentException("Invalid input. That shipSize does not exist. Valid shipSize is: shipSize.Small, shipSize.Medium or shipSize.Large.", nameof(shipSize));
         }
 
         /// <summary>

@@ -95,13 +95,18 @@ namespace Client.HarborName
                 
             }
             */
+
+            Ship ship1 = new Ship(("Ship solo 1"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2)));
+            Ship ship2 = new Ship(("Ship solo 2"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2)));
+            Ship ship3 = new Ship(("Ship recurring"), ShipSize.Large, clientStartTime, false, rand.Next(0, 6), rand.Next(1, (99 / 2)), rand.Next(1, (99 / 2)));
             
+            clientShips.Add(ship1);
+            clientShips.Add(ship2);
+            clientShips.Add(ship3);
 
-            clientShips.Add(new Ship(("Ship solo"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2))));
 
-            clientShips.Add(new Ship(("Ship recurring"), ShipSize.Large, clientStartTime, false, rand.Next(0, 6), rand.Next(1, (99 / 2)), rand.Next(1, (99 / 2))));
 
-            Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24)/7), 10, numberOfSmallShipDocks, numberOfMediumShipDocks, numberOfLargeShipDocks,30,15,10,20, 3);
+            Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24)/7), 10, numberOfSmallShipDocks, 1, numberOfLargeShipDocks,30,15,10,20, 3);
 
             Simulation clientSim = new Simulation(clientHarbor, clientStartTime, clientEndTime);
 
@@ -226,6 +231,10 @@ namespace Client.HarborName
 
 
             clientSim.Run();
+
+            clientSim.PrintShipHistory(ship1);
+            clientSim.PrintShipHistory(ship2);
+            clientSim.PrintShipHistory(ship3);
 
             //unsubscribing to events
             clientSim.SimulationStarting -= (sender, e) =>
