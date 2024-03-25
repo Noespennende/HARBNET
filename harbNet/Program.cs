@@ -164,7 +164,7 @@ namespace Client.HarborName
             clientSim.ShipUndocking += (sender, e) =>
             {
                 ShipUndockingEventArgs args = (ShipUndockingEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' undocking from dock ID '{args.DockID}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' undocking from location ID '{args.LocationID}'\n");
             };
 
             clientSim.ShipInTransit += (sender, e) =>
