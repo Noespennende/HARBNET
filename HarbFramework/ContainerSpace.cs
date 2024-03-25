@@ -22,16 +22,24 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a containerSize enum representing the size of the containers that can be stored.</returns>
         internal ContainerSize SizeOfContainerStored { get; set; }
         /// <summary>
-        /// Returns wether or not the dock currently free for ships to dock
+        /// Checks if container space is available for a full size container.
         /// </summary>
-        /// <returns>Returns a boolean that is true if the dock is free and false if it is not</returns>
+        /// <returns>Returns a boolean that is true if the container space is available and false if it is not</returns>
         internal bool FreeOne {  get; set; }
+        /// <summary>
+        /// Checks if container space is available for two half size containers.
+        /// </summary>
+        /// <returns>Returns a boolean that is true if the container space is available and false if it is not</returns>
         internal bool FreeTwo { get; set; }
         /// <summary>
-        /// Gets the ID of the container currently stored in the container space
+        /// Gets the ID of the full size container currently stored in the container space.
         /// </summary>
-        /// <returns>Returns a Guid object representing the ID of the container currently stored in the container space</returns>
+        /// <returns>Returns a Guid object representing the ID of the full container currently stored in the container space.</returns>
         internal Guid StoredContainerOne { get; set; }
+        /// <summary>
+        /// Gets the ID of the half size containers currently stored in the container space.
+        /// </summary>
+        /// <returns>Returns a Guid object representing the ID of the half size containers currently stored in the container space.</returns>
         internal Guid StoredContainerTwo { get; set; }
 
         /// <summary>
