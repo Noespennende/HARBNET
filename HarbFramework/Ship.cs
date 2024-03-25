@@ -612,6 +612,7 @@ namespace Gruppe8.HarbNet
 
             Container containertoUnload = ContainersOnBoard[0];
             ContainersOnBoard.RemoveAt(0);
+            CurrentWeightInTonn -= containertoUnload.WeightInTonn;
 
             return containertoUnload;
         }
