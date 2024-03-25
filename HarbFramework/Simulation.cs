@@ -579,6 +579,7 @@ namespace Gruppe8.HarbNet
 
                         harbor.AddNewShipToAnchorage(ship);
                         ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
+                        ShipAnchoring?.Invoke(this, shipAnchoringEventArgs);
                     }
 
                 }
@@ -675,7 +676,8 @@ namespace Gruppe8.HarbNet
                         {
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Unloading);
 
-                            ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks();
+                            double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips;
+                            ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks(percentTrucks);
                         }
 
                         // ** Unloading **
@@ -783,8 +785,9 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">The ship that is being unloaded</param>
         private void UnloadShipForOneHour(Ship ship)
         {
-            int numberOfContainersForTrucks = ship.GetNumberOfContainersToTrucks();
-            int numberOfContainersForStorage = ship.GetNumberOfContainersToStorage();
+            double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips; 
+            int numberOfContainersForTrucks = ship.GetNumberOfContainersToTrucks(percentTrucks);
+            int numberOfContainersForStorage = ship.GetNumberOfContainersToStorage(percentTrucks);
 
             LoadingDock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
 
@@ -1076,7 +1079,7 @@ namespace Gruppe8.HarbNet
                      (LastLocationWasDockedToShipDock && shipIsSingleTripAndHasNotBeenOnTrip))
                 {
                     Guid currentPosition = lastStatusLog.SubjectLocation;
-
+                    
                     if (ship.ContainersOnBoard.Count < ship.ContainerCapacity && ship.CurrentWeightInTonn < ship.MaxWeightInTonn)
                     {
                         if (harbor.storedContainers.Keys.Count != 0 && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
@@ -1085,12 +1088,11 @@ namespace Gruppe8.HarbNet
                             {
                                 ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
                             }
-
                             LoadShipForOneHour(ship, currentPosition);
 
                         }
 
-                        else
+                       else
                         {
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Undocking);
@@ -1102,7 +1104,6 @@ namespace Gruppe8.HarbNet
                     }
                     else
                     {
-
                         ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
 
@@ -1155,30 +1156,35 @@ namespace Gruppe8.HarbNet
 
             Container? containerToBeLoaded;
 
-            if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null)
-            {
+            bool underMaxWeight;
+            bool underMaxCapacity;
 
-                bool exceedsMaxWeight = ship.CurrentWeightInTonn + (int)ContainerSize.Half > ship.MaxWeightInTonn;
-                bool exceedsMaxCapacity = ship.ContainersOnBoard.Count + 1 > ship.ContainerCapacity;
-                if (!(exceedsMaxWeight || exceedsMaxCapacity))
+            if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null
+                || harbor.GetStoredContainer(ContainerSize.Full) == null && harbor.GetStoredContainer(ContainerSize.Half) != null)
+            {
+                underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Half;
+                underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
+
+                if (underMaxCapacity && underMaxWeight)
                 {
                     containerToBeLoaded = MoveOneContainerFromContainerRowToShip(ContainerSize.Half, ship);
+
                     return containerToBeLoaded;
+
                 }
             }
 
-            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null)
+            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null
+                || harbor.GetStoredContainer(ContainerSize.Half) == null && harbor.GetStoredContainer(ContainerSize.Full) != null)
             {
-                bool exceedsMaxWeight = ship.CurrentWeightInTonn + (int)ContainerSize.Full > ship.MaxWeightInTonn;
-                bool exceedsMaxCapacity = ship.ContainersOnBoard.Count + 1 > ship.ContainerCapacity;
+                underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Full;
+                underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
 
-                if (!(exceedsMaxWeight || exceedsMaxCapacity))
+                if (underMaxCapacity && underMaxWeight)
                 {
-
                     containerToBeLoaded = MoveOneContainerFromContainerRowToShip(ContainerSize.Full, ship);
-
+                    
                     return containerToBeLoaded;
-
                 }
             }
 
@@ -1349,6 +1355,7 @@ namespace Gruppe8.HarbNet
         {
             return ship.HistoryToString();
         }
+
 
         /// <summary>
         /// Returns a string that contains information about the start time, end time of the simulation and the ID of the harbour used.

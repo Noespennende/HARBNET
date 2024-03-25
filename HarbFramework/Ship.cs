@@ -317,10 +317,23 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets the number of containers for trucks to load.
         /// </summary>
+        /// <param name="percentTrucks">The percentage of containers that is to be loaded directly on trucks from ship.</param>
         /// <returns>Returns the int value of the total amount of containers for trucks to load.</returns>
-        internal int GetNumberOfContainersToTrucks()
+        internal int GetNumberOfContainersToTrucks(double percentTrucks)
         {
-            int numberOfContainersToTrucks = ContainersOnBoard.Count() * (DirectDeliveryPercentage / 100);
+            double decimalNumberOfContainers = ContainersOnBoard.Count * percentTrucks;
+
+            int numberOfContainersToTrucks;
+            double decimalPart = decimalNumberOfContainers - Math.Floor(decimalNumberOfContainers);
+
+            if (decimalPart < 0.5)
+            {
+                numberOfContainersToTrucks = (int)Math.Floor(decimalNumberOfContainers);
+            }
+            else
+            {
+                numberOfContainersToTrucks = (int)Math.Ceiling(decimalNumberOfContainers);
+            }
 
             return numberOfContainersToTrucks;
         }
@@ -328,10 +341,11 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets the number of containers going to storage on ship.
         /// </summary>
+        /// <param name="percentTrucks">The percentage of containers that is to be loaded directly on trucks from ship.</param>
         /// <returns>Returns the int value of the total amount of containers in storage onboard ship.</returns>
-        internal int GetNumberOfContainersToStorage()
+        internal int GetNumberOfContainersToStorage(double percentTrucks)
         {
-            int numberOfContainersToStorage = ContainersOnBoard.Count() - GetNumberOfContainersToTrucks();
+            int numberOfContainersToStorage = ContainersOnBoard.Count - GetNumberOfContainersToTrucks(percentTrucks);
 
             return numberOfContainersToStorage;
         }
@@ -612,6 +626,7 @@ namespace Gruppe8.HarbNet
 
             Container containertoUnload = ContainersOnBoard[0];
             ContainersOnBoard.RemoveAt(0);
+            CurrentWeightInTonn -= containertoUnload.WeightInTonn;
 
             return containertoUnload;
         }
