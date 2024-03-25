@@ -10,17 +10,18 @@ namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// ContainerRow used as storage space for containers in harbor.
+    /// Each container storage row represents one row of storage spaces where containers can be stored.
     /// </summary>
     public class ContainerStorageRow : IContainerStorageRow
     {
         /// <summary>
-        /// Gets the unique ID for the containerRow.
+        /// Gets the unique ID for the ContainerRow.
         /// </summary>
         /// <returns>Returns a Guid object representing the containerRows unique ID.</returns>
         public Guid ID { get; } = Guid.NewGuid();
 
         /// <summary>
-        /// Gets a IList of ContainerSpace object containing information about the space in the ContainerRow.
+        /// Gets a IList of ContainerSpace object containing information about the storage space in the ContainerRow.
         /// </summary>
         /// <returns>Returns a IList with ContainerSpace object with information on the containerspace in a containerRow.</returns>
         internal IList<ContainerSpace> RowOfContainerSpaces { get; set; } = new List<ContainerSpace>();
@@ -312,7 +313,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a String containing information about the ContainerSpace.</returns>
         public override String ToString()
         {
-            return $"Row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces}, Stored containers: {GetIDOfAllStoredContainers().Count}";
+            return $"Storage row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces}, Stored containers: {GetIDOfAllStoredContainers().Count}";
         }
 
     }
