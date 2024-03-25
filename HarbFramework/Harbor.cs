@@ -190,6 +190,11 @@ namespace Gruppe8.HarbNet
                 }
             }
 
+            for (int i = 0; i < numberOfAdv; i++)
+            {
+                AdvFree.Add(new(HarborDockAreaID));
+            }
+
             
             for (int i = 0; i < numberOfSmallLoadingDocks; i++)
             {
@@ -334,13 +339,26 @@ namespace Gruppe8.HarbNet
             TrucksInQueue.Remove(truck);
         }
 
-        internal void SendTruckOnTransit(LoadingDock loadingDock, Truck? truck)
+        internal void SendTruckOnTransit(LoadingDock loadingDock, Container container)
         {
+            Truck? truck = null;
+
+            foreach (var pair in loadingDock.TruckLoadingSpots)
+            {
+                if (pair.Value.Container == container)
+                {
+                    truck = pair.Value; 
+                    break; 
+                }
+            }
+            
             if (truck == null)
             {
-                // EXCEPTION ??
+                throw new NullReferenceException("Did not find truck containing the given container");
+                // EXCEPTION?
             }
-            else if (!loadingDock.TruckExistsInTruckLoadingSpots(truck))
+
+            if (!loadingDock.TruckExistsInTruckLoadingSpots(truck))
             {
                 if (TrucksInTransit.Contains(truck))
                 {
@@ -479,6 +497,7 @@ namespace Gruppe8.HarbNet
                     crane.LoadContainer(container);
                     container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
                     storedContainers[container].RemoveContainerFromContainerRow(container);
+                    storedContainers.Remove(container);
                     
                     return container;
                 }
@@ -647,6 +666,9 @@ namespace Gruppe8.HarbNet
                 shipsInShipDock.Add(shipToBeDocked, shipDock);
                 shipsInLoadingDock.Remove(shipToBeDocked);
                 freeLoadingDocks.Add(loadingDock);
+                loadingDock.DockedShip = Guid.Empty;
+                loadingDock.Free = true;
+
                 freeShipDocks.Remove(shipDock);
 
                 return shipDock.ID;
@@ -861,7 +883,8 @@ namespace Gruppe8.HarbNet
                 }
 
             }
-            throw new ArgumentException("Invalid input. That shipSize does not exist. Valid shipSize is: shipSize.Small, shipSize.Medium or shipSize.Large.", nameof(shipSize));
+            return null;
+            //throw new ArgumentException("Invalid input. That shipSize does not exist. Valid shipSize is: shipSize.Small, shipSize.Medium or shipSize.Large.", nameof(shipSize));
         }
 
         /// <summary>

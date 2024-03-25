@@ -14,7 +14,7 @@ namespace Client.HarborName
 
             //CLIENT HARBOR 
             DateTime clientStartTime = new DateTime(2024, 3, 1, 8, 0, 0);
-            DateTime clientEndTime = clientStartTime + TimeSpan.FromDays(7);
+            DateTime clientEndTime = clientStartTime + TimeSpan.FromDays(20);
 
             ShipNames shipNames = new ShipNames();
 
@@ -39,9 +39,9 @@ namespace Client.HarborName
             {
                 storageRows.Add(new ContainerStorageRow(15 * 6 * 4));
             }
-            
 
-
+            // Kommentert ut for enklere testing. Fjerner kommentering når alt er OK
+            /*
             for (int i = 0 ; i < 7; i++) {
                 for (int j = 0 ; j < 20; j++) {
                     ShipSize shipSize;
@@ -95,15 +95,21 @@ namespace Client.HarborName
                 }
                 
             }
+            */
+
+            Ship ship1 = new Ship(("Ship solo 1"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2)));
+            Ship ship2 = new Ship(("Ship solo 2"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2)));
+            Ship ship3 = new Ship(("Ship recurring"), ShipSize.Large, clientStartTime, false, rand.Next(0, 6), rand.Next(1, (99 / 2)), rand.Next(1, (99 / 2)));
+            
+            clientShips.Add(ship1);
+            clientShips.Add(ship2);
+            clientShips.Add(ship3);
 
 
 
-   
-            Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24) / 7), 10, numberOfSmallShipDocks, numberOfMediumShipDocks, numberOfLargeShipDocks, 30, 15, 10, 20, 3);
-   
+            Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24)/7), 10, numberOfSmallShipDocks, 1, numberOfLargeShipDocks,30,15,10,20, 3);
 
             Simulation clientSim = new Simulation(clientHarbor, clientStartTime, clientEndTime);
-
 
             //subscribing to events
             clientSim.SimulationStarting += (sender, e) =>
@@ -175,7 +181,7 @@ namespace Client.HarborName
 
             clientSim.DayEnded += (sender, e) =>
             {
-                DayLoggedEventArgs args = (DayLoggedEventArgs)e;
+                DayOverEventArgs args = (DayOverEventArgs)e;
 
                 Console.WriteLine($"-----------------------------------");
                 Console.WriteLine($"| {args.CurrentTime} | Day over! |");
@@ -225,6 +231,11 @@ namespace Client.HarborName
             };
 
 
+            clientSim.Run();
+
+            clientSim.PrintShipHistory(ship1);
+            clientSim.PrintShipHistory(ship2);
+            clientSim.PrintShipHistory(ship3);
 
             //unsubscribing to events
             clientSim.SimulationStarting -= (sender, e) =>

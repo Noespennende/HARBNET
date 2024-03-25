@@ -16,7 +16,7 @@ namespace Gruppe8.HarbNet
         /// Gets the unique ID for the Adv
         /// </summary>
         /// <return>Returns a Guid object representing the Advs unique ID</return>
-        internal Guid ID { get; set; }
+        internal Guid ID { get; set; } = Guid.NewGuid();
 
         /// <summary>
         /// Gets container
@@ -41,9 +41,8 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="id">Unique Id for the Adv object</param>
         /// <param name="location">Location of the Adv</param>
-        internal Adv (Guid id, Guid location)
+        internal Adv (Guid location)
         {
-            this.ID = id;
             this.Container = null;
             this.Location = location;
         }
