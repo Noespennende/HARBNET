@@ -157,8 +157,16 @@ namespace Gruppe8.HarbNet
             this.IsForASingleTrip = isForASingleTrip;
             this.HistoryIList = new List<StatusLog>();
             this.DirectDeliveryPercentage = directDeliveryPercentage;
-            this.TransitStatus = TransitStatus.Arriving;
 
+            if (isForASingleTrip)
+            {
+                this.TransitStatus = TransitStatus.Leaving;
+            }
+            else
+            {
+                this.TransitStatus = TransitStatus.Arriving;
+            }
+            
             if (shipSize == ShipSize.Large)
             {
                 this.ContainersLoadedPerHour = 8;

@@ -123,7 +123,12 @@ namespace Client.HarborName
                 Thread.Sleep(2000);
             };
 
+            clientSim.OneHourHasPassed += (sender, e) =>
+            {
+                OneHourHasPassedEventArgs args = (OneHourHasPassedEventArgs)e;
+                Console.WriteLine($"| New hour!: {args.CurrentTime.TimeOfDay} |\n");
 
+            };
 
             clientSim.ShipAnchoring += (sender, e) =>
             {
@@ -261,6 +266,8 @@ namespace Client.HarborName
                 Console.WriteLine($"-----------------------------------");
                 Console.WriteLine($"|         Simulation over!         |");
                 Console.WriteLine($"-----------------------------------");
+
+                Thread.Sleep(1000);
             };
 
 

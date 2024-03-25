@@ -32,6 +32,7 @@ namespace Gruppe8.HarbNet
 
         public EventHandler? SimulationEnded;
         public EventHandler? SimulationStarting;
+        public EventHandler? OneHourHasPassed;
         public EventHandler? DayEnded;
         public EventHandler? DayLoggedToSimulationHistory;
         public EventHandler? ShipUndocking;
@@ -76,17 +77,15 @@ namespace Gruppe8.HarbNet
         /// <returns>returns the history of the simulation in the form of log objects where each object contains information about all ships and containers on one day of the simulation.</returns>
         public IList<DailyLog> Run()
         {
-            
-            
+
+            this.currentTime = startTime;
+
             SimulationStartingEventArgs simulationStartingEventArgs = new(harbor, currentTime, "The simulation has started");
             
             SimulationStarting?.Invoke(this, simulationStartingEventArgs);
 
             HistoryIList.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
                         harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
-
-
-            this.currentTime = startTime;
 
             while (currentTime < endTime)
             {
@@ -114,12 +113,15 @@ namespace Gruppe8.HarbNet
 
                 EndOf24HourPeriod();
 
+
+                OneHourHasPassedEventArgs oneHourHasPassedEventArgs = new(currentTime, "One hour has passed in the simulation, which equals to one 'round'");
+                OneHourHasPassed?.Invoke(this, oneHourHasPassedEventArgs);
+
                 continue;
             }
             SimulationEndedEventArgs simulationEndedEventArgs = new SimulationEndedEventArgs(History, "The simulation has reached the end time and has ended.");
 
             SimulationEnded?.Invoke(this, simulationEndedEventArgs);
-            Thread.Sleep(1000);
 
             return History;
 
@@ -150,6 +152,11 @@ namespace Gruppe8.HarbNet
 
                         ShipDockedtoLoadingDock?.Invoke(this, shipDockedToLoadingDockEventArgs);
 
+                    }
+                    else if (ship.IsForASingleTrip == true && harbor.GetFreeLoadingDock(ship.ShipSize) == null)
+                    {
+                        ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchored);
+                        ShipAnchored?.Invoke(this, shipAnchoredEventArgs);
                     }
                     else
                     {
@@ -833,6 +840,7 @@ namespace Gruppe8.HarbNet
                     else if (ShipIsFinishedLoadingContainers(ship, lastStatusLog)) //lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock
                     {
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
+                        ship.TransitStatus = TransitStatus.Leaving;
                     }
 
                     else if (ShipIsUndocking(ship, lastStatusLog)) //lastStatusLog.Status == Status.Undocking && (CurrentTime - lastStatusLog.PointInTime).TotalHours >= 1
@@ -894,6 +902,7 @@ namespace Gruppe8.HarbNet
                         ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from Anchorage.", currentLocation);
 
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
+                        ship.TransitStatus = TransitStatus.Leaving;
 
                         ShipUndocking?.Invoke(this, shipUndockingEventArgs);
                     }
@@ -1006,6 +1015,7 @@ namespace Gruppe8.HarbNet
                             ShipDoneLoading?.Invoke(this, shipDoneLoadingEventArgs);
 
                             ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.Undocking);
+                            ship.TransitStatus = TransitStatus.Leaving;
 
                             ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentLocation);
                             ShipUndocking?.Invoke(this, shipUndockingEventArgs);
@@ -1020,6 +1030,7 @@ namespace Gruppe8.HarbNet
                         ShipDoneLoading?.Invoke(this, shipDoneLoadingEventArgs);
 
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
+                        ship.TransitStatus = TransitStatus.Leaving;
 
                         ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentLocation);
                         ShipUndocking?.Invoke(this, shipUndockingEventArgs);
@@ -1049,6 +1060,7 @@ namespace Gruppe8.HarbNet
                     ShipDoneLoading?.Invoke(this, shipDoneLoadingEventArgs);
 
                     ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Undocking);
+                    ship.TransitStatus = TransitStatus.Leaving;
 
                     ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentPosition);
                     ShipUndocking?.Invoke(this, shipUndockingEventArgs);
@@ -1162,6 +1174,7 @@ namespace Gruppe8.HarbNet
                     {
                         harbor.AddNewShipToAnchorage(ship);
                         ship.AddStatusChangeToHistory(currentTime, CurrentPosition, Status.Anchoring);
+                        ship.TransitStatus = TransitStatus.Arriving;
 
                         ShipAnchoringEventArgs shipAnchoringEventArgs = new(ship, currentTime, "Ship is anchoring to anchorage.", harbor.AnchorageID);
                         ShipAnchoring?.Invoke(this, shipAnchoringEventArgs);
@@ -1320,6 +1333,25 @@ namespace Gruppe8.HarbNet
         {
             HarborToBeSimulated = harborToBeSimulated;
             StartDate = startDate;
+            Description = description;
+        }
+    }
+
+    public class OneHourHasPassedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The time in the simulation the event was raised.
+        /// </summary>
+        public DateTime CurrentTime { get; internal set; }
+
+        /// <summary>
+        /// A description of the event.
+        /// </summary>
+        public string Description { get; internal set; }
+
+        public OneHourHasPassedEventArgs(DateTime currentTime, string description)
+        {
+            CurrentTime = currentTime;
             Description = description;
         }
     }
