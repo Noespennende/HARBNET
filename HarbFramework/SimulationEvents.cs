@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
+    /// <summary>
+    /// SimulationEvents to be used in a simulation.
+    /// </summary>
     internal class SimulationEvents
     {
     }

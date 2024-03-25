@@ -8,39 +8,39 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Cranes to be used in a simulation
+    /// Cranes to be used in a simulation.
     /// </summary>
     internal class Adv
     {
         /// <summary>
-        /// Gets the unique ID for the Adv
+        /// Gets the unique ID for the Adv.
         /// </summary>
-        /// <return>Returns a Guid object representing the Advs unique ID</return>
+        /// <return>Returns a Guid object representing the Advs unique ID.</return>
         internal Guid ID { get; set; } = Guid.NewGuid();
 
         /// <summary>
-        /// Gets container
+        /// Gets a container.
         /// </summary>
-        /// <return>Returns a container object</return>
+        /// <return>Returns a container object.</return>
         internal Container Container { get; set; }
 
         /// <summary>
-        /// Gets the status of the Adv
+        /// Gets the current status of the Adv.
         /// </summary>
-        /// <return>Returns the latest registered status of the Adv</return>
+        /// <return>Returns a Status enum representing the latest registered status of the Adv.</return>
         internal Status Status { get; set; }
 
         /// <summary>
-        /// Get the location of the Adv
+        /// Get the current location of the Adv.
         /// </summary>
-        /// <return>Returns the latest registered location of the Adv</return>
+        /// <return>Returns a Guid object representing the latest registered location of the Adv.</return>
         internal Guid Location {  get; set; }
 
         /// <summary>
-        /// Creates a new Adv object
+        /// Creates a new Adv object.
         /// </summary>
-        /// <param name="id">Unique Id for the Adv object</param>
-        /// <param name="location">Location of the Adv</param>
+        /// <param name="id">Unique Id for the Adv to be created.</param>
+        /// <param name="location">Location of the Adv to be created.</param>
         internal Adv (Guid location)
         {
             this.Container = null;
@@ -48,10 +48,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the container that will be loaded from an object to another
+        /// Loads container from a object to another.
         /// </summary>
-        /// <param name="containerToBeLoaded">The specific container object</param>
-        /// <return>Returns the unique Id of the specified container</return>
+        /// <param name="containerToBeLoaded">Container to be loaded.</param>
+        /// <return>Returns a Guid object representing the container to be loaded.</return>
         internal Guid LoadContainer(Container containerToBeLoaded)
         {
             this.Container = containerToBeLoaded;
@@ -59,9 +59,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Get the container that will be unloaded from an object to another
+        /// Unloads container from a object to another.
         /// </summary>
-        /// <return>Returns the container object</return>
+        /// <return>Returns the container object to be unloaded.</return>
         internal Container UnloadContainer()
         {
             Container containerToBeUnloaded = this.Container;

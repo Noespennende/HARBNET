@@ -15,21 +15,21 @@ namespace Gruppe8.HarbNet
     public class ContainerStorageRow : IContainerStorageRow
     {
         /// <summary>
-        /// Gets the unique ID for the ContainerRow
+        /// Gets the unique ID for the ContainerRow.
         /// </summary>
-        /// <returns>Returns the unique ID defining a specific containerRow</returns>
+        /// <returns>Returns a Guid object representing the containerRows unique ID.</returns>
         public Guid ID { get; } = Guid.NewGuid();
 
         /// <summary>
-        /// Gets the storage spaces in the containerRow
+        /// Gets a IList of ContainerSpace object containing information about the storage space in the ContainerRow.
         /// </summary>
-        /// <returns>Returns a list of the containerspace in a containerRow</returns>
+        /// <returns>Returns a IList with ContainerSpace object with information on the containerspace in a containerRow.</returns>
         internal IList<ContainerSpace> RowOfContainerSpaces { get; set; } = new List<ContainerSpace>();
 
         /// <summary>
-        /// Gets the containerRow containing a list of containerSpace
+        /// Gets the amount of ContainerSpace in a ContainerRow.
         /// </summary>
-        /// <param name="RowOfContainerSpaces">The containerSpace in a row</param>
+        /// <param name="numberOfContainerStorageSpaces">Amount of ContainerSpaces to be created.</param>
         public ContainerStorageRow(int numberOfContainerStorageSpaces)
         {
             for (int i = 0; i < numberOfContainerStorageSpaces; i++)
@@ -39,10 +39,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the containerSpace that contains a specific container
+        /// Gets the cCntainerSpace that contains a container.
         /// </summary>
-        /// <param name="container">unique name for container</param>
-        /// <returns>Returns the containerRow that contains the specified container. If container is not found, null is returned</returns>
+        /// <param name="container">Name of the container to be checked if it's contained.</param>
+        /// <returns>Returns the containerSpace that contains the specified container, null if not found.</returns>
         internal ContainerSpace GetContainerSpaceContainingContainer(Container container)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
@@ -61,10 +61,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the containerSpace that contains a specific container
+        /// Gets the ContainerSpace that contains a container.
         /// </summary>
-        /// <param name="containerID">Unique ID for container</param>
-        /// <returns>Returns the containerRow as a containerSpace list that contains the space the specified container is in. If container is not found, null is returned</returns>
+        /// <param name="containerID">Unique ID for container to be checked if it's contained.</param>
+        /// <returns>Returns the containerSpace that contains the specified container, null if not found.</returns>
         internal ContainerSpace GetContainerSpaceContainingContainer(Guid containerID)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
@@ -82,10 +82,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Adds specified container to available containerSpace
+        /// Adds container to available ContainerSpace.
         /// </summary>
-        /// <param name="container">Unique name for container to be added to containerSpace</param>
-        /// <returns>Returns the containerRow as a containerSpace list that contains the space the specified container was added to. If free space is not found for the container, null is returned</returns>
+        /// <param name="container">Unique name for the container to be added to containerSpace.</param>
+        /// <returns>Returns the containerSpace the container was added to, null if not found.</returns>
         internal ContainerSpace AddContainerToFreeSpace(Container container)
         {
             if (SizeOfContainersStored() == container.Size || SizeOfContainersStored() == ContainerSize.None)
@@ -111,10 +111,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if there is available containerSpace based on size
+        /// Checks if there is available ContainerSpace based on size.
         /// </summary>
-        /// <param name="size">Size of containerSpace that will be checked for availability</param>
-        /// <returns>Returns true if containerSpace of speicified size is available, returns false if not found</returns>
+        /// <param name="size">Size of containerSpace that will be checked for availability.</param>
+        /// <returns>Returns true if containerSpace of given size is available, false if not found.</returns>
         internal bool CheckIfFreeContainerSpaceExists (ContainerSize size)
         {
             if (SizeOfContainersStored() == size || SizeOfContainersStored() == ContainerSize.None)
@@ -137,11 +137,11 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Adds specific container to available containerSpace
+        /// Add container to available ContainerSpace.
         /// </summary>
-        /// <param name="containerID">Unique ID for the container to be added</param>
-        /// <param name="sizeOfContainer">Size of the container to be added</param>
-        /// <returns>Returns the containerRow as a containerSpace list that contains the space the container was added to, if the size of the container matched with available space size. If not, null is returned</returns>
+        /// <param name="containerID">Unique ID for the container to be added.</param>
+        /// <param name="sizeOfContainer">Size of the container to be added.</param>
+        /// <returns>Returns the containerSpace the container was added to. If container was not not added, null is returned.</returns>
         internal ContainerSpace AddContainerToFreeSpace(Guid containerID, ContainerSize sizeOfContainer)
         {
             if (SizeOfContainersStored() == sizeOfContainer || SizeOfContainersStored() == ContainerSize.None)
@@ -166,10 +166,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Removes specific container from containerRow
+        /// Removes container from ContainerSpace.
         /// </summary>
-        /// <param name="containerToBeRemoved">Unique name of specific container to be removed</param>
-        /// <returns>Returns the containerRow as a containerSpace list that contains the space the container was removed from. If container was not found, null is returned</returns>
+        /// <param name="containerToBeRemoved">Name of the container to be removed.</param>
+        /// <returns>Returns the ContainerSpacethe container was removed from, null if not found.</returns>
         internal ContainerSpace RemoveContainerFromContainerRow(Container containerToBeRemoved)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
@@ -204,10 +204,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Removes specific container from containerRow
+        /// Removes container from ContainerSpace.
         /// </summary>
-        /// <param name="idOfContainerToBeRemoved">Unique ID of specific container to be removed</param>
-        /// <returns>Returns the containerRow as a containerSpace list that contains the space the container was removed from. If container was not found, null is returned</returns>
+        /// <param name="idOfContainerToBeRemoved">Unique ID of the container to be removed.</param>
+        /// <returns>Returns the containerSpace the container was removed from, null if not found.</returns>
         internal ContainerSpace RemoveContainerFromContainerRow(Guid idOfContainerToBeRemoved)
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
@@ -240,9 +240,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the amount of available containerSpaces
+        /// Gets the amount of available containerSpaces.
         /// </summary>
-        /// <returns>Returns the total amount of available containerSpaces</returns>
+        /// <returns>Returns an int value representing the total amount of available containerSpaces.</returns>
         public int numberOfFreeContainerSpaces (ContainerSize size)
         {
             int count = 0;
@@ -266,6 +266,10 @@ namespace Gruppe8.HarbNet
             return count;
         }
 
+        /// <summary>
+        /// Gets the size of the containers stored.
+        /// </summary>
+        /// <returns>Returns the ContainerSize enum representing the containers size of the ContainerSpaces that contains containers, if none is stored, none is returned.</returns>
         public ContainerSize SizeOfContainersStored()
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
@@ -281,6 +285,10 @@ namespace Gruppe8.HarbNet
 
         }
 
+        /// <summary>
+        /// Gets all stored containers.
+        /// </summary>
+        /// <returns>Returns a IList with Guid objects with information of all the containers stored in a ContainerSpace.</returns>
         public IList<Guid> GetIDOfAllStoredContainers()
         {
             IList<Guid> idList = new List<Guid>();
@@ -299,6 +307,10 @@ namespace Gruppe8.HarbNet
             return idList;
         }
 
+        /// <summary>
+        /// Returns a String containing information about the ContainerSpace.
+        /// </summary>
+        /// <returns>Returns a String containing information about the ContainerSpace.</returns>
         public override String ToString()
         {
             return $"Storage row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces}, Stored containers: {GetIDOfAllStoredContainers().Count}";
