@@ -189,7 +189,6 @@ namespace Client.HarborName
     "HMS Thunder Child",
     "USS Monitor",
     "CSS Virginia",
-    "USS Merrimack",
     "USS Cairo",
     "USS Merrimac",
     "USS Monitor",
@@ -236,7 +235,6 @@ namespace Client.HarborName
     "USS Constitution",
     "USS Essex",
     "HMS Phoebe",
-    "USS Essex",
     "HMS Phoebe"
         };
 

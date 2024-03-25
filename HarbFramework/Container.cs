@@ -51,7 +51,7 @@ namespace Gruppe8.HarbNet
         /// The number of days the container has been in storage
         /// </summary>
         /// <returns>Returns the int value of the days container has been in storage</returns>
-        public int DaysInStorage { get; internal set; }
+        internal int DaysInStorage { get; set; }
 
         /// <summary>
         /// Constructor for Container, creates a new container object
@@ -113,7 +113,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Adds another day the container is in storage
         /// </summary>
-        public void AddAnotherDayInStorage()
+        internal void AddAnotherDayInStorage()
         {
             DaysInStorage++;
         }

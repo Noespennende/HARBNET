@@ -57,6 +57,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns an unique Guid defining a specific transitlocation</return>
         public Guid TransitLocationID { get; }
+        public Guid AdvCargoID { get; }
+        public Guid TruckTransitLocationID { get; }
+        public Guid TruckQueueLocationID { get; } 
+        public Guid HarborStorageAreaID { get; } 
+        public Guid HarborDockAreaID { get; } 
 
         /// <summary>
         /// Returns a string value containing information about the harbour, its ships and container spaces.

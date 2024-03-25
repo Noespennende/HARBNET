@@ -281,7 +281,7 @@ namespace Gruppe8.HarbNet
         internal Container CraneToShip(Crane crane, Ship ship, DateTime currentTime)
         {
             Container containerToBeLoaded = crane.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = crane.location;
+            containerToBeLoaded.CurrentPosition = crane.Location;
             containerToBeLoaded.AddStatusChangeToHistory(Status.Loading, currentTime);
             ship.AddContainer(containerToBeLoaded);
             
@@ -315,7 +315,7 @@ namespace Gruppe8.HarbNet
             }
 
             Container containerToBeLoaded = crane.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = crane.location;
+            containerToBeLoaded.CurrentPosition = crane.Location;
             truck.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
 
@@ -403,7 +403,7 @@ namespace Gruppe8.HarbNet
                 throw new AdvCantBeLoadedExeption("The Adv given already has a container in its storage and therefore has no room for the container the crane is trying to load.");
             }
             Container containerToBeLoaded = crane.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = crane.location;
+            containerToBeLoaded.CurrentPosition = crane.Location;
             adv.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAdv, currentTime);
 
@@ -1154,25 +1154,6 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets last registered status of all ships
-        /// </summary>
-        /// <returns>Returns last registered status of all ships</returns>
-        public Dictionary<Ship, Status> GetStatusAllShips()
-        {
-            Dictionary<Ship, Status> shipStatus = new Dictionary<Ship, Status>();
-            
-            foreach (Ship ship in AllShips)
-            {
-                StatusLog test = ship.HistoryIList.Last();
-                if (test != null)
-                {
-                    shipStatus[ship] = test.Status;
-                }
-            }
-            return shipStatus;
-        }
-
-        /// <summary>
         /// Gets the status of all shipdocks
         /// </summary>
         /// <returns>Returns the status of all shipdocks</returns>
@@ -1342,7 +1323,7 @@ namespace Gruppe8.HarbNet
         /// Gets the last registered status from all ships
         /// </summary>
         /// <returns>Return the last registered status of all ships, if they have a status</returns>
-        IDictionary<Ship, Status> IHarbor.GetStatusAllShips()
+        public IDictionary<Ship, Status> GetStatusAllShips()
         {
             Dictionary<Ship, Status> statusOfAllShips = new Dictionary<Ship, Status>();
 

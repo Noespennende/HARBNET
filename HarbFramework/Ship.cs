@@ -67,18 +67,6 @@ namespace Gruppe8.HarbNet
         /// Gets the container capacity of the ship.
         /// </summary>
         /// <returns>Returns an int value representing the max number of containers the ship can store.</returns>
-        public int numberOfSmallContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// Gets the number of small containers on board
-        /// </summary>
-        public int numberOfMediumContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// gets the number of medium containers on boar
-        /// </summary>
-        public int numberOfLargeContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// gets the number of Large containers on board
-        /// </summary>
         public int ContainerCapacity { get; internal set; }
         /// <summary>
         /// Gets the ships max weight the ship in tonns can be before it sinks
@@ -596,7 +584,7 @@ namespace Gruppe8.HarbNet
         /// Unloads container from ship
         /// </summary>
         /// <returns>Returns null if there is zero containers on board, or the container object that will be unloaded</returns>
-        public Container? UnloadContainer()
+        internal Container? UnloadContainer()
         {
             if(ContainersOnBoard.Count <= 0)
             {
