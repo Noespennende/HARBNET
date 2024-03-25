@@ -9,18 +9,19 @@ using System.Xml.Linq;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// ContainerRow used as storage space for containers in harbor
+    /// ContainerRow used as storage space for containers in harbor.
+    /// Each container storage row represents one row of storage spaces where containers can be stored.
     /// </summary>
     public class ContainerStorageRow : IContainerStorageRow
     {
         /// <summary>
-        /// Gets the unique ID for the containerRow
+        /// Gets the unique ID for the ContainerRow
         /// </summary>
         /// <returns>Returns the unique ID defining a specific containerRow</returns>
         public Guid ID { get; } = Guid.NewGuid();
 
         /// <summary>
-        /// Gets the space in the containerRow
+        /// Gets the storage spaces in the containerRow
         /// </summary>
         /// <returns>Returns a list of the containerspace in a containerRow</returns>
         internal IList<ContainerSpace> RowOfContainerSpaces { get; set; } = new List<ContainerSpace>();
@@ -300,7 +301,7 @@ namespace Gruppe8.HarbNet
 
         public override String ToString()
         {
-            return $"Row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces}, Stored containers: {GetIDOfAllStoredContainers().Count}";
+            return $"Storage row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces}, Stored containers: {GetIDOfAllStoredContainers().Count}";
         }
 
     }

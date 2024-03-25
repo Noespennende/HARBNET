@@ -2,6 +2,7 @@
 using Gruppe8.HarbNet;
 using System.Text;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 
 namespace Client.HarborName
@@ -97,7 +98,9 @@ namespace Client.HarborName
 
 
 
-            Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24)/7), 10, numberOfSmallShipDocks, numberOfMediumShipDocks, numberOfLargeShipDocks,30,15,10,20, 3);
+   
+            Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24) / 7), 10, numberOfSmallShipDocks, numberOfMediumShipDocks, numberOfLargeShipDocks, 30, 15, 10, 20, 3);
+   
 
             Simulation clientSim = new Simulation(clientHarbor, clientStartTime, clientEndTime);
 
