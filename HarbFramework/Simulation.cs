@@ -220,6 +220,25 @@ namespace Gruppe8.HarbNet
             shipToBePrinted.PrintHistory();
         }
 
+        public void PrintShipHistory(Guid shipID)
+        {
+
+
+            foreach (Ship ship in harbor.AllShips)
+            {
+                if (ship.ID.Equals(shipID))
+                {
+                    ship.PrintHistory();
+                    break;
+                }
+
+            
+            }
+
+            throw new ShipNotFoundExeption("The ship you are trying to print does not exist in the Harbor the simulation is using.");
+
+        }
+
         /// <summary>
         /// Printing each container in the simulations entire history to console.
         /// </summary>
@@ -1273,6 +1292,22 @@ namespace Gruppe8.HarbNet
             else { return ""; }
         }
 
+        public string HistoryToString(Guid shipID)
+        {
+
+            foreach (Ship ship in harbor.AllShips)
+            {
+                if (ship.ID.Equals(shipID))
+                {
+                    return ship.HistoryToString();
+                }
+
+
+            }
+
+            throw new ShipNotFoundExeption("The ship you are trying to get the history from does not exist in the Harbor object the simulation is using.");
+        }
+
         /// <summary>
         /// Returns a string containing information about the history of all ships or all containers in the simulation.
         /// </summary>
@@ -1324,6 +1359,7 @@ namespace Gruppe8.HarbNet
             return ($"Simulation start time: {startTime.ToString()}, end time: {endTime.ToString()}, harbor ID: {harbor.ID}");
         }
 
+    
     }
 
     /// <summary>

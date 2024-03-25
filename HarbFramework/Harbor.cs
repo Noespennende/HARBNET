@@ -78,7 +78,7 @@ namespace Gruppe8.HarbNet
         /// Gets all ships
         /// </summary>
         /// <return>Returns a list of all ships</return>
-        internal IList<Ship> AllShips { get; } = new List<Ship>(); // Sikkert midlertidig, til vi kan regne på det
+        internal IList<Ship> AllShips { get; } = new List<Ship>();
 
         /// <summary>
         /// Gets all container spaces
