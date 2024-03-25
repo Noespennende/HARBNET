@@ -16,27 +16,27 @@ namespace Gruppe8.HarbNet
         /// </summary>
         None = 0,
         /// <summary>
-        /// Ship is anchoring
+        /// Ship is anchoring.
         /// </summary>
         Anchoring,
         /// <summary>
-        /// Ship is in anchorage
+        /// Ship is in anchorage.
         /// </summary>
         Anchored,
         /// <summary>
-        /// Docking to a free loading dock
+        /// Docking to a free loading dock.
         /// </summary>
         DockingToLoadingDock,
         /// <summary>
-        /// Docking to a free ship dock
+        /// Docking to a free ship dock.
         /// </summary>
         DockingToShipDock,
         /// <summary>
-        /// Docked to a loading dock
+        /// Docked to a loading dock.
         /// </summary>
         DockedToLoadingDock,
         /// <summary>
-        /// Docked to a ship dock
+        /// Docked to a ship dock.
         /// </summary>
         DockedToShipDock,
         /// <summary>
@@ -68,23 +68,23 @@ namespace Gruppe8.HarbNet
         /// </summary>
         InStorage,
         /// <summary>
-        /// Container being loaded to crane
+        /// Container being loaded to crane.
         /// </summary>
         LoadingToCrane,
         /// <summary>
-        /// Unloading container from crane to ship
+        /// Unloading container from crane to ship.
         /// </summary>
         UnloadingFromCraneToShip,
         /// <summary>
-        /// Loading Container to Truck
+        /// Loading Container to Truck.
         /// </summary>
         LoadingToTruck,
         /// <summary>
-        /// Loading Container to ADV
+        /// Loading Container to ADV.
         /// </summary>
         LoadingToAdv,
         /// <summary>
-        /// Truck queuing
+        /// Truck queuing.
         /// </summary>
         Queuing,
     }

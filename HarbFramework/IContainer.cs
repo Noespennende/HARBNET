@@ -8,53 +8,49 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Interface defining the contract the public API of the container class
+    /// Interface defining the contract the public API of the container class.
     /// </summary>
     internal interface IContainer
     {
         /// <summary>
-        /// Unique ID for container
+        /// Gets the unique ID for container.
         /// </summary>
-        /// <return>Returns the unique ID defining a specific container</return>
+        /// <return>Returns a Guid object representing the containers unique ID.</return>
         public Guid ID { get; }
         /// <summary>
-        /// Gets the history of the container
+        /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the ship has gone through throughout a simulation.
         /// </summary>
-        /// <return>Returns a ReadOnlyCollection of StatusLog objects,each object containing information about one status change of the subject in a simulation.</return>
+        /// <return>Returns a ReadOnlyCollection with StatusLog objects with information on status changes the container has gone through throughout a simulation.</return>
         public ReadOnlyCollection<StatusLog> History { get; }
-
         /// <summary>
-        /// Gets the size of the container
+        /// Gets the containers size.
         /// </summary>
-        /// <return>Returns the size of the container</return>
+        /// <returns>Returns a ContainerSize enum representing the containers size.</returns>
         public ContainerSize Size { get; }
-
         /// <summary>
-        /// Gets the containers weight in tonn
+        /// Gets the containers weight in tonn.
         /// </summary>
-        /// <return>Returns the int value of the containers weight in tonn</return>
-        public int WeightInTonn { get;  }
-
+        /// <returns>Returns an int value representing the containers weight in tonn.</returns>
+        public int WeightInTonn { get; }
         /// <summary>
-        /// Unique ID for the current position
+        /// Gets the ID if the containers current position.
         /// </summary>
-        /// <return>Returns the Guid for the current position of container</return>
+        /// <returns>Returns a Guid object representing the ID of the containers current position.</returns>
         public Guid CurrentPosition { get; }
 
         /// <summary>
-        /// Gets current status of container
+        /// Gets current status of the container.
         /// </summary>
-        /// <returns>Returns last status change of container if they have a history. Returns a none status if there is no history registered</returns>
+        /// <returns>Returns a Status enum with the current status of the container.</returns>
         public Status GetCurrentStatus();
-
         /// <summary>
-        /// Prints the containers entire history to console 
+        /// Prints the containers entire history to console.
         /// </summary>
         public void PrintHistory();
         /// <summary>
         /// Returns a String representing the history of the container. 
         /// </summary>
-        /// <returns>String representing the history of a the container</returns>
+        /// <returns>String representing the history of a the container.</returns>
         public String HistoryToString();
         /// <summary>
         /// Returns a String containing information about the container. 

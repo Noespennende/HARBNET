@@ -12,28 +12,32 @@ namespace Gruppe8.HarbNet
     public class StatusLog : IStatusLog
     {
         /// <summary>
-        /// Gets an unique Id of the subject
+        /// Gets the unique ID for the subject.
         /// </summary>
+        /// <returns>Returns a Guid object representing the subjects unique ID.</returns>
         public Guid Subject { get; internal set; }
         /// <summary>
-        /// gets an unique ID of the location of a subject
+        /// Gets the ID of the subjects location.
         /// </summary>
+        /// <returns>Returns a Guid object representing the locations unique ID.</returns>
         public Guid SubjectLocation { get; internal set; }
         /// <summary>
-        /// gets the point in time the status change occured. 
+        /// Gets the date and time the status change occured. 
         /// </summary>
+        /// <returns>Returns a DateTime object representing the date and time the subjects status change occured.</returns>
         public DateTime PointInTime { get; internal set; }
         /// <summary>
-        /// gets the new status of the subject after the status change
+        /// Gets the current status of the subject.
         /// </summary>
+        /// <return>Returns a Status enum representing the latest registered status of the subject.</return>
         public Status Status { get; internal set; }
 
         /// <summary>
         /// Constructor for a StatusLog object. Each object holds information about its subject at the time it went trough a status change.
         /// </summary>
-        /// <param name="subject">The subject that went trough the status change</param>
-        /// <param name="subjectLocation">The location of the subject at the time the subject changed status</param>
-        /// <param name="pointInTime">The point in time the subject changed status</param>
+        /// <param name="subject">Guid of the subject that went trough the status change</param>
+        /// <param name="subjectLocation">Guid of the location of the subject at the time the subject changed status</param>
+        /// <param name="pointInTime">Date and time the subject changed status</param>
         /// <param name="status">The new status of the subject, f.eks Undocking, Loading, Unloading</param>
         internal StatusLog (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
         {
@@ -44,9 +48,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string conraining information about the subject on a given point in time
+        /// Returns a string conraining information about the subject on a given point in time.
         /// </summary>
-        /// <returns> a String containing information about the subject on a given point in time</returns>
+        /// <returns> a String containing information about the subject on a given point in time.</returns>
         override public string ToString()
         {
             return ("Date: " + PointInTime.ToString() + ", Subject ID: " + Subject.ToString() + ", Location: " + SubjectLocation.ToString() + ", Status: " + Status.ToString());

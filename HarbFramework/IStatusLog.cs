@@ -12,24 +12,28 @@ namespace Gruppe8.HarbNet
     public interface IStatusLog
     {
         /// <summary>
-        /// Gets the subject ID
+        /// Gets the unique ID for the Subject.
         /// </summary>
+        /// <returns>Returns a Guid object representing the subjects unique ID.</returns>
         public Guid Subject { get; }
         /// <summary>
-        /// Gets the subject location
+        /// Gets the unique ID for the subjects location.
         /// </summary>
+        /// <returns>Returns a Guid object representing the subjects location unique ID.</returns>
         public Guid SubjectLocation { get; }
         /// <summary>
-        /// gets the point in time the status change occured to the subject.
+        /// Gets the point in time the status change occured to the subject.
         /// </summary>
+        /// <returns>Returns a DateTime object representing the date and time status change occured to the subject.</returns>
         public DateTime PointInTime { get; }
         /// <summary>
-        /// gets the new status of the subject at the time the status change occured. IE: undocking, unloading.
+        /// Gets the new status of the subject at the time the status change occured. IE: undocking, unloading.
         /// </summary>
+        /// <return>Returns a Status enum representing the latest registered status of the subject.</return>
         public Status Status { get; }
 
         /// <summary>
-        /// Returns a string conraining information about the subject on a given point in time
+        /// Returns a string containing information about the subject on a given point in time.
         /// </summary>
         /// <returns> a String containing information about the subject on a given point in time.</returns>
         public String ToString();

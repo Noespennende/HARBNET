@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
+    /// <summary>
+    /// ShipDock to be used in simulation.
+    /// </summary>
     internal class ShipDock : Dock
     {
+        /// <summary>
+        /// Creates new ShipDock object.
+        /// </summary>
+        /// <param name="shipSize">Size of ship the ShipDock to be created can hold.</param>
         internal ShipDock(ShipSize shipSize) : base(shipSize)
         {
             this.Size = shipSize;

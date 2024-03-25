@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Size of containers
+    /// Size of containers.
     /// </summary>
     public enum ContainerSize
     {
         /// <summary>
-        /// No size
+        /// No size.
         /// </summary>
         None = 0,
         /// <summary>

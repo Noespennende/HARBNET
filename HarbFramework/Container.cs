@@ -11,54 +11,52 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Container to be used in the simulation
+    /// Container to be used in the simulation.
     /// </summary>
     public class Container : IContainer
     {
         /// <summary>
-        /// Unique ID for container
+        /// Gets the unique ID for container.
         /// </summary>
-        /// <returns>Returns the unique ID defining a specific container</returns>
+        /// <returns>Returns a Guid object representing the containers unique ID.</returns>
         public Guid ID { get; }
         /// <summary>
-        /// Gets the history of the container
+        /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the container has gone through throughout a simulation.
         /// </summary>
-        /// <returns>Returns a ReadOnlyCollection of StatusLog objects, each object containing information about one status change of the subject in a simulation.</returns>
+        /// <returns>Returns a ReadOnlyCollection with StatusLog objects with information on status changes the container has gone through throughout a simulation.</returns>
         public ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
         /// <summary>
-        /// Gets the history of the container
+        /// Gets a IList of StatusLog objects containing information on status changes the container has gone through throughout a simulation.
         /// </summary>
-        /// <returns>Returns a list of StatusLog objects that contains informations on the status changes the container has been through</returns>
+        /// <returns>Returns an Ilist with StatusLog objects with informations on the status changes the container has gone through throughout a simulation.</returns>
         internal IList<StatusLog> HistoryIList {  get; } = new List<StatusLog>();
         /// <summary>
-        /// Gets the size of the container
+        /// Gets the containers size
         /// </summary>
-        /// <returns>Returns the size of the container</returns>
+        /// <returns>Returns a ContainerSize enum representing the containers size</returns>
         public ContainerSize Size { get; internal set; }
-
         /// <summary>
-        /// Gets the containers weight in tonn
+        /// Gets the containers weight in tonn.
         /// </summary>
-        /// <returns>Returns the int value of the containers weight in tonn</returns>
+        /// <returns>Returns an int value representing the containers weight in tonn.</returns>
         public int WeightInTonn { get; internal set; }
-
         /// <summary>
-        /// Unique ID for the current position
+        /// Gets the ID if the containers current position.
         /// </summary>
-        /// <returns>Returns the Guid for the current position of container</returns>
+        /// <returns>Returns a Guid object representing the ID of the containers current position.</returns>
         public Guid CurrentPosition { get; internal set; }
         /// <summary>
-        /// The number of days the container has been in storage
+        /// Gets the number of days the container has been in storage.
         /// </summary>
-        /// <returns>Returns the int value of the days container has been in storage</returns>
+        /// <returns>Returns an int value representing the days container has been in storage.</returns>
         public int DaysInStorage { get; internal set; }
 
         /// <summary>
-        /// Constructor for Container, creates a new container object
+        /// Constructor for Container, creates a new container object.
         /// </summary>
-        /// <param name="size">Size of container</param>
-        /// <param name="WeightInTonn">weight of container in tonn</param>
-        /// <param name="currentPosition">Current posistion of container</param>
+        /// <param name="size">Size of container to be created</param>
+        /// <param name="WeightInTonn">Weight of container to be created in tonn.</param>
+        /// <param name="currentPosition">Current posistion of container to be created.</param>
         internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition) {
             this.ID = Guid.NewGuid();
             this.Size = size;
@@ -67,12 +65,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Constructor for Container, creates a new container object
+        /// Constructor for Container, creates a new container object.
         /// </summary>
-        /// <param name="size">Size of container</param>
-        /// <param name="WeightInTonn">weight of container in tonn</param>
-        /// <param name="currentPosition">Current position of container</param>
-        /// <param name="id">Unique ID defining the container</param>
+        /// <param name="size">Size of container to be created</param>
+        /// <param name="WeightInTonn">weight of container to be created in tonn.</param>
+        /// <param name="currentPosition">Current position of container to ve created.</param>
+        /// <param name="id">Unique ID defining the container to be created.</param>
         /// <param name="containerHistory">History of status changes the container has been through stored in StatusLog objects.</param>
         internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition, Guid id, IList<StatusLog> containerHistory)
         {
@@ -86,17 +84,17 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Adds a StatusLog object to the containers history.
         /// </summary>
-        /// <param name="status">current status of container</param>
-        /// <param name="currentTime">The time the status change to the container happened</param>
+        /// <param name="status">Current status of container to be created.</param>
+        /// <param name="currentTime">The time the status change to the container be created happened</param>
         internal void AddStatusChangeToHistory (Status status, DateTime currentTime)
         {
             HistoryIList.Add(new StatusLog(ID, CurrentPosition, currentTime, status));
         }
 
         /// <summary>
-        /// Gets current status of container
+        /// Gets current status of the container.
         /// </summary>
-        /// <returns>StatusLog with information about the latest status change of container. Returns none if there is no history registered</returns>
+        /// <returns>Returns a Status enum with the current status of the container.</returns>
         public Status GetCurrentStatus()
         {
             if (HistoryIList.Count > 0)
@@ -111,7 +109,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Adds another day the container is in storage
+        /// Adds another day the container is in storage.
         /// </summary>
         public void AddAnotherDayInStorage()
         {
@@ -119,7 +117,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Prints the containers entire history to console 
+        /// Prints the containers entire history to console.
         /// </summary>
         public void PrintHistory()
         {
@@ -131,9 +129,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a String representing the history of the container. 
+        /// Returns the containers entire history in the form of a String. 
         /// </summary>
-        /// <returns>String representing the history of a the container</returns>
+        /// <returns>String representing the history of a the container.</returns>
         public String HistoryToString()
         {
             StringBuilder sb = new StringBuilder();

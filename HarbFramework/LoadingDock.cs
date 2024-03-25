@@ -8,14 +8,26 @@ namespace Gruppe8.HarbNet
 {
     internal class LoadingDock : Dock
     {
-
+        /// <summary>
+        /// Gets all truck loading spots.
+        /// </summary>
+        /// <returns>Returns a dictionary with all trucks that are in a loading spot.</returns>
         internal IDictionary<Guid, Truck?> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck?>();
-
+        
+        /// <summary>
+        /// Creates a new LoadingDock object.
+        /// </summary>
+        /// <param name="shipSize">Size of the ship the loading dock to be created can hold.</param>
         internal LoadingDock(ShipSize shipSize) : base(shipSize)
         {
             this.Size = shipSize;
         }
 
+        /// <summary>
+        /// Assigns truck to a loading spot.
+        /// </summary>
+        /// <param name="truck">Name of truck to be assigned loading spot.</param>
+        /// <returns>Returns truck object if truck was assined loading spot, if not assigned null is returned.</returns>
         internal Truck? AssignTruckToTruckLoadingSpot(Truck truck)
         {
 
@@ -29,6 +41,11 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
+        /// <summary>
+        /// Checks if truck exists in loading spot.
+        /// </summary>
+        /// <param name="truck">Name of truck to be checked if exists in loading spot.</param>
+        /// <returns>Returns a bool value. True is returned if truck exists in loading spot, if not false is returned.</returns>
         internal bool TruckExistsInTruckLoadingSpots(Truck truck)
         {
             foreach (var spot in TruckLoadingSpots)
@@ -41,6 +58,11 @@ namespace Gruppe8.HarbNet
             return false;
         }
 
+        /// <summary>
+        /// Removes truck from loading spot.
+        /// </summary>
+        /// <param name="truck">Name of truck to be removed.</param>
+        /// <returns>Returns truck object if removed from loading spot, if not null is returned.</returns>
         internal Truck? RemoveTruckFromTruckLoadingSpot(Truck truck)
         {
             foreach (var spot in TruckLoadingSpots)

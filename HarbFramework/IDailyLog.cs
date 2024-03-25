@@ -19,29 +19,29 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a DateTime object representing the date and time the info were logged</returns>
         public DateTime Time { get; }
         /// <summary>
-        /// Gets all ships in anchorage when the DailyLog object were created.
+        /// Gets a ReadOnlyCollection of ship objects containting information of all ships in anchorage at the date and time when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a an ReadOnlyCollection with ship object representing all the ships in anchorage when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Ship object representing all the ships in anchorage when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsInAnchorage { get; }
         /// <summary>
-        /// Gets all the ships in transit when the DailyLog object were created
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships in transit when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships in transit when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships in transit when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsInTransit { get; }
         /// <summary>
-        /// Gets all the ships docked in a loading dock when the DailyLog object were created
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships docked in a loading dock when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a ReadOnlyCollection with Ship object representing the docked in a loading dock when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Ship object representing the docked in a loading dock when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsDockedInLoadingDocks { get; }
         /// <summary>
-        /// Gets all the ships docked to ship docks when the DailyLog object were created
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships docked to ship docks when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships docked to ship docks when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships docked to ship docks when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsDockedInShipDocks { get; }
         /// <summary>
-        /// Gets all the containers stored in harbour when the DailyLog object were created
+        /// Gets a ReadOnlyCollection of container objects containing information of all the containers stored in harbour when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a ReadOnlyCollection with Container object representing the containers stored in when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Container object representing the containers stored in when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Container> ContainersInHarbour { get; }
         /// <summary>
         /// Prints the wereabouts and info regarding all the ships in the DailyLog.

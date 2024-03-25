@@ -20,39 +20,39 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a DateTime object representing the date and time the info were logged</returns>
         public DateTime Time { get; internal set; }
         /// <summary>
-        /// Gets all ships in anchorage at the date and time when the DailyLog object were created.
+        /// Gets a ReadOnlyCollection of ship objects containting information of all ships in anchorage at the date and time when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a an Ilist with ship object representing all the ships in anchorage when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Ship object representing all the ships in anchorage when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsInAnchorage { get; }
         /// <summary>
-        /// Gets all the ships in transit when the DailyLog object were created
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships in transit when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a IList with Ship object representing the ships in transit when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships in transit when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsInTransit { get; }
         /// <summary>
-        /// Gets all the containers stored in harbour when the DailyLog object were created
+        /// Gets a ReadOnlyCollection of container objects containing information of all the containers stored in harbour when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a IList with Container object representing the containers stored in when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Container object representing the containers stored in when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Container> ContainersInHarbour { get; }
         /// <summary>
-        /// Gets all the ships docked in a loading dock when the DailyLog object were created
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships docked in a loading dock when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a IList with Ship object representing the docked in a loading dock when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Ship object representing the docked in a loading dock when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsDockedInLoadingDocks { get; }
         /// <summary>
-        /// Gets all the ships docked to ship docks when the DailyLog object were created
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships docked to ship docks when the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a IList with Ship object representing the ships docked to ship docks when the DailyLog object was created</returns>
+        /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships docked to ship docks when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsDockedInShipDocks { get; }
 
         /// <summary>
         /// Creates a Dailylog object which holds information about the state of the simulation at a specific day.
         /// </summary>
-        /// <param name="time">The date and time of the information being logged</param>
-        /// <param name="shipsInTransit">All the ships in transit at the time given</param>
-        /// <param name="containersInHarbour">All the containers stored in harbour at the time given</param>
-        /// <param name="shipsDockedInLoadingDocks">All the ships docked in loading docks at the time given</param>
-        /// <param name="ShipsDockedInShipDocks">All the ships docked in ship docks at the time given</param>
+        /// <param name="time">The date and time of the information being logged.</param>
+        /// <param name="shipsInTransit">All the ships in transit at the time given.</param>
+        /// <param name="containersInHarbour">All the containers stored in harbour at the time given.</param>
+        /// <param name="shipsDockedInLoadingDocks">All the ships docked in loading docks at the time given.</param>
+        /// <param name="ShipsDockedInShipDocks">All the ships docked in ship docks at the time given.</param>
         internal DailyLog(DateTime time, IList<Ship> shipsInAnchorage, IList<Ship> shipsInTransit, IList<Container> containersInHarbour, IList<Ship> shipsDockedInLoadingDocks, IList<Ship> ShipsDockedInShipDocks)
         {
             this.Time = time;
@@ -72,8 +72,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Duplicate a shipList making copies of all objects in it.
         /// </summary>
-        /// <param name="shipListToDuplicate">list to duplicate</param>
-        /// <returns>a Collection duplications of all objects in the List</returns>
+        /// <param name="shipListToDuplicate">list to duplicate.</param>
+        /// <returns>a Collection duplications of all objects in the List.</returns>
         private Collection <Ship> DuplicateShipList(IList<Ship> shipListToDuplicate)
         {
             Collection<Ship> duplicatedList = new Collection<Ship>();
@@ -105,8 +105,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Duplicate a container list making copies of all objects in it.
         /// </summary>
-        /// <param name="containersToDuplicate">list to duplicate</param>
-        /// <returns>a collection containing duplications of all objects in the List</returns>
+        /// <param name="containersToDuplicate">list to duplicate.</param>
+        /// <returns>a collection containing duplications of all objects in the List.</returns>
         private Collection<Container> DuplicateContainerList(IList<Container> containersToDuplicate)
         {
             Collection<Container> duplicatedList = new Collection<Container>();
@@ -300,9 +300,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string that contains information about all ships on the given day of a simulation
+        /// Returns a string that contains information about all ships on the given day of a simulation.
         /// </summary>
-        /// <returns>Returns a String containing information about all ships on the given day of a simulation</returns>
+        /// <returns>Returns a String containing information about all ships on the given day of a simulation.</returns>
         public String HistoryToString()
         {
             StringBuilder sb = new StringBuilder();
