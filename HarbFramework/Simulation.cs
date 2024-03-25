@@ -592,7 +592,6 @@ namespace Gruppe8.HarbNet
                 Guid shipID = ship.ID;
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
 
-                
                 if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
                     (lastStatusLog.Status == Status.Anchored ||
                     lastStatusLog.Status == Status.DockedToShipDock ||
@@ -603,8 +602,12 @@ namespace Gruppe8.HarbNet
 
                     Guid dockID;
 
+                    // Unngår at singleTripShip i Anchorage som måtte docke i Anchorage på starten av simuleringen får loadingDock før den har vært i Transit
+                    // Dette fordi singleTripShip i Anchorage skal dra direkte i Transit og ikke måtte innom loadingDock
+                    bool isTheStartOfSimulationForSingleTripShipInAnchorage = (ship.IsForASingleTrip && !ContainsTransitStatus(ship));
+
                     // Skip ønsker å begynne å docke til loading dock (trigges så videre i LoadingShips() overordnede metoden) 
-                    if (harbor.FreeLoadingDockExists(ship.ShipSize) && ship.ContainersOnBoard.Count != 0)
+                    if (harbor.FreeLoadingDockExists(ship.ShipSize) && ship.ContainersOnBoard.Count != 0 && !isTheStartOfSimulationForSingleTripShipInAnchorage)
                     {
 
                         if (lastStatusLog.Status == Status.Anchored)
@@ -1007,6 +1010,23 @@ namespace Gruppe8.HarbNet
                     }
                     ship.HasBeenAlteredThisHour = true;
 
+                }
+            }
+
+            Guid anchorageID = harbor.AnchorageID;
+            List<Ship> Anchorage = harbor.Anchorage.ToList();
+
+            foreach (Ship ship in Anchorage)
+            {
+                // Gjelder enkeltseiling-skip som måtte docke til Anchorage ved simulering-start (!ContainsTransitStatus)
+                if (ship.IsForASingleTrip && !ContainsTransitStatus(ship))
+                {
+
+                    Guid oldLocation = harbor.UnDockShipFromAnchorageToTransit(ship.ID);
+                    if (oldLocation != Guid.Empty)
+                    { 
+                        ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Transit);
+                    }
                 }
             }
         }

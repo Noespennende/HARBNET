@@ -744,6 +744,33 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
+        /// Undock Ship from Anchorage to Transit.
+        /// </summary>
+        /// <param name="shipID">Unique ID of specific ship.</param>
+        /// <returns>Returns the Guid of the Anchorage the ship was undocked from.</returns>
+        internal Guid UnDockShipFromAnchorageToTransit(Guid shipID)
+        {
+            Ship shipToBeUndocked = GetShipFromAnchorage(shipID);
+
+            if (shipToBeUndocked != null)
+            {
+                bool removed = RemoveShipFromAnchorage(shipID);
+
+                if (removed)
+                {
+                    if (!ShipsInTransit.ContainsKey(shipToBeUndocked))
+                    {
+                        ShipsInTransit.Add(shipToBeUndocked, shipToBeUndocked.RoundTripInDays);
+                    }
+                    return AnchorageID;
+                }
+                
+            }
+
+            return Guid.Empty;
+        }
+
+        /// <summary>
         /// Gets specific ship from anchorage
         /// </summary>
         /// <param name="shipID">Unique ID of specific ship</param>
