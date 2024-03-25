@@ -146,19 +146,49 @@ namespace Client.HarborName
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to loading dock with ID {args.DockID}\n");
             };
 
-
-            clientSim.ShipUnloadedContainer += (sender, e) =>
+            clientSim.ShipStartingUnloading += (sender, e) =>
             {
-                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+                ShipStartingUnloadingEventArgs args = (ShipStartingUnloadingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' is starting the unloading process.'\n");
 
             };
 
+            // BØR FORANDRE HVA SOM SKJER PÅ "MOTTAKELSE" -> Akkurat nå blir det myyyye utskrift. Kanskje en count?
+            clientSim.ShipUnloadedContainer += (sender, e) =>
+            {
+                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
+                //Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+
+            };
+
+            clientSim.ShipDoneUnloading += (sender, e) =>
+            {
+                ShipDoneUnloadingEventArgs args = (ShipDoneUnloadingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished unloading.\n");
+
+            };
+
+            clientSim.ShipStartingLoading += (sender, e) =>
+            {
+                ShipStartingLoadingEventArgs args = (ShipStartingLoadingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' is starting the loading process.\n");
+
+            };
+
+            // BØR FORANDRE HVA SOM SKJER PÅ "MOTTAKELSE" -> Akkurat nå blir det myyyye utskrift. Kanskje en count?
             clientSim.ShipLoadedContainer += (sender, e) =>
             {
+
                 ShipLoadedContainerEventArgs args = (ShipLoadedContainerEventArgs)e;
 
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
+                //Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
+            };
+
+            clientSim.ShipDoneLoading += (sender, e) =>
+            {
+                ShipDoneLoadingEventArgs args = (ShipDoneLoadingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished loading.\n");
+
             };
 
             clientSim.ShipUndocking += (sender, e) =>
@@ -170,7 +200,7 @@ namespace Client.HarborName
             clientSim.ShipInTransit += (sender, e) =>
             {
                 ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime}  | ' {args.Ship.Name}' is in transit at transit ID '{args.TransitLocationID}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | ' {args.Ship.Name}' is in transit at transit ID '{args.TransitLocationID}'\n");
             };
 
             clientSim.ShipDockedToShipDock += (sender, e) =>
