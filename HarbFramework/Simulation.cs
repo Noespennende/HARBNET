@@ -600,6 +600,7 @@ namespace Gruppe8.HarbNet
                 {
 
                     Guid currentPosition = lastStatusLog.SubjectLocation;
+                    Guid dockID = lastStatusLog.SubjectLocation;
 
                     // Unloading container
                     if (ShipNowUnloading(ship, lastStatusLog))  //ship.ContainersOnBoard.Count != 0 && lastStatusLog.Status == Status.DockedToLoadingDock || lastStatusLog.Status == Status.Unloading
@@ -607,14 +608,8 @@ namespace Gruppe8.HarbNet
 
                         if (ShipIsDockedToLoadingDock(ship, lastStatusLog)) //lastStatusLog.Status == Status.DockedToLoadingDock
                         {
-                            ShipStartingUnloadingEventArgs shipStartingUnloadingEventArgs = new(ship, currentTime, "The ship is starting the unloading process.", ship.CurrentLocation);
-
-                            double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips;
-                            ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks(percentTrucks);
-
-                            ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Unloading);
-
-                            ShipStartingUnloading?.Invoke(this, shipStartingUnloadingEventArgs);
+                            StartUnloadProcess(ship, dockID);
+                            
                         }
 
                         // ** Unloading **
