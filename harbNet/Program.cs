@@ -13,6 +13,9 @@ namespace Client.HarborName
         {
 
             //CLIENT HARBOR 
+            // Denne koden representerer ett eksempel av hvordan kunden kan opprette en simulering for havnen som er gitt i oppgaven.
+            // Det finnes flere måter å gjøre dette på i APIet og koden under er bare ett eksempel på hvordan dette kan gjøres. 
+
             DateTime clientStartTime = new DateTime(2024, 3, 1, 8, 0, 0);
             DateTime clientEndTime = clientStartTime + TimeSpan.FromDays(20);
 
