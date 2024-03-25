@@ -657,7 +657,8 @@ namespace Gruppe8.HarbNet
                         {
                             ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Unloading);
 
-                            ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks();
+                            double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips;
+                            ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks(percentTrucks);
                         }
 
                         // ** Unloading **
@@ -765,8 +766,9 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">The ship that is being unloaded</param>
         private void UnloadShipForOneHour(Ship ship)
         {
-            int numberOfContainersForTrucks = ship.GetNumberOfContainersToTrucks();
-            int numberOfContainersForStorage = ship.GetNumberOfContainersToStorage();
+            double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips; 
+            int numberOfContainersForTrucks = ship.GetNumberOfContainersToTrucks(percentTrucks);
+            int numberOfContainersForStorage = ship.GetNumberOfContainersToStorage(percentTrucks);
 
             LoadingDock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
 
@@ -1318,6 +1320,7 @@ namespace Gruppe8.HarbNet
         {
             return ship.HistoryToString();
         }
+
 
         /// <summary>
         /// Returns a string that contains information about the start time, end time of the simulation and the ID of the harbour used.
