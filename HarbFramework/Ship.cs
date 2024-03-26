@@ -180,7 +180,6 @@ namespace Gruppe8.HarbNet
         /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
         /// <param name="roundTripInDays">Number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
         /// <param name="numberOfHalfContainersOnBoard">How many small containers will be in the ships storage when it enters the harbor for the first time.</param>
-        /// <param name="numberOfMediumContainersOnBoard">How many medium containers will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="numberOfFullContainersOnBoard">How many Large containers will be in the ships storage when it enters the harbor for the first time.</param>
         public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
              int numberOfHalfContainersOnBoard, 
