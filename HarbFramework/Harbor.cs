@@ -25,181 +25,146 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns a Guid object representing the harbors unique ID.</return>
         public Guid ID { get; internal set; } = Guid.NewGuid();
-
         /// <summary>
         /// Gets all loading docks.
         /// </summary>
         /// <return>Returns an IList with LoadingDock objects representing the loadingdocks in the harbor.</return>
         internal IList<LoadingDock> allLoadingDocks = new List<LoadingDock>();
-
         /// <summary>
         /// Gets all available loading docks.
         /// </summary>
         /// <return>Returns an Ilist with LoadingDock objects representing the available loadingdocks in the harbor.</return>
         internal IList<LoadingDock> freeLoadingDocks = new List<LoadingDock>();
-
         /// <summary>
         /// Gets all ships in loading dock.
         /// </summary>
         /// <return>Returns a dictionary with all ships in loadingdocks.</return>
         internal IDictionary<Ship, LoadingDock> shipsInLoadingDock = new Dictionary<Ship, LoadingDock>(); // Ship : Dock
-
         /// <summary>
         /// Gets all ship docks.
         /// </summary>
         /// <return>Returns an IList with ShipDick objects representing the shipdocks in the harbor.</return>
         internal IList<ShipDock> allShipDocks = new List<ShipDock>();
-
         /// <summary>
         /// Gets all available ship docks.
         /// </summary>
         /// <return>Returns an Ilist with ShipDock objects representing the available shipdocks in the harbor.</return>
         internal IList<ShipDock> freeShipDocks = new List<ShipDock>();
-
         /// <summary>
         /// Gets all ships in ship dock.
         /// </summary>
         /// <return>Returns a dictionary with all ships in ship docks.</return>
         internal IDictionary<Ship, ShipDock> shipsInShipDock = new Dictionary<Ship, ShipDock>(); // Ship : Dock
-
         /// <summary>
         /// Gets all ships in anchorage.
         /// </summary>
         /// <return>Returns an Ilist with Ship objects representing the ships in anchorage in the harbor.</return>
         internal IList<Ship> Anchorage { get; } = new List<Ship>();
-
         /// <summary>
         /// Gets all ships in transit.
         /// </summary>
         /// <return>Returns a dictionary with all ships in transit.</return>
         internal IDictionary<Ship, int> ShipsInTransit { get; } = new Dictionary<Ship, int>(); // ship: int number of days until return
-
         /// <summary>
         /// Gets all ships.
         /// </summary>
         /// <return>Returns a list of all ships</return>
         internal IList<Ship> AllShips { get; } = new List<Ship>();
-
         /// <summary>
         /// Gets all container spaces.
         /// </summary>
         /// <return>Returns an Ilist with ContainerStorageRow objects representing the containerRows in the harbor.</return>
         internal IList<ContainerStorageRow> allContainerRows { get; set; }
-
         /// <summary>
         /// Gets all stored containers.
         /// </summary>
         /// <return>Returns a dictionary of all stored containers.</return>
         internal IDictionary<Container, ContainerStorageRow> storedContainers = new Dictionary<Container, ContainerStorageRow>(); // Container : ContainerRow
-
         /// <summary>
         /// Gets cranes in storage area.
         /// </summary>
         /// <return>Returns an Ilist with Crane objects representing the cranes in the storage area in the harbor.</return>
        internal IList<Crane> HarborStorageAreaCranes { get; set; } = new List<Crane>();
-
         /// <summary>
         /// Get all containers that have left the harbor and arived at their destination
         /// </summary>
         /// <return>Returns a IList of all containers that have arrived at their destination during a simulation</return>
         public IList<Container> ArrivedAtDestination { get; internal set; } = new List<Container>();
-
         /// <summary>
         /// Gets cranes in dock.
         /// </summary>
         /// <return>Returns an Ilist with Crane objects representing the cranes in the dock in the harbor.</return>
         internal IList<Crane> DockCranes { get; set; } = new List<Crane>();
-
         /// <summary>
         /// Gets the working Advs.
         /// </summary>
         /// <return>Returns an Ilist with Adv objects representing the working Advs in the harbor.</return>
         internal IList<Adv> AdvWorking { get; set; } = new List<Adv>();
-
         /// <summary>
         /// Gets the available Advs.
         /// </summary>
         /// <return>Returns an Ilist with Adv objects representing the available Advs in the harbor.</return>
         internal IList<Adv> AdvFree { get; set; } = new List<Adv>();
-
         /// <summary>
         /// Gets the Trucks in transit.
         /// </summary>
         /// <return>Returns an Ilist with Truck objects representing the Trucks in transit in the harbor.</return>
         internal IList<Truck> TrucksInTransit { get; set; } = new List<Truck>();
-
         /// <summary>
         /// Gets the Trucks in queue.
         /// </summary>
         /// <return>Returns an Ilist with Truck objects representing the Trucks in queue in the harbor.</return>
         internal IList<Truck> TrucksInQueue { get; set; } = new List<Truck>();
-
         /// <summary>
         /// Gets the percentege of containers loaded directly from the ships.
         /// </summary>
         /// <returns>Returns a double value representing the percentege of the total amount of containers that are directly loaded from the ships.</returns>
-        
         internal double PercentOfContainersDirectlyLoadedFromShips { get; set; }
         /// <summary>
         /// Gets the percentege of containers loaded directly from the storage area.
         /// </summary>
         /// <returns>Returns a double value representing the percentege of the total amount of containers that are directly loaded from the storage area.</returns>
-        
         internal double PercentOfContainersDirectlyLoadedFromStorageArea { get; set; }
         /// <summary>
         /// Gets the amount of trucks that arrive per hour.
         /// </summary>
         /// <returns>Returns an int value representing the amount of trucks in harbor that arrive per hour.</returns>
-        
         internal int TrucksArrivePerHour { get; set; }
         /// <summary>
         /// Gets the amount of loads each adv do per hour.
         /// </summary>
         /// <returns>Returns an int value representing the amount of loads each adv in harbor does per hour.</returns>
-        
         internal int LoadsPerAdvPerHour { get; set; }
-
         /// <summary>
         /// Gets the unique ID for the transit location.
         /// </summary>
         /// <return>Returns a Guid representing the harbors transit location.</return>
         public Guid TransitLocationID { get; } = Guid.NewGuid();
-
         /// <summary>
         /// Gets the unique ID for the anchorage.
         /// </summary>
         /// <return>Returns a Guid representing the harbors anchorages.</return>
         public Guid AnchorageID { get; } = Guid.NewGuid();
-
-
         /// <summary>
         /// Gets the unique ID for the Adv cargo.
         /// </summary>
         /// <return>Returns a Guid representing the harbors Adv cargos.</return>
         public Guid AdvCargoID { get; } = Guid.NewGuid();
-
-
         /// <summary>
         /// Gets the unique ID for the truck transit location.
         /// </summary>
         /// <return>Returns a Guid representing the harbors truck transit locations.</return>
         public Guid TruckTransitLocationID { get; } = Guid.NewGuid();
-
-
         /// <summary>
         /// Gets the unique ID for the truck queue location.
         /// </summary>
         /// <return>Returns a Guid representing the harbors truck queue locations.</return>
         public Guid TruckQueueLocationID { get; } = Guid.NewGuid();
-
-
         /// <summary>
         /// Gets the unique ID for the harbor storage area.
         /// </summary>
         /// <return>Returns a Guid representing the harbors storage areas.</return>
         public Guid HarborStorageAreaID { get; } = Guid.NewGuid();
-
-
         /// <summary>
         /// Gets the unique ID for the dock area.
         /// </summary>
@@ -485,6 +450,11 @@ namespace Gruppe8.HarbNet
             
         }
 
+        /// <summary>
+        /// Sends truck on transit.
+        /// </summary>
+        /// <param name="container">Container to be transported on truck.</param>
+        /// <returns>Returns truck object transporting container, if truck is not transporting container null is returned.</returns>
         internal Truck? SendTruckOnTransit(Container container)
         {
             
@@ -504,6 +474,10 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
+        /// <summary>
+        /// Amount of container in storage to ships.
+        /// </summary>
+        /// <returns>Returns an int value representing the amount of containers in storage to ships.</returns>
         internal int NumberOfContainersInStorageToShips()
         {
             int numberOfContainersToShips = storedContainers.Count - NumberOfContainersInStorageToTrucks();
@@ -511,6 +485,10 @@ namespace Gruppe8.HarbNet
             return numberOfContainersToShips;
         }
 
+        /// <summary>
+        /// Amount of containers in storage to trucks.
+        /// </summary>
+        /// <returns>Returns an int value representing the amount of containers in storage to trucks.</returns>
         internal int NumberOfContainersInStorageToTrucks()
         {
             double percentTrucks = 0.10; // PercentOfContainersDirectlyLoadedFromStorageArea;

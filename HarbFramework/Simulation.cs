@@ -257,7 +257,7 @@ namespace Gruppe8.HarbNet
             
             }
 
-            throw new ShipNotFoundExeption("The ship you are trying to print does not exist in the Harbor the simulation is using.");
+            throw new ArgumentException("The ship you are trying to print does not exist in the Harbor the simulation is using.");
 
         }
 
@@ -1651,7 +1651,7 @@ namespace Gruppe8.HarbNet
 
             }
 
-            throw new ShipNotFoundExeption("The ship you are trying to get the history from does not exist in the Harbor object the simulation is using.");
+            throw new ArgumentException("The ship you are trying to get the history from does not exist in the Harbor object the simulation is using.");
         }
 
         /// <summary>

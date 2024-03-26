@@ -11,12 +11,12 @@ namespace Gruppe8.HarbNet
     /// </summary>
     internal class AdvCantBeLoadedExeption : Exception
     {
-        public AdvCantBeLoadedExeption() { }
+        internal AdvCantBeLoadedExeption() { }
 
-        public AdvCantBeLoadedExeption(string message) : base(message)
+        internal AdvCantBeLoadedExeption(string message) : base(message)
         {
         }
-        public AdvCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
+        internal AdvCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
         {
         }
     }
