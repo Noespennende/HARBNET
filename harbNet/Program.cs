@@ -103,7 +103,7 @@ namespace Client.HarborName
             Ship ship1 = new Ship(("Ship solo 1"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2)));
             Ship ship2 = new Ship(("Ship solo 2"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2)));
             Ship ship3 = new Ship(("Ship recurring"), ShipSize.Large, clientStartTime, false, rand.Next(0, 6), rand.Next(1, (99 / 2)), rand.Next(1, (99 / 2)));
-            
+
             clientShips.Add(ship1);
             clientShips.Add(ship2);
             clientShips.Add(ship3);
@@ -165,14 +165,14 @@ namespace Client.HarborName
             clientSim.ShipUnloadedContainer += (sender, e) =>
             {
                 ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
-                //Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
 
             };
 
             clientSim.ShipDoneUnloading += (sender, e) =>
             {
                 ShipDoneUnloadingEventArgs args = (ShipDoneUnloadingEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished unloading.\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished unloading. - Containers onboard: {args.Ship.ContainersOnBoard.Count}\n");
 
             };
 
@@ -189,13 +189,13 @@ namespace Client.HarborName
 
                 ShipLoadedContainerEventArgs args = (ShipLoadedContainerEventArgs)e;
 
-                //Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
             };
 
             clientSim.ShipDoneLoading += (sender, e) =>
             {
                 ShipDoneLoadingEventArgs args = (ShipDoneLoadingEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished loading.\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished loading. - Containers onboard: {args.Ship.ContainersOnBoard.Count}\n");
 
             };
 
@@ -215,6 +215,12 @@ namespace Client.HarborName
             {
                 ShipDockedToShipDockEventArgs args = (ShipDockedToShipDockEventArgs)e;
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to ship dock with ID '{args.DockID}'\n");
+            };
+
+            clientSim.TruckLoadingFromStorage += (sender, e) =>
+            {
+                TruckLoadingFromStorageEventArgs args = (TruckLoadingFromStorageEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | A truck has loaded a container and left the harbor \n");
             };
 
             clientSim.DayEnded += (sender, e) =>
