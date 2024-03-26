@@ -44,6 +44,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships docked to ship docks when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Ship> ShipsDockedInShipDocks { get; }
+        /// <summary>
+        /// Gets a ReadOnlyCollection of container objects containing information of all the containers that have arrived to their destination during the simulation.
+        /// </summary>
+        /// <returns>Returns a ReadOnlyCollection of container objects containing information of all the containers that have arrived to their destination during the simulation.</returns>
+        public ReadOnlyCollection<Container> ContainersArrivedAtDestination { get; }
 
         /// <summary>
         /// Creates a Dailylog object which holds information about the state of the simulation at a specific day.
@@ -53,7 +58,7 @@ namespace Gruppe8.HarbNet
         /// <param name="containersInHarbour">All the containers stored in harbour at the time given.</param>
         /// <param name="shipsDockedInLoadingDocks">All the ships docked in loading docks at the time given.</param>
         /// <param name="ShipsDockedInShipDocks">All the ships docked in ship docks at the time given.</param>
-        internal DailyLog(DateTime time, IList<Ship> shipsInAnchorage, IList<Ship> shipsInTransit, IList<Container> containersInHarbour, IList<Ship> shipsDockedInLoadingDocks, IList<Ship> ShipsDockedInShipDocks)
+        internal DailyLog(DateTime time, IList<Ship> shipsInAnchorage, IList<Ship> shipsInTransit, IList<Container> containersInHarbour, IList<Container> containersAtDestination, IList<Ship> shipsDockedInLoadingDocks, IList<Ship> ShipsDockedInShipDocks)
         {
             this.Time = time;
 
@@ -66,6 +71,8 @@ namespace Gruppe8.HarbNet
             this.ShipsDockedInShipDocks = new ReadOnlyCollection<Ship>(DuplicateShipList(shipsDockedInLoadingDocks));
 
             this.ContainersInHarbour = new ReadOnlyCollection<Container>(DuplicateContainerList(containersInHarbour));
+
+            this.ContainersArrivedAtDestination = new ReadOnlyCollection<Container> (DuplicateContainerList(containersAtDestination));
 
         }
 
@@ -297,6 +304,21 @@ namespace Gruppe8.HarbNet
             {
                 Console.WriteLine("\nNO CONTAINERS IN HARBOR STORAGE");
             }
+
+            if (ContainersArrivedAtDestination.Count > 0)
+            {
+                Console.WriteLine("\nCONTAINERS ARRIVED AT THEIR DESTINATION:" + "\n");
+
+                foreach (Container container in ContainersArrivedAtDestination)
+                {
+                    Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("\nNO CONTAINERS ARRIVED TO THEIR DESTINATION");
+            }
         }
 
         /// <summary>
@@ -495,6 +517,21 @@ namespace Gruppe8.HarbNet
                     sb.Append("\nNO CONTAINERS IN HARBOR STORAGE");
                 }
 
+                if (ContainersArrivedAtDestination.Count > 0)
+                {
+                    sb.Append("\nCONTAINERS ARRIVED AT THEIR DESTINATION:" + "\n");
+
+                    foreach (Container container in ContainersArrivedAtDestination)
+                    {
+                        sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                    }
+
+                }
+                else
+                {
+                    sb.Append("\nNO CONTAINERS ARRIVED TO THEIR DESTINATION");
+                }
+
                 return sb.ToString();
             } else {
                 throw new ArgumentException("Invalid input. Valid input is 'ships' or 'container'.", nameof(ShipsOrContainers));
@@ -509,7 +546,7 @@ namespace Gruppe8.HarbNet
         public override string ToString()
         {
             return ($"Time: {Time.ToString()}, Ships in anchorage {ShipsInAnchorage.Count}, Ships in loading docks: {ShipsDockedInLoadingDocks.Count}, Ships in ship dock: {ShipsDockedInShipDocks.Count}, Ships in transit: " +
-                $"{ShipsInTransit.Count}, Containers in harbor: {ContainersInHarbour.Count}");
+                $"{ShipsInTransit.Count}, Containers in harbor: {ContainersInHarbour.Count}, Containers arrived at their destination: {ContainersArrivedAtDestination.Count}");
         }
 
     }
