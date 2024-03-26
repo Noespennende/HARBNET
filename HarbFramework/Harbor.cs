@@ -92,6 +92,12 @@ namespace Gruppe8.HarbNet
         /// <return>Returns a dictionary of all stored containers</return>
         internal IDictionary<Container, ContainerStorageRow> storedContainers = new Dictionary<Container, ContainerStorageRow>(); // Container : ContainerRow
 
+        /// <summary>
+        /// Get all containers that have left the harbor and arived at their destination
+        /// </summary>
+        /// <return>Returns a IList of all containers that have arrived at their destination during a simulation</return>
+        public IList<Container> ArrivedAtDestination { get; internal set; } = new List<Container>();
+
         internal IList<Crane> HarborStorageAreaCranes { get; set; } = new List<Crane>();
         internal IList<Crane> DockCranes { get; set; } = new List<Crane>();
 
@@ -126,6 +132,11 @@ namespace Gruppe8.HarbNet
         public Guid TruckQueueLocationID { get; } = Guid.NewGuid();
         public Guid HarborStorageAreaID { get; } = Guid.NewGuid();
         public Guid HarborDockAreaID { get; } = Guid.NewGuid();
+        /// <summary>
+        /// The ID of a containers destination.
+        /// </summary>
+        /// <return>The ID of a containers destination.</return>
+        public Guid DestinationID { get; } = Guid.NewGuid();
 
 
         /// <summary>
@@ -756,7 +767,6 @@ namespace Gruppe8.HarbNet
 
         }
 
-
         /// <summary>
         /// Ship in loading dock got get moved to dock for ships in transit 
         /// </summary>
@@ -905,6 +915,25 @@ namespace Gruppe8.HarbNet
             }
 
             return ships;
+        }
+
+        internal void RestockContainers(Ship ship, DateTime time)
+        {
+            int size = ship.ContainersOnBoard.Count;
+            Random rand = new Random();
+            for (int i = 0; i < size; i++)
+            {
+                Container container = ship.UnloadContainer();
+                container.AddStatusChangeToHistory(Status.ArrivedAtDestination, time);
+                ArrivedAtDestination.Add(container);
+            }
+
+            for (int i = 0; i < rand.Next(ship.ContainerCapacity/3, ship.ContainerCapacity - 1); i++)
+            {
+                ship.GenerateContainer();
+            }
+
+
         }
 
         /// <summary>
@@ -1130,7 +1159,6 @@ namespace Gruppe8.HarbNet
 
         } //returnerer antallet okuperte plasser av den gitte typen
 
-
         /// <summary>
         /// Gets the available container space of specified size
         /// </summary>
@@ -1246,7 +1274,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="dockID">Unique ID of specific dock</param>
         /// <returns>Returns string informing of specified dock and if it's free</returns>
-        public string LoadingDockIsFree(Guid dockID)
+        internal string LoadingDockIsFree(Guid dockID)
         {
             StringBuilder sb = new StringBuilder();
             bool dockFree = false;
@@ -1358,24 +1386,6 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if specified dock is free
-        /// </summary>
-        /// <param name="dockID">Unique ID of specific dock</param>
-        /// <returns>Returns true if specified dock is free, or false if not</returns>
-        bool IHarbor.LoadingDockIsFree(Guid dockID)
-        {
-            bool dockIsFree = false;
-            foreach (LoadingDock loadingDock in allLoadingDocks)
-            {
-                if (dockID == loadingDock.ID)
-                {
-                    dockIsFree = true;
-                }
-            }
-            return dockIsFree;
-        }
-
-        /// <summary>
         /// Checks if ship dock is free/available for all dock sizes
         /// </summary>
         /// <returns>Returns true if all ship docka is free, or false if not</returns>
@@ -1411,8 +1421,6 @@ namespace Gruppe8.HarbNet
             }
             return statusOfAllShips;
         }
-
-       
 
         /// <summary>
         /// Gets all containers stored in harbor
@@ -1473,8 +1481,6 @@ namespace Gruppe8.HarbNet
             }
             return list;
         }
-
-       
 
         /// <summary>
         /// Returns a string value containing information about the harbour, its ships and container spaces.

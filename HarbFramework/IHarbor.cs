@@ -21,11 +21,10 @@ namespace Gruppe8.HarbNet
         public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks();
 
         /// <summary>
-        /// Checks if specified dock is free
+        /// Get all containers that have left the harbor and arived at their destination
         /// </summary>
-        /// <param name="dockID">Unique ID of specific dock</param>
-        /// <returns>Returns true if specified dock is free, or false if not</returns>
-        public bool LoadingDockIsFree(Guid dockID);
+        /// <return>Returns a IList of all containers that have arrived at their destination during a simulation</return>
+        public IList<Container> ArrivedAtDestination { get; }
 
         /// <summary>
         /// Gets last registered status of specific ship
@@ -61,7 +60,13 @@ namespace Gruppe8.HarbNet
         public Guid TruckTransitLocationID { get; }
         public Guid TruckQueueLocationID { get; } 
         public Guid HarborStorageAreaID { get; } 
-        public Guid HarborDockAreaID { get; } 
+        public Guid HarborDockAreaID { get; }
+
+        /// <summary>
+        /// The ID of a containers destination.
+        /// </summary>
+        /// <return>The ID of a containers destination.</return>
+        public Guid DestinationID { get; }
 
         /// <summary>
         /// Returns a string value containing information about the harbour, its ships and container spaces.
