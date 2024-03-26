@@ -262,7 +262,8 @@ namespace Gruppe8.HarbNet
             
             }
 
-            throw new ArgumentException("The ship you are trying to print does not exist in the Harbor the simulation is using.");
+            throw new ArgumentException("The ship you are trying to print does not exist in the Harbor the simulation is using. In order for the simulation to be able to print the ships " +
+                "history the ship must be part of the simulated harbor.");
 
         }
 
@@ -1551,7 +1552,8 @@ namespace Gruppe8.HarbNet
 
             }
 
-            throw new ArgumentException("The ship you are trying to get the history from does not exist in the Harbor object the simulation is using.");
+            throw new ArgumentException("The ship you are trying to get the history from does not exist in the Harbor object the simulation is using. In order for the simulation to be able to provide a String of the ships history " +
+                "the ship must exist within the harbor the simulation is simulating.");
         }
 
         /// <summary>
