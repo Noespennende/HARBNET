@@ -13,7 +13,7 @@ namespace Gruppe8.HarbNet
         /// Gets the unique ID for the truck.
         /// </summary>
         /// <returns>Returns a Guid object representing the trucks unique ID.</returns>
-        public Guid ID { get; internal set; } = new Guid();
+        public Guid ID { get; internal set; } = Guid.NewGuid();
         /// <summary>
         /// Gets the ID of the trucks location.
         /// </summary>
@@ -28,7 +28,7 @@ namespace Gruppe8.HarbNet
         /// Gets container.
         /// </summary>
         /// <returns>Returns a container object.</returns>
-        public Container Container { get; internal set; }
+        public Container? Container { get; internal set; }
 
         /// <summary>
         /// Creates new truck object.

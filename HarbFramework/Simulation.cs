@@ -90,7 +90,7 @@ namespace Gruppe8.HarbNet
             
             SimulationStarting?.Invoke(this, simulationStartingEventArgs);
 
-            HistoryIList.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
+            HistoryIList.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.ArrivedAtDestination,
                         harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
 
             while (currentTime < endTime)
@@ -116,6 +116,8 @@ namespace Gruppe8.HarbNet
                 LoadingShips();
 
                 LoadingTrucksFromStorage();
+
+                ContainersOnTrucksArrivingToDestination();
 
                 InTransitShips();
 
@@ -185,7 +187,7 @@ namespace Gruppe8.HarbNet
             DateTime past24Hours = currentTime.AddHours(-24);
             if (currentTime.Hour == 0)
             {
-                DailyLog harborDayLog = new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
+                DailyLog harborDayLog = new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.ArrivedAtDestination,
                     harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock());
                 
                 HistoryIList.Add(harborDayLog);
@@ -1210,7 +1212,6 @@ namespace Gruppe8.HarbNet
 
             }
 
-            Console.WriteLine("HER ER JEG NÅÅÅ");
             return null;
         }
 
@@ -1348,11 +1349,13 @@ namespace Gruppe8.HarbNet
 
                     if (ShipHasReturnedToHarbor(ship, lastStatusLog)) //DaysSinceTransitStart >= ship.RoundTripInDays & double DaysSinceTransitStart = (currentTime - LastHistoryStatusLog.PointInTime).TotalDays;
                     {
+                        harbor.RestockContainers(ship, currentTime);
                         harbor.AddNewShipToAnchorage(ship);
                         ship.AddStatusChangeToHistory(currentTime, CurrentPosition, Status.Anchoring);
                         ship.TransitStatus = TransitStatus.Arriving;
 
                         ShipAnchoringEventArgs shipAnchoringEventArgs = new(ship, currentTime, "Ship is anchoring to anchorage.", harbor.AnchorageID);
+                        
                         ShipAnchoring?.Invoke(this, shipAnchoringEventArgs);
                     }
 
@@ -1414,14 +1417,20 @@ namespace Gruppe8.HarbNet
 
                         if (harbor.TrucksInQueue.Count > 0)
                         {
+                          
+                            Container? loadedContainer = MoveOneContainerFromContainerRowToTruck(container);
+                            Truck? truck = null;
+
+                            if (loadedContainer != null)
+                            {
+                                containersToTruck++;
+                                truck = harbor.SendTruckOnTransit(container);
+
+                                TruckLoadingFromStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, currentTime, "One truck has loaded a container and has left");
+                                TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
+
+                            }
                             
-                            MoveOneContainerFromContainerRowToTruck(container);
-                            containersToTruck++;
-                            Truck truck = harbor.SendTruckOnTransit(container);
-
-
-                            TruckLoadingFromStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, currentTime, "One truck has loaded a container and has left");
-                            TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
                         }
 
                         if (containersToTruck == maxLoadsPerHour)
@@ -1439,6 +1448,33 @@ namespace Gruppe8.HarbNet
                 }
             }
         }
+
+        private void ContainersOnTrucksArrivingToDestination()
+        {
+            foreach(Truck truck in harbor.TrucksInTransit)
+            {
+                
+                Container? container = truck.Container;
+                if(container != null)
+                {
+                    StatusLog? lastLogContainer = container.HistoryIList.Last();
+
+                    if ((currentTime - lastLogContainer.PointInTime).TotalHours >= 1)
+                    {
+                        Container arrivedContainer = truck.UnloadContainer();
+                        harbor.ArrivedAtDestination.Add(arrivedContainer);
+
+                        truck.Location = harbor.DestinationID;
+
+                        arrivedContainer.CurrentPosition = harbor.DestinationID;
+                        arrivedContainer.AddStatusChangeToHistory(Status.ArrivedAtDestination, currentTime);
+                    }
+                }
+            }
+
+            Console.WriteLine($"ArrivedToDestination: {harbor.ArrivedAtDestination.Count}");
+        }
+
 
         private int CalculateNumberOfStorageContainersToTrucks()
         {
@@ -1467,16 +1503,18 @@ namespace Gruppe8.HarbNet
 
             if (container == null)
             {
-                // Exception ??
+                return null;
             }
             Truck? truck = harbor.GetFreeTruck();
 
             if (truck != null && containerFound != null)
             {
-                harbor.CraneToTruck(storageCrane, truck, currentTime);
+                Container containerOnTruck = harbor.CraneToTruck(storageCrane, truck, currentTime);
+
+                return containerOnTruck;
             }
-   
-            return containerFound;
+
+            return null;
 
         }
 

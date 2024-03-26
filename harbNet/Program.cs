@@ -189,7 +189,6 @@ namespace Client.HarborName
             {
 
                 ShipLoadedContainerEventArgs args = (ShipLoadedContainerEventArgs)e;
-
                 //Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
             };
 

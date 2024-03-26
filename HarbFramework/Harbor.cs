@@ -406,6 +406,7 @@ namespace Gruppe8.HarbNet
             containerToBeLoaded.CurrentPosition = crane.Location;
             truck.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
+            
 
             return containerToBeLoaded;
         }
@@ -475,7 +476,10 @@ namespace Gruppe8.HarbNet
             }
             else if (truck.Container != null)
             {
+                RemoveTruckFromQueue(truck);
                 TrucksInTransit.Add(truck);
+                truck.Status = Status.Transit;
+                truck.Location = TruckTransitLocationID;
             }
             
         }
@@ -485,10 +489,12 @@ namespace Gruppe8.HarbNet
             
             foreach (Truck truck in TrucksInQueue)
             {
-                if (truck.Container == container)
+                if (truck.Container == container && container != null)
                 {
                     RemoveTruckFromQueue(truck);
                     TrucksInTransit.Add(truck);
+                    truck.Status = Status.Transit;
+                    truck.Location = TruckTransitLocationID;
 
                     return truck;
                 }
@@ -675,7 +681,7 @@ namespace Gruppe8.HarbNet
         /// Gets avaulable truck.
         /// </summary>
         /// <returns>Returns available truck found, if none is available null is returned.</returns>
-        internal Truck GetFreeTruck()
+        internal Truck? GetFreeTruck()
         {
             if (TrucksInQueue.Count > 0)
             {
@@ -1377,25 +1383,6 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets last registered status of all ships.
-        /// </summary>
-        /// <returns>Returns a dictionary with last registered status of all ships.</returns>
-        public Dictionary<Ship, Status> GetStatusAllShips()
-        {
-            Dictionary<Ship, Status> shipStatus = new Dictionary<Ship, Status>();
-            
-            foreach (Ship ship in AllShips)
-            {
-                StatusLog test = ship.HistoryIList.Last();
-                if (test != null)
-                {
-                    shipStatus[ship] = test.Status;
-                }
-            }
-            return shipStatus;
-        }
-
-        /// <summary>
         /// Gets the status of all shipdocks
         /// </summary>
         /// <returns>Returns a dictionary representing the status of all shipdocks.</returns>
@@ -1407,28 +1394,6 @@ namespace Gruppe8.HarbNet
                 dockStatus[shipDock.ID] = shipDock.Free;
             }
             return dockStatus;
-        }
-
-        /// <summary>
-        /// Checks if specified dock is free.
-        /// </summary>
-        /// <param name="dockID">Unique ID of dock to be checked if available.</param>
-        /// <returns>Returns a string value representing the specified dock and if it's free.</returns>
-        internal string LoadingDockIsFree(Guid dockID)
-        {
-            StringBuilder sb = new StringBuilder();
-            bool dockFree = false;
-            foreach (LoadingDock loadingDock in allLoadingDocks)
-            {
-                if (dockID == loadingDock.ID)
-                {
-                    dockFree = loadingDock.Free;
-                    String dockStatus = $"DockId: {loadingDock.ID}, dock free: {dockFree}";
-                    sb.Append(dockStatus);
-                }
-            }
-            return sb.ToString();
-
         }
 
         /// <summary>
@@ -1530,7 +1495,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="dockID">Unique ID of dock to be checked if available.</param>
         /// <returns>Returns a bollean that is true if specified dock is free, or false if it's not.</returns>
-        bool IHarbor.LoadingDockIsFree(Guid dockID)
+        bool LoadingDockIsFree(Guid dockID)
         {
             bool dockIsFree = false;
             foreach (LoadingDock loadingDock in allLoadingDocks)
