@@ -67,25 +67,6 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
         public IList<Container> ContainersOnBoard {  get; } = new List<Container>();
-        /// <summary>
-        /// Gets the number of small containers on board.
-        /// </summary>
-        /// <returns>Returns an int value representing the amount of small containers onboard.</returns>
-        public int numberOfSmallContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// Gets the number of medium containers on board.
-        /// </summary>
-        /// <returns>Returns an int value representing the amount of medium containers onboard.</returns>
-        public int numberOfMediumContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// gets the number of large containers on board.
-        /// </summary>
-        /// <returns>Returns an int value representing the amount of small containers onboard.</returns>
-        public int numberOfLargeContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// Gets the container capacity of the ship.
-        /// </summary>
-        /// <returns>Returns an int value representing the max number of containers the ship can store.</returns>
         public int ContainerCapacity { get; internal set; }
         /// <summary>
         /// Gets the ships max weight the ship in tonns can be before it sinks.
@@ -320,6 +301,27 @@ namespace Gruppe8.HarbNet
             }
 
             CheckForValidWeight();
+        }
+
+        internal void GenerateContainer()
+        {
+            if (ContainersOnBoard.Count < ContainerCapacity)
+            {
+                Random rand = new Random();
+                ContainerSize size;
+
+                if (rand.Next(0, 2) == 0)
+                {
+                    size = ContainerSize.Full;
+                }
+                else
+                {
+                    size = ContainerSize.Half;
+                }
+
+                ContainersOnBoard.Add(new Container(size, (int)size, ID));
+            }
+           
         }
 
         /// <summary>
