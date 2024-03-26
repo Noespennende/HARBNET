@@ -30,6 +30,8 @@ namespace Gruppe8.HarbNet
         /// </summary>
         private Harbor harbor;
 
+        private int numberOfContainersToShipThisRound;
+
         public EventHandler? SimulationEnded;
         public EventHandler? SimulationStarting;
         public EventHandler? OneHourHasPassed;
@@ -49,6 +51,8 @@ namespace Gruppe8.HarbNet
         public EventHandler? ShipDoneUnloading;
         public EventHandler? ShipAnchored;
         public EventHandler? ShipAnchoring;
+
+        public EventHandler? TruckLoadingFromStorage;
 
         /// <summary>
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
@@ -108,6 +112,8 @@ namespace Gruppe8.HarbNet
                 UnloadingShips();
 
                 LoadingShips();
+
+                LoadingTrucksFromStorage();
 
                 InTransitShips();
 
@@ -733,7 +739,7 @@ namespace Gruppe8.HarbNet
             foreach (Crane crane in harbor.DockCranes)
             {
                 if (crane.Container == null)
-                { 
+                {
                     // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
                     int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, crane.ContainersLoadedPerHour);
 
@@ -777,14 +783,20 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">The ship the container is being unloaded from.</param>
         /// <param name="crane">The crane at the dock that is being used for moving between ship and adv.</param>
         /// <returns>The container that has been unloaded off ship.</returns>
-        private Container MoveContainerFromShipToAdv(Ship ship, Crane crane)
+        private Container? MoveContainerFromShipToAdv(Ship ship, Crane crane)
         {
             Adv adv = harbor.GetFreeAdv();
 
-            Container unloadedContainer = harbor.ShipToCrane(ship, crane, currentTime);
-            harbor.CraneToAdv(crane, adv, currentTime);
+            if (adv != null)
+            {
+                Container unloadedContainer = harbor.ShipToCrane(ship, crane, currentTime);
+                harbor.CraneToAdv(crane, adv, currentTime);
 
-            return unloadedContainer;
+                return unloadedContainer;
+
+            }
+
+            return null;
 
             // Event og status håndtering kommer //
 
@@ -1124,12 +1136,30 @@ namespace Gruppe8.HarbNet
 
         private void LoadShipForOneHour(Ship ship, Guid currentPosition)
         {
-            for (int i = 0; i < ship.ContainersLoadedPerHour; i++)
-            {
 
+            numberOfContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
+
+            Crane? testCrane = harbor.GetFreeLoadingDockCrane();
+
+            // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
+            int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, testCrane.ContainersLoadedPerHour);
+            int numberOfRepeats;
+
+            if (maxLoadsPerHour == harbor.LoadsPerAdvPerHour)
+            {
+                
+                numberOfRepeats = maxLoadsPerHour * harbor.AdvFree.Count;
+            }
+            else
+            {
+                numberOfRepeats = maxLoadsPerHour * Math.Min(harbor.DockCranes.Count, harbor.HarborStorageAreaCranes.Count);
+            }
+
+            for (int i = 0; i < numberOfContainersToShipThisRound && i < numberOfRepeats; i++)
+            {
+                // Gjør det til maks per time er nådd, eller nådd antall containere i storage for ship
                 Container? loadedContainer = LoadContainerOnShip(ship);
 
-                
                 // Event and Status handling
                 if (loadedContainer == null)
                 {
@@ -1143,16 +1173,43 @@ namespace Gruppe8.HarbNet
 
                     ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentPosition);
                     ShipUndocking?.Invoke(this, shipUndockingEventArgs);
-                    break;
+                    //break;
                 }
                 else
                 {
-                    // Legger eventet her siden det blir dobbelt opp i LoadContainerOnShip ..?
+                    // Legger eventet her siden det blir dobbelt opp i LoadContainerOnStorageAdv ..?
                     ShipLoadedContainerEventArgs shipLoadedContainerEventArgs = new(ship, currentTime, "Ship has loaded one container.", loadedContainer);
                     ShipLoadedContainer?.Invoke(this, shipLoadedContainerEventArgs);
                 }
+            }
+        }
+
+        internal Container? LoadContainerOnShip(Ship ship)
+        {
+            numberOfContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
+
+            Container? loadedContainer = null;
+            Container? movedContainer = null;
+
+            Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
+            Crane? dockCrane = harbor.GetFreeLoadingDockCrane();
+
+            if (storageCrane.Container == null && dockCrane.Container == null)
+            {
+                Console.WriteLine($"containers to ship: {numberOfContainersToShipThisRound} - in storage: {harbor.storedContainers.Count} - for truck: {harbor.NumberOfContainersInStorageToTrucks()}");
+
+                loadedContainer = LoadContainerOnStorageAdv(ship);
+
+                movedContainer = MoveOneContainerFromAdvToShip(loadedContainer, ship);
+
+
+
+                return movedContainer;
 
             }
+
+            Console.WriteLine("HER ER JEG NÅÅÅ");
+            return null;
         }
 
         /// <summary>
@@ -1160,7 +1217,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ship">The ship that is loading the container onboard.</param>
         /// <returns></returns>
-        internal Container? LoadContainerOnShip(Ship ship)
+        internal Container? LoadContainerOnStorageAdv(Ship ship)
         {
 
             Container? containerToBeLoaded;
@@ -1176,7 +1233,7 @@ namespace Gruppe8.HarbNet
 
                 if (underMaxCapacity && underMaxWeight)
                 {
-                    containerToBeLoaded = MoveOneContainerFromContainerRowToShip(ContainerSize.Half, ship);
+                    containerToBeLoaded = MoveOneContainerFromContainerRowToAdv(ContainerSize.Half);
 
                     return containerToBeLoaded;
 
@@ -1191,8 +1248,8 @@ namespace Gruppe8.HarbNet
 
                 if (underMaxCapacity && underMaxWeight)
                 {
-                    containerToBeLoaded = MoveOneContainerFromContainerRowToShip(ContainerSize.Full, ship);
-                    
+                    containerToBeLoaded = MoveOneContainerFromContainerRowToAdv(ContainerSize.Full);
+
                     return containerToBeLoaded;
                 }
             }
@@ -1200,7 +1257,32 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
-        private Container? MoveOneContainerFromContainerRowToShip(ContainerSize containerSize, Ship ship)
+        internal Container? LoadContainerFromStorageAdvToShip(Container container, Ship ship)
+        {
+
+            Container? loadedContainer;
+
+            // For hver DockCrane, så kan cont
+            foreach (Crane crane in harbor.DockCranes)
+            {
+                if (crane.Container == null)
+                {
+                    // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
+                    int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, crane.ContainersLoadedPerHour);
+
+                    // Gjør det til maks per time er nådd, eller skipet er tomt
+                    for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)
+                    {
+                        loadedContainer = MoveOneContainerFromAdvToShip(container, ship);
+                        return loadedContainer;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private Container? MoveOneContainerFromContainerRowToAdv(ContainerSize containerSize)
         {
             Adv adv = harbor.GetFreeAdv();
             Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
@@ -1212,19 +1294,32 @@ namespace Gruppe8.HarbNet
 
             Container? container = harbor.ContainerRowToCrane(containerSize, storageCrane, currentTime);
 
-            if (container == null)
+            if (container == null || adv == null)
             {
-                // Exception ??
+                return null;
             }
             harbor.CraneToAdv(storageCrane, adv, currentTime);
 
-            Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
-            Crane loadingDockCrane = harbor.GetFreeLoadingDockCrane();
+            return container;
+
+        }
+
+        private Container? MoveOneContainerFromAdvToShip(Container? container, Ship ship)
+        {
+            Adv? adv = null;
+
+            if (container != null) 
+            { 
+                adv = harbor.GetAdvContainingContainer(container);
+            }
+
+            Crane? loadingDockCrane = harbor.GetFreeLoadingDockCrane();
+
             if (adv == null || loadingDockCrane == null)
             {
-                // EXCEPTION HÅNDTERING ?
                 return null;
             }
+            
             harbor.AdvToCrane(loadingDockCrane, adv, currentTime);
             harbor.CraneToShip(loadingDockCrane, ship, currentTime);
             return container;
@@ -1288,6 +1383,84 @@ namespace Gruppe8.HarbNet
 
 
         }
+
+
+
+        private void LoadingTrucksFromStorage()
+        {
+            int numberOfContainersToTrucks = harbor.NumberOfContainersInStorageToTrucks();
+
+            Container? container = null;
+            int containersToTruck = 0;
+
+            while (harbor.TrucksInQueue.Count > 0 && numberOfContainersToTrucks > containersToTruck)
+            {
+                foreach (Crane crane in harbor.HarborStorageAreaCranes)
+                {
+                    int maxLoadsPerHour = crane.ContainersLoadedPerHour;
+
+                    for (int i = 0; i < maxLoadsPerHour && containersToTruck < numberOfContainersToTrucks; i++)
+                    {
+                        container = harbor.storedContainers.FirstOrDefault().Key;
+                        if (container == null)
+                        {
+                            break; // Avslutt løkken hvis det ikke er flere containere igjen
+                        }
+
+                        if (harbor.TrucksInQueue.Count > 0)
+                        {
+                            Console.WriteLine($"PRØVER - {numberOfContainersToTrucks}");
+                            MoveOneContainerFromContainerRowToTruck(container);
+                            containersToTruck++;
+                            Truck truck = harbor.SendTruckOnTransit(container);
+
+
+                            TruckLoadingFromStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, currentTime, "One truck has loaded a container and has left");
+                            TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
+                        }
+
+                        if (containersToTruck == maxLoadsPerHour)
+                        {
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+
+                if (numberOfContainersToTrucks <= containersToTruck)
+                {
+                    break; // Avslutt hovedløkken hvis vi har lastet nok containere
+                }
+            }
+        }
+
+        private Container? MoveOneContainerFromContainerRowToTruck(Container container)
+        {
+            Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
+            if (storageCrane == null)
+            {
+                // EXCEPTION HÅNDTERING HVOR ?
+                return null;
+            }
+
+            Container? containerFound = harbor.ContainerRowToCrane(container.Size, storageCrane, currentTime);
+
+            if (container == null)
+            {
+                // Exception ??
+            }
+            Truck? truck = harbor.GetFreeTruck();
+
+            if (truck != null && containerFound != null)
+            {
+                harbor.CraneToTruck(storageCrane, truck, currentTime);
+            }
+   
+            return containerFound;
+
+        }
+
 
         /// <summary>
         /// Returns a string that contains information about all ships in the previous simulation.
@@ -1928,6 +2101,21 @@ namespace Gruppe8.HarbNet
             : base(ship, currentTime, description)
         {
             AnchorageID = anchorageID;
+        }
+    }
+
+    public class TruckLoadingFromStorageEventArgs : EventArgs
+    {
+        public Truck Truck { get; internal set; }
+
+        public DateTime CurrentTime { get; internal set; }
+        public string Description { get; internal set; }
+
+        public TruckLoadingFromStorageEventArgs(Truck truck, DateTime currentTime, string description)
+        {
+            Truck = truck;
+            CurrentTime = currentTime;
+            Description = description;
         }
     }
 }

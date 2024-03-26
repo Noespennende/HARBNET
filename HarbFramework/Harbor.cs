@@ -377,6 +377,53 @@ namespace Gruppe8.HarbNet
             }
             
         }
+
+        internal Truck? SendTruckOnTransit(Container container)
+        {
+            
+            foreach (Truck truck in TrucksInQueue)
+            {
+                if (truck.Container == container)
+                {
+                    RemoveTruckFromQueue(truck);
+                    TrucksInTransit.Add(truck);
+
+                    return truck;
+                }
+                
+            }
+            return null;
+        }
+
+        internal int NumberOfContainersInStorageToShips()
+        {
+            int numberOfContainersToShips = storedContainers.Count - NumberOfContainersInStorageToTrucks();
+
+            return numberOfContainersToShips;
+        }
+
+        internal int NumberOfContainersInStorageToTrucks()
+        {
+            double percentTrucks = 0.10; // PercentOfContainersDirectlyLoadedFromStorageArea;
+
+            double decimalNumberOfContainers = storedContainers.Count * percentTrucks;
+
+            double decimalPart = decimalNumberOfContainers - Math.Floor(decimalNumberOfContainers);
+
+            int numberOfContainersToTrucks;
+
+            if (decimalPart < 0.5)
+            {
+                numberOfContainersToTrucks = (int)Math.Floor(decimalNumberOfContainers);
+            }
+            else
+            {
+                numberOfContainersToTrucks = (int)Math.Ceiling(decimalNumberOfContainers);
+            }
+
+            return numberOfContainersToTrucks;
+        }
+
         /// <summary>
         /// Loading an ADV with a container
         /// </summary>
