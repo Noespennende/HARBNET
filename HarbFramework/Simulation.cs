@@ -30,7 +30,9 @@ namespace Gruppe8.HarbNet
         /// </summary>
         private Harbor harbor;
 
-        private int numberOfContainersToShipThisRound;
+        private int numberOfStorageContainersToShipThisRound;
+
+        private int numberOfStorageContainersToTrucksThisRound;
 
         public EventHandler? SimulationEnded;
         public EventHandler? SimulationStarting;
@@ -1137,7 +1139,7 @@ namespace Gruppe8.HarbNet
         private void LoadShipForOneHour(Ship ship, Guid currentPosition)
         {
 
-            numberOfContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
+            numberOfStorageContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
 
             Crane? testCrane = harbor.GetFreeLoadingDockCrane();
 
@@ -1155,7 +1157,7 @@ namespace Gruppe8.HarbNet
                 numberOfRepeats = maxLoadsPerHour * Math.Min(harbor.DockCranes.Count, harbor.HarborStorageAreaCranes.Count);
             }
 
-            for (int i = 0; i < numberOfContainersToShipThisRound && i < numberOfRepeats; i++)
+            for (int i = 0; i < numberOfStorageContainersToShipThisRound && i < numberOfRepeats; i++)
             {
                 // Gjør det til maks per time er nådd, eller nådd antall containere i storage for ship
                 Container? loadedContainer = LoadContainerOnShip(ship);
@@ -1186,7 +1188,7 @@ namespace Gruppe8.HarbNet
 
         internal Container? LoadContainerOnShip(Ship ship)
         {
-            numberOfContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
+            numberOfStorageContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
 
             Container? loadedContainer = null;
             Container? movedContainer = null;
@@ -1196,7 +1198,7 @@ namespace Gruppe8.HarbNet
 
             if (storageCrane.Container == null && dockCrane.Container == null)
             {
-                Console.WriteLine($"containers to ship: {numberOfContainersToShipThisRound} - in storage: {harbor.storedContainers.Count} - for truck: {harbor.NumberOfContainersInStorageToTrucks()}");
+                Console.WriteLine($"containers to ship: {numberOfStorageContainersToShipThisRound} - in storage: {harbor.storedContainers.Count} - for truck: {harbor.NumberOfContainersInStorageToTrucks()}");
 
                 loadedContainer = LoadContainerOnStorageAdv(ship);
 
@@ -1388,13 +1390,16 @@ namespace Gruppe8.HarbNet
 
         private void LoadingTrucksFromStorage()
         {
-            int numberOfContainersToTrucks = harbor.NumberOfContainersInStorageToTrucks();
+            int numberOfContainersToTrucks = CalculateNumberOfStorageContainersToTrucks();
 
             Container? container = null;
             int containersToTruck = 0;
 
+            Console.WriteLine($"I Storage: {harbor.storedContainers.Count} - Antall containere fra storage til trucks - {numberOfContainersToTrucks}");
+
             while (harbor.TrucksInQueue.Count > 0 && numberOfContainersToTrucks > containersToTruck)
             {
+                
                 foreach (Crane crane in harbor.HarborStorageAreaCranes)
                 {
                     int maxLoadsPerHour = crane.ContainersLoadedPerHour;
@@ -1409,7 +1414,7 @@ namespace Gruppe8.HarbNet
 
                         if (harbor.TrucksInQueue.Count > 0)
                         {
-                            Console.WriteLine($"PRØVER - {numberOfContainersToTrucks}");
+                            
                             MoveOneContainerFromContainerRowToTruck(container);
                             containersToTruck++;
                             Truck truck = harbor.SendTruckOnTransit(container);
@@ -1433,6 +1438,20 @@ namespace Gruppe8.HarbNet
                     break; // Avslutt hovedløkken hvis vi har lastet nok containere
                 }
             }
+        }
+
+        private int CalculateNumberOfStorageContainersToTrucks()
+        {
+            if (harbor.shipsInLoadingDock.Count != 0)
+            {
+                numberOfStorageContainersToTrucksThisRound = harbor.NumberOfContainersInStorageToTrucks();
+                return numberOfStorageContainersToTrucksThisRound;
+            }
+            else
+            {
+                return numberOfStorageContainersToTrucksThisRound;
+            }
+                
         }
 
         private Container? MoveOneContainerFromContainerRowToTruck(Container container)
