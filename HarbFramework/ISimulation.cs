@@ -5,7 +5,7 @@ using System.Text;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Interface defining the public API of the Simulation class
+    /// Interface defining the public API of the Simulation class.
     /// </summary>
     public interface ISimulation
     {   
@@ -13,7 +13,6 @@ namespace Gruppe8.HarbNet
         /// A list of DailyLog objects containing information about the status of the harbour troughout the duration of a simulation.
         /// </summary>
         public ReadOnlyCollection<DailyLog> History { get; }
-
         /// <summary>
         /// Starting the simulation
         /// </summary>
