@@ -67,6 +67,10 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
         public IList<Container> ContainersOnBoard {  get; } = new List<Container>();
+        /// <summary>
+        /// The capacity of containers the ship can hold.
+        /// </summary>
+        /// <returns>Returns an int value representing the amount of containers a ship can hold.</returns>
         public int ContainerCapacity { get; internal set; }
         /// <summary>
         /// Gets the ships max weight the ship in tonns can be before it sinks.
@@ -303,6 +307,10 @@ namespace Gruppe8.HarbNet
             CheckForValidWeight();
         }
 
+        /// <summary>
+        /// Creates a container and adds it onboard the ship.
+        /// </summary>
+        /// <param name="time">The Date and time the container is created.</param>
         internal void GenerateContainer(DateTime time)
         {
             if (ContainersOnBoard.Count < ContainerCapacity)
@@ -612,7 +620,6 @@ namespace Gruppe8.HarbNet
         /// Returns the ships entire history in the form of a string.
         /// </summary>
         /// <returns> a String containing the ships entire history.</returns>
-
         public String HistoryToString()
         {
             StringBuilder sb = new StringBuilder();
