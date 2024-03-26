@@ -157,7 +157,7 @@ namespace Client.HarborName
             clientSim.ShipStartingUnloading += (sender, e) =>
             {
                 ShipStartingUnloadingEventArgs args = (ShipStartingUnloadingEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' is starting the unloading process.'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' is starting the unloading process. Containers onboard: {args.Ship.ContainersOnBoard.Count}'\n");
 
             };
 
@@ -172,14 +172,14 @@ namespace Client.HarborName
             clientSim.ShipDoneUnloading += (sender, e) =>
             {
                 ShipDoneUnloadingEventArgs args = (ShipDoneUnloadingEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished unloading.\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished unloading. Containers onboard: {args.Ship.ContainersOnBoard.Count}\n");
 
             };
 
             clientSim.ShipStartingLoading += (sender, e) =>
             {
                 ShipStartingLoadingEventArgs args = (ShipStartingLoadingEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' is starting the loading process.\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' is starting the loading process. Containers onboard: {args.Ship.ContainersOnBoard.Count}\n");
 
             };
 
@@ -195,7 +195,7 @@ namespace Client.HarborName
             clientSim.ShipDoneLoading += (sender, e) =>
             {
                 ShipDoneLoadingEventArgs args = (ShipDoneLoadingEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished loading.\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished loading. Containers onboard: {args.Ship.ContainersOnBoard.Count}\n");
 
             };
 

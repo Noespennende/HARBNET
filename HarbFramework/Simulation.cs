@@ -308,6 +308,13 @@ namespace Gruppe8.HarbNet
             return ship.HistoryIList.Last();
         }
 
+        private StatusLog? GetSecondLastStatusLog(Ship ship)
+        {
+            return ship.HistoryIList != null && ship.HistoryIList.Count >= 2
+                    ? ship.HistoryIList[ship.HistoryIList.Count - 2]
+                    : null;
+        }
+
         /// <summary>
         /// Docking ships to the harbor, the shipStatus is set to docking
         /// </summary>
@@ -591,7 +598,7 @@ namespace Gruppe8.HarbNet
                 //StatusLog? lastStatusLog = ship.HistoryIList?.Last();
                 StatusLog? lastStatusLog = GetStatusLog(ship);
 
-                StatusLog? secondLastStatusLog = ship.HistoryIList?[ship.HistoryIList.Count - 2];
+                StatusLog? secondLastStatusLog = GetSecondLastStatusLog(ship);
 
 
                 if (IsShipReadyForUnloading(ship,lastStatusLog,secondLastStatusLog))
@@ -875,10 +882,10 @@ namespace Gruppe8.HarbNet
         {
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
+
                 Guid shipID = ship.ID;
                 //StatusLog lastStatusLog = ship.HistoryIList.Last();
                 StatusLog lastStatusLog = GetStatusLog(ship);
-
 
                 /*if (ship.HasBeenAlteredThisHour == false && lastStatusLog != null &&
                     (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock ||
@@ -889,12 +896,17 @@ namespace Gruppe8.HarbNet
                 {
                     bool containsTransitStatus = ContainsTransitStatus(ship);
 
-
-                    if (SingleTripShipCanUndock(ship, lastStatusLog)) //ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock;
+                    if (SingleTripShipCanDockToShipDock(ship, lastStatusLog)) //ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock;
                     {
                         Guid dockID = harbor.DockShipToShipDock(ship.ID);
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToShipDock);
 
+                    }
+
+                    else if (ship.IsForASingleTrip && !containsTransitStatus && lastStatusLog.Status == Status.DockedToLoadingDock)
+                    {
+                        ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
+                        ship.TransitStatus = TransitStatus.Leaving;
                     }
 
                     else if (ShipIsDockingToDock(ship, lastStatusLog)) //lastStatusLog.Status == Status.DockingToShipDock && (CurrentTime - lastStatusLog.PointInTime).TotalHours >= 1
@@ -996,10 +1008,11 @@ namespace Gruppe8.HarbNet
             bool containsTransitStatus = ContainsTransitStatus(ship);
 
             return ship.HasBeenAlteredThisHour == false && lastStatusLog != null &&
-                    (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock ||
+                    (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || 
+                    (lastStatusLog.Status == Status.DockedToLoadingDock && ship.IsForASingleTrip && !ContainsTransitStatus(ship)) ||
                     (lastStatusLog.Status == Status.UnloadingDone && ContainsTransitStatus(ship)) || lastStatusLog.Status == Status.DockingToShipDock);
         }
-        private bool SingleTripShipCanUndock(Ship ship, StatusLog lastStatusLog)
+        private bool SingleTripShipCanDockToShipDock(Ship ship, StatusLog lastStatusLog)
         {
             bool containsTransitStatus = ContainsTransitStatus(ship);
             return ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock && FreeDockExists(ship) != null;
@@ -1045,7 +1058,7 @@ namespace Gruppe8.HarbNet
             {
 
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
-                StatusLog secondLastStatusLog = ship.HistoryIList[ship.HistoryIList.Count - 2];
+                StatusLog secondLastStatusLog = GetSecondLastStatusLog(ship);
 
                 // Dette kan simplifiseres og refaktoriseres ned (f.eks singleTripShip går igjen her..)
                 bool shipIsNotSingleTripAndIsDoneUnloading = (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true));
