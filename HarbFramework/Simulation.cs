@@ -1522,10 +1522,10 @@ namespace Gruppe8.HarbNet
                                 TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
 
                             }
-                            
+
                         }
 
-                        if (containersToTruck == maxLoadsPerHour)
+                        else
                         {
                             break;
                         }
@@ -1534,10 +1534,7 @@ namespace Gruppe8.HarbNet
                     break;
                 }
 
-                if (numberOfContainersToTrucks <= containersToTruck)
-                {
-                    break; // Avslutt hovedløkken hvis vi har lastet nok containere
-                }
+                break;
             }
         }
         /// <summary>
