@@ -303,7 +303,7 @@ namespace Gruppe8.HarbNet
             CheckForValidWeight();
         }
 
-        internal void GenerateContainer()
+        internal void GenerateContainer(DateTime time)
         {
             if (ContainersOnBoard.Count < ContainerCapacity)
             {
@@ -319,7 +319,11 @@ namespace Gruppe8.HarbNet
                     size = ContainerSize.Half;
                 }
 
-                ContainersOnBoard.Add(new Container(size, (int)size, ID));
+                Container container = new Container(size, (int)size, ID);
+
+                container.AddStatusChangeToHistory(Status.InStorage, time);
+
+                ContainersOnBoard.Add(container);
             }
            
         }

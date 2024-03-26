@@ -930,7 +930,7 @@ namespace Gruppe8.HarbNet
 
             for (int i = 0; i < rand.Next(ship.ContainerCapacity/3, ship.ContainerCapacity - 1); i++)
             {
-                ship.GenerateContainer();
+                ship.GenerateContainer(time);
             }
 
 
