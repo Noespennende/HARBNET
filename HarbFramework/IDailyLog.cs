@@ -43,6 +43,12 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Container object representing the containers stored in when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Container> ContainersInHarbour { get; }
+
+        /// <summary>
+        /// Gets a ReadOnlyCollection of container objects containing information of all the containers that have arrived to their destination during the simulation.
+        /// </summary>
+        /// <returns>Returns a ReadOnlyCollection of container objects containing information of all the containers that have arrived to their destination during the simulation.</returns>
+        public ReadOnlyCollection<Container> ContainersArrivedAtDestination { get; }
         /// <summary>
         /// Prints the wereabouts and info regarding all the ships in the DailyLog.
         /// </summary>

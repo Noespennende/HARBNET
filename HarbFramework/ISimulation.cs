@@ -23,6 +23,16 @@ namespace Gruppe8.HarbNet
         /// </summary>
         public void PrintShipHistory();
         /// <summary>
+        /// Prints the ships history to console
+        ///  <param name="shipToBePrinted">The ship who's history will be printed</param>
+        /// </summary>
+        public void PrintShipHistory(Ship shipToBePrinted);
+        /// <summary>
+        /// Prints the ships history to console
+        ///  <param name="shipName">Name of the ship who's history will be printed</param>
+        /// </summary>
+        public void PrintShipHistory(Guid shipID);
+        /// <summary>
         /// prints the containers history to console
         /// </summary>
         public void PrintContainerHistory();
@@ -46,12 +56,18 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a String containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
         public String HistoryToString(String ShipsOrContainers);
 
-
         /// <summary>
         /// Returns a string that represents the information about one ship in the simulation.
         /// </summary>
         /// <param name="ship">The ship you want information on</param>
         /// <returns>Returns a String containing information about the given ship in the simulation</returns>
         public String HistoryToString(Ship ship);
+
+        /// <summary>
+        /// Returns a string that represents the information about one ship in the simulation.
+        /// </summary>
+        /// <param name="shipID">Name of the ship you want information on</param>
+        /// <returns>Returns a String containing information about the given ship in the simulation</returns>
+        public String HistoryToString(Guid shipID);
     }
 }

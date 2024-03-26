@@ -16,12 +16,12 @@ namespace Gruppe8.HarbNet
         /// </summary>
         None = 0,
         /// <summary>
-        /// Small container. Weight: 10 tonn.
+        /// Half container. Weight: 10 tonn.
         /// </summary>
-        Half = 1,
+        Half = 10,
         /// <summary>
-        /// Medium container. Weight: 15 tonn.
+        /// Full container. Weight: 20 tonn.
         /// </summary>
-        Full = 2,
+        Full = 20,
     }
 }

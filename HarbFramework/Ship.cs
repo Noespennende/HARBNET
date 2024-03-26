@@ -67,25 +67,6 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
         public IList<Container> ContainersOnBoard {  get; } = new List<Container>();
-        /// <summary>
-        /// Gets the number of small containers on board.
-        /// </summary>
-        /// <returns>Returns an int value representing the amount of small containers onboard.</returns>
-        public int numberOfSmallContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// Gets the number of medium containers on board.
-        /// </summary>
-        /// <returns>Returns an int value representing the amount of medium containers onboard.</returns>
-        public int numberOfMediumContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// gets the number of large containers on board.
-        /// </summary>
-        /// <returns>Returns an int value representing the amount of small containers onboard.</returns>
-        public int numberOfLargeContainersOnBoard { get; internal set; }
-        /// <summary>
-        /// Gets the container capacity of the ship.
-        /// </summary>
-        /// <returns>Returns an int value representing the max number of containers the ship can store.</returns>
         public int ContainerCapacity { get; internal set; }
         /// <summary>
         /// Gets the ships max weight the ship in tonns can be before it sinks.
@@ -157,8 +138,16 @@ namespace Gruppe8.HarbNet
             this.IsForASingleTrip = isForASingleTrip;
             this.HistoryIList = new List<StatusLog>();
             this.DirectDeliveryPercentage = directDeliveryPercentage;
-            this.TransitStatus = TransitStatus.Arriving;
 
+            if (isForASingleTrip)
+            {
+                this.TransitStatus = TransitStatus.Leaving;
+            }
+            else
+            {
+                this.TransitStatus = TransitStatus.Arriving;
+            }
+            
             if (shipSize == ShipSize.Large)
             {
                 this.ContainersLoadedPerHour = 8;
@@ -314,13 +303,51 @@ namespace Gruppe8.HarbNet
             CheckForValidWeight();
         }
 
+        internal void GenerateContainer(DateTime time)
+        {
+            if (ContainersOnBoard.Count < ContainerCapacity)
+            {
+                Random rand = new Random();
+                ContainerSize size;
+
+                if (rand.Next(0, 2) == 0)
+                {
+                    size = ContainerSize.Full;
+                }
+                else
+                {
+                    size = ContainerSize.Half;
+                }
+
+                Container container = new Container(size, (int)size, ID);
+
+                container.AddStatusChangeToHistory(Status.InStorage, time);
+
+                ContainersOnBoard.Add(container);
+            }
+           
+        }
+
         /// <summary>
         /// Gets the number of containers for trucks to load.
         /// </summary>
+        /// <param name="percentTrucks">The percentage of containers that is to be loaded directly on trucks from ship.</param>
         /// <returns>Returns the int value of the total amount of containers for trucks to load.</returns>
-        internal int GetNumberOfContainersToTrucks()
+        internal int GetNumberOfContainersToTrucks(double percentTrucks)
         {
-            int numberOfContainersToTrucks = ContainersOnBoard.Count() * (DirectDeliveryPercentage / 100);
+            double decimalNumberOfContainers = ContainersOnBoard.Count * percentTrucks;
+
+            int numberOfContainersToTrucks;
+            double decimalPart = decimalNumberOfContainers - Math.Floor(decimalNumberOfContainers);
+
+            if (decimalPart < 0.5)
+            {
+                numberOfContainersToTrucks = (int)Math.Floor(decimalNumberOfContainers);
+            }
+            else
+            {
+                numberOfContainersToTrucks = (int)Math.Ceiling(decimalNumberOfContainers);
+            }
 
             return numberOfContainersToTrucks;
         }
@@ -328,10 +355,11 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets the number of containers going to storage on ship.
         /// </summary>
+        /// <param name="percentTrucks">The percentage of containers that is to be loaded directly on trucks from ship.</param>
         /// <returns>Returns the int value of the total amount of containers in storage onboard ship.</returns>
-        internal int GetNumberOfContainersToStorage()
+        internal int GetNumberOfContainersToStorage(double percentTrucks)
         {
-            int numberOfContainersToStorage = ContainersOnBoard.Count() - GetNumberOfContainersToTrucks();
+            int numberOfContainersToStorage = ContainersOnBoard.Count - GetNumberOfContainersToTrucks(percentTrucks);
 
             return numberOfContainersToStorage;
         }
@@ -602,8 +630,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Unloads container from ship.
         /// </summary>
-        /// <returns>Returns null if there is zero containers on board, or the container object that will be unloaded.</returns>
-        public Container? UnloadContainer()
+        /// <returns>Returns null if there is zero containers on board, or the container object that will be unloaded</returns>
+        internal Container? UnloadContainer()
         {
             if(ContainersOnBoard.Count <= 0)
             {
@@ -612,6 +640,7 @@ namespace Gruppe8.HarbNet
 
             Container containertoUnload = ContainersOnBoard[0];
             ContainersOnBoard.RemoveAt(0);
+            CurrentWeightInTonn -= containertoUnload.WeightInTonn;
 
             return containertoUnload;
         }

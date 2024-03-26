@@ -12,7 +12,11 @@ namespace Client.HarborName
         static void Main(string[] args)
         {
 
+
             //CLIENT HARBOR 
+            // Denne koden representerer ett eksempel av hvordan kunden kan opprette en simulering for havnen som er gitt i oppgaven.
+            // Det finnes flere måter å gjøre dette på i APIet og koden under er bare ett eksempel på hvordan dette kan gjøres. 
+
             DateTime clientStartTime = new DateTime(2024, 3, 1, 8, 0, 0);
             DateTime clientEndTime = clientStartTime + TimeSpan.FromDays(20);
 
@@ -100,7 +104,7 @@ namespace Client.HarborName
             Ship ship1 = new Ship(("Ship solo 1"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2)));
             Ship ship2 = new Ship(("Ship solo 2"), ShipSize.Medium, clientStartTime, true, rand.Next(0, 6), rand.Next(1, (49 / 2)), rand.Next(1, (49 / 2)));
             Ship ship3 = new Ship(("Ship recurring"), ShipSize.Large, clientStartTime, false, rand.Next(0, 6), rand.Next(1, (99 / 2)), rand.Next(1, (99 / 2)));
-            
+
             clientShips.Add(ship1);
             clientShips.Add(ship2);
             clientShips.Add(ship3);
@@ -120,7 +124,12 @@ namespace Client.HarborName
                 Thread.Sleep(2000);
             };
 
+            clientSim.OneHourHasPassed += (sender, e) =>
+            {
+                OneHourHasPassedEventArgs args = (OneHourHasPassedEventArgs)e;
+                Console.WriteLine($"| New hour!: {args.CurrentTime.TimeOfDay} |\n");
 
+            };
 
             clientSim.ShipAnchoring += (sender, e) =>
             {
@@ -146,37 +155,73 @@ namespace Client.HarborName
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to loading dock with ID {args.DockID}\n");
             };
 
-
-            clientSim.ShipUnloadedContainer += (sender, e) =>
+            clientSim.ShipStartingUnloading += (sender, e) =>
             {
-                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+                ShipStartingUnloadingEventArgs args = (ShipStartingUnloadingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' is starting the unloading process. Containers onboard: {args.Ship.ContainersOnBoard.Count}'\n");
 
             };
 
+            // BØR FORANDRE HVA SOM SKJER PÅ "MOTTAKELSE" -> Akkurat nå blir det myyyye utskrift. Kanskje en count?
+            clientSim.ShipUnloadedContainer += (sender, e) =>
+            {
+                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
+                //Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+
+            };
+
+            clientSim.ShipDoneUnloading += (sender, e) =>
+            {
+                ShipDoneUnloadingEventArgs args = (ShipDoneUnloadingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished unloading. - Containers onboard: {args.Ship.ContainersOnBoard.Count}\n");
+
+            };
+
+            clientSim.ShipStartingLoading += (sender, e) =>
+            {
+                ShipStartingLoadingEventArgs args = (ShipStartingLoadingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' is starting the loading process. Containers onboard: {args.Ship.ContainersOnBoard.Count}\n");
+
+            };
+
+            // BØR FORANDRE HVA SOM SKJER PÅ "MOTTAKELSE" -> Akkurat nå blir det myyyye utskrift. Kanskje en count?
             clientSim.ShipLoadedContainer += (sender, e) =>
             {
+
                 ShipLoadedContainerEventArgs args = (ShipLoadedContainerEventArgs)e;
 
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
+                //Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
+            };
+
+            clientSim.ShipDoneLoading += (sender, e) =>
+            {
+                ShipDoneLoadingEventArgs args = (ShipDoneLoadingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has finished loading. - Containers onboard: {args.Ship.ContainersOnBoard.Count}\n");
+
             };
 
             clientSim.ShipUndocking += (sender, e) =>
             {
                 ShipUndockingEventArgs args = (ShipUndockingEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' undocking from dock ID '{args.DockID}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' undocking from location ID '{args.LocationID}'\n");
             };
 
             clientSim.ShipInTransit += (sender, e) =>
             {
                 ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime}  | ' {args.Ship.Name}' is in transit at transit ID '{args.TransitLocationID}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | ' {args.Ship.Name}' is in transit at transit ID '{args.TransitLocationID}'\n");
             };
 
             clientSim.ShipDockedToShipDock += (sender, e) =>
             {
                 ShipDockedToShipDockEventArgs args = (ShipDockedToShipDockEventArgs)e;
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to ship dock with ID '{args.DockID}'\n");
+            };
+
+            clientSim.TruckLoadingFromStorage += (sender, e) =>
+            {
+                TruckLoadingFromStorageEventArgs args = (TruckLoadingFromStorageEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | A truck has loaded a container and left the harbor \n");
             };
 
             clientSim.DayEnded += (sender, e) =>
@@ -228,6 +273,8 @@ namespace Client.HarborName
                 Console.WriteLine($"-----------------------------------");
                 Console.WriteLine($"|         Simulation over!         |");
                 Console.WriteLine($"-----------------------------------");
+
+                Thread.Sleep(1000);
             };
 
 
@@ -245,6 +292,9 @@ namespace Client.HarborName
                 Console.WriteLine($"Simulating {args.HarborToBeSimulated.ID} from {args.StartDate}\n");
                 Thread.Sleep(2000);
             };
+
+
+            
 
 
 

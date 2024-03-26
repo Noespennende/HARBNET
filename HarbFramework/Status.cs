@@ -87,5 +87,10 @@ namespace Gruppe8.HarbNet
         /// Truck queuing.
         /// </summary>
         Queuing,
+        /// <summary>
+        /// Container has arrived at destination
+        /// </summary>
+        ArrivedAtDestination,
+
     }
 }

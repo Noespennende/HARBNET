@@ -30,8 +30,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         private Harbor harbor;
 
+        private int numberOfStorageContainersToShipThisRound;
+
+        private int numberOfStorageContainersToTrucksThisRound;
+
         public EventHandler? SimulationEnded;
         public EventHandler? SimulationStarting;
+        public EventHandler? OneHourHasPassed;
         public EventHandler? DayEnded;
         public EventHandler? DayLoggedToSimulationHistory;
         public EventHandler? ShipUndocking;
@@ -40,10 +45,16 @@ namespace Gruppe8.HarbNet
         public EventHandler? ShipDockedToShipDock;
         public EventHandler? ShipDockingtoLoadingDock;
         public EventHandler? ShipDockedtoLoadingDock;
+        public EventHandler? ShipStartingLoading;
         public EventHandler? ShipLoadedContainer;
+        public EventHandler? ShipDoneLoading;
+        public EventHandler? ShipStartingUnloading;
         public EventHandler? ShipUnloadedContainer;
+        public EventHandler? ShipDoneUnloading;
         public EventHandler? ShipAnchored;
         public EventHandler? ShipAnchoring;
+
+        public EventHandler? TruckLoadingFromStorage;
 
         /// <summary>
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
@@ -72,17 +83,15 @@ namespace Gruppe8.HarbNet
         /// <returns>returns the history of the simulation in the form of log objects where each object contains information about all ships and containers on one day of the simulation.</returns>
         public IList<DailyLog> Run()
         {
-            
-            
+
+            this.currentTime = startTime;
+
             SimulationStartingEventArgs simulationStartingEventArgs = new(harbor, currentTime, "The simulation has started");
             
             SimulationStarting?.Invoke(this, simulationStartingEventArgs);
 
             HistoryIList.Add(new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(),
                         harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock()));
-
-
-            this.currentTime = startTime;
 
             while (currentTime < endTime)
             {
@@ -106,16 +115,21 @@ namespace Gruppe8.HarbNet
 
                 LoadingShips();
 
+                LoadingTrucksFromStorage();
+
                 InTransitShips();
 
                 EndOf24HourPeriod();
 
+
+                OneHourHasPassedEventArgs oneHourHasPassedEventArgs = new(currentTime, "One hour has passed in the simulation, which equals to one 'round'");
+                OneHourHasPassed?.Invoke(this, oneHourHasPassedEventArgs);
+
                 continue;
             }
-            SimulationEndedEventArgs simulationEndedEventArgs = new SimulationEndedEventArgs(History, "The simulation is has reached the end time and ha ended.");
+            SimulationEndedEventArgs simulationEndedEventArgs = new SimulationEndedEventArgs(History, "The simulation has reached the end time and has ended.");
 
             SimulationEnded?.Invoke(this, simulationEndedEventArgs);
-            Thread.Sleep(1000);
 
             return History;
 
@@ -128,7 +142,8 @@ namespace Gruppe8.HarbNet
         {
             foreach (Ship ship in harbor.AllShips)
             {
-                ShipAnchoringEventArgs shipAnchoringEventArgs = new(ship, currentTime, "Ship is anchoring to anchorage.", harbor.AnchorageID);
+                ShipAnchoredEventArgs shipAnchoredEventArgs = new(ship, currentTime, "Ship has anchored to Anchorage.", harbor.AnchorageID);
+                
 
                 if (ship.StartDate == currentTime)
                 {
@@ -138,14 +153,24 @@ namespace Gruppe8.HarbNet
                     if (ship.IsForASingleTrip == true && harbor.GetFreeLoadingDock(ship.ShipSize) != null)
                     {
                         Guid loadingDock = harbor.StartShipInLoadingDock(ship.ID);
-                        
+
+                        ShipDockedToLoadingDockEventArgs shipDockedToLoadingDockEventArgs = new(ship, currentTime, "Ship has docked to loading dock.", loadingDock);
+
                         ship.AddStatusChangeToHistory(currentTime, loadingDock, Status.DockedToLoadingDock);
+
+                        ShipDockedtoLoadingDock?.Invoke(this, shipDockedToLoadingDockEventArgs);
+
+                    }
+                    else if (ship.IsForASingleTrip == true && harbor.GetFreeLoadingDock(ship.ShipSize) == null)
+                    {
+                        ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchored);
+                        ShipAnchored?.Invoke(this, shipAnchoredEventArgs);
                     }
                     else
                     {
                         ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
                         ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchored);
-                        ShipAnchoring?.Invoke(this, shipAnchoringEventArgs);
+                        ShipAnchored?.Invoke(this, shipAnchoredEventArgs);
                     } 
                 }
             }
@@ -220,6 +245,25 @@ namespace Gruppe8.HarbNet
             shipToBePrinted.PrintHistory();
         }
 
+        public void PrintShipHistory(Guid shipID)
+        {
+
+
+            foreach (Ship ship in harbor.AllShips)
+            {
+                if (ship.ID.Equals(shipID))
+                {
+                    ship.PrintHistory();
+                    break;
+                }
+
+            
+            }
+
+            throw new ShipNotFoundExeption("The ship you are trying to print does not exist in the Harbor the simulation is using.");
+
+        }
+
         /// <summary>
         /// Printing each container in the simulations entire history to console.
         /// </summary>
@@ -264,196 +308,24 @@ namespace Gruppe8.HarbNet
 
         private bool ShipIsAnchoring(Ship ship, StatusLog lastStatusLog)
         {
-            return !ship.HasBeenAlteredThisHour && lastStatusLog != null && lastStatusLog.Status == Status.Anchoring;
+            return ShipNotAlteredWithStatusLog(ship, lastStatusLog) && lastStatusLog.Status == Status.Anchoring;
         }
-
-        /*
-        private void DockingShips()
-        {
-            DockShipsInShipDock();
-            DockShipsInLoadingDock();
-            
-        }
-
-        private void DockShipsInShipDock()
-        {
-            foreach(Ship ship in harbor.shipsInShipDock.Keys)
-            {
-                if (ShipCanDockInShipDock(ship)){
-                    ShipNowDockingToShipDock(ship);
-                }
-            }
-        }
-
-        private void ShipNowDockingToShipDock(Ship ship)
-        {
-            StatusLog lastStatusLog = GetStatusLog(ship);
-            Guid dockID;
-
-            if (CanDocktoLoadingDock(ship, lastStatusLog))
-            {
-                if (lastStatusLog.Status == Status.Anchored)
-                {
-                    DocktoLoadingDock(ship);
-                }
-
-                if (CanDockToShipDock(ship, lastStatusLog))
-                {
-                    DockToShipDock(ship);
-
-                }
-
-            }
-
-            ship.HasBeenAlteredThisHour = true;
-        }
-
-        private bool CanDockToShipDock(Ship ship, StatusLog lastStatusLog)
-        {
-            return harbor.FreeShipDockExists(ship.ShipSize) && ship.IsForASingleTrip == true && ContainsTransitStatus(ship)
-                    && ship.ContainersOnBoard.Count == 0 && currentTime != startTime
-                    && lastStatusLog.Status != Status.DockingToShipDock;
-        }
-
-        private void DockToShipDock(Ship ship)
-        {
-            Guid dockID = harbor.DockShipToShipDock(ship.ID);
-            ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToShipDock);
-
-            ShipDockingToShipDockEventArgs shipDockingToShipDock = new(ship, currentTime, "Ship is docking to ship dock.", dockID);
-            ShipDockingToShipDock?.Invoke(this, shipDockingToShipDock); 
-        }
-
-        private void DocktoLoadingDock(Ship ship)
-        {
-            Guid dockID = harbor.DockShipToLoadingDock(ship.ID, currentTime);
-            ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
-
-            ShipDockingToLoadingDockEventArgs shipDockingToLoadingDockEventArgs = new(ship, currentTime, "Ship is docking to loading dock.", dockID);
-            ShipDockingtoLoadingDock?.Invoke(this, shipDockingToLoadingDockEventArgs);
-        }
-
-       
-
-        private bool CanDocktoLoadingDock(Ship ship, StatusLog lastStatusLog)
-        {
-            return harbor.FreeLoadingDockExists(ship.ShipSize) && lastStatusLog.Status != Status.DockedToShipDock;
-        }
-
-        private bool ShipCanDockInShipDock(Ship ship)
-        {
-            StatusLog lastStatusLog = ship.HistoryIList.Last();
-
-            return !ship.HasBeenAlteredThisHour && lastStatusLog != null &&
-           (lastStatusLog.Status == Status.Anchored ||
-            lastStatusLog.Status == Status.DockedToShipDock ||
-            lastStatusLog.Status == Status.DockingToLoadingDock ||
-            (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship))));
-        }
-
-        private void DockShipsInLoadingDock()
-        {
-            foreach (Ship ship in harbor.shipsInShipDock.Keys)
-            {
-                if (ShipCanDockToLoadingDock(ship))
-                {
-                    ShipNowDockingToLoadingDock(ship);
-                }
-            }
-        }
-
-        private bool ShipCanDockToLoadingDock(Ship ship)
-        {
-            StatusLog lastStatusLog = ship.HistoryIList.Last();
-
-            return !ship.HasBeenAlteredThisHour && lastStatusLog != null &&
-                   (lastStatusLog.Status == Status.DockedToShipDock ||
-                    lastStatusLog.Status == Status.DockingToLoadingDock ||
-                    (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship))));
-        }
-        
-        // Dette er vel når skipet har docket? Docked. Og starter loading. (Status settes til Status.DockedToLoadingDock)
-        private void ShipNowDockingToLoadingDock(Ship ship)
-        {
-            Guid shipID = ship.ID;
-            StatusLog lastStatusLog = ship.HistoryIList.Last();
-
-            if (lastStatusLog.Status == Status.DockingToLoadingDock && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1)
-            {
-
-                Guid dockID = lastStatusLog.SubjectLocation;
-                ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToLoadingDock);
-
-                ShipDockedToLoadingDockEventArgs shipDockedToLoadingDockEventArgs = new(ship, currentTime, "Ship has docked to loading dock.", dockID);
-                ShipDockingtoLoadingDock?.Invoke(this, shipDockedToLoadingDockEventArgs);
-
-                if (CanStartLoading(ship))
-                {
-                    StartLoading(ship, dockID);
-                }
-                else
-                {
-                    StartUnloading(ship, dockID );
-                }
-            }
-
-        }
-
-        private bool CanStartLoading(Ship ship)
-        {
-            return ship.IsForASingleTrip && !ContainsTransitStatus(ship);
-        }
-
-        private void StartLoading(Ship ship, Guid dockID)
-        {
-            ship.AddStatusChangeToHistory(currentTime, dockID, Status.Loading);
-        }
-
-        private void StartUnloading(Ship ship, Guid dockID)
-        {
-            ship.AddStatusChangeToHistory(currentTime, dockID, Status.Unloading);
-        }
-
-
-        private void DockShipsInAnchorage()
-        {
-            foreach (Ship ship in harbor.shipsInShipDock.Keys)
-            {
-                if (ShipCanDockToAnchorage(ship))
-                {
-                    ShipNowDockingToAnchorage();
-                }
-            }
-        }
-
-        private bool ShipCanDockToAnchorage(Ship ship)
-        {
-            StatusLog lastStatusLog = ship.HistoryIList.LastOrDefault();
-
-            return !ship.HasBeenAlteredThisHour && lastStatusLog != null &&
-                   (lastStatusLog.Status == Status.Anchored ||
-                    lastStatusLog.Status == Status.DockedToShipDock ||
-                    lastStatusLog.Status == Status.DockingToLoadingDock ||
-                    lastStatusLog.Status == Status.DockingToShipDock ||
-                    (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship))));
-        }
-
-
-        private void ShipNowDockingToAnchorage()
-        {
-            throw new NotImplementedException();
-        }
-        */
 
         private StatusLog GetStatusLog(Ship ship)
         {
             return ship.HistoryIList.Last();
         }
 
+        private StatusLog? GetSecondLastStatusLog(Ship ship)
+        {
+            return ship.HistoryIList != null && ship.HistoryIList.Count >= 2
+                    ? ship.HistoryIList[ship.HistoryIList.Count - 2]
+                    : null;
+        }
+
         /// <summary>
         /// Docking ships to the harbor, the shipStatus is set to docking
         /// </summary>
-
         private void DockingShips()
         {
 
@@ -499,67 +371,53 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in ShipsInLoadingDock)
             {
                 Guid shipID = ship.ID;
-                StatusLog lastStatusLog = ship.HistoryIList.Last();
+                StatusLog lastStatusLog = GetStatusLog(ship);
 
                 // Skipet har fått plass "inne" i Harbor (ikke Anchorage) (DockingToLoadingDock) -> De skal unloade/loade
-                if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
+                if (ShipNotAlteredWithStatusLog(ship, lastStatusLog) &&
                     (lastStatusLog.Status == Status.DockingToLoadingDock ||
-                    (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))))
+                    (lastStatusLog.Status == Status.UnloadingDone && SingleTripShipInTransit(ship))))
                 {
                     // Skipet holder på med å docke ("in the process of docking" (Pga DockingToLoadingDock statusen), og har gjort det i minst 1 time)
-                    if (lastStatusLog.Status == Status.DockingToLoadingDock && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1)
+                    if (ShipDockingForMoreThanOneHour(lastStatusLog))
                     {
                         Guid dockID = lastStatusLog.SubjectLocation;
 
-                        ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToLoadingDock);
+                        ShipDockingToLoadingDock(ship, dockID);
 
-                        ShipDockedToLoadingDockEventArgs shipDockedToLoadingDockEventArgs = new(ship, currentTime, "Ship has docked to loading dock.", dockID);
-                        
-                        ShipDockedtoLoadingDock?.Invoke(this, shipDockedToLoadingDockEventArgs);
 
-                        // Hvis skipet er et enkeltseilingskip og har ikke "InTransit" historie (har aldri vært ute på tur)
-                        
-                        // Skipet har vært i Transit og er ikke tomt
-                        if (ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count != 0)
+                        // Skipet har vært i Transit og er ikke tomt -> Skal Unloade
+                        if (ShipFromTransitWithContainersToUnload(ship))
                         {
-                            ship.AddStatusChangeToHistory(currentTime, dockID, Status.Unloading);
+                            StartUnloadProcess(ship, dockID);
                         }
-                        // Skipet er tomt og er ikke enkeltseiling 
+                        // Skipet er tomt og er ikke enkeltseiling -> Skal Loade
                         else if (ship.ContainersOnBoard.Count == 0 && !ship.IsForASingleTrip)
                         {
-                            ship.AddStatusChangeToHistory(currentTime, dockID, Status.Loading);
+                            StartLoadingProcess(ship, dockID);
                         }
 
-                        // Anchoring av enkeltskip i ShipsInLoadingDock blir flyttet til anchorage via AnchorageShips()
+                        // Ikke noe ship.HasBeenAlteredThisHour = true; fordi det er ingen ventetid mellom DockedToLoadingDock og Unloading/Loading nødvendig.
+                        // Er med andre ord en rask status-forandring som skjer her.
                     }
 
                     // Skipet er et enkeltseilingskip og er tomt og det er ledig shipdock
-                    else if (ship.IsForASingleTrip && ship.ContainersOnBoard.Count == 0 
-                        && harbor.FreeShipDockExists(ship.ShipSize))
+                    else if (ship.IsForASingleTrip && ship.ContainersOnBoard.Count == 0
+                        && FreeDockExists(ship))
                     {
                         // Det er ledig shipdock, ingen containere om bord, og siste status er ikke DockingToShipDock (unødig dobbel if?)
-                        if (harbor.FreeShipDockExists(ship.ShipSize) && ship.IsForASingleTrip == true && ContainsTransitStatus(ship)
-                            && ship.ContainersOnBoard.Count == 0 && currentTime != startTime
+                        if (FreeDockExists(ship) && SingleTripShipInTransit(ship)
+                            && ShipHasNoContainers(ship) && currentTime != startTime
                             && lastStatusLog.Status != Status.DockingToShipDock)
                         {
-                            Guid dockID = harbor.DockShipToShipDock(shipID);
-
-                            ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToShipDock);
-
-                            ShipDockingToShipDockEventArgs shipDockingToShipDockEventArgs = new(ship, currentTime, "Ship is docking to ship dock.", dockID);
-                            ShipDockingToShipDock?.Invoke(this, shipDockingToShipDockEventArgs);
+                            ShipNowDockingToShipDock(ship, shipID);
                         }
                     }
 
                     // Det er IKKE ledig shipDock, så enkeltskip går til Anchorage
-                    else if (ship.IsForASingleTrip && !harbor.FreeShipDockExists(ship.ShipSize) && ship.TransitStatus == TransitStatus.Anchoring)
+                    else if (ship.IsForASingleTrip && !FreeDockExists(ship) && ship.TransitStatus == TransitStatus.Anchoring)
                     {
-                        ShipAnchoringEventArgs shipAnchoringEventArgs = new(ship, currentTime, "Ship is anchoring to anchorage.", harbor.AnchorageID);
-
-                        ship.TransitStatus = TransitStatus.Anchoring;
-
-                        harbor.AddNewShipToAnchorage(ship);
-                        ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
+                        ShipAnchoringToAnchorage(ship);
                     }
 
                 }
@@ -568,54 +426,52 @@ namespace Gruppe8.HarbNet
             // Skipet ligger i Anchorage og docking skal begynne / er ønsket (Skip skal få status til "DockingTo...")
             foreach (Ship ship in Anchorage)
             {
-                
-                Guid shipID = ship.ID;
-                StatusLog lastStatusLog = ship.HistoryIList.Last();
 
-                
-                if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
-                    (lastStatusLog.Status == Status.Anchored ||
-                    lastStatusLog.Status == Status.DockedToShipDock ||
-                    lastStatusLog.Status == Status.DockingToLoadingDock ||
-                    lastStatusLog.Status == Status.DockingToShipDock ||
-                    (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))))
+                Guid shipID = ship.ID;
+                StatusLog lastStatusLog = GetStatusLog(ship);
+
+                if (ShipCanDock(ship, lastStatusLog))
                 {
 
                     Guid dockID;
 
+                    // Unngår at singleTripShip i Anchorage som måtte docke i Anchorage på starten av simuleringen får loadingDock før den har vært i Transit
+                    // Dette fordi singleTripShip i Anchorage skal dra direkte i Transit og ikke måtte innom loadingDock
+
+
                     // Skip ønsker å begynne å docke til loading dock (trigges så videre i LoadingShips() overordnede metoden) 
-                    if (harbor.FreeLoadingDockExists(ship.ShipSize) && ship.ContainersOnBoard.Count != 0)
+                    //
+                    // (ship.IsForASingleTrip && !ContainsTransitStatus(ship)) brukes fordi....:
+                    // Unngår at enkeltseiling-skip i Anchorage som måtte docke i starten av simulering får loadingDock før den har vært i Transit.
+                    if (NonEmptyShipReadyForLoadingDock(ship))
                     {
 
                         if (lastStatusLog.Status == Status.Anchored)
                         {
                             dockID = harbor.DockShipToLoadingDock(shipID, currentTime);
-
-                            ShipDockingToLoadingDockEventArgs ShipDockingToLoadingDockEventArgs = new(ship, currentTime, "Ship is docking to loading dock.", dockID);
-                            ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
-                            ShipDockingtoLoadingDock?.Invoke(this, ShipDockingToLoadingDockEventArgs);
+                            ShipDockingToLoadingDock(ship, dockID);
                         }
                     }
                     // Skipet er et enkeltseilingskip og det er ledig shipdock (VIKTIG: TransitStatus == TransitStatus.Anchoring)
-                    else if (ship.IsForASingleTrip && harbor.FreeShipDockExists(ship.ShipSize))
+                    // Hele denne kan være unødig, siden et skip ikke forlater ShipDock, og da skal det aldri bli en ledig ShipDock når et skip først på i Anchorage pga plassmangel.
+                    // Kanskje grei å beholde i tilfelle rottefelle fremtidige forandringer?
+                    else if (SingleTripShipAnchoring(ship))
                     {
-                        // Det er ledig shipdock, ingen containere om bord, og siste status er ikke DockingToShipDock (unødig dobbel if?)
-                        if (harbor.FreeShipDockExists(ship.ShipSize) && ship.IsForASingleTrip == true && ContainsTransitStatus(ship)
-                            && ship.ContainersOnBoard.Count == 0 && currentTime != startTime
+                        // Det er ledig shipdock, ingen containere om bord, og siste status er ikke DockingToShipDock (unødig dobbel if-setning?)
+                        
+                        if (FreeDockExists(ship) && SingleTripShipInTransit(ship)
+                            && ShipHasNoContainers(ship) && currentTime != startTime
                             && lastStatusLog.Status != Status.DockingToShipDock)
                         {
                             dockID = harbor.DockShipToShipDock(shipID);
 
-                            ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToShipDock);
-
-                            ShipDockingToShipDockEventArgs shipDockingToShipDockEventArgs = new(ship, currentTime, "Ship is docking to ship dock.", dockID);
-                            ShipDockingToShipDock?.Invoke(this, shipDockingToShipDockEventArgs);
+                            ShipNowDockingToShipDock(ship, dockID);
                         }
                     }
 
-                    // Skipet er singleTrip, det er ikke plass i ShipDock, den har vært i transit (TransitStatus eksisterer) og siste status var Anchoring
+                    // Skipet er singleTrip, det er ikke plass i ShipDock, den har vært i transit (ContainsTransitStatus) og siste status var Anchoring
                     // Kanskje unødig sjekk for "ikke plass i ShipDock", da skipet ikke skal få Anchoring status om det er plass
-                    else if (ship.IsForASingleTrip && !(harbor.FreeShipDockExists(ship.ShipSize)) && 
+                    else if (ship.IsForASingleTrip && !(FreeDockExists(ship)) &&
                         ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count == 0 && lastStatusLog.Status == Status.Anchoring)
                     {
                         ship.AddStatusChangeToHistory(currentTime, lastStatusLog.SubjectLocation, Status.Anchored);
@@ -627,6 +483,117 @@ namespace Gruppe8.HarbNet
 
 
         }
+
+        private bool SingleTripShipAnchoring(Ship ship)
+        {
+            return ship.IsForASingleTrip && FreeDockExists(ship) && ship.TransitStatus == TransitStatus.Anchoring;
+        }
+
+
+        private bool NonEmptyShipReadyForLoadingDock(Ship ship)
+        {
+            return harbor.FreeLoadingDockExists(ship.ShipSize) && ship.ContainersOnBoard.Count != 0 && !(ship.IsForASingleTrip && !ContainsTransitStatus(ship));
+        }
+
+        private static bool ShipCanDock(Ship ship, StatusLog lastStatusLog)
+        {
+            return ShipNotAlteredWithStatusLog(ship, lastStatusLog) &&
+                                (lastStatusLog.Status == Status.Anchored ||
+                                lastStatusLog.Status == Status.DockedToShipDock ||
+                                lastStatusLog.Status == Status.DockingToLoadingDock ||
+                                lastStatusLog.Status == Status.DockingToShipDock ||
+                                (lastStatusLog.Status == Status.UnloadingDone && SingleTripShipInTransit(ship)));
+        }
+
+        private void ShipAnchoringToAnchorage(Ship ship)
+        {
+            ShipAnchoringEventArgs shipAnchoringEventArgs = new(ship, currentTime, "Ship is anchoring to anchorage.", harbor.AnchorageID);
+
+            ship.TransitStatus = TransitStatus.Anchoring;
+
+            harbor.AddNewShipToAnchorage(ship);
+            ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
+            ShipAnchoring?.Invoke(this, shipAnchoringEventArgs);
+
+            ship.HasBeenAlteredThisHour = true;
+        }
+
+        private void ShipNowDockingToShipDock(Ship ship, Guid shipID)
+        {
+            Guid dockID = harbor.DockShipToShipDock(shipID);
+
+            ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToShipDock);
+
+            ShipDockingToShipDockEventArgs shipDockingToShipDockEventArgs = new(ship, currentTime, "Ship is docking to ship dock.", dockID);
+            ShipDockingToShipDock?.Invoke(this, shipDockingToShipDockEventArgs);
+
+            ship.HasBeenAlteredThisHour = true;
+
+        }
+
+        private static bool ShipHasNoContainers(Ship ship)
+        {
+            return ship.ContainersOnBoard.Count == 0;
+        }
+
+        private bool FreeDockExists(Ship ship)
+        {
+            return harbor.FreeShipDockExists(ship.ShipSize);
+        }
+
+        private void StartLoadingProcess(Ship ship, Guid dockID)
+        {
+            ShipStartingLoadingEventArgs shipStartingLoadingEventArgs = new(ship, currentTime, "The ship is starting the loading process.", ship.CurrentLocation);
+
+            ship.AddStatusChangeToHistory(currentTime, dockID, Status.Loading);
+
+            ShipStartingLoading?.Invoke(this, shipStartingLoadingEventArgs);
+        }
+
+        private static bool SingleTripShipInTransit(Ship ship)
+        {
+            return (ship.IsForASingleTrip == true && ContainsTransitStatus(ship));
+        }
+
+        private void StartUnloadProcess(Ship ship, Guid dockID)
+        {
+            ShipStartingUnloadingEventArgs shipStartingUnloadingEventArgs = new(ship, currentTime, "The ship is starting the unloading process.", ship.CurrentLocation);
+
+            double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips;
+            ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks(percentTrucks);
+
+            ship.AddStatusChangeToHistory(currentTime, dockID, Status.Unloading);
+
+            ShipStartingUnloading?.Invoke(this, shipStartingUnloadingEventArgs);
+        }
+
+        private bool ShipDockingForMoreThanOneHour(StatusLog lastStatusLog)
+        {
+            return lastStatusLog.Status == Status.DockingToLoadingDock && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1;
+        }
+
+        private bool ShipFromTransitWithContainersToUnload(Ship ship)
+        {
+            return ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count != 0;
+        }
+
+      
+
+        private void ShipDockingToLoadingDock(Ship ship, Guid dockID)
+        {
+            ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToLoadingDock);
+
+            ShipDockedToLoadingDockEventArgs shipDockedToLoadingDockEventArgs = new(ship, currentTime, "Ship has docked to loading dock.", dockID);
+
+            ShipDockedtoLoadingDock?.Invoke(this, shipDockedToLoadingDockEventArgs);
+        }
+
+        private static bool ShipNotAlteredWithStatusLog(Ship ship, StatusLog lastStatusLog)
+        {
+            return !ship.HasBeenAlteredThisHour && lastStatusLog != null;
+        }
+
+
         /// <summary>
         /// unload containers from ship to harbor
         /// </summary>
@@ -639,7 +606,7 @@ namespace Gruppe8.HarbNet
                 //StatusLog? lastStatusLog = ship.HistoryIList?.Last();
                 StatusLog? lastStatusLog = GetStatusLog(ship);
 
-                StatusLog? secondLastStatusLog = ship.HistoryIList?[ship.HistoryIList.Count - 2];
+                StatusLog? secondLastStatusLog = GetSecondLastStatusLog(ship);
 
 
                 if (IsShipReadyForUnloading(ship,lastStatusLog,secondLastStatusLog))
@@ -648,15 +615,16 @@ namespace Gruppe8.HarbNet
                 {
 
                     Guid currentPosition = lastStatusLog.SubjectLocation;
+                    Guid dockID = lastStatusLog.SubjectLocation;
 
                     // Unloading container
                     if (ShipNowUnloading(ship, lastStatusLog))  //ship.ContainersOnBoard.Count != 0 && lastStatusLog.Status == Status.DockedToLoadingDock || lastStatusLog.Status == Status.Unloading
                     {
+
                         if (ShipIsDockedToLoadingDock(ship, lastStatusLog)) //lastStatusLog.Status == Status.DockedToLoadingDock
                         {
-                            ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Unloading);
-
-                            ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks();
+                            StartUnloadProcess(ship, dockID);
+                            
                         }
 
                         // ** Unloading **
@@ -664,43 +632,11 @@ namespace Gruppe8.HarbNet
                         UnloadShipForOneHour(ship);
                         UpdateShipStatus(ship, lastStatusLog, secondLastStatusLog);
 
-                        // Skipet er enkeltseiling og ferdig unloadet, OG det er ingen ledig shipDock
-                        // -> Skipet må "parkere selv" utenfor harbor
-                        if (ship.IsForASingleTrip && ship.ContainersOnBoard.Count == 0 && harbor.GetFreeShipDock == null)
-                        {
-                            harbor.AddNewShipToAnchorage(ship);
-                            ship.TransitStatus = TransitStatus.Anchoring;
-                            ship.AddStatusChangeToHistory(currentTime, harbor.AnchorageID, Status.Anchoring);
+                       
 
-                        }
-                        
+                        ship.HasBeenAlteredThisHour = true;
                     }
 
-                    // Status oppdateringer
-                    
-                    
-                    /*
-                    if (secondLastStatusLog.Status == Status.DockedToShipDock)
-                    {
-                        ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
-                    }
-
-                    else if (ship.ContainersOnBoard.Count == 0 && !(ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))
-                    {
-                        ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.UnloadingDone);
-
-                        ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
-                    }
-                    else if (ship.ContainersOnBoard.Count == 0 && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))
-                    {
-                        ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.UnloadingDone);
-
-                        ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.DockingToShipDock);
-                    }
-                    */
-
-                    ship.HasBeenAlteredThisHour = true;
-                    
                 }
 
             }
@@ -708,7 +644,7 @@ namespace Gruppe8.HarbNet
 
         private bool IsShipReadyForUnloading(Ship ship, StatusLog lastStatusLog, StatusLog secondLastStatusLog)
         {
-            return !ship.HasBeenAlteredThisHour && lastStatusLog != null && secondLastStatusLog != null &&
+            return ShipNotAlteredWithStatusLog(ship, lastStatusLog) && secondLastStatusLog != null &&
                     (lastStatusLog.Status == Status.Unloading || lastStatusLog.Status == Status.DockedToLoadingDock && secondLastStatusLog != null);
         }
 
@@ -725,37 +661,66 @@ namespace Gruppe8.HarbNet
 
         private void UpdateShipStatus(Ship ship, StatusLog lastStatusLog, StatusLog secondLastStatusLog)
         {
-            Guid currentPosition = lastStatusLog.SubjectLocation;
+            Guid currentLocation = lastStatusLog.SubjectLocation;
 
+            // Denne tror jeg kan slettes
             if (secondLastStatusLog.Status == Status.DockedToShipDock)
             {
-                ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
+                ShipStartingUnloadingEventArgs shipStartingUnloadingEventArgs = new(ship, currentTime, "The ship is starting the unloading process.", ship.CurrentLocation);
+
+                double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips;
+                ship.ContainersLeftForTrucks = ship.GetNumberOfContainersToTrucks(percentTrucks);
+
+                ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.Unloading);
+
+                ShipStartingUnloading?.Invoke(this, shipStartingUnloadingEventArgs);
             }
 
-            else if (ship.ContainersOnBoard.Count == 0 && !(ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))
+            // Skipet er ferdig med unloading, og *er ikke* enkeltseiling-skip som har vært på tur
+            else if (ship.ContainersOnBoard.Count == 0 && !SingleTripShipInTransit(ship))
             {
-                ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.UnloadingDone);
 
-                ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
+                ShipDoneUnloadingEventArgs shipDoneUnloadingEventArgs = new(ship, currentTime, "The ship has finished unloading.", currentLocation);
+                ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.UnloadingDone);
+
+                ShipDoneUnloading?.Invoke(this, shipDoneUnloadingEventArgs);
+
+                ShipStartingLoadingEventArgs shipStartingLoadingEventArgs = new(ship, currentTime, "The ship is starting the loading process.", ship.CurrentLocation);
+                ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.Loading);
+
+                ShipStartingLoading?.Invoke(this, shipStartingLoadingEventArgs);
+
+                
             }
-            else if (ship.ContainersOnBoard.Count == 0 && (ship.IsForASingleTrip == true && ContainsTransitStatus(ship)))
+
+            // Skipet er ferdig med unloading og *er* enkeltseiling-skip som har vært på tur
+            else if (ship.ContainersOnBoard.Count == 0 && SingleTripShipInTransit(ship))
             {
-                ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.UnloadingDone);
+                ShipDoneUnloadingEventArgs shipDoneUnloadingEventArgs = new(ship, currentTime, "The ship has finished unloading.", currentLocation);
+                ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.UnloadingDone);
+
+                ShipDoneUnloading?.Invoke(this, shipDoneUnloadingEventArgs);
 
                 Guid dockID = harbor.DockShipToShipDock(ship.ID);
                 if (dockID != Guid.Empty)
                 { 
-                    ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.DockingToShipDock); 
+                    ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.DockingToShipDock); 
                 }
+
+                // Skipet er enkeltseiling og ferdig unloadet, OG det er *ingen ledig shipDock* (Får derfor TransitStatus = TransitStatus.Anchoring)
+                // -> Skipet må "parkere selv" i Anchorage.
                 else
                 {
+                    ShipAnchoringEventArgs shipAnchoringEventArgs = new(ship, currentTime, "Ship is anchoring to anchorage.", harbor.AnchorageID);
+
                     harbor.AddNewShipToAnchorage(ship);
-                    ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Anchoring);
+                    ship.TransitStatus = TransitStatus.Anchoring;
+                    ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.Anchoring);
+
+                    ShipAnchoring?.Invoke(this, shipAnchoringEventArgs);
 
                 }
             }
-
-            ship.HasBeenAlteredThisHour = true;
         }
 
         /// <summary>
@@ -764,8 +729,9 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">The ship that is being unloaded</param>
         private void UnloadShipForOneHour(Ship ship)
         {
-            int numberOfContainersForTrucks = ship.GetNumberOfContainersToTrucks();
-            int numberOfContainersForStorage = ship.GetNumberOfContainersToStorage();
+            double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips; 
+            int numberOfContainersForTrucks = ship.GetNumberOfContainersToTrucks(percentTrucks);
+            int numberOfContainersForStorage = ship.GetNumberOfContainersToStorage(percentTrucks);
 
             LoadingDock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
 
@@ -775,29 +741,39 @@ namespace Gruppe8.HarbNet
             foreach (Crane crane in harbor.DockCranes)
             {
                 if (crane.Container == null)
-                { 
+                {
                     // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
                     int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, crane.ContainersLoadedPerHour);
 
                     // Gjør det til maks per time er nådd, eller skipet er tomt
                     for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)
                     {
+
+                        Container? container = null;
+
                         if (numberOfContainersForStorage != 0 && (ship.ContainersOnBoard.Count - ship.ContainersLeftForTrucks) > 0) // ?? Lage advsInQueue også?
                         {
-                            Container container = MoveContainerFromShipToAdv(ship, crane);
+                            container = MoveContainerFromShipToAdv(ship, crane);
                             MoveContainerFromAdvToStorage(container);
-                            //Console.WriteLine("Unloading " + ship.Name + " " + container.ID);
                         }
 
                         if (numberOfContainersForTrucks != 0 && harbor.TrucksInQueue.Count != 0)
                         {
-                            Container? container = MoveContainerFromShipToTruck(ship, crane);
+                            container = MoveContainerFromShipToTruck(ship, crane);
                             if (container != null)
                             {
                                 harbor.SendTruckOnTransit(loadingDock, container);
                             }
-                            //Console.WriteLine("Unloading " + ship.Name + " " + container.ID);
                         }
+
+                        if (container != null)
+                        {
+                            ShipUnloadedContainerEventArgs shipUnloadedContainerEventArgs = new(ship, currentTime, "Ship has unloaded one container.", container);
+
+                            ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs);
+
+                        }
+                        
                     }
                 }
             }
@@ -809,14 +785,20 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">The ship the container is being unloaded from.</param>
         /// <param name="crane">The crane at the dock that is being used for moving between ship and adv.</param>
         /// <returns>The container that has been unloaded off ship.</returns>
-        private Container MoveContainerFromShipToAdv(Ship ship, Crane crane)
+        private Container? MoveContainerFromShipToAdv(Ship ship, Crane crane)
         {
             Adv adv = harbor.GetFreeAdv();
 
-            Container unloadedContainer = harbor.ShipToCrane(ship, crane, currentTime);
-            harbor.CraneToAdv(crane, adv, currentTime);
+            if (adv != null)
+            {
+                Container unloadedContainer = harbor.ShipToCrane(ship, crane, currentTime);
+                harbor.CraneToAdv(crane, adv, currentTime);
 
-            return unloadedContainer;
+                return unloadedContainer;
+
+            }
+
+            return null;
 
             // Event og status håndtering kommer //
 
@@ -914,10 +896,10 @@ namespace Gruppe8.HarbNet
         {
             foreach (Ship ship in harbor.DockedShipsInLoadingDock())
             {
+
                 Guid shipID = ship.ID;
                 //StatusLog lastStatusLog = ship.HistoryIList.Last();
                 StatusLog lastStatusLog = GetStatusLog(ship);
-
 
                 /*if (ship.HasBeenAlteredThisHour == false && lastStatusLog != null &&
                     (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock ||
@@ -928,12 +910,17 @@ namespace Gruppe8.HarbNet
                 {
                     bool containsTransitStatus = ContainsTransitStatus(ship);
 
-
-                    if (SingleTripShipCanUndock(ship, lastStatusLog)) //ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock;
+                    if (SingleTripShipCanDockToShipDock(ship, lastStatusLog)) //ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock;
                     {
                         Guid dockID = harbor.DockShipToShipDock(ship.ID);
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToShipDock);
 
+                    }
+
+                    else if (ship.IsForASingleTrip && !containsTransitStatus && lastStatusLog.Status == Status.DockedToLoadingDock)
+                    {
+                        ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
+                        ship.TransitStatus = TransitStatus.Leaving;
                     }
 
                     else if (ShipIsDockingToDock(ship, lastStatusLog)) //lastStatusLog.Status == Status.DockingToShipDock && (CurrentTime - lastStatusLog.PointInTime).TotalHours >= 1
@@ -945,9 +932,10 @@ namespace Gruppe8.HarbNet
                     else if (ShipIsFinishedLoadingContainers(ship, lastStatusLog)) //lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock
                     {
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
+                        ship.TransitStatus = TransitStatus.Leaving;
                     }
 
-                    else if (ShipIsUndockingFromDock(ship, lastStatusLog)) //lastStatusLog.Status == Status.Undocking && (CurrentTime - lastStatusLog.PointInTime).TotalHours >= 1
+                    else if (ShipIsUndocking(ship, lastStatusLog)) //lastStatusLog.Status == Status.Undocking && (CurrentTime - lastStatusLog.PointInTime).TotalHours >= 1
                     {
 
                         harbor.UnDockShipFromLoadingDockToTransit(shipID, currentTime);
@@ -962,6 +950,7 @@ namespace Gruppe8.HarbNet
 
                 }
             }
+
             foreach (Ship ship in harbor.GetShipsInShipDock())
             {
                 Guid shipID = ship.ID;
@@ -987,19 +976,60 @@ namespace Gruppe8.HarbNet
 
                 }
             }
+
+            Guid anchorageID = harbor.AnchorageID;
+            List<Ship> Anchorage = harbor.Anchorage.ToList();
+
+            foreach (Ship ship in Anchorage)
+            {
+                StatusLog lastStatusLog = GetStatusLog(ship);
+
+                // Gjelder enkeltseiling-skip som måtte docke til Anchorage ved simulering-start (fordi: !ContainsTransitStatus)
+                if (ship.IsForASingleTrip && !ContainsTransitStatus(ship))
+                {
+                    if (lastStatusLog.Status == Status.Anchored)
+                    { 
+                        Guid currentLocation = lastStatusLog.SubjectLocation;
+
+                        ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from Anchorage.", currentLocation);
+
+                        ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
+                        ship.TransitStatus = TransitStatus.Leaving;
+
+                        ShipUndocking?.Invoke(this, shipUndockingEventArgs);
+                    }
+
+                    else if (ShipIsUndocking(ship, lastStatusLog))
+                    {
+                        Guid oldLocation = harbor.UnDockShipFromAnchorageToTransit(ship.ID);
+
+                        ShipInTransitEventArgs shipInTransitEventArgs = new(ship, currentTime, "Ship as left the harbor and is in transit.", harbor.TransitLocationID);
+
+                        ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Transit);
+
+                        ShipInTransit?.Invoke(this, shipInTransitEventArgs);
+                    }
+
+                    ship.HasBeenAlteredThisHour = true;
+                }
+
+               
+            }
         }
+
         private bool ShipCanUndockFromDock(Ship ship, StatusLog lastStatusLog)
         {
             bool containsTransitStatus = ContainsTransitStatus(ship);
 
             return ship.HasBeenAlteredThisHour == false && lastStatusLog != null &&
-                    (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock ||
+                    (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || 
+                    (lastStatusLog.Status == Status.DockedToLoadingDock && ship.IsForASingleTrip && !ContainsTransitStatus(ship)) ||
                     (lastStatusLog.Status == Status.UnloadingDone && ContainsTransitStatus(ship)) || lastStatusLog.Status == Status.DockingToShipDock);
         }
-        private bool SingleTripShipCanUndock(Ship ship, StatusLog lastStatusLog)
+        private bool SingleTripShipCanDockToShipDock(Ship ship, StatusLog lastStatusLog)
         {
             bool containsTransitStatus = ContainsTransitStatus(ship);
-            return ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock && harbor.FreeShipDockExists(ship.ShipSize) != null;
+            return ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock && FreeDockExists(ship) != null;
         }
         private bool ShipIsDockingToDock(Ship ship, StatusLog lastStatusLog)
         {
@@ -1009,7 +1039,7 @@ namespace Gruppe8.HarbNet
         {
             return lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock;
         }
-        private bool ShipIsUndockingFromDock(Ship ship, StatusLog lastStatusLog)
+        private bool ShipIsUndocking(Ship ship, StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.Undocking && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1;
         }
@@ -1042,7 +1072,7 @@ namespace Gruppe8.HarbNet
             {
 
                 StatusLog lastStatusLog = ship.HistoryIList.Last();
-                StatusLog secondLastStatusLog = ship.HistoryIList[ship.HistoryIList.Count - 2];
+                StatusLog secondLastStatusLog = GetSecondLastStatusLog(ship);
 
                 // Dette kan simplifiseres og refaktoriseres ned (f.eks singleTripShip går igjen her..)
                 bool shipIsNotSingleTripAndIsDoneUnloading = (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true));
@@ -1050,44 +1080,52 @@ namespace Gruppe8.HarbNet
                 bool LastLocationWasDockedToShipDock = (lastStatusLog.Status == Status.DockedToLoadingDock && secondLastStatusLog != null && secondLastStatusLog.Status == Status.DockedToShipDock);
                 bool shipIsSingleTripAndHasNotBeenOnTrip = (ship.IsForASingleTrip == true && !ContainsTransitStatus(ship));
 
-                if (!ship.HasBeenAlteredThisHour && lastStatusLog != null &&
+                if (ShipNotAlteredWithStatusLog(ship, lastStatusLog) &&
                     shipIsNotSingleTripAndIsDoneUnloading || 
                     shipIsSingleTripAndHasLastUnloadedAndHasNotBeenOnTrip ||
                      (lastStatusLog.Status == Status.Loading) ||
                      (LastLocationWasDockedToShipDock && shipIsSingleTripAndHasNotBeenOnTrip))
                 {
-                    Guid currentPosition = lastStatusLog.SubjectLocation;
-
+                    Guid currentLocation = lastStatusLog.SubjectLocation;
+                    
                     if (ship.ContainersOnBoard.Count < ship.ContainerCapacity && ship.CurrentWeightInTonn < ship.MaxWeightInTonn)
                     {
                         if (harbor.storedContainers.Keys.Count != 0 && ship.ContainersOnBoard.Count < ship.ContainerCapacity)
                         {
                             if (lastStatusLog.Status != Status.Loading)
                             {
-                                ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Loading);
+                                ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.Loading);
                             }
-
-                            LoadShipForOneHour(ship, currentPosition);
+                            LoadShipForOneHour(ship, currentLocation);
 
                         }
 
-                        else
+                       else
                         {
-                            ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
-                            ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Undocking);
+                            ShipDoneLoadingEventArgs shipDoneLoadingEventArgs = new(ship, currentTime, "The ship is done loading.", currentLocation);
+                            ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.LoadingDone);
 
-                            ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentPosition);
+                            ShipDoneLoading?.Invoke(this, shipDoneLoadingEventArgs);
+
+                            ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.Undocking);
+                            ship.TransitStatus = TransitStatus.Leaving;
+
+                            ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentLocation);
                             ShipUndocking?.Invoke(this, shipUndockingEventArgs);
                         }
 
                     }
                     else
                     {
+                        ShipDoneLoadingEventArgs shipDoneLoadingEventArgs = new(ship, currentTime, "The ship is done loading.", currentLocation);
+                        ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.LoadingDone);
 
-                        ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
+                        ShipDoneLoading?.Invoke(this, shipDoneLoadingEventArgs);
+
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
+                        ship.TransitStatus = TransitStatus.Leaving;
 
-                        ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentPosition);
+                        ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentLocation);
                         ShipUndocking?.Invoke(this, shipUndockingEventArgs);
 
                     }
@@ -1100,30 +1138,80 @@ namespace Gruppe8.HarbNet
 
         private void LoadShipForOneHour(Ship ship, Guid currentPosition)
         {
-            for (int i = 0; i < ship.ContainersLoadedPerHour; i++)
-            {
 
+            numberOfStorageContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
+
+            Crane? testCrane = harbor.GetFreeLoadingDockCrane();
+
+            // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
+            int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, testCrane.ContainersLoadedPerHour);
+            int numberOfRepeats;
+
+            if (maxLoadsPerHour == harbor.LoadsPerAdvPerHour)
+            {
+                
+                numberOfRepeats = maxLoadsPerHour * harbor.AdvFree.Count;
+            }
+            else
+            {
+                numberOfRepeats = maxLoadsPerHour * Math.Min(harbor.DockCranes.Count, harbor.HarborStorageAreaCranes.Count);
+            }
+
+            for (int i = 0; i < numberOfStorageContainersToShipThisRound && i < numberOfRepeats; i++)
+            {
+                // Gjør det til maks per time er nådd, eller nådd antall containere i storage for ship
                 Container? loadedContainer = LoadContainerOnShip(ship);
 
-                
                 // Event and Status handling
                 if (loadedContainer == null)
                 {
+                    ShipDoneLoadingEventArgs shipDoneLoadingEventArgs = new(ship, currentTime, "The ship is done loading.", currentPosition);
                     ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.LoadingDone);
+
+                    ShipDoneLoading?.Invoke(this, shipDoneLoadingEventArgs);
+
                     ship.AddStatusChangeToHistory(currentTime, currentPosition, Status.Undocking);
+                    ship.TransitStatus = TransitStatus.Leaving;
 
                     ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentPosition);
                     ShipUndocking?.Invoke(this, shipUndockingEventArgs);
-                    break;
+                    //break;
                 }
                 else
                 {
-                    // Legger eventet her siden det blir dobbelt opp i LoadContainerOnShip ..?
+                    // Legger eventet her siden det blir dobbelt opp i LoadContainerOnStorageAdv ..?
                     ShipLoadedContainerEventArgs shipLoadedContainerEventArgs = new(ship, currentTime, "Ship has loaded one container.", loadedContainer);
                     ShipLoadedContainer?.Invoke(this, shipLoadedContainerEventArgs);
                 }
+            }
+        }
+
+        internal Container? LoadContainerOnShip(Ship ship)
+        {
+            numberOfStorageContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
+
+            Container? loadedContainer = null;
+            Container? movedContainer = null;
+
+            Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
+            Crane? dockCrane = harbor.GetFreeLoadingDockCrane();
+
+            if (storageCrane.Container == null && dockCrane.Container == null)
+            {
+                Console.WriteLine($"containers to ship: {numberOfStorageContainersToShipThisRound} - in storage: {harbor.storedContainers.Count} - for truck: {harbor.NumberOfContainersInStorageToTrucks()}");
+
+                loadedContainer = LoadContainerOnStorageAdv(ship);
+
+                movedContainer = MoveOneContainerFromAdvToShip(loadedContainer, ship);
+
+
+
+                return movedContainer;
 
             }
+
+            Console.WriteLine("HER ER JEG NÅÅÅ");
+            return null;
         }
 
         /// <summary>
@@ -1131,42 +1219,72 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ship">The ship that is loading the container onboard.</param>
         /// <returns></returns>
-        internal Container? LoadContainerOnShip(Ship ship)
+        internal Container? LoadContainerOnStorageAdv(Ship ship)
         {
 
             Container? containerToBeLoaded;
 
-            if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null)
-            {
+            bool underMaxWeight;
+            bool underMaxCapacity;
 
-                bool exceedsMaxWeight = ship.CurrentWeightInTonn + (int)ContainerSize.Half > ship.MaxWeightInTonn;
-                bool exceedsMaxCapacity = ship.ContainersOnBoard.Count + 1 > ship.ContainerCapacity;
-                if (!(exceedsMaxWeight || exceedsMaxCapacity))
+            if (ship.ContainersOnBoard.Count == 0 || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null
+                || harbor.GetStoredContainer(ContainerSize.Full) == null && harbor.GetStoredContainer(ContainerSize.Half) != null)
+            {
+                underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Half;
+                underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
+
+                if (underMaxCapacity && underMaxWeight)
                 {
-                    containerToBeLoaded = MoveOneContainerFromContainerRowToShip(ContainerSize.Half, ship);
+                    containerToBeLoaded = MoveOneContainerFromContainerRowToAdv(ContainerSize.Half);
+
                     return containerToBeLoaded;
+
                 }
             }
 
-            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null)
+            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null
+                || harbor.GetStoredContainer(ContainerSize.Half) == null && harbor.GetStoredContainer(ContainerSize.Full) != null)
             {
-                bool exceedsMaxWeight = ship.CurrentWeightInTonn + (int)ContainerSize.Full > ship.MaxWeightInTonn;
-                bool exceedsMaxCapacity = ship.ContainersOnBoard.Count + 1 > ship.ContainerCapacity;
+                underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Full;
+                underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
 
-                if (!(exceedsMaxWeight || exceedsMaxCapacity))
+                if (underMaxCapacity && underMaxWeight)
                 {
-
-                    containerToBeLoaded = MoveOneContainerFromContainerRowToShip(ContainerSize.Full, ship);
+                    containerToBeLoaded = MoveOneContainerFromContainerRowToAdv(ContainerSize.Full);
 
                     return containerToBeLoaded;
-
                 }
             }
 
             return null;
         }
 
-        private Container? MoveOneContainerFromContainerRowToShip(ContainerSize containerSize, Ship ship)
+        internal Container? LoadContainerFromStorageAdvToShip(Container container, Ship ship)
+        {
+
+            Container? loadedContainer;
+
+            // For hver DockCrane, så kan cont
+            foreach (Crane crane in harbor.DockCranes)
+            {
+                if (crane.Container == null)
+                {
+                    // Regner ut maks mulige avlastinger basert på det minste tallet - kan ikke ADVer gjøre mer enn 10 i timen, men kran kan gjøre 20, så gjør vi aldri mer enn 10.
+                    int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, crane.ContainersLoadedPerHour);
+
+                    // Gjør det til maks per time er nådd, eller skipet er tomt
+                    for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)
+                    {
+                        loadedContainer = MoveOneContainerFromAdvToShip(container, ship);
+                        return loadedContainer;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private Container? MoveOneContainerFromContainerRowToAdv(ContainerSize containerSize)
         {
             Adv adv = harbor.GetFreeAdv();
             Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
@@ -1178,19 +1296,32 @@ namespace Gruppe8.HarbNet
 
             Container? container = harbor.ContainerRowToCrane(containerSize, storageCrane, currentTime);
 
-            if (container == null)
+            if (container == null || adv == null)
             {
-                // Exception ??
+                return null;
             }
             harbor.CraneToAdv(storageCrane, adv, currentTime);
 
-            Dock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
-            Crane loadingDockCrane = harbor.GetFreeLoadingDockCrane();
+            return container;
+
+        }
+
+        private Container? MoveOneContainerFromAdvToShip(Container? container, Ship ship)
+        {
+            Adv? adv = null;
+
+            if (container != null) 
+            { 
+                adv = harbor.GetAdvContainingContainer(container);
+            }
+
+            Crane? loadingDockCrane = harbor.GetFreeLoadingDockCrane();
+
             if (adv == null || loadingDockCrane == null)
             {
-                // EXCEPTION HÅNDTERING ?
                 return null;
             }
+            
             harbor.AdvToCrane(loadingDockCrane, adv, currentTime);
             harbor.CraneToShip(loadingDockCrane, ship, currentTime);
             return container;
@@ -1219,6 +1350,7 @@ namespace Gruppe8.HarbNet
                     {
                         harbor.AddNewShipToAnchorage(ship);
                         ship.AddStatusChangeToHistory(currentTime, CurrentPosition, Status.Anchoring);
+                        ship.TransitStatus = TransitStatus.Arriving;
 
                         ShipAnchoringEventArgs shipAnchoringEventArgs = new(ship, currentTime, "Ship is anchoring to anchorage.", harbor.AnchorageID);
                         ShipAnchoring?.Invoke(this, shipAnchoringEventArgs);
@@ -1254,6 +1386,101 @@ namespace Gruppe8.HarbNet
 
         }
 
+
+
+        private void LoadingTrucksFromStorage()
+        {
+            int numberOfContainersToTrucks = CalculateNumberOfStorageContainersToTrucks();
+
+            Container? container = null;
+            int containersToTruck = 0;
+
+            Console.WriteLine($"I Storage: {harbor.storedContainers.Count} - Antall containere fra storage til trucks - {numberOfContainersToTrucks}");
+
+            while (harbor.TrucksInQueue.Count > 0 && numberOfContainersToTrucks > containersToTruck)
+            {
+                
+                foreach (Crane crane in harbor.HarborStorageAreaCranes)
+                {
+                    int maxLoadsPerHour = crane.ContainersLoadedPerHour;
+
+                    for (int i = 0; i < maxLoadsPerHour && containersToTruck < numberOfContainersToTrucks; i++)
+                    {
+                        container = harbor.storedContainers.FirstOrDefault().Key;
+                        if (container == null)
+                        {
+                            break; // Avslutt løkken hvis det ikke er flere containere igjen
+                        }
+
+                        if (harbor.TrucksInQueue.Count > 0)
+                        {
+                            
+                            MoveOneContainerFromContainerRowToTruck(container);
+                            containersToTruck++;
+                            Truck truck = harbor.SendTruckOnTransit(container);
+
+
+                            TruckLoadingFromStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, currentTime, "One truck has loaded a container and has left");
+                            TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
+                        }
+
+                        if (containersToTruck == maxLoadsPerHour)
+                        {
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+
+                if (numberOfContainersToTrucks <= containersToTruck)
+                {
+                    break; // Avslutt hovedløkken hvis vi har lastet nok containere
+                }
+            }
+        }
+
+        private int CalculateNumberOfStorageContainersToTrucks()
+        {
+            if (harbor.shipsInLoadingDock.Count != 0)
+            {
+                numberOfStorageContainersToTrucksThisRound = harbor.NumberOfContainersInStorageToTrucks();
+                return numberOfStorageContainersToTrucksThisRound;
+            }
+            else
+            {
+                return numberOfStorageContainersToTrucksThisRound;
+            }
+                
+        }
+
+        private Container? MoveOneContainerFromContainerRowToTruck(Container container)
+        {
+            Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
+            if (storageCrane == null)
+            {
+                // EXCEPTION HÅNDTERING HVOR ?
+                return null;
+            }
+
+            Container? containerFound = harbor.ContainerRowToCrane(container.Size, storageCrane, currentTime);
+
+            if (container == null)
+            {
+                // Exception ??
+            }
+            Truck? truck = harbor.GetFreeTruck();
+
+            if (truck != null && containerFound != null)
+            {
+                harbor.CraneToTruck(storageCrane, truck, currentTime);
+            }
+   
+            return containerFound;
+
+        }
+
+
         /// <summary>
         /// Returns a string that contains information about all ships in the previous simulation.
         /// </summary>
@@ -1271,6 +1498,22 @@ namespace Gruppe8.HarbNet
                 return sb.ToString();
             }
             else { return ""; }
+        }
+
+        public string HistoryToString(Guid shipID)
+        {
+
+            foreach (Ship ship in harbor.AllShips)
+            {
+                if (ship.ID.Equals(shipID))
+                {
+                    return ship.HistoryToString();
+                }
+
+
+            }
+
+            throw new ShipNotFoundExeption("The ship you are trying to get the history from does not exist in the Harbor object the simulation is using.");
         }
 
         /// <summary>
@@ -1315,6 +1558,7 @@ namespace Gruppe8.HarbNet
             return ship.HistoryToString();
         }
 
+
         /// <summary>
         /// Returns a string that contains information about the start time, end time of the simulation and the ID of the harbour used.
         /// </summary>
@@ -1324,6 +1568,7 @@ namespace Gruppe8.HarbNet
             return ($"Simulation start time: {startTime.ToString()}, end time: {endTime.ToString()}, harbor ID: {harbor.ID}");
         }
 
+    
     }
 
     /// <summary>
@@ -1359,6 +1604,25 @@ namespace Gruppe8.HarbNet
         {
             HarborToBeSimulated = harborToBeSimulated;
             StartDate = startDate;
+            Description = description;
+        }
+    }
+
+    public class OneHourHasPassedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The time in the simulation the event was raised.
+        /// </summary>
+        public DateTime CurrentTime { get; internal set; }
+
+        /// <summary>
+        /// A description of the event.
+        /// </summary>
+        public string Description { get; internal set; }
+
+        public OneHourHasPassedEventArgs(DateTime currentTime, string description)
+        {
+            CurrentTime = currentTime;
             Description = description;
         }
     }
@@ -1518,22 +1782,22 @@ namespace Gruppe8.HarbNet
     public class ShipUndockingEventArgs : BaseShipEventArgs
     {
         /// <summary>
-        /// The unique ID of the dock the ship undocked from.
+        /// The unique ID of the location the ship undocked from, Anchorage or Dock.
         /// </summary>
-        /// <returns>Guid object representing the ID of the dock the ship undocked from</returns>
-        public Guid DockID { get; internal set; }
+        /// <returns>Guid object representing the ID of the location the ship undocked from</returns>
+        public Guid LocationID { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
         /// <param name="ship">The ship involved in the event.</param>
         /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="dockID">The unique ID of the dock the ship undocked from.</param>
+        /// <param name="locationID">The unique ID of the location the ship undocked from.</param>
         /// <param name="description">A description of the event.</param>
-        public ShipUndockingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
+        public ShipUndockingEventArgs(Ship ship, DateTime currentTime, string description, Guid locationID)
             : base(ship, currentTime, description)
         {
-            DockID = dockID;
+            LocationID = locationID;
         }
     }
 
@@ -1663,7 +1927,28 @@ namespace Gruppe8.HarbNet
         }
 
     }
-    
+
+    public class ShipStartingLoadingEventArgs : BaseShipEventArgs
+    {
+        /// <summary>
+        /// The unique ID of the dock the ship is located at and loading from.
+        /// </summary>
+        public Guid DockID { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the ShipStartingUnloadingEventArgs class.
+        /// </summary>
+        /// <param name="ship">The ship involved in the event.</param>
+        /// <param name="currentTime">The current time in the simulation.</param>
+        /// <param name="description">A description of the event.</param>
+        /// <param name="dockID">The unique ID of the dock the ship is located at and loading from.</param>
+        public ShipStartingLoadingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
+            : base(ship, currentTime, description)
+        {
+            DockID = dockID;
+        }
+    }
+
     /// <summary>
     /// The EventArgs class for the ShipLoadedContainer event.
     /// </summary>
@@ -1688,6 +1973,54 @@ namespace Gruppe8.HarbNet
             Container = container;
         }
 
+    }
+
+    /// <summary>
+    /// The EventArgs class for the ShipStartingUnloading event.
+    /// </summary>
+    public class ShipDoneLoadingEventArgs : BaseShipEventArgs
+    {
+        /// <summary>
+        /// The unique ID of the dock the ship is located and loaded at.
+        /// </summary>
+        public Guid DockID { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the ShipDoneLoadingEventArgs class.
+        /// </summary>
+        /// <param name="ship">The ship involved in the event.</param>
+        /// <param name="currentTime">The current time in the simulation.</param>
+        /// <param name="description">A description of the event.</param>
+        /// <param name="dockID">The unique ID of the dock the ship is located and loaded at.</param>
+        public ShipDoneLoadingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
+            : base(ship, currentTime, description)
+        {
+            DockID = dockID;
+        }
+    }
+
+    /// <summary>
+    /// The EventArgs class for the ShipStartingUnloading event.
+    /// </summary>
+    public class ShipStartingUnloadingEventArgs : BaseShipEventArgs
+    {
+        /// <summary>
+        /// The unique ID of the dock the ship is located and unloading at.
+        /// </summary>
+        public Guid DockID { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the ShipStartingUnloadingEventArgs class.
+        /// </summary>
+        /// <param name="ship">The ship involved in the event.</param>
+        /// <param name="currentTime">The current time in the simulation.</param>
+        /// <param name="description">A description of the event.</param>
+        /// <param name="dockID">The unique ID of the dock the ship is located and unloading at.</param>
+        public ShipStartingUnloadingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
+            : base(ship, currentTime, description)
+        {
+           DockID = dockID;
+        }
     }
     
     /// <summary>
@@ -1714,6 +2047,30 @@ namespace Gruppe8.HarbNet
             Container = container;
         }
 
+    }
+
+    /// <summary>
+    /// The EventArgs class for the ShipDoneUnloading event.
+    /// </summary>
+    public class ShipDoneUnloadingEventArgs : BaseShipEventArgs
+    {
+        /// <summary>
+        /// The unique ID of the dock the ship is located and unloaded at.
+        /// </summary>
+        public Guid DockID { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the ShipDoneUnloadingEventArgs class.
+        /// </summary>
+        /// <param name="ship">The ship involved in the event.</param>
+        /// <param name="currentTime">The current time in the simulation.</param>
+        /// <param name="description">A description of the event.</param>
+        /// <param name="dockID">The unique ID of the dock the ship is located and unloaded at.</param>
+        public ShipDoneUnloadingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
+            : base(ship, currentTime, description)
+        {
+            DockID = dockID;
+        }
     }
     
     /// <summary>
@@ -1763,6 +2120,21 @@ namespace Gruppe8.HarbNet
             : base(ship, currentTime, description)
         {
             AnchorageID = anchorageID;
+        }
+    }
+
+    public class TruckLoadingFromStorageEventArgs : EventArgs
+    {
+        public Truck Truck { get; internal set; }
+
+        public DateTime CurrentTime { get; internal set; }
+        public string Description { get; internal set; }
+
+        public TruckLoadingFromStorageEventArgs(Truck truck, DateTime currentTime, string description)
+        {
+            Truck = truck;
+            CurrentTime = currentTime;
+            Description = description;
         }
     }
 }

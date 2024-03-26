@@ -28,25 +28,10 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the int value representing the amount of containers loaded per hour.</returns>
         public int ContainersLoadedPerHour { get; internal set; }
         /// <summary>
-        /// Gets the current status of the Crane.
+        /// Gets the unique ID for the cranes current location
         /// </summary>
-        /// <return>Returns a Status enum representing the latest registered status of the Crane.</return>
-        public Status Status { get; internal set; }
-        /// <summary>
-        /// Gets the ID for the cranes location.
-        /// </summary>
-        /// <returns>Returns a Guid object representing the ID of the cranes location.</returns>
-        public Guid location { get; internal set; }
-        /// <summary>
-        /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the crane has gone through throughout a simulation.
-        /// </summary>
-        /// <returns>Returns a ReadOnlyCollection with StatusLog objects with information on status changes the crane has gone through throughout a simulation.</returns>
-        public ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
-        /// <summary>
-        /// Gets a IList of StatusLog objects containing information on status changes the crane has gone through throughout a simulation.
-        /// </summary>
-        /// <returns>Returns an IList with StatusLog objects with information on status changes the crane has gone through throughout a simulation.</returns>
-        internal IList<StatusLog> HistoryIList { get; set; }
+        /// <returns>Returns a Guid object representing the location of the crane</returns>
+        public Guid Location { get; internal set; }
 
         /// <summary>
         /// Creates a new crane object.
@@ -57,7 +42,7 @@ namespace Gruppe8.HarbNet
         {
             this.ID = Guid.NewGuid();
             this.ContainersLoadedPerHour = containersLoadedPerHour;
-            this.location = location;
+            this.Location = location;
             this.Container = null;
         }
 
@@ -82,6 +67,14 @@ namespace Gruppe8.HarbNet
             this.Container = null;
             return containerToBeUnloaded;
 
+        }
+        /// <summary>
+        /// Returns a string that represents the object, containing the ID, container load per hour and location ID.
+        /// </summary>
+        /// <returns>Returns a Guid object representing the location of the crane</returns>
+        public override String ToString()
+        {
+            return $"ID: {ID.ToString()}, Container load per hour {ContainersLoadedPerHour}, Location ID: {Location}";
         }
        
     }
