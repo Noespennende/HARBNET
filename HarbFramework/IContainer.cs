@@ -37,7 +37,6 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the containers current position.</returns>
         public Guid CurrentPosition { get; }
-
         /// <summary>
         /// Gets current status of the container.
         /// </summary>

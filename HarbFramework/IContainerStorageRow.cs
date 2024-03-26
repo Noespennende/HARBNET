@@ -7,7 +7,6 @@
         /// </summary>
         /// <returns>Returns a Guid object representing the containerRows unique ID.</returns>
         public Guid ID { get; }
-
         /// <summary>
         /// Gets the amount of available containerSpaces.
         /// </summary>

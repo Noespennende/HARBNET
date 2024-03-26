@@ -71,7 +71,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string that represents the object, containing the ID, container load per hour and location ID.
         /// </summary>
-        /// <returns>Returns a Guid object representing the location of the crane</returns>
+        /// <returns>Returns a string value representing information about the crane, crane ID, container load per hour and location ID</returns>
         public override String ToString()
         {
             return $"ID: {ID.ToString()}, Container load per hour {ContainersLoadedPerHour}, Location ID: {Location}";

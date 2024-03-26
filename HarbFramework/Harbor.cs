@@ -98,6 +98,7 @@ namespace Gruppe8.HarbNet
         /// <return>Returns an Ilist with Crane objects representing the cranes in the storage area in the harbor.</return>
        internal IList<Crane> HarborStorageAreaCranes { get; set; } = new List<Crane>();
 
+        /// <summary>
         /// Get all containers that have left the harbor and arived at their destination
         /// </summary>
         /// <return>Returns a IList of all containers that have arrived at their destination during a simulation</return>

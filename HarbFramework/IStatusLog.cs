@@ -31,7 +31,6 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns a Status enum representing the latest registered status of the subject.</return>
         public Status Status { get; }
-
         /// <summary>
         /// Returns a string containing information about the subject on a given point in time.
         /// </summary>

@@ -43,7 +43,6 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Container object representing the containers stored in when the DailyLog object was created.</returns>
         public ReadOnlyCollection<Container> ContainersInHarbour { get; }
-
         /// <summary>
         /// Gets a ReadOnlyCollection of container objects containing information of all the containers that have arrived to their destination during the simulation.
         /// </summary>
@@ -57,7 +56,6 @@ namespace Gruppe8.HarbNet
         /// Prints the wereabouts and info regarding all the containers in the DailyLog.
         /// </summary>
         public void PrintInfoForAllContainers();
-
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
