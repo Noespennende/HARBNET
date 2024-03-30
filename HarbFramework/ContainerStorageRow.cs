@@ -25,89 +25,101 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a IList with ContainerSpace object with information on the containerspace in a containerRow.</returns>
         internal IList<ContainerSpace> RowOfContainerSpaces { get; set; } = new List<ContainerSpace>();
+        internal IList<Guid> IDOfStoredContainers { get; private set; }
+
+        internal int StackSize { get; private set; } 
+        internal int MaxStackSize { get; private set; }
+        private int CurrentIndex { get; set; }
+
+        internal ContainerSize SizeOfContainersStored { get; private set; }
 
         /// <summary>
         /// Gets the amount of ContainerSpace in a ContainerRow.
         /// </summary>
         /// <param name="numberOfContainerStorageSpaces">Amount of ContainerSpaces to be created.</param>
-        public ContainerStorageRow(int numberOfContainerStorageSpaces)
+        public ContainerStorageRow(int numberOfContainerStorageSpaces, int maxStackSize)
         {
+            this.MaxStackSize = maxStackSize;
+            this.StackSize = 0;
+            this.CurrentIndex = 0;
             for (int i = 0; i < numberOfContainerStorageSpaces; i++)
             {
-                RowOfContainerSpaces.Add(new ContainerSpace());
+                RowOfContainerSpaces.Add(new ContainerSpace(maxStackSize));
             }
         }
 
-        /// <summary>
-        /// Gets the cCntainerSpace that contains a container.
-        /// </summary>
-        /// <param name="container">Name of the container to be checked if it's contained.</param>
-        /// <returns>Returns the containerSpace that contains the specified container, null if not found.</returns>
-        internal ContainerSpace GetContainerSpaceContainingContainer(Container container)
-        {
-            foreach (ContainerSpace space in RowOfContainerSpaces)
-            {
-                if (space.StoredContainerOne == container.ID)
-                {
-                    return space;
-                }
-                if (space.StoredContainerTwo == container.ID)
-                {
-                    return space;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the ContainerSpace that contains a container.
-        /// </summary>
-        /// <param name="containerID">Unique ID for container to be checked if it's contained.</param>
-        /// <returns>Returns the containerSpace that contains the specified container, null if not found.</returns>
-        internal ContainerSpace GetContainerSpaceContainingContainer(Guid containerID)
-        {
-            foreach (ContainerSpace space in RowOfContainerSpaces)
-            {
-                if (space.StoredContainerOne == containerID)
-                {
-                    return space;
-                }
-                if (space.StoredContainerTwo == containerID)
-                {
-                    return space;
-                }
-            }
-            return null;
-        }
 
         /// <summary>
         /// Adds container to available ContainerSpace.
         /// </summary>
         /// <param name="container">Unique name for the container to be added to containerSpace.</param>
         /// <returns>Returns the containerSpace the container was added to, null if not found.</returns>
-        internal ContainerSpace AddContainerToFreeSpace(Container container)
+        internal bool AddContainer(Container container)
         {
-            if (SizeOfContainersStored() == container.Size || SizeOfContainersStored() == ContainerSize.None)
+            if ((SizeOfContainersStored == container.Size || SizeOfContainersStored == ContainerSize.None) && (StackSize < MaxStackSize) )
             {
-                foreach (ContainerSpace space in RowOfContainerSpaces)
+               if (CurrentIndex < RowOfContainerSpaces.Count()-1)
                 {
-                    if (space.FreeOne == true)
+                    RowOfContainerSpaces[CurrentIndex].load(container.ID);
+                    IDOfStoredContainers.Add(container.ID);
+
+                    if (SizeOfContainersStored == ContainerSize.None)
                     {
-                        space.StoredContainerOne = container.ID;
-                        space.FreeOne = false;
-                        return space;
+                        SizeOfContainersStored = container.Size;
                     }
-                    if (space.FreeTwo == true || container.Size == ContainerSize.Half)
-                    {
-                        space.StoredContainerTwo = container.ID;
-                        space.FreeTwo = false;
-                        return space;
-                    }
+
+                    CurrentIndex++;
+                    return true;
                 }
+               else
+                {
+                    RowOfContainerSpaces[CurrentIndex].load(container.ID);
+                    IDOfStoredContainers.Add(container.ID);
+                    StackSize++;
+                    CurrentIndex = 0;
+                    return true;
+                }
+
             }
            
-            return null;
+            return false;
+        }
+
+        /// <summary>
+        /// Add container to available ContainerSpace.
+        /// </summary>
+        /// <param name="containerID">Unique ID for the container to be added.</param>
+        /// <param name="sizeOfContainer">Size of the container to be added.</param>
+        /// <returns>Returns the containerSpace the container was added to. If container was not not added, null is returned.</returns>
+        internal bool AddContainer(Guid containerID, ContainerSize sizeOfContainer)
+        {
+            if ((SizeOfContainersStored == sizeOfContainer || SizeOfContainersStored == ContainerSize.None) && (StackSize < MaxStackSize))
+            {
+                if (CurrentIndex < RowOfContainerSpaces.Count() - 1)
+                {
+                    RowOfContainerSpaces[CurrentIndex].load(containerID);
+                    CurrentIndex++;
+                    IDOfStoredContainers.Add(containerID);
+
+                    if (SizeOfContainersStored == ContainerSize.None)
+                    {
+                        SizeOfContainersStored = sizeOfContainer;
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    RowOfContainerSpaces[CurrentIndex].load(containerID);
+                    IDOfStoredContainers.Add(containerID);
+                    StackSize++;
+                    CurrentIndex = 0;
+                    return true;
+                }
+
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -115,6 +127,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="size">Size of containerSpace that will be checked for availability.</param>
         /// <returns>Returns true if containerSpace of given size is available, false if not found.</returns>
+        /// DENNE MÅ GJØRES!!!!!!!!!!!!!!!!!!!!
         internal bool CheckIfFreeContainerSpaceExists (ContainerSize size)
         {
             if (SizeOfContainersStored() == size || SizeOfContainersStored() == ContainerSize.None)
@@ -136,113 +149,49 @@ namespace Gruppe8.HarbNet
             return false;
         }
 
-        /// <summary>
-        /// Add container to available ContainerSpace.
-        /// </summary>
-        /// <param name="containerID">Unique ID for the container to be added.</param>
-        /// <param name="sizeOfContainer">Size of the container to be added.</param>
-        /// <returns>Returns the containerSpace the container was added to. If container was not not added, null is returned.</returns>
-        internal ContainerSpace AddContainerToFreeSpace(Guid containerID, ContainerSize sizeOfContainer)
-        {
-            if (SizeOfContainersStored() == sizeOfContainer || SizeOfContainersStored() == ContainerSize.None)
-            {
-                foreach (ContainerSpace space in RowOfContainerSpaces)
-                {
-                    if (space.FreeOne == true)
-                    {
-                        space.StoredContainerOne = containerID;
-                        space.FreeOne = false;
-                        return space;
-                    }
-                    if (space.FreeTwo == true || sizeOfContainer == ContainerSize.Half)
-                    {
-                        space.StoredContainerTwo = containerID;
-                        space.FreeTwo = false;
-                        return space;
-                    }
-                }
-            }
-            return null;
-        }
 
         /// <summary>
         /// Removes container from ContainerSpace.
         /// </summary>
         /// <param name="containerToBeRemoved">Name of the container to be removed.</param>
         /// <returns>Returns the ContainerSpacethe container was removed from, null if not found.</returns>
-        internal ContainerSpace RemoveContainerFromContainerRow(Container containerToBeRemoved)
+        internal Guid RemoveContainer()
         {
-            foreach (ContainerSpace space in RowOfContainerSpaces)
+            if (StackSize == 0 && CurrentIndex == 0)
             {
-                if (containerToBeRemoved.ID == space.StoredContainerOne)
-                {
-                    space.StoredContainerOne = Guid.Empty;
-                    space.FreeOne = true;
-
-                    if (space.StoredContainerTwo == Guid.Empty)
-                    {
-                        space.SizeOfContainerStored = ContainerSize.None;
-                    }
-
-                    return space;
-                }
-
-                else if (containerToBeRemoved.ID == space.StoredContainerTwo)
-                {
-                    space.StoredContainerTwo = Guid.Empty;
-                    space .FreeTwo = true;
-
-                    if (space.StoredContainerOne == Guid.Empty)
-                    {
-                        space.SizeOfContainerStored = ContainerSize.None;
-                    }
-                    return space;
-                }
+                return Guid.Empty;
             }
 
-            return null;
-        }
-
-        /// <summary>
-        /// Removes container from ContainerSpace.
-        /// </summary>
-        /// <param name="idOfContainerToBeRemoved">Unique ID of the container to be removed.</param>
-        /// <returns>Returns the containerSpace the container was removed from, null if not found.</returns>
-        internal ContainerSpace RemoveContainerFromContainerRow(Guid idOfContainerToBeRemoved)
-        {
-            foreach (ContainerSpace space in RowOfContainerSpaces)
+            if (CurrentIndex > 0)
             {
-                if (idOfContainerToBeRemoved == space.StoredContainerOne)
-                {
-                    space.StoredContainerOne = Guid.Empty;
-                    space.FreeOne = true;
-
-                    if (space.StoredContainerTwo == Guid.Empty)
-                    {
-                        space.SizeOfContainerStored = ContainerSize.None;
-                    }
-
-                    return space;
-                } 
-                else if (idOfContainerToBeRemoved == space.StoredContainerTwo)
-                {
-                    space.StoredContainerTwo = Guid.Empty;
-                    space.FreeTwo = true;
-
-                    if (space.StoredContainerOne == Guid.Empty)
-                    {
-                        space.SizeOfContainerStored = ContainerSize.None;
-                    }
-                    return space;
-                }
+                Guid containerID = RowOfContainerSpaces[CurrentIndex - 1].unload();
+                IDOfStoredContainers.Remove(containerID);
+                CurrentIndex--;
+                return containerID;
             }
-            return null;
+            else
+            {
+                Guid containerID = RowOfContainerSpaces[CurrentIndex].unload();
+                IDOfStoredContainers.Remove(containerID);
+                if (StackSize > 0)
+                {
+                    StackSize--;
+                    CurrentIndex = RowOfContainerSpaces.Count - 1;
+                }
+                else
+                {
+                    SizeOfContainersStored = ContainerSize.None;
+                }
+                return containerID;
+
+            }
         }
 
         /// <summary>
         /// Gets the amount of available containerSpaces.
         /// </summary>
         /// <returns>Returns an int value representing the total amount of available containerSpaces.</returns>
+        /// IMPLEMENTER DETTE!!!!!!!!!!!!!!!!!
         public int numberOfFreeContainerSpaces (ContainerSize size)
         {
             int count = 0;
@@ -266,24 +215,6 @@ namespace Gruppe8.HarbNet
             return count;
         }
 
-        /// <summary>
-        /// Gets the size of the containers stored.
-        /// </summary>
-        /// <returns>Returns the ContainerSize enum representing the containers size of the ContainerSpaces that contains containers, if none is stored, none is returned.</returns>
-        public ContainerSize SizeOfContainersStored()
-        {
-            foreach (ContainerSpace space in RowOfContainerSpaces)
-            {
-                if (space.SizeOfContainerStored != ContainerSize.None)
-                {
-                    return space.SizeOfContainerStored;
-                }
-            }
-
-            return ContainerSize.None;
-
-
-        }
 
         /// <summary>
         /// Gets all stored containers.
@@ -291,20 +222,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a IList with Guid objects with information of all the containers stored in a ContainerSpace.</returns>
         public IList<Guid> GetIDOfAllStoredContainers()
         {
-            IList<Guid> idList = new List<Guid>();
-
-            foreach (ContainerSpace space in RowOfContainerSpaces)
-            {
-                if (space.StoredContainerOne != Guid.Empty)
-                {
-                    idList.Add(space.StoredContainerOne);
-                }
-                if (space.StoredContainerTwo != Guid.Empty)
-                {
-                    idList.Add(space.StoredContainerOne);
-                }
-            }
-            return idList;
+            return IDOfStoredContainers.ToList(); 
         }
 
         /// <summary>
@@ -313,7 +231,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a String containing information about the ContainerSpace.</returns>
         public override String ToString()
         {
-            return $"Storage row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces}, Stored containers: {GetIDOfAllStoredContainers().Count}";
+            return $"Storage row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces.Count}, Stored containers: {GetIDOfAllStoredContainers().Count}";
         }
 
     }

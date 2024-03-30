@@ -25,32 +25,52 @@ namespace Gruppe8.HarbNet
         /// Checks if container space is available for a full size container.
         /// </summary>
         /// <returns>Returns a boolean that is true if the container space is available and false if it is not</returns>
-        internal bool FreeOne {  get; set; }
-        /// <summary>
-        /// Checks if container space is available for two half size containers.
-        /// </summary>
-        /// <returns>Returns a boolean that is true if the container space is available and false if it is not</returns>
-        internal bool FreeTwo { get; set; }
+        internal bool Free {  get; set; }
+
         /// <summary>
         /// Gets the ID of the full size container currently stored in the container space.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the full container currently stored in the container space.</returns>
-        internal Guid StoredContainerOne { get; set; }
-        /// <summary>
-        /// Gets the ID of the half size containers currently stored in the container space.
-        /// </summary>
-        /// <returns>Returns a Guid object representing the ID of the half size containers currently stored in the container space.</returns>
-        internal Guid StoredContainerTwo { get; set; }
+        private Stack<Guid> StoredContainers { get; set; } = new Stack<Guid>();
+        
+        internal int StackSize { get; private set; }
+        internal int MaxStackSize { get; private set; }
 
         /// <summary>
         /// Creates a new ContainerSpace.
         /// </summary>
-        internal ContainerSpace ()
+        internal ContainerSpace (int maxStackSize)
         {
-            this.FreeOne = true;
-            this.FreeTwo = true;
-            this.StoredContainerOne = Guid.Empty;
-            this.StoredContainerTwo = Guid.Empty;
+            this.MaxStackSize= maxStackSize;
+            this.Free = true;
+            StackSize = 0;
+            SizeOfContainerStored = ContainerSize.None;
+        }
+
+        internal Guid unload()
+        {
+            if ( StoredContainers.Count > 0)
+            {
+                StackSize--;
+                return StoredContainers.Pop();
+            }
+            return Guid.Empty;
+        }
+
+        internal bool load(Guid containerID)
+        {
+            if (StackSize < MaxStackSize)
+            {
+                StackSize++;
+                StoredContainers.Push(containerID);
+                return true;
+            } 
+            return false;
+        }
+
+        internal Guid nextContainer ()
+        { 
+            return StoredContainers.Peek();
         }
         
     }

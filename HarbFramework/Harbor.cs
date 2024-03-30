@@ -603,7 +603,7 @@ namespace Gruppe8.HarbNet
             {
                 if (CR.CheckIfFreeContainerSpaceExists(container.Size))
                 {
-                    CR.AddContainerToFreeSpace(container);
+                    CR.AddContainer(container);
                     storedContainers.Add(container, CR);
                     container.AddStatusChangeToHistory(Status.InStorage, currentTime);
                     return true;
@@ -633,7 +633,7 @@ namespace Gruppe8.HarbNet
                 {
                     crane.LoadContainer(container);
                     container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
-                    storedContainers[container].RemoveContainerFromContainerRow(container);
+                    storedContainers[container].RemoveContainer(container);
                     storedContainers.Remove(container);
                     
                     return container;
@@ -1320,7 +1320,7 @@ namespace Gruppe8.HarbNet
             ship.RemoveContainer(containerToBeUnloaded.ID);
             storedContainers.Add(containerToBeUnloaded, containerRow);
 
-            ContainerSpace containerSpace = containerRow.AddContainerToFreeSpace(containerToBeUnloaded);
+            ContainerSpace containerSpace = containerRow.AddContainer(containerToBeUnloaded);
             containerToBeUnloaded.CurrentPosition = containerSpace.ID;
             containerToBeUnloaded.AddStatusChangeToHistory(Status.InStorage, currentTime);
 
