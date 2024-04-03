@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -25,13 +26,16 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a IList with ContainerSpace object with information on the containerspace in a containerRow.</returns>
         internal IList<ContainerSpace> RowOfContainerSpaces { get; set; } = new List<ContainerSpace>();
-        internal IList<Guid> IDOfStoredContainers { get; private set; }
+
+        public ReadOnlyCollection<Guid> IDOfStoredContainers { get { return StoredContainersList.AsReadOnly<Guid>(); } }
+
+        private IList<Guid> StoredContainersList { get; set; } = new List<Guid>();
 
         internal int StackSize { get; private set; } 
         internal int MaxStackSize { get; private set; }
         private int CurrentIndex { get; set; }
 
-        internal ContainerSize SizeOfContainersStored { get; private set; }
+        public ContainerSize SizeOfContainersStored { get; private set; }
 
         /// <summary>
         /// Gets the amount of ContainerSpace in a ContainerRow.
@@ -61,7 +65,7 @@ namespace Gruppe8.HarbNet
                if (CurrentIndex < RowOfContainerSpaces.Count()-1)
                 {
                     RowOfContainerSpaces[CurrentIndex].load(container.ID);
-                    IDOfStoredContainers.Add(container.ID);
+                    StoredContainersList.Add(container.ID);
 
                     if (SizeOfContainersStored == ContainerSize.None)
                     {
@@ -74,7 +78,7 @@ namespace Gruppe8.HarbNet
                else
                 {
                     RowOfContainerSpaces[CurrentIndex].load(container.ID);
-                    IDOfStoredContainers.Add(container.ID);
+                    StoredContainersList.Add(container.ID);
                     StackSize++;
                     CurrentIndex = 0;
                     return true;
@@ -99,7 +103,7 @@ namespace Gruppe8.HarbNet
                 {
                     RowOfContainerSpaces[CurrentIndex].load(containerID);
                     CurrentIndex++;
-                    IDOfStoredContainers.Add(containerID);
+                    StoredContainersList.Add(containerID);
 
                     if (SizeOfContainersStored == ContainerSize.None)
                     {
@@ -111,7 +115,7 @@ namespace Gruppe8.HarbNet
                 else
                 {
                     RowOfContainerSpaces[CurrentIndex].load(containerID);
-                    IDOfStoredContainers.Add(containerID);
+                    StoredContainersList.Add(containerID);
                     StackSize++;
                     CurrentIndex = 0;
                     return true;
@@ -165,14 +169,14 @@ namespace Gruppe8.HarbNet
             if (CurrentIndex > 0)
             {
                 Guid containerID = RowOfContainerSpaces[CurrentIndex - 1].unload();
-                IDOfStoredContainers.Remove(containerID);
+                StoredContainersList.Remove(containerID);
                 CurrentIndex--;
                 return containerID;
             }
             else
             {
                 Guid containerID = RowOfContainerSpaces[CurrentIndex].unload();
-                IDOfStoredContainers.Remove(containerID);
+                StoredContainersList.Remove(containerID);
                 if (StackSize > 0)
                 {
                     StackSize--;
@@ -217,21 +221,12 @@ namespace Gruppe8.HarbNet
 
 
         /// <summary>
-        /// Gets all stored containers.
-        /// </summary>
-        /// <returns>Returns a IList with Guid objects with information of all the containers stored in a ContainerSpace.</returns>
-        public IList<Guid> GetIDOfAllStoredContainers()
-        {
-            return IDOfStoredContainers.ToList(); 
-        }
-
-        /// <summary>
         /// Returns a String containing information about the ContainerSpace.
         /// </summary>
         /// <returns>Returns a String containing information about the ContainerSpace.</returns>
         public override String ToString()
         {
-            return $"Storage row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces.Count}, Stored containers: {GetIDOfAllStoredContainers().Count}";
+            return $"Storage row ID: {ID.ToString()}, Container storage spaces: {RowOfContainerSpaces.Count}, Stored containers: {IDOfStoredContainers.Count}";
         }
 
     }

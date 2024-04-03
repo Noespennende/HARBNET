@@ -1,4 +1,6 @@
-﻿namespace Gruppe8.HarbNet
+﻿using System.Collections.ObjectModel;
+
+namespace Gruppe8.HarbNet
 {
     public interface IContainerStorageRow
     {
@@ -16,12 +18,12 @@
         /// Gets the size of the containers stored.
         /// </summary>
         /// <returns>Returns the ContainerSize enum representing the containers size of the ContainerSpaces that contains containers, if none is stored, none is returned.</returns>
-        public ContainerSize SizeOfContainersStored();
+        public ContainerSize SizeOfContainersStored { get; }
         /// <summary>
         /// Gets all stored containers.
         /// </summary>
         /// <returns>Returns a IList with Guid objects with information of all the containers stored in a ContainerSpace.</returns>
-        public IList<Guid> GetIDOfAllStoredContainers();
+        public ReadOnlyCollection<Guid> IDOfStoredContainers { get; }
         /// <summary>
         /// Returns a String containing information about the ContainerSpace.
         /// </summary>
