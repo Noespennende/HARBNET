@@ -57,7 +57,8 @@ namespace Gruppe8.HarbNet
         /// <param name="size">Size of container to be created</param>
         /// <param name="WeightInTonn">Weight of container to be created in tonn.</param>
         /// <param name="currentPosition">Current posistion of container to be created.</param>
-        internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition) {
+        public Container(ContainerSize size, int WeightInTonn, Guid currentPosition) {
+            //SKAL VÆRE INTERNAL
             this.ID = Guid.NewGuid();
             this.Size = size;
             this.CurrentPosition = currentPosition;

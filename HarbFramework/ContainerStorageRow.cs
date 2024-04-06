@@ -53,6 +53,7 @@ namespace Gruppe8.HarbNet
         }
 
 
+
         /// <summary>
         /// Adds container to available ContainerSpace.
         /// </summary>
@@ -135,10 +136,9 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="size">Size of containerSpace that will be checked for availability.</param>
         /// <returns>Returns true if containerSpace of given size is available, false if not found.</returns>
-        /// DENNE MÅ GJØRES!!!!!!!!!!!!!!!!!!!!
         internal bool FreeContainerSpaceExists (ContainerSize size)
         {
-            if (SizeOfContainersStored == size && RowOfContainerSpaces[RowOfContainerSpaces.Count-1].StackSize < MaxStackSize)
+            if ((SizeOfContainersStored == size || SizeOfContainersStored == ContainerSize.None) && StackSize < MaxStackSize)
             {
                 return true;    
             }
@@ -153,22 +153,21 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the ContainerSpacethe container was removed from, null if not found.</returns>
         internal Guid RemoveContainer()
         {
-            if (StackSize == 0 && CurrentIndex == 0)
+            if (StoredContainersList.Count == 0)
             {
                 return Guid.Empty;
             }
 
+            Guid containerID = RowOfContainerSpaces[CurrentIndex].unload();
+            StoredContainersList.Remove(containerID);
+
             if (CurrentIndex > 0)
             {
-                Guid containerID = RowOfContainerSpaces[CurrentIndex - 1].unload();
-                StoredContainersList.Remove(containerID);
                 CurrentIndex--;
                 return containerID;
             }
             else
             {
-                Guid containerID = RowOfContainerSpaces[CurrentIndex].unload();
-                StoredContainersList.Remove(containerID);
                 if (StackSize > 0)
                 {
                     StackSize--;

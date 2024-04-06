@@ -11,6 +11,9 @@ namespace Client.HarborName
     {
         static void Main(string[] args)
         {
+            ContainerStorageRow CSR = new ContainerStorageRow(5, 5);
+
+            
 
 
             //CLIENT HARBOR 
@@ -279,6 +282,7 @@ namespace Client.HarborName
                 Console.WriteLine($"Simulating {args.HarborToBeSimulated.ID} from {args.StartDate}\n");
                 Thread.Sleep(2000);
             };
+
 
         }
     }

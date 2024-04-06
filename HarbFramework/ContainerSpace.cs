@@ -33,7 +33,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid object representing the ID of the full container currently stored in the container space.</returns>
         private Stack<Guid> StoredContainers { get; set; } = new Stack<Guid>();
         
-        internal int StackSize { get; private set; }
+        internal int StackSize { get { return StoredContainers.Count(); } }
         internal int MaxStackSize { get; private set; }
 
         /// <summary>
@@ -43,15 +43,19 @@ namespace Gruppe8.HarbNet
         {
             this.MaxStackSize= maxStackSize;
             this.Free = true;
-            StackSize = 0;
             SizeOfContainerStored = ContainerSize.None;
         }
 
+        
         internal Guid unload()
         {
             if ( StoredContainers.Count > 0)
             {
-                StackSize--;
+                if (StackSize < MaxStackSize )
+                {
+                    Free = true;
+                }
+
                 return StoredContainers.Pop();
             }
             return Guid.Empty;
@@ -61,8 +65,12 @@ namespace Gruppe8.HarbNet
         {
             if (StackSize < MaxStackSize)
             {
-                StackSize++;
                 StoredContainers.Push(containerID);
+                if ( StackSize >= MaxStackSize)
+                {
+                    Free = false;
+                }
+
                 return true;
             } 
             return false;

@@ -75,11 +75,12 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns an Ilist with ContainerStorageRow objects representing the containerRows in the harbor.</return>
         internal IList<ContainerStorageRow> allContainerRows { get; set; }
+
         /// <summary>
         /// Gets all stored containers.
         /// </summary>
         /// <return>Returns a dictionary of all stored containers.</return>
-        internal IDictionary<Container, ContainerStorageRow> storedContainers = new Dictionary<Container, ContainerStorageRow>(); // Container : ContainerRow
+        internal IDictionary<Container, ContainerStorageRow> storedContainers = new Dictionary<Container, ContainerStorageRow>(); // Container : ContainerRow NB! Aldri bruk denne til å hente kontainere fra.
         /// <summary>
         /// Gets cranes in storage area.
         /// </summary>
