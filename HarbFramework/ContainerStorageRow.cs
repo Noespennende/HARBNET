@@ -58,12 +58,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="container">Unique name for the container to be added to containerSpace.</param>
         /// <returns>Returns the containerSpace the container was added to, null if not found.</returns>
-        internal bool AddContainer(Container container)
+        internal Guid AddContainer(Container container)
         {
             if ((SizeOfContainersStored == container.Size || SizeOfContainersStored == ContainerSize.None) && (StackSize < MaxStackSize) )
             {
                if (CurrentIndex < RowOfContainerSpaces.Count()-1)
                 {
+                    Guid containerSpaceID = RowOfContainerSpaces[CurrentIndex].ID;
                     RowOfContainerSpaces[CurrentIndex].load(container.ID);
                     StoredContainersList.Add(container.ID);
 
@@ -73,20 +74,21 @@ namespace Gruppe8.HarbNet
                     }
 
                     CurrentIndex++;
-                    return true;
+                    return containerSpaceID;
                 }
                else
                 {
+                    Guid containerSpaceID = RowOfContainerSpaces[CurrentIndex].ID;
                     RowOfContainerSpaces[CurrentIndex].load(container.ID);
                     StoredContainersList.Add(container.ID);
                     StackSize++;
                     CurrentIndex = 0;
-                    return true;
+                    return containerSpaceID;
                 }
 
             }
-           
-            return false;
+
+            return Guid.Empty;
         }
 
         /// <summary>
@@ -95,12 +97,13 @@ namespace Gruppe8.HarbNet
         /// <param name="containerID">Unique ID for the container to be added.</param>
         /// <param name="sizeOfContainer">Size of the container to be added.</param>
         /// <returns>Returns the containerSpace the container was added to. If container was not not added, null is returned.</returns>
-        internal bool AddContainer(Guid containerID, ContainerSize sizeOfContainer)
+        internal Guid AddContainer(Guid containerID, ContainerSize sizeOfContainer)
         {
             if ((SizeOfContainersStored == sizeOfContainer || SizeOfContainersStored == ContainerSize.None) && (StackSize < MaxStackSize))
             {
                 if (CurrentIndex < RowOfContainerSpaces.Count() - 1)
                 {
+                    Guid containerSpaceID = RowOfContainerSpaces[CurrentIndex].ID;
                     RowOfContainerSpaces[CurrentIndex].load(containerID);
                     CurrentIndex++;
                     StoredContainersList.Add(containerID);
@@ -110,20 +113,21 @@ namespace Gruppe8.HarbNet
                         SizeOfContainersStored = sizeOfContainer;
                     }
 
-                    return true;
+                    return containerSpaceID;
                 }
                 else
                 {
+                    Guid containerSpaceID = RowOfContainerSpaces[CurrentIndex].ID;
                     RowOfContainerSpaces[CurrentIndex].load(containerID);
                     StoredContainersList.Add(containerID);
                     StackSize++;
                     CurrentIndex = 0;
-                    return true;
+                    return containerSpaceID;
                 }
 
             }
 
-            return false;
+            return Guid.Empty;
         }
 
         /// <summary>
@@ -132,23 +136,11 @@ namespace Gruppe8.HarbNet
         /// <param name="size">Size of containerSpace that will be checked for availability.</param>
         /// <returns>Returns true if containerSpace of given size is available, false if not found.</returns>
         /// DENNE MÅ GJØRES!!!!!!!!!!!!!!!!!!!!
-        internal bool CheckIfFreeContainerSpaceExists (ContainerSize size)
+        internal bool FreeContainerSpaceExists (ContainerSize size)
         {
-            if (SizeOfContainersStored() == size || SizeOfContainersStored() == ContainerSize.None)
+            if (SizeOfContainersStored == size && RowOfContainerSpaces[RowOfContainerSpaces.Count-1].StackSize < MaxStackSize)
             {
-                foreach (ContainerSpace space in RowOfContainerSpaces)
-                {
-
-                    if (space.FreeOne == true)
-                    {
-                        return true;
-                    }
-
-                    if (space.FreeTwo == true || size == ContainerSize.Half)
-                    {
-                        return true;
-                    }
-                }
+                return true;    
             }
             return false;
         }
@@ -197,26 +189,8 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns an int value representing the total amount of available containerSpaces.</returns>
         /// IMPLEMENTER DETTE!!!!!!!!!!!!!!!!!
         public int numberOfFreeContainerSpaces (ContainerSize size)
-        {
-            int count = 0;
-            ContainerSize sizeOfContainersStored = SizeOfContainersStored();
-
-            if (sizeOfContainersStored == ContainerSize.None || size == sizeOfContainersStored)
-            {
-                foreach (ContainerSpace space in RowOfContainerSpaces)
-                {
-                    if (space.FreeOne)
-                    {
-                        count++;
-                    }
-                    if (space.FreeTwo && size == ContainerSize.Half)
-                    {
-                        count++;
-                    }
-                }
-            }
-            
-            return count;
+        {  
+            return (RowOfContainerSpaces.Count * MaxStackSize) - IDOfStoredContainers.Count;
         }
 
 

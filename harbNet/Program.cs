@@ -36,12 +36,12 @@ namespace Client.HarborName
 
             for (int i = 0; i < 24; i++)
             {
-                storageRows.Add(new ContainerStorageRow(18 * 6 * 4));
+                storageRows.Add(new ContainerStorageRow(18 * 6 * 4, 10));
             }
 
             for (int i = 0; i < 7; i++)
             {
-                storageRows.Add(new ContainerStorageRow(15 * 6 * 4));
+                storageRows.Add(new ContainerStorageRow(15 * 6 * 4, 10));
             }
 
             

@@ -61,7 +61,7 @@ namespace Gruppe8.HarbNet
         /// Unloads container from crane to another object.
         /// </summary>
         /// <returns>Returns the Container object to be unloaded.</returns>
-        internal Container UnloadContainer ()
+        internal Container Unload ()
         {
             Container containerToBeUnloaded = this.Container;
             this.Container = null;

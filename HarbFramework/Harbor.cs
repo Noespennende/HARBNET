@@ -84,7 +84,7 @@ namespace Gruppe8.HarbNet
         /// Gets cranes in storage area.
         /// </summary>
         /// <return>Returns an Ilist with Crane objects representing the cranes in the storage area in the harbor.</return>
-       internal IList<Crane> HarborStorageAreaCranes { get; set; } = new List<Crane>();
+        internal IList<Crane> HarborStorageAreaCranes { get; set; } = new List<Crane>();
         /// <summary>
         /// Get all containers that have left the harbor and arived at their destination
         /// </summary>
@@ -291,13 +291,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="numberOfContainerSpaces">Number of container spaces to be created.</param>
         /// <param name="numberOfContainerRows">Number of container rows to be created.</param>
-        internal void CreateContainerSpaces(int numberOfContainerSpaces, int numberOfContainerRows)
+        internal void CreateContainerSpaces(int numberOfContainerSpaces, int numberOfContainerRows, int containerStackHeight)
         {
             IList <ContainerStorageRow> containerRows = new List <ContainerStorageRow>();
 
             for (int j = 0; j < numberOfContainerRows; j++)
             {
-                containerRows.Add(new ContainerStorageRow(numberOfContainerSpaces));
+                containerRows.Add(new ContainerStorageRow(numberOfContainerSpaces, containerStackHeight));
             }
 
             this.allContainerRows = containerRows;
@@ -333,7 +333,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns container to be loaded from crane to ship.</returns>
         internal Container CraneToShip(Crane crane, Ship ship, DateTime currentTime)
         {
-            Container containerToBeLoaded = crane.UnloadContainer();
+            Container containerToBeLoaded = crane.Unload();
             containerToBeLoaded.CurrentPosition = crane.Location;
             containerToBeLoaded.AddStatusChangeToHistory(Status.Loading, currentTime);
             ship.AddContainer(containerToBeLoaded);
@@ -368,7 +368,7 @@ namespace Gruppe8.HarbNet
                 throw new TruckCantBeLoadedExeption("The truck you are trying to load already has a container in its storage and therefore don't have room for the container from the given crane");
             }
 
-            Container containerToBeLoaded = crane.UnloadContainer();
+            Container containerToBeLoaded = crane.Unload();
             containerToBeLoaded.CurrentPosition = crane.Location;
             truck.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
@@ -537,7 +537,7 @@ namespace Gruppe8.HarbNet
             {
                 throw new AdvCantBeLoadedExeption("The Adv given already has a container in its storage and therefore has no room for the container the crane is trying to load.");
             }
-            Container containerToBeLoaded = crane.UnloadContainer();
+            Container containerToBeLoaded = crane.Unload();
             containerToBeLoaded.CurrentPosition = crane.Location;
             adv.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAdv, currentTime);
@@ -597,11 +597,11 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns True if there is available space for the container and it's size to be loaded to, or false if nothing is available.</returns>
         internal bool CraneToContainerRow(Crane crane,DateTime currentTime)
         {
-            Container container = crane.UnloadContainer();
+            Container container = crane.Unload();
 
             foreach (ContainerStorageRow CR in allContainerRows)
             {
-                if (CR.CheckIfFreeContainerSpaceExists(container.Size))
+                if (CR.FreeContainerSpaceExists(container.Size))
                 {
                     CR.AddContainer(container);
                     storedContainers.Add(container, CR);
@@ -628,15 +628,24 @@ namespace Gruppe8.HarbNet
                 throw new CraneCantBeLoadedExeption("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the harbor storage area");
             }
 
-            foreach (Container container in storedContainers.Keys){
-                if (container.Size == size)
+            foreach (ContainerStorageRow csr in storedContainers.Values){
+                if (csr.SizeOfContainersStored == size)
                 {
-                    crane.LoadContainer(container);
-                    container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
-                    storedContainers[container].RemoveContainer(container);
-                    storedContainers.Remove(container);
+                    Guid containerID = csr.RemoveContainer();
+                    Container container;
                     
-                    return container;
+                    foreach (Container c in storedContainers.Keys)
+                    {
+                        if (c.ID == containerID)
+                        {
+                            container = c;
+                            crane.LoadContainer(container);
+                            storedContainers.Remove(container);
+                            container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
+
+                            return container;
+                        }
+                    }
                 }
             }
             return null;
@@ -1274,7 +1283,7 @@ namespace Gruppe8.HarbNet
         {
             foreach (ContainerStorageRow containerRow in allContainerRows)
             {
-                if (containerRow.CheckIfFreeContainerSpaceExists(containerSize))
+                if (containerRow.FreeContainerSpaceExists(containerSize))
                 {
                     return containerRow;
                 }
@@ -1299,36 +1308,7 @@ namespace Gruppe8.HarbNet
             }
             return null;
         }
-
-        /// <summary>
-        /// Unloads container of specific size from ship to containerspace.
-        /// </summary>
-        /// <param name="containerSize">Size of the container the containerSpace has to fit.</param>
-        /// <param name="ship">Ship object container is unloaded from.</param>
-        /// <param name="currentTime">The current time container is unloaded</param>
-        /// <returns>Returns a Guid object representing the containerspaces the unloaded container was stored, if container did not exist empty is returned.</returns>
-        internal Guid UnloadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
-        {
-            Container containerToBeUnloaded = ship.GetContainer(containerSize);
-            ContainerStorageRow containerRow = GetContainerRowWithFreeSpace(containerSize);
-            
-            if (containerToBeUnloaded == null || containerRow == null)
-            {
-                return Guid.Empty;
-            }
-
-            ship.RemoveContainer(containerToBeUnloaded.ID);
-            storedContainers.Add(containerToBeUnloaded, containerRow);
-
-            ContainerSpace containerSpace = containerRow.AddContainer(containerToBeUnloaded);
-            containerToBeUnloaded.CurrentPosition = containerSpace.ID;
-            containerToBeUnloaded.AddStatusChangeToHistory(Status.InStorage, currentTime);
-
-            return containerSpace.ID;
-
-        }
-
-        
+  
         /// <summary>
         /// Adds new ship to anchorage.
         /// </summary>
