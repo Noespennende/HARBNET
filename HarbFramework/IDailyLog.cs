@@ -62,14 +62,14 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a String containing information about all ships on the given day of a simulation</returns>
         public String HistoryToString();
         /// <summary>
-        /// Returns a string that represents the current object.
+        /// Returns a string that contains information about all ships or containers on the given day of a simulation.
         /// </summary>
-        /// <param name="ShipsOrContainers">"ships" returns information on all ships, "containers" return information on all containers</param>
+        /// <param name="ShipsOrContainers">User can choose to write either "ships" or "containers" as input. "ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers on the given day of a simulation.</returns>
         public String HistoryToString(String ShipsOrContainers);
 
         /// <summary>
-        /// Returns a string that represents the current object.
+        /// Returns a string with the date and time, amount of ships in anchorage, amount of ships docked in loading docks, amount of ships docked in ship dock, amount of ships in transit, amount of containers in harbor and amount of containers that have arrived at their destination.
         /// </summary>
         /// <returns>Returns a String containing the time the DailyLog object represents and the number of ships in all locations.</returns>
         public String ToString();

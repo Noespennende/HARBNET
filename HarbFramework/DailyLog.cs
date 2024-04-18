@@ -53,11 +53,13 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates a Dailylog object which holds information about the state of the simulation at a specific day.
         /// </summary>
-        /// <param name="time">The date and time of the information being logged.</param>
-        /// <param name="shipsInTransit">All the ships in transit at the time given.</param>
-        /// <param name="containersInHarbour">All the containers stored in harbour at the time given.</param>
-        /// <param name="shipsDockedInLoadingDocks">All the ships docked in loading docks at the time given.</param>
-        /// <param name="ShipsDockedInShipDocks">All the ships docked in ship docks at the time given.</param>
+        /// <param name="time">The date and time the information is being logged.</param>
+        /// <param name="shipsInAnchorage">An IList with ship objects containing all the ships in anchorage at the time given.</param>
+        /// <param name="shipsInTransit">An IList with ship objects containing all the ships in transit at the time given.</param>
+        /// <param name="containersInHarbour">An IList with container objects with all the containers stored in harbour at the time given.</param>
+        /// <param name="containersAtDestination">An IList with container objects with all the containers stored in their target destination at the time given.</param>
+        /// <param name="shipsDockedInLoadingDocks">An IList with ship objects containing all the ships docked in loading docks at the time given.</param>
+        /// <param name="ShipsDockedInShipDocks">An IList with ship objects containing all the ships docked in ship docks at the time given.</param>
         internal DailyLog(DateTime time, IList<Ship> shipsInAnchorage, IList<Ship> shipsInTransit, IList<Container> containersInHarbour, IList<Container> containersAtDestination, IList<Ship> shipsDockedInLoadingDocks, IList<Ship> ShipsDockedInShipDocks)
         {
             this.Time = time;
@@ -77,10 +79,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Duplicate a shipList making copies of all objects in it.
+        /// Duplicate a shipList making copies of all objects in it in a new list.
         /// </summary>
-        /// <param name="shipListToDuplicate">list to duplicate.</param>
-        /// <returns>a Collection duplications of all objects in the List.</returns>
+        /// <param name="shipListToDuplicate">The IList containing Ship objects to be duplicated.</param>
+        /// <returns>Returns a Collection containing Ship objects, which are duplications of all objects in the shipListToDuplicate.</returns>
         private Collection <Ship> DuplicateShipList(IList<Ship> shipListToDuplicate)
         {
             Collection<Ship> duplicatedList = new Collection<Ship>();
@@ -110,10 +112,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Duplicate a container list making copies of all objects in it.
+        /// Duplicate a container list making copies of all objects in it in a new list.
         /// </summary>
-        /// <param name="containersToDuplicate">list to duplicate.</param>
-        /// <returns>a collection containing duplications of all objects in the List.</returns>
+        /// <param name="containersToDuplicate">The IList containing Container objects to be duplicated.</param>
+        /// <returns>Returns a Collection containing Container objects, which are duplications of all objects in the containersToDuplicate.</returns>
         private Collection<Container> DuplicateContainerList(IList<Container> containersToDuplicate)
         {
             Collection<Container> duplicatedList = new Collection<Container>();
@@ -399,7 +401,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string that contains information about all ships or containers on the given day of a simulation.
         /// </summary>
-        /// <param name="ShipsOrContainers">"ships" returns information on all ships, "containers" return information on all containers</param>
+        /// <param name="ShipsOrContainers">User can choose to write either "ships" or "containers" as input. "ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers on the given day of a simulation.</returns>
         public String HistoryToString(String ShipsOrContainers) 
         {
@@ -540,7 +542,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string that represents the current object.
+        /// Returns a string with the date and time, amount of ships in anchorage, amount of ships docked in loading docks, amount of ships docked in ship dock, amount of ships in transit, amount of containers in harbor and amount of containers that have arrived at their destination.
         /// </summary>
         /// <returns>Returns a String containing the time the DailyLog object represents and the number of ships in all locations.</returns>
         public override string ToString()

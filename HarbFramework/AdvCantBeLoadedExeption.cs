@@ -11,11 +11,24 @@ namespace Gruppe8.HarbNet
     /// </summary>
     internal class AdvCantBeLoadedExeption : Exception
     {
+        /// <summary>
+        /// 
+        /// </summary>
         internal AdvCantBeLoadedExeption() { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         internal AdvCantBeLoadedExeption(string message) : base(message)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
         internal AdvCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
         {
         }

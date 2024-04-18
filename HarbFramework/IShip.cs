@@ -78,7 +78,7 @@ namespace Gruppe8.HarbNet
         /// <returns> a String containing the ships entire history.</returns>
         public String HistoryToString();
         /// <summary>
-        /// Returns a string containing information about the ship.
+        /// Returns a string with the Ships ID, name, size, startdate, round trip time, amount on containers of the differenct containerSizes on board, base weight in tonn, current weight in tonn and max weigth in tonn the ship can handle.
         /// </summary>
         /// <returns> a String containing information about the ship.</returns>
         public String ToString();
