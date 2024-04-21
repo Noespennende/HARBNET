@@ -660,23 +660,22 @@ namespace Gruppe8.HarbNet
         /// 
         public override string ToString()
         {
-            int large = 0;
-            int medium = 0;
-            int small = 0;
+            int full = 0;
+            int half = 0;
 
             foreach (Container container in ContainersOnBoard)
             {
                 if (container.Size == ContainerSize.Half)
                 {
-                    small++;
+                    half++;
                 }  else
                 {
-                    large++;
+                    full++;
                 }
             }
 
-            return ($"ID: {ID}, Navn: {Name}, Size: {ShipSize}, Start date: {StartDate.ToString()}, Round trip time: {RoundTripInDays} days, Containers on board: {small} small," +
-                $" {medium} medium, {large} large, Base weight: {BaseWeightInTonn} tonnes, Current weight: {CurrentWeightInTonn} tonnes, Max weight: {MaxWeightInTonn} tonnes.");
+            return ($"ID: {ID}, Navn: {Name}, Size: {ShipSize}, Start date: {StartDate.ToString()}, Round trip time: {RoundTripInDays} days, Containers on board: {half} small," +
+                $" , {full} large, Base weight: {BaseWeightInTonn} tonnes, Current weight: {CurrentWeightInTonn} tonnes, Max weight: {MaxWeightInTonn} tonnes.");
         }
     }
 }

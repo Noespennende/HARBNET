@@ -12,17 +12,22 @@ namespace Client.HarborName
         static void Main(string[] args)
         {
 
-            Ship titanic = new Ship("Titanic", ShipSize.Large, DateTime.Now.AddDays(1), true, 1, 10, 40);
+            DateTime startTime = DateTime.Now;
+            DateTime endTime = DateTime.Now.AddDays(7);
+            
+            Ship titanic = new Ship("Titanic", ShipSize.Large, startTime.AddDays(1), true, 1, 10, 40);
 
             Ship denSorteDame = new Ship(
                 shipName: "Den Sorte Dame",
                 shipSize: ShipSize.Medium,
-                startDate: DateTime.Now.AddDays(1),
+                startDate: startTime.AddDays(2),
                 isForASingleTrip: false,
                 roundTripInDays: 2,
                 numberOfHalfContainersOnBoard: 20,
                 numberOfFullContainersOnBoard: 20
                 );
+
+            
 
             IList<Ship> shipsList = new List<Ship>();
 
@@ -53,20 +58,19 @@ namespace Client.HarborName
                 numberOfSmallShipDocks: 1,
                 numberOfMediumShipDocks: 2,
                 numberOfLargeShipDocks: 3,
-                numberOfTrucksArriveToHarborPerHour: 2,
+                numberOfTrucksArriveToHarborPerHour: 10,
                 percentageOfContainersDirectlyLoadedFromShipToTrucks: 10,
                 percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks: 10,
                 numberOfAdv: 5,
                 loadsPerAdvPerHour: 3
                 );
 
+
             Simulation sim = new Simulation(
                 harbor: kjuttaviga,
-                simulationStartTime: DateTime.Now,
-                simulationEndTime: DateTime.Now.AddDays(7)
+                simulationStartTime: startTime,
+                simulationEndTime: startTime.AddDays(7)
                 );
-
-
 
 
             sim.SimulationStarting += (sender, e) =>
@@ -137,6 +141,7 @@ namespace Client.HarborName
             };
 
             sim.Run();
+
             /*
             
             //CLIENT HARBOR 
@@ -391,6 +396,7 @@ namespace Client.HarborName
                 Thread.Sleep(1000);
             };
 
+
             clientSim.Run();
 
             //unsubscribing from event
@@ -401,6 +407,7 @@ namespace Client.HarborName
                 Console.WriteLine($"Simulating {args.HarborToBeSimulated.ID} from {args.StartDate}\n");
                 Thread.Sleep(2000);
             };
+
             */
         }
     }

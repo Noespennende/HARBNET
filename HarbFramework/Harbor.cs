@@ -1598,7 +1598,7 @@ namespace Gruppe8.HarbNet
         /// <returns>String value containing information about the harbour, its ships and container spaces.</returns>
         public override string ToString()
         {
-            return ($"ID: {ID}, Ships in loading docks: {shipsInLoadingDock.Count}, Free loading docks: {freeLoadingDocks.Count}, Ships in ship docks: {shipsInShipDock.Count}, Free ship docks: {freeShipDocks.Count}, " +
+            return ($"ID: {ID}, Total number of ships: {AllShips.Count}, Ships in loading docks: {shipsInLoadingDock.Count}, Free loading docks: {freeLoadingDocks.Count}, Ships in ship docks: {shipsInShipDock.Count}, Free ship docks: {freeShipDocks.Count}, " +
                 $", Ships in anchorage: {Anchorage.Count}, Ships in transit: {ShipsInTransit.Count}, Containers stored in harbor: {storedContainers.Count}");
         }
     }
