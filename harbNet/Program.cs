@@ -12,7 +12,133 @@ namespace Client.HarborName
         static void Main(string[] args)
         {
 
+            Ship titanic = new Ship("Titanic", ShipSize.Large, DateTime.Now.AddDays(1), true, 1, 10, 40);
 
+            Ship denSorteDame = new Ship(
+                shipName: "Den Sorte Dame",
+                shipSize: ShipSize.Medium,
+                startDate: DateTime.Now.AddDays(1),
+                isForASingleTrip: false,
+                roundTripInDays: 2,
+                numberOfHalfContainersOnBoard: 20,
+                numberOfFullContainersOnBoard: 20
+                );
+
+            IList<Ship> shipsList = new List<Ship>();
+
+            shipsList.Add( titanic );
+            shipsList.Add(denSorteDame);
+
+            ContainerStorageRow storageRow1 = new ContainerStorageRow(100);
+            
+            ContainerStorageRow storageRow2 = new ContainerStorageRow(
+                numberOfContainerStorageSpaces: 100
+                );
+
+            IList<ContainerStorageRow> containerStorageList = new List<ContainerStorageRow>();
+
+            containerStorageList.Add( storageRow1 );
+            containerStorageList.Add( storageRow2 );
+
+
+            Harbor kjuttaviga = new Harbor(
+                listOfShips: shipsList,
+                listOfContainerStorageRows: containerStorageList,
+                numberOfSmallLoadingDocks: 2,
+                numberOfMediumLoadingDocks: 3,
+                numberOfLargeLoadingDocks: 4,
+                numberOfCranesNextToLoadingDocks: 2,
+                LoadsPerCranePerHour: 2,
+                numberOfCranesOnHarborStorageArea: 2,
+                numberOfSmallShipDocks: 1,
+                numberOfMediumShipDocks: 2,
+                numberOfLargeShipDocks: 3,
+                numberOfTrucksArriveToHarborPerHour: 2,
+                percentageOfContainersDirectlyLoadedFromShipToTrucks: 10,
+                percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks: 10,
+                numberOfAdv: 5,
+                loadsPerAdvPerHour: 3
+                );
+
+            Simulation sim = new Simulation(
+                harbor: kjuttaviga,
+                simulationStartTime: DateTime.Now,
+                simulationEndTime: DateTime.Now.AddDays(7)
+                );
+
+
+
+
+            sim.SimulationStarting += (sender, e) =>
+            {
+                SimulationStartingEventArgs args = (SimulationStartingEventArgs)e;
+                Console.WriteLine("Simulation starting ...");
+                Console.WriteLine($"Simulating {args.HarborToBeSimulated.ID} from {args.StartDate}\n");
+                Thread.Sleep(1000);
+            };
+            sim.ShipDockedtoLoadingDock += (sender, e) =>
+            {
+                ShipDockedToLoadingDockEventArgs args = (ShipDockedToLoadingDockEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to loading dock with ID {args.DockID}\n");
+            };
+            sim.ShipAnchored += (sender, e) =>
+            {
+                ShipAnchoredEventArgs args = (ShipAnchoredEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' anchored to anchorage with ID {args.AnchorageID}\n");
+            };
+            sim.ShipDockedToShipDock += (sender, e) =>
+            {
+                ShipDockedToShipDockEventArgs args = (ShipDockedToShipDockEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to ship dock with ID '{args.DockID}'\n");
+            };
+            sim.ShipUndocking += (sender, e) =>
+            {
+                ShipUndockingEventArgs args = (ShipUndockingEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' undocking from location ID '{args.LocationID}'\n");
+            };
+            sim.ShipInTransit += (sender, e) =>
+            {
+                ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | ' {args.Ship.Name}' is in transit at transit ID '{args.TransitLocationID}'\n");
+            };
+            sim.TruckLoadingFromStorage += (sender, e) =>
+            {
+                TruckLoadingFromStorageEventArgs args = (TruckLoadingFromStorageEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | A truck has loaded a container and left the harbor \n");
+            };
+            sim.ShipUnloadedContainer += (sender, e) =>
+            {
+                ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+
+            };
+            sim.DayEnded += (sender, e) =>
+            {
+                DayOverEventArgs args = (DayOverEventArgs)e;
+
+                Console.WriteLine($"-----------------------------------");
+                Console.WriteLine($"| {args.CurrentTime} | Day over! |");
+                Console.WriteLine($"-----------------------------------");
+
+            };
+            sim.ShipLoadedContainer += (sender, e) =>
+            {
+                ShipLoadedContainerEventArgs args = (ShipLoadedContainerEventArgs)e;
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
+            };
+            sim.SimulationEnded += (sender, e) =>
+            {
+                SimulationEndedEventArgs args = (SimulationEndedEventArgs)e;
+                Console.WriteLine($"-----------------------------------");
+                Console.WriteLine($"|         Simulation over!         |");
+                Console.WriteLine($"-----------------------------------");
+
+                Thread.Sleep(1000);
+            };
+
+            sim.Run();
+            /*
+            
             //CLIENT HARBOR 
             // Denne koden representerer ett eksempel av hvordan kunden kan opprette en simulering for havnen som er gitt i oppgaven.
             // Det finnes flere måter å gjøre dette på i APIet og koden under er bare ett eksempel på hvordan dette kan gjøres. 
@@ -44,7 +170,6 @@ namespace Client.HarborName
                 storageRows.Add(new ContainerStorageRow(15 * 6 * 4));
             }
 
-            
             for (int i = 0 ; i < 7; i++) {
                 for (int j = 0 ; j < 20; j++) {
                     ShipSize shipSize;
@@ -222,8 +347,7 @@ namespace Client.HarborName
                 Console.WriteLine($"-----------------------------------");
 
             };
-
-            
+     
             clientSim.DayLoggedToSimulationHistory += (sender, e) =>
             {
                 DayLoggedEventArgs args = (DayLoggedEventArgs)e;
@@ -257,7 +381,6 @@ namespace Client.HarborName
                 Console.WriteLine("");
             };
             
-
             clientSim.SimulationEnded += (sender, e) =>
             {
                 SimulationEndedEventArgs args = (SimulationEndedEventArgs)e;
@@ -267,7 +390,6 @@ namespace Client.HarborName
 
                 Thread.Sleep(1000);
             };
-
 
             clientSim.Run();
 
@@ -279,7 +401,7 @@ namespace Client.HarborName
                 Console.WriteLine($"Simulating {args.HarborToBeSimulated.ID} from {args.StartDate}\n");
                 Thread.Sleep(2000);
             };
-
+            */
         }
     }
 }
