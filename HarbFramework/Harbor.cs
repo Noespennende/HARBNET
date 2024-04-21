@@ -728,7 +728,7 @@ namespace Gruppe8.HarbNet
 
             foreach (ContainerStorageRow containerRow in allContainerRows)
             {
-                count += containerRow.numberOfFreeContainerSpaces(size);
+                count += containerRow.NumberOfFreeContainerSpaces(size);
             }
 
             return count;
@@ -1255,7 +1255,7 @@ namespace Gruppe8.HarbNet
             int count = 0;
             foreach (ContainerStorageRow containerRow in allContainerRows)
             {
-                count += containerRow.numberOfFreeContainerSpaces(containerSize);
+                count += containerRow.NumberOfFreeContainerSpaces(containerSize);
             }
 
             return count;
