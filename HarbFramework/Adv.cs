@@ -39,8 +39,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates a new Adv object.
         /// </summary>
-        /// <param name="id">Unique Id for the Adv to be created.</param>
-        /// <param name="location">Location of the Adv to be created.</param>
+        /// <param name="location">Unique ID representing the location the Adv to be created will be located.</param>
         internal Adv (Guid location)
         {
             this.Container = null;
@@ -48,10 +47,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads container from a object to another.
+        /// Loads container from an object to an Adv.
         /// </summary>
-        /// <param name="containerToBeLoaded">Container to be loaded.</param>
-        /// <return>Returns a Guid object representing the container to be loaded.</return>
+        /// <param name="containerToBeLoaded">Container object to be loaded to an Adv.</param>
+        /// <return>Returns a Guid object representing the container to be loaded to an Adv.</return>
         internal Guid LoadContainer(Container containerToBeLoaded)
         {
             this.Container = containerToBeLoaded;
@@ -59,9 +58,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Unloads container from a object to another.
+        /// Unloads container from an Adv to another object.
         /// </summary>
-        /// <return>Returns the container object to be unloaded.</return>
+        /// <return>Returns a container object representing the container to be unloaded from an Adv.</return>
         internal Container UnloadContainer()
         {
             Container containerToBeUnloaded = this.Container;

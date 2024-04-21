@@ -180,22 +180,22 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates new harbor object.
         /// </summary>
-        /// <param name="listOfShips">List of ships in harbor to be created.</param>
-        /// <param name="listOfContainerStorageRows">List of container storage rows in harbor to be created.</param>
-        /// <param name="numberOfSmallLoadingDocks">Number of small loading docks in harbor to be created.</param>
-        /// <param name="numberOfMediumLoadingDocks">Number of medium loading docks in harbor to be created.</param>
-        /// <param name="numberOfLargeLoadingDocks">Number of large loading docks in harbor to be created.</param>
-        /// <param name="numberOfCranesNextToLoadingDocks">Number of cranes next to loading docks in harbor to be created.</param>
-        /// <param name="LoadsPerCranePerHour">Number of loads per crane per hour in harbor to be created.</param>
-        /// <param name="numberOfCranesOnHarborStorageArea">Number of cranes on harbor storage area in harbor to be created.</param>
-        /// <param name="numberOfSmallShipDocks">Number of small ship docks in harbor to be created.</param>
-        /// <param name="numberOfMediumShipDocks">Number of medium ship docks in harbor to be created.</param>
-        /// <param name="numberOfLargeShipDocks">Number of large ship docks in harbor to be created.</param>
-        /// <param name="numberOfTrucksArriveToHarborPerHour">Number of truck arriving to the harbor to be created per hour</param>
-        /// <param name="percentageOfContainersDirectlyLoadedFromShipToTrucks">Percentage of containers directly loaded from ship to trucks in harbor to be created.</param>
-        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Percentage of containers directly loaded from harbor storage to trucks in harbor to be created.</param>
-        /// <param name="numberOfAdv">Number of Advs in harbor to be created.</param>
-        /// <param name="loadsPerAdvPerHour">Number of loads per adv per hour in harbor to be created.</param>
+        /// <param name="listOfShips">An IList containing ship objects to be created in harbor.</param>
+        /// <param name="listOfContainerStorageRows">An IList containing ContainerStorageRows objects to be created in the harbor.</param>
+        /// <param name="numberOfSmallLoadingDocks">Int value representing the amount of small loading docks to be created in the harbor.</param>
+        /// <param name="numberOfMediumLoadingDocks">Int value representing the amount of medium loading docks to be created in the harbor.</param>
+        /// <param name="numberOfLargeLoadingDocks">Int value representing the amount of large loading docks to be created in the harbor.</param>
+        /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes next to loading docks to be created in the harbor.</param>
+        /// <param name="LoadsPerCranePerHour">Int value representing the amount of loads a crane does per hour.</param>
+        /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes in the harbor storage area to be created in the harbor.</param>
+        /// <param name="numberOfSmallShipDocks">Int value representing the amount of small ship docks to be created in the harbor.</param>
+        /// <param name="numberOfMediumShipDocks">Int value representing the amount of medium ship docks to be created in the harbor.</param>
+        /// <param name="numberOfLargeShipDocks">Int value representing the amount of large ship docks to be created in the harbor.</param>
+        /// <param name="numberOfTrucksArriveToHarborPerHour">Int value representing the amount of trucks arriving to the harbor per hour</param>
+        /// <param name="percentageOfContainersDirectlyLoadedFromShipToTrucks">Int value representing the percentage of containers directly loaded from ship to trucks.</param>
+        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.</param>
+        /// <param name="numberOfAdv">Int value representing the amount of Advs in the harbor to be created.</param>
+        /// <param name="loadsPerAdvPerHour">Int value representing the amount of loads each adv does per hour.</param>
         /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in Harbor if parameter is out of set range.</exception>
         public Harbor(IList<Ship> listOfShips, IList<ContainerStorageRow> listOfContainerStorageRows, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
             int numberOfCranesNextToLoadingDocks, int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea,
@@ -287,10 +287,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Creates container space in harbor.
+        /// Creates container space in harbor based on the amount of numberOfContainerSpace and numberOfContainerRows.
         /// </summary>
-        /// <param name="numberOfContainerSpaces">Number of container spaces to be created.</param>
-        /// <param name="numberOfContainerRows">Number of container rows to be created.</param>
+        /// <param name="numberOfContainerSpaces">Int value representing the amount of container spaces to be created in harbor.</param>
+        /// <param name="numberOfContainerRows">Int value representing the amount of container rows to be created in harbor.</param>
         internal void CreateContainerSpaces(int numberOfContainerSpaces, int numberOfContainerRows)
         {
             IList <ContainerStorageRow> containerRows = new List <ContainerStorageRow>();
@@ -302,13 +302,14 @@ namespace Gruppe8.HarbNet
 
             this.allContainerRows = containerRows;
         }
+
         /// <summary>
-        /// Loads container from ship to crane
+        /// Loads container from ship to crane.
         /// </summary>
-        /// <param name="ship">Ship object container is unloaded from.</param>
-        /// <param name="crane">Crane object that loads container.</param>
-        /// <param name="currentTime">The current time container is loaded.</param>
-        /// <returns>Returns the container to be loaded from ship to crane.</returns>
+        /// <param name="ship">Ship object the container is unloaded from.</param>
+        /// <param name="crane">Crane object that loads the container.</param>
+        /// <param name="currentTime">The Date and time container is loaded from ship to crane.</param>
+        /// <returns>Returns the container object to be loaded from ship to crane.</returns>
         internal Container ShipToCrane(Ship ship, Crane crane, DateTime currentTime)
         {
             if (!(crane.Container == null))
@@ -327,10 +328,10 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Loads container from crane to ship.
         /// </summary>
-        /// <param name="ship">Ship object that loads container.</param>
-        /// <param name="crane">Crane object container is unloaded from.</param>
-        /// <param name="currentTime">The current time container is loaded.</param>
-        /// <returns>Returns container to be loaded from crane to ship.</returns>
+        /// <param name="ship">Ship object that loads the container.</param>
+        /// <param name="crane">Crane object the container is unloaded from.</param>
+        /// <param name="currentTime">The Date and time container is loaded from crane to ship.</param>
+        /// <returns>Returns the container object to be loaded from crane to ship.</returns>
         internal Container CraneToShip(Crane crane, Ship ship, DateTime currentTime)
         {
             Container containerToBeLoaded = crane.UnloadContainer();
@@ -344,10 +345,10 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Loads container from crane to truck.
         /// </summary>
-        /// <param name="crane">Crane object container is unloaded from.</param>
-        /// <param name="truck">Truck object that loads container.</param>
-        /// <param name="currentTime">The current time container is loaded.</param>
-        /// <returns>Returns container to be loaded from crane to truck.</returns>
+        /// <param name="crane">Crane object the container is unloaded from.</param>
+        /// <param name="truck">Truck object that loads the container.</param>
+        /// <param name="currentTime">The Date and time container is loaded from crane to truck.</param>
+        /// <returns>Returns the container object to be loaded from crane to truck.</returns>
         /// <exception cref="TruckCantBeLoadedExeption">Exception to be thrown if truck can't be loaded.</exception>
         internal Container CraneToTruck(Crane crane, Truck truck, DateTime currentTime)
         {
@@ -378,9 +379,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets available loading dock for cranes.
+        /// Gets all available cranes from loading dock.
         /// </summary>
-        /// <returns>Returns crane if the crane holds on no container, if crane holds on container then null is returned.</returns>
+        /// <returns>Returns crane from docked cranes if the crane holds on no container, if crane holds on container then null is returned.</returns>
         internal Crane? GetFreeLoadingDockCrane()
         {
             foreach (Crane crane in DockCranes)
@@ -396,17 +397,17 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Removes truck from queue.
         /// </summary>
-        /// <param name="truck">Truck object to be removed from queue.</param>
+        /// <param name="truck">Truck object to be removed from truck queue.</param>
         internal void RemoveTruckFromQueue(Truck truck)
         {
             TrucksInQueue.Remove(truck);
         }
 
         /// <summary>
-        /// Sends truck on transit.
+        /// Sends truck to transit.
         /// </summary>
-        /// <param name="loadingDock">The loading dock for truck to be sent to transit.</param>
-        /// <param name="container">Container to be transported on truck.</param>
+        /// <param name="loadingDock">The loading dock object the truck is being sent to for transit.</param>
+        /// <param name="container">The container object to be transported on truck.</param>
         /// <exception cref="NullReferenceException">Exception to be thrown if truck is not found.</exception>
         internal void SendTruckOnTransit(LoadingDock loadingDock, Container container)
         {
@@ -451,10 +452,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Sends truck on transit.
+        /// Sends truck to transit.
         /// </summary>
-        /// <param name="container">Container to be transported on truck.</param>
-        /// <returns>Returns truck object transporting container, if truck is not transporting container null is returned.</returns>
+        /// <param name="container">The container object to be transported on truck.</param>
+        /// <returns>Returns the truck object transporting the dedined container object, if the truck is not transporting the container null is returned.</returns>
         internal Truck? SendTruckOnTransit(Container container)
         {
             
@@ -475,9 +476,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Amount of container in storage to ships.
+        /// Amount of containers in the ships storage.
         /// </summary>
-        /// <returns>Returns an int value representing the amount of containers in storage to ships.</returns>
+        /// <returns>Returns an int value representing the amount of containers in the ships storage.</returns>
         internal int NumberOfContainersInStorageToShips()
         {
             int numberOfContainersToShips = storedContainers.Count - NumberOfContainersInStorageToTrucks();
@@ -486,9 +487,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Amount of containers in storage to trucks.
+        /// Amount of containers in the trucks storage.
         /// </summary>
-        /// <returns>Returns an int value representing the amount of containers in storage to trucks.</returns>
+        /// <returns>Returns an int value representing the amount of containers in the trucks storage.</returns>
         internal int NumberOfContainersInStorageToTrucks()
         {
             double percentTrucks = 0.10; // PercentOfContainersDirectlyLoadedFromStorageArea;
@@ -514,10 +515,10 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Loads container from Crane to Adv
         /// </summary>
-        /// <param name="crane">Crane object container is unloaded from.</param>
-        /// <param name="adv">Adv object that loads container.</param>
-        /// <param name="currentTime">The current time container is loaded.</param>
-        /// <returns>Returns container to be loaded from crane to adv.</returns>
+        /// <param name="crane">The crane object the container is unloaded from.</param>
+        /// <param name="adv">The adv object that loads the container.</param>
+        /// <param name="currentTime">The Date and Time the container is loaded from crane to adv.</param>
+        /// <returns>Returns the container object to be loaded from crane to adv.</returns>
         /// <exception cref="AdvCantBeLoadedExeption">Exception to be thrown if Adv can't be loaded.</exception>
         internal Container CraneToAdv(Crane crane, Adv adv, DateTime currentTime)
         {
@@ -550,10 +551,10 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Loads container from Adv to Crane.
         /// </summary>
-        /// <param name="crane">Crane object that loads container.</param>
-        /// <param name="adv">Adv object container is unloaded from.</param>
-        /// <param name="currentTime">The current time container is loaded.</param>
-        /// <returns>Returns container to be loaded from crane to adv.</returns>
+        /// <param name="crane">The crane object that loads the container.</param>
+        /// <param name="adv">The Adv object the container is unloaded from.</param>
+        /// <param name="currentTime">The Date and Time the container is loaded.</param>
+        /// <returns>Returns the container object to be loaded from crane to adv.</returns>
         /// <exception cref="CraneCantBeLoadedExeption">Exception the be thrown if Crane can't be loaded.</exception>
         internal Container AdvToCrane(Crane crane, Adv adv, DateTime currentTime)
         {
@@ -590,7 +591,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads container from crane to container storage if there is available space.
+        /// Loads container from crane to container storage row if there is available space.
         /// </summary>
         /// <param name="crane">Crane object container is unloaded from</param>
         /// <param name="currentTime">The current time container is loaded.</param>
@@ -613,13 +614,14 @@ namespace Gruppe8.HarbNet
             crane.LoadContainer(container);
             return false;
         }
+
         /// <summary>
         /// Loads container from container row to crane.
         /// </summary>
-        /// <param name="size">the size of the container to be loaded</param>
-        /// <param name="crane">Crane object that loads container.</param>
-        /// <param name="currentTime">The current time container is loaded.</param>
-        /// <returns>Returns container to be loaded from container row to crane, if container is not found null is returned.</returns>
+        /// <param name="size">The containerSize enum representing the Size of container to be created.</param>
+        /// <param name="crane">Crane object that loads the container.</param>
+        /// <param name="currentTime">The date and time the container is loaded.</param>
+        /// <returns>Returns the container object to be loaded from container row to crane, if container is not found then null is returned.</returns>
         /// <exception cref="CraneCantBeLoadedExeption">Throws exception if crane can't be loaded.</exception>
         internal Container ContainerRowToCrane(ContainerSize size, Crane crane,DateTime currentTime)
         {
@@ -645,7 +647,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets available adv.
         /// </summary>
-        /// <returns>Returns available adv found, if none is available null is returned.</returns>
+        /// <returns>Returns the first available adv object, if none is available null is returned.</returns>
         internal Adv GetFreeAdv()
         {
             if (AdvFree.Count > 0)
@@ -657,9 +659,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets avaulable truck.
+        /// Gets available truck.
         /// </summary>
-        /// <returns>Returns available truck found, if none is available null is returned.</returns>
+        /// <returns>Returns the first available truck found, if none is available null is returned.</returns>
         internal Truck? GetFreeTruck()
         {
             if (TrucksInQueue.Count > 0)
@@ -671,7 +673,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Creates new truck objects.
+        /// Creates new truck objects and adds them to the TruckInQueue list.
         /// </summary>
         internal void GenerateTrucks()
         {
@@ -682,9 +684,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets available crane from storage area.
+        /// Gets available crane from the storage area.
         /// </summary>
-        /// <returns>Returns available crane found in storage area, if none is available null is returned.</returns>
+        /// <returns>Returns the available crane object found in the storage area, if none is available null is returned.</returns>
         internal Crane? GetFreeStorageAreaCrane()
         {
             foreach (Crane crane in HarborStorageAreaCranes)
@@ -700,8 +702,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets adv containing a container.
         /// </summary>
-        /// <param name="container">Container to be checked if held by adv.</param>
-        /// <returns>Returns adv if it holds an container, if it's not holding an container then null is returned</returns>
+        /// <param name="container">The container object to be checked if it's held by an adv.</param>
+        /// <returns>Returns adv object if it hold an container, if it's not holding an container then null is returned</returns>
         internal Adv? GetAdvContainingContainer(Container container)
         {
             foreach (Adv adv in AdvWorking)
@@ -716,9 +718,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Finds the number of free container spaces.
+        /// Finds the number of available container spaces in ContainerStorageRow.
         /// </summary>
-        /// <returns>Returns an int value representing how many free spaces there are.</returns>
+        /// <param name="size">The containerSize enum representing the Size of container to be created.</param>
+        /// <returns>Returns an int value representing how many available container spaces of specified ContainerSize enum there are.</returns>
         internal int numberOfFreeContainerSpaces (ContainerSize size)
         {
             int count = 0;
@@ -734,9 +737,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Docks ship to loading dock.
         /// </summary>
-        /// <param name="shipID">unique ID of ship to be docked</param>
-        /// <param name="currentTime">The current time ship is docked.</param>
-        /// <returns>Returns a Guid object representing the dock the ship gets docked to, if correct dock does not exist nothing is returned.</returns>
+        /// <param name="shipID">unique ID of ship object to be docked</param>
+        /// <param name="currentTime">The date and time the ship is docked.</param>
+        /// <returns>Returns a Guid object representing the dock the ship gets docked to, if available loading dock matching the ShipSize enum does not exist nothing is returned.</returns>
         internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
@@ -766,11 +769,11 @@ namespace Gruppe8.HarbNet
 
 
         /// <summary>
-        /// Transfering ship from dock to loading dock.
+        /// Docking ship from ship dock to loading dock.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be transfered.</param>
-        /// <param name="currentTime">The current time ship is transfered.</param>
-        /// <returns>Returns a Guid object representing the loading dock the ship gets docked to, if correct dock does not exist nothing is returned.</returns>
+        /// <param name="shipID">Unique ID of ship object to be docked from ship dock to loading dock.</param>
+        /// <param name="currentTime">The date and time ship is docked from ship dock to loading dock.</param>
+        /// <returns>Returns a Guid object representing the loading dock the ship gets docked to, if available loading dock matching the ShipSize enum does not exist nothing is returned.</returns>
         internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeDocked = GetShipFromShipDock(shipID);
@@ -800,10 +803,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Ship gets docked to dock.
+        /// Ship gets docked to ship dock.
         /// </summary>
-        /// <param name="shipID">Unique ID of the ship to be docked.</param>
-        /// <returns>Returns a Guid object representing the dock the ship gets docked to, if correct dock does not exist nothing is returned.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be docked to ship dock.</param>
+        /// <returns>Returns a Guid object representing the ship dock object the ship gets docked to, if available ship dock matching the ShipSize enum does not exist nothing is returned.</returns>
         internal Guid DockShipToShipDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromLoadingDock(shipID) ?? GetShipFromAnchorage(shipID);
@@ -838,8 +841,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Ship in anchorage gets moved to loading dock.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be moved to loading dock.</param>
-        /// <returns>Returns a Guid object representing the dock the ship gets docked to, if correct dock does not exist nothing is returned.</returns>
+        /// <param name="shipID">Unique ID of ship object to be moved to loading dock.</param>
+        /// <returns>Returns a Guid object representing the ladong dock the ship gets docked to, if available loading dock matching the ShipSize enum does not exist nothing is returned.</returns>
 
         internal Guid StartShipInLoadingDock(Guid shipID)
         {
@@ -869,9 +872,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Ship in loading dock got get moved to dock for ships in transit.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be moved to transit.</param>
-        /// <param name="currentTime">The current time ship is transfered.</param>
-        /// <returns>Returns a Guid object representing the dock the ship gets docked from, if correct dock does not exist nothing is returned.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be moved to transit.</param>
+        /// <param name="currentTime">The date and time the ship object is undocked from loading dock to tranist.</param>
+        /// <returns>Returns a Guid object representing the loading dock the ship gets docked from, if correct dock does not exist nothing is returned.</returns>
         internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime)
         {
             Ship shipToBeUndocked = GetShipFromLoadingDock(shipID);
@@ -902,8 +905,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Undock Ship from Anchorage to Transit.
         /// </summary>
-        /// <param name="shipID">Unique ID of specific ship.</param>
-        /// <returns>Returns the Guid of the Anchorage the ship was undocked from.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be undocked from anchorage to transit.</param>
+        /// <returns>Returns the Guid of the Anchorage the ship object was undocked from, if there is no ships to be undocked from anchorage null is returned.</returns>
         internal Guid UnDockShipFromAnchorageToTransit(Guid shipID)
         {
             Ship shipToBeUndocked = GetShipFromAnchorage(shipID);
@@ -927,10 +930,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets specific ship from anchorage
+        /// Gets specific ship object from anchorage.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be found.</param>
-        /// <returns>Returns ship object if ship is found in anchorage.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be found in anchorage.</param>
+        /// <returns>Returns the ship object if ship is found in anchorage.</returns>
         /// <exception cref="ArgumentException">Throws exception if ship is not found.</exception>
         internal Ship GetShipFromAnchorage(Guid shipID)
         {
@@ -950,8 +953,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets specific ship from loading dock.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be found.</param>
-        /// <returns>Returns ship object if ship is found in loading dock.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be found in loading dock.</param>
+        /// <returns>Returns the ship object if the ship is found in loading dock.</returns>
         /// <exception cref="ArgumentException">Throws exception if ship is not found.</exception>
         internal Ship GetShipFromLoadingDock(Guid shipID)
         {
@@ -969,8 +972,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets specific ship from ship docks.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be found.</param>
-        /// <returns>Returns ship object if ship is found in ship dock.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be found in ship docks.</param>
+        /// <returns>Returns the ship object if ship is found in ship dock.</returns>
         /// <exception cref="ArgumentException">Throws exception if ship is not found.</exception>
         internal Ship GetShipFromShipDock(Guid shipID)
         {
@@ -986,10 +989,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets loading dock that has a specific ship docked.
+        /// Gets loading dock that has the specified ship docked.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be found in loading dock.</param>
-        /// <returns>Returns loading dock that contains the specified ship.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be found in loading dock.</param>
+        /// <returns>Returns the loading dock object that contains the specified ship.</returns>
         /// <exception cref="ArgumentException">Throws exception if ship is not found.</exception>
         internal LoadingDock GetLoadingDockContainingShip(Guid shipID)
         {
@@ -1005,9 +1008,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Creates a list of all docked ships in loading docks.
+        /// Creates an IList containing ship objects of all docked ships in loading docks.
         /// </summary>
-        /// <returns>Returns an IList with Ship object container information on all ships docked in loading dock.</returns>
+        /// <returns>Returns an IList with Ship object containing all ships docked in loading dock.</returns>
         internal List<Ship> DockedShipsInLoadingDock()
         {
             List<Ship> ships = new List<Ship>();
@@ -1020,6 +1023,11 @@ namespace Gruppe8.HarbNet
             return ships;
         }
 
+        /// <summary>
+        /// New containers are generated when container arrives at destination.
+        /// </summary>
+        /// <param name="ship">Ship object transfering containers to their destination.</param>
+        /// <param name="time">The date and time new containers are generated.</param>
         internal void RestockContainers(Ship ship, DateTime time)
         {
             int size = ship.ContainersOnBoard.Count;
@@ -1040,10 +1048,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if a loading dock matching the specified shipsize is available.
+        /// Checks if a loading dock matching the specified shipsize enum is available.
         /// </summary>
-        /// <param name="shipSize">Size of ship the dock has to fit.</param>
-        /// <returns>Returns true if there is available loading docks for the shipsize, false if there is no available loading docks.</returns>
+        /// <param name="shipSize">The shipSize enum representing the Size of ships to fit in loading dock.</param>
+        /// <returns>Returns true if there is available loading docks for the defined shipsize, false if there is no available loading docks.</returns>
         internal bool FreeLoadingDockExists(ShipSize shipSize)
         {
             foreach (LoadingDock loadingDock in freeLoadingDocks)
@@ -1057,10 +1065,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if a free ship dock matching the specified shipsize is available.
+        /// Checks if a free ship dock matching the specified shipsize enum is available.
         /// </summary>
-        /// <param name="shipSize">Size of ship the dock has to fit.</param>
-        /// <returns>Returns true if there is available ship docks for the shipsize, false if there is no available ship docks.</returns>
+        /// <param name="shipSize">The shipSize enum representing the Size of ships to fit in ship dock.</param>
+        /// <returns>Returns true if there is available ship docks for the defined shipsize, false if there is no available ship docks.</returns>
         internal bool FreeShipDockExists(ShipSize shipSize)
         {
             foreach (ShipDock shipDock in freeShipDocks)
@@ -1074,10 +1082,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets all free loading dock matching the specified shipsize,
+        /// Gets all free loading dock matching the specified shipsize.
         /// </summary>
-        /// <param name="shipSize">Size of ship the dock has to fit.</param>
-        /// <returns>Returns loadingdock if there is available loading docks for the shipsize, if no docks are available null is returned.</returns>
+        /// <param name="shipSize">The shipSize enum representing the Size of ships to fit in loading dock.</param>
+        /// <returns>Returns loadingdock if there is available loading docks for the defined shipsize, if no docks are available null is returned.</returns>
         internal LoadingDock GetFreeLoadingDock(ShipSize shipSize)
         {
 
@@ -1096,8 +1104,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets all free ship dock matching the specified shipsize.
         /// </summary>
-        /// <param name="shipSize">Size of ship the dock has to fit.</param>
-        /// <returns>Returns shipdocks if there is available ship docks for the shipsize.</returns>
+        /// <param name="shipSize">The shipSize enum representing the Size of ships to fit in ship dock.</param>
+        /// <returns>Returns the shipdocks if there is available ship docks for the defined shipsize.</returns>
         /// <exception cref="ArgumentException">Throws exception if shipSize is not found.</exception>
         internal ShipDock GetFreeShipDock(ShipSize shipSize)
         {
@@ -1116,8 +1124,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Removes specified ship from anchorage.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be removed.</param>
-        /// <returns>Returns true if specified ship was in anchorage, if ship was not found in anchorage false is returned.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be removed from anchorage.</param>
+        /// <returns>Returns true if specified ship object was in anchorage, if ship was not found in anchorage false is returned.</returns>
         internal bool RemoveShipFromAnchorage(Guid shipID)
         {
             foreach (Ship ship in Anchorage)
@@ -1134,8 +1142,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Undocks ship from loading lock to ship dock.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be undocked.</param>
-        /// <returns>Returns a Guid object representing the loading dock the ship docked from.</returns>
+        /// <param name="shipID">Unique ID of ship to be undocked from loading dock to ship dock.</param>
+        /// <returns>Returns a Guid object representing the loading dock the ship object undocked from, if there are no ship objects to be undocked null is returned.</returns>
         internal Guid UnDockShipFromLoadingDockToShipDock(Guid shipID)
         {
             Ship shipToBeUndocked = GetShipFromLoadingDock(shipID);
@@ -1166,8 +1174,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Undocks ship from ship dock to loading dock.
         /// </summary>
-        /// <param name="shipID">Unique ID of ship to be undocked.</param>
-        /// <returns>Returns a Guid object representing the ship dock the ship docked from.</returns>
+        /// <param name="shipID">Unique ID of the ship object to be undocked from ship dock to loading dock.</param>
+        /// <returns>Returns a Guid object representing the ship dock the ship object undocked from, if there are no ships to be undocked null is returned.</returns>
         internal Guid UnDockShipFromShipDockToLoadingDock(Guid shipID)
         {
             Ship shipToBeUndocked = GetShipFromShipDock(shipID);
@@ -1198,8 +1206,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Removes loading dock from list of free loading docks.
         /// </summary>
-        /// <param name="dockID">Unique ID of dock to be removed.</param>
-        /// <returns>Returns a boolean that is true if specified dock was in the list of free loading docks, if specified dock was not in list flase is returned.</returns>
+        /// <param name="dockID">Unique ID the of dock to be removed from list of available loading docks.</param>
+        /// <returns>Returns a boolean that is true if specified dock was in the list of free loading docks, if specified dock was not in the list false is returned.</returns>
         internal bool RemoveLoadingDockFromFreeLoadingDocks(Guid dockID)
         {
             foreach (LoadingDock loadingDock in freeLoadingDocks)
@@ -1214,10 +1222,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Counts the number of available loading docks of the specified size.
+        /// Counts the number of available loading docks of the specified shipSize enum.
         /// </summary>
-        /// <param name="shipSize">Size of ship the dock has to fit.</param>
-        /// <returns>Returns an int value representing the total amount of available loading docks of specified size.</returns>
+        /// <param name="shipSize">The shipSize enum representing the size of ships to fit in loading dock.</param>
+        /// <returns>Returns an int value representing the total amount of available loading docks of specified shipSize enum.</returns>
         internal int NumberOfFreeLoadingDocks(ShipSize shipSize)
         {
             int count = 0;
@@ -1234,7 +1242,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Counts the number of available containerspaces of specified size.
         /// </summary>
-        /// <param name="containerSize">Size of the container the containerSpace has to fit.</param>
+        /// <param name="containerSize">The containerSize enum representing the size the containerSpace has to fit.</param>
         /// <returns>Returns an int value representing the total number of available loading containerspaces of specified size.</returns>
         /// <exception cref="ArgumentException">Throws exception if containerSize is not found.</exception>
         internal int NumberOfFreeContainerSpaces(ContainerSize containerSize)
@@ -1256,8 +1264,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Counts the number of occupied containerspaces of specified size.
         /// </summary>
-        /// <param name="containerSize">Size of the container the containerSpace has to fit.</param>
-        /// <returns>Returns an int value representing the total number of occupoed loading containerspaces of specified size.</returns>
+        /// <param name="containerSize">The containerSize enum representing the size the containerSpace has to fit.</param>
+        /// <returns>Returns an int value representing the total number of occupied loading containerspaces of specified size.</returns>
         internal int GetNumberOfOccupiedContainerSpaces(ContainerSize containerSize)
         {
             return storedContainers.Count;
@@ -1265,10 +1273,10 @@ namespace Gruppe8.HarbNet
         } //returnerer antallet okuperte plasser av den gitte typen
 
         /// <summary>
-        /// Gets the available container space of specified size.
+        /// Gets the available container row of specified containerSize.
         /// </summary>
-        /// <param name="containerSize">Size of the container the containerRow has to fit.</param>
-        /// <returns>Returns a Guid representing the available containerspace of specified size.</returns>
+        /// <param name="containerSize">The containerSize enum representing the size the containerRow has to fit.</param>
+        /// <returns>Returns a Guid representing the available containerRow of specified size.</returns>
         /// <exception cref="ArgumentException">Throws exception if containerSize is not found.</exception>
         internal ContainerStorageRow GetContainerRowWithFreeSpace(ContainerSize containerSize)
         {
@@ -1284,10 +1292,10 @@ namespace Gruppe8.HarbNet
         } //returnerer en Guid til en ledig plass av den gitte typen
 
         /// <summary>
-        /// Gets the stored containers of specified size.
+        /// Gets the stored containers of specified containerSize.
         /// </summary>
-        /// <param name="containerSize">Size of the container the containerSpace has to fit.</param>
-        /// <returns>Returns a Guid object representing the stored container of specified size, if container of specified size is not found null is returned.</returns>
+        /// <param name="containerSize">The containerSize enum representing the size the containers to be retrieved.</param>
+        /// <returns>Returns a Guid object representing the stored container objects of specified containerSize, if container of specified size is not found null is returned.</returns>
         internal Container GetStoredContainer(ContainerSize containerSize)
         {
             foreach (Container container in storedContainers.Keys)
@@ -1301,12 +1309,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Unloads container of specific size from ship to containerspace.
+        /// Unloads container of specific containerSize from ship to ContainerSpace in ContainerStorageRow.
         /// </summary>
-        /// <param name="containerSize">Size of the container the containerSpace has to fit.</param>
-        /// <param name="ship">Ship object container is unloaded from.</param>
-        /// <param name="currentTime">The current time container is unloaded</param>
-        /// <returns>Returns a Guid object representing the containerspaces the unloaded container was stored, if container did not exist empty is returned.</returns>
+        /// <param name="containerSize">The containerSize enum representing the size the containers to be unloaded from ship to containerspace.</param>
+        /// <param name="ship">The ship object the container is unloaded from.</param>
+        /// <param name="currentTime">The date and time the container is unloaded from ship to available containerspace.</param>
+        /// <returns>Returns a Guid object representing the containerspaces the unloaded container was stored in, if there were no containers to unload from the ship empty is returned.</returns>
         internal Guid UnloadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
         {
             Container containerToBeUnloaded = ship.GetContainer(containerSize);
@@ -1330,7 +1338,7 @@ namespace Gruppe8.HarbNet
 
         
         /// <summary>
-        /// Adds new ship to anchorage.
+        /// Adds new ship object to anchorage.
         /// </summary>
         /// <param name="ship">Ship object to be added to anchorage.</param>
         internal void AddNewShipToAnchorage(Ship ship)
@@ -1341,9 +1349,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets last registered status of specific ship.
+        /// Gets last registered status of specific ship object.
         /// </summary>
-        /// <param name="ShipID">Unique ID of ship to get status from.</param>
+        /// <param name="ShipID">Unique ID of the ship object to get status from.</param>
         /// <returns>Returns a Status enum representing the last registered status of specified ship if the ship has a history, if no status is registered null is returned.</returns>
         public Status GetShipStatus(Guid ShipID)
         {
@@ -1362,9 +1370,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the status of all shipdocks
+        /// Gets the status of all shipdocks if they are avilable or not.
         /// </summary>
-        /// <returns>Returns a dictionary representing the status of all shipdocks.</returns>
+        /// <returns>Returns a dictionary containing the Guid of the ship docks and bool values representing the availability of the ship docks.</returns>
         public Dictionary<Guid, bool> StatusAllShipDocks()
         {
             Dictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
@@ -1376,9 +1384,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the status of all loading docks.
+        /// Gets the status of all loading docks if they are available or not.
         /// </summary>
-        /// <returns>Returns a string value representing all the dock IDs and their status.</returns>
+        /// <returns>Returns a string value representing all the dock IDs and if they are available or not.</returns>
         public string GetStatusAllLoadingDocks()
         {
             StringBuilder sb = new StringBuilder();
@@ -1399,8 +1407,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets the status of specified container.
         /// </summary>
-        /// <param name="ContainerId">Unique ID of container to get status from.</param>
-        /// <returns>Returns a string value representing the dock ID and their status.</returns>
+        /// <param name="ContainerId">Unique ID of the container object to get last registered status from.</param>
+        /// <returns>Returns a string value representing the container ID and their last registered status from Status enums.</returns>
         public string GetContainerStatus(Guid ContainerId)
         {
             StringBuilder sb = new StringBuilder();
@@ -1427,9 +1435,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the last registered status of all containers.
+        /// Gets the status of all containers.
         /// </summary>
-        /// <returns>Returns a string value representing the container ID and their last registered status.</returns>
+        /// <returns>Returns a string value representing the container ID and their last registered status from Status enums.</returns>
         public string GetAllContainerStatus()
         {
             StringBuilder sb = new StringBuilder();
@@ -1454,7 +1462,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if loading dock is available for all dock sizes.
         /// </summary>
-        /// <returns>Returns a dictionary with all the available loading docks, if no docks are available null is returned.</returns>
+        /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not. The Dictionary with available loading docks are returned, if no docks are available null is returned.</returns>
         public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks()
         {
             Dictionary<Guid, bool> freeLoadingDock = new Dictionary<Guid, bool>();
@@ -1470,10 +1478,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if specified dock is available.
+        /// Checks if specified loading dock is available.
         /// </summary>
-        /// <param name="dockID">Unique ID of dock to be checked if available.</param>
-        /// <returns>Returns a bollean that is true if specified dock is free, or false if it's not.</returns>
+        /// <param name="dockID">Unique ID of the dock object to be checked if available.</param>
+        /// <returns>Returns a boolean that is true if specified loading dock is free, or false if it's not.</returns>
         bool LoadingDockIsFree(Guid dockID)
         {
             bool dockIsFree = false;
@@ -1490,7 +1498,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if ship dock is available for all dock sizes.
         /// </summary>
-        /// <returns>Returns a dictionary with ship docks available for all dock sizes.</returns>
+        /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not. The Dictionary with available ship docks are returned, if no docks are available null is returned.</returns>
         public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks()
         {
             Dictionary<Guid, bool> freeShipDock = new Dictionary<Guid, bool>();
@@ -1508,7 +1516,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets the last registered status from all ships.
         /// </summary>
-        /// <returns>Return a dictionary with the last registered status of all ships, if they have a status.</returns>
+        /// <returns>Return an IDictionary containing Ship objects and Status enum representing the last registered status of the ships, if they have a status.</returns>
         public IDictionary<Ship, Status> GetStatusAllShips()
         {
             Dictionary<Ship, Status> statusOfAllShips = new Dictionary<Ship, Status>();
@@ -1527,7 +1535,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets all containers stored in harbor.
         /// </summary>
-        /// <returns>Returns an Ilist with Container objects with all containors stored in harbor.</returns>
+        /// <returns>Returns an Ilist with Container objects containing all containors stored in harbor.</returns>
         internal IList<Container> GetContainersStoredInHarbour()
         {
             IList<Container> list = new List<Container>();
@@ -1543,7 +1551,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets all ships in a loading dock.
         /// </summary>
-        /// <returns>Returns a Ilist with Ship objects with all ships in a loading dock.</returns>
+        /// <returns>Returns a Ilist with Ship objects containing all ships in a loading dock.</returns>
         internal IList<Ship> GetShipsInLoadingDock()
         {
             IList<Ship> list = new List<Ship>();
@@ -1558,7 +1566,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets all ships in a ship dock.
         /// </summary>
-        /// <returns>Returns an Ilist with Ship objects with all ships in a ship dock.</returns>
+        /// <returns>Returns an Ilist with Ship objects containing all ships in a ship dock.</returns>
         internal IList<Ship> GetShipsInShipDock()
         {
             IList<Ship> list = new List<Ship>();
@@ -1573,7 +1581,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets all ships in transit.
         /// </summary>
-        /// <returns>Returns an Ilist with Ship objects with all ships in transit.</returns>
+        /// <returns>Returns an Ilist with Ship objects containing all ships in transit.</returns>
         internal IList<Ship> GetShipsInTransit()
         {
             IList<Ship> list = new List<Ship>();
@@ -1585,7 +1593,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string value containing information about the harbour, its ships and container spaces.
+        /// Returns a string with the harbor ID, amount of ships in loading dock, amount of free loading docks, amount of ships in ship dock, amount of free ship docks, amount of ships in anchorage, amount of ships in transit and amount of containers stored in harbor. .
         /// </summary>
         /// <returns>String value containing information about the harbour, its ships and container spaces.</returns>
         public override string ToString()

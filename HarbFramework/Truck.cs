@@ -33,7 +33,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates new truck object.
         /// </summary>
-        /// <param name="location">Location of the truck to be created.</param>
+        /// <param name="location">Guid object representing the location of the truck to be created.</param>
         public Truck (Guid location)
         {
             this.Location = location;
@@ -42,9 +42,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads container from a object to another.
+        /// Loads container from a object to truck.
         /// </summary>
-        /// <param name="containerToBeLoaded">Container to be loaded.</param>
+        /// <param name="containerToBeLoaded">Container object to be loaded to truck.</param>
         /// <return>Returns a Guid object representing the container to be loaded.</return>
         internal Guid LoadContainer(Container containerToBeLoaded)
         {
@@ -52,7 +52,7 @@ namespace Gruppe8.HarbNet
             return containerToBeLoaded.ID;
         }
         /// <summary>
-        /// Unloads container from an object to another.
+        /// Unloads container from an truck to another object.
         /// </summary>
         /// <return>Returns the container object to be unloaded.</return>
         internal Container UnloadContainer()

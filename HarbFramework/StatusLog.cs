@@ -38,7 +38,7 @@ namespace Gruppe8.HarbNet
         /// <param name="subject">Guid of the subject that went trough the status change</param>
         /// <param name="subjectLocation">Guid of the location of the subject at the time the subject changed status</param>
         /// <param name="pointInTime">Date and time the subject changed status</param>
-        /// <param name="status">The new status of the subject, f.eks Undocking, Loading, Unloading</param>
+        /// <param name="status">Status enum representing the new status of the subject</param>
         internal StatusLog (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
         {
             this.Subject = subject;
@@ -48,7 +48,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string conraining information about the subject on a given point in time.
+        /// Returns a string with the date and time of status log, subjets ID, subjets location and current status.
         /// </summary>
         /// <returns> a String containing information about the subject on a given point in time.</returns>
         override public string ToString()

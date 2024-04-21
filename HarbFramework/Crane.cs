@@ -36,8 +36,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates a new crane object.
         /// </summary>
-        /// <param name="containersLoadedPerHour">Amount on containers loaded per hour.</param>
-        /// <param name="location">The location of the crane.</param>
+        /// <param name="containersLoadedPerHour">Int value representing the amount on containers loaded by the crane per hour.</param>
+        /// <param name="location">Unique Guid representing the location the Container to be created will currently be located.</param>
         internal Crane (int containersLoadedPerHour, Guid location)
         {
             this.ID = Guid.NewGuid();
@@ -47,9 +47,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads container from another object to crane.
+        /// Container loaded by Crane.
         /// </summary>
-        /// <param name="containerToBeLoaded">Name of container to be loaded.</param>
+        /// <param name="containerToBeLoaded">The container object to be loaded by the Crane.</param>
         /// <returns>Returns the Guid object representing the unique ID of container to be loaded.</returns>
         internal Guid LoadContainer (Container containerToBeLoaded)
         {
@@ -58,7 +58,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Unloads container from crane to another object.
+        /// Container unloaded from Crane.
         /// </summary>
         /// <returns>Returns the Container object to be unloaded.</returns>
         internal Container UnloadContainer ()

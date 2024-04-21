@@ -32,7 +32,7 @@ namespace Gruppe8.HarbNet
         /// <return>Returns a Status enum representing the latest registered status of the subject.</return>
         public Status Status { get; }
         /// <summary>
-        /// Returns a string containing information about the subject on a given point in time.
+        /// Returns a string with the date and time of status log, subjets ID, subjets location and current status.
         /// </summary>
         /// <returns> a String containing information about the subject on a given point in time.</returns>
         public String ToString();

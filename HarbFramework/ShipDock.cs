@@ -14,7 +14,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates new ShipDock object.
         /// </summary>
-        /// <param name="shipSize">Size of ship the ShipDock to be created can hold.</param>
+        /// <param name="shipSize">ShipSize enum representing the size of ships the ShipDock to be created can hold.</param>
         internal ShipDock(ShipSize shipSize) : base(shipSize)
         {
             this.Size = shipSize;

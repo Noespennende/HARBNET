@@ -38,23 +38,23 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid object representing the ID of the containers current position.</returns>
         public Guid CurrentPosition { get; }
         /// <summary>
-        /// Gets current status of the container.
+        /// Gets current status of the container, which is the most recent status change in the HistoryList with StatusLogs.
         /// </summary>
-        /// <returns>Returns a Status enum with the current status of the container.</returns>
+        /// <returns>Returns a Status enum with the most recent status of the container.</returns>
         public Status GetCurrentStatus();
         /// <summary>
-        /// Prints the containers entire history to console.
+        /// Prints a container's entire HistoryList to console, with the date and time the status change took place and status enum for each StatusLog change.
         /// </summary>
         public void PrintHistory();
         /// <summary>
-        /// Returns a String representing the history of the container. 
+        /// Prints the containers entire HistoryList, with the container ID, date and time the status change took place and status enum for each StatusLog change in the form of a String. 
         /// </summary>
-        /// <returns>String representing the history of a the container.</returns>
+        /// <returns>Returns a String representing the history of a the container, printing each Statuslog object in the HistoryList.</returns>
         public String HistoryToString();
         /// <summary>
-        /// Returns a String containing information about the container. 
+        /// Prints a String with the container's ID, ContainerSize enum and int value representing it's weight in tonn. 
         /// </summary>
-        /// <returns>String containing information about the container.</returns>
+        /// <returns>Returns a String with the container's ID, ContainerSize enum and int value representing it's weight in tonn.</returns>
         public string ToString();
     }
 }

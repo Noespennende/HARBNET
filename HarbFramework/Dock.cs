@@ -38,7 +38,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates a new dock object.
         /// </summary>
-        ///  <param name="shipSize">Size of the ships that the dock will allow to dock to it.</param>
+        ///  <param name="shipSize">The shipSize enum representing the Size of container to be created.</param>
         internal Dock(ShipSize shipSize)
         {
             this.Size = shipSize;

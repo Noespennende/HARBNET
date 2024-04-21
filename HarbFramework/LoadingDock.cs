@@ -17,16 +17,16 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates a new LoadingDock object.
         /// </summary>
-        /// <param name="shipSize">Size of the ship the loading dock to be created can hold.</param>
+        /// <param name="shipSize">ShipSize enum representing the size of the ship the loading dock to be created can hold.</param>
         internal LoadingDock(ShipSize shipSize) : base(shipSize)
         {
             this.Size = shipSize;
         }
 
         /// <summary>
-        /// Assigns truck to a loading spot.
+        /// Assigns truck to available loading spot.
         /// </summary>
-        /// <param name="truck">Name of truck to be assigned loading spot.</param>
+        /// <param name="truck">Truck object to be assigned loading spot.</param>
         /// <returns>Returns truck object if truck was assined loading spot, if not assigned null is returned.</returns>
         internal Truck? AssignTruckToTruckLoadingSpot(Truck truck)
         {
@@ -44,7 +44,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if truck exists in loading spot.
         /// </summary>
-        /// <param name="truck">Name of truck to be checked if exists in loading spot.</param>
+        /// <param name="truck">Truck object to be checked if assigned to a loading spot.</param>
         /// <returns>Returns a bool value. True is returned if truck exists in loading spot, if not false is returned.</returns>
         internal bool TruckExistsInTruckLoadingSpots(Truck truck)
         {
@@ -61,7 +61,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Removes truck from loading spot.
         /// </summary>
-        /// <param name="truck">Name of truck to be removed.</param>
+        /// <param name="truck">Truck object to be removed from loading spot.</param>
         /// <returns>Returns truck object if removed from loading spot, if not null is returned.</returns>
         internal Truck? RemoveTruckFromTruckLoadingSpot(Truck truck)
         {
