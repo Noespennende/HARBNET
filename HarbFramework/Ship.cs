@@ -40,7 +40,6 @@ namespace Gruppe8.HarbNet
         /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour.
         /// </summary>
         /// <returns>Returns an int value representing the number of days the ship uses to do a round trip at sea.</returns>
-
         internal TransitStatus TransitStatus { get; set; }
         /// <summary>
         /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour.
@@ -58,7 +57,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
         public ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
         /// <summary>
-        /// Gets a IList of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
+        /// Gets an IList of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
         internal IList<StatusLog> HistoryIList { get; }

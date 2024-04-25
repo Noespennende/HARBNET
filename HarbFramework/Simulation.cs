@@ -11,27 +11,39 @@ namespace Gruppe8.HarbNet
     public class Simulation : ISimulation
     {
         /// <summary>
-        /// Start time for simulation
+        /// Gets the date and time when the simulation started.
         /// </summary>
+        /// <returns>Returns a DateTime object representing the date and time when the simulation started.</returns>
         private DateTime startTime;
 
         /// <summary>
-        /// Current time in simulation
+        /// Gets the current date and time in simulation.
         /// </summary>
+        /// <returns>Returns a DateTime object representing the date and time the simulation currently is in.</returns>
         private DateTime currentTime;
 
         /// <summary>
-        /// End time for simulation
+        /// Gets the date and time when the simulation ended.
         /// </summary>
+        /// <returns>Returns a DateTime object representing the date and time when the simulation ended.</returns>
         private DateTime endTime;
 
         /// <summary>
-        /// Gets the harbor object
+        /// Gets the harbor object.
         /// </summary>
+        /// <returns>Returns a harbor object.</returns>
         private Harbor harbor;
 
+        /// <summary>
+        /// Gets the number of containers transported from storage to ship on a loading round lasting an hour.
+        /// </summary>
+        /// <returns>Returns an int value representing the number of containers transported from storage to ship in a hour.</returns>
         private int numberOfStorageContainersToShipThisRound;
 
+        /// <summary>
+        /// Gets the number of containers transported from storage to truck on a loading round lasting an hour.
+        /// </summary>
+        /// <returns>Returns an int value representing the number of containers transported from storage to truck in a hour.</returns>
         private int numberOfStorageContainersToTrucksThisRound;
 
         public EventHandler? SimulationEnded;
@@ -59,17 +71,21 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
-        /// <returns>returns a readOnlyCollection of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
+        /// <returns>Returns a readOnlyCollection of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
         public ReadOnlyCollection<DailyLog> History { get { return HistoryIList.AsReadOnly(); } }
 
+        /// <summary>
+        /// Gets an IList of StatusLog objects containing information on status changes troughout a simulation.
+        /// </summary>
+        /// <returns>Returns an IList with StatusLog objects with information on status changes troughout a simulation.</returns>
         internal IList<DailyLog> HistoryIList { get; } = new List<DailyLog>();
 
         /// <summary>
         /// Simulation constructor.
         /// </summary>
-        /// <param name="harbor">The harbor which will be used in the simulation</param>
-        /// <param name="simulationStartTime">The start time of the simulation</param>
-        /// <param name="simulationEndTime">The end time of simulation</param>
+        /// <param name="harbor">The harbor object which will be used in the simulation.</param>
+        /// <param name="simulationStartTime">The date and time the simulation starts.</param>
+        /// <param name="simulationEndTime">The date and time the simulation ends.</param>
         public Simulation(Harbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
         {
             this.harbor = harbor;
@@ -78,9 +94,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Running the simulation
+        /// Running the simulation.
         /// </summary>
-        /// <returns>returns the history of the simulation in the form of log objects where each object contains information about all ships and containers on one day of the simulation.</returns>
+        /// <returns>Returns the history of the simulation in the form of log objects where each object contains information about all ships and containers on one day of the simulation.</returns>
         public IList<DailyLog> Run()
         {
 
@@ -176,7 +192,6 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Ends the 24 hour period with log and status updates, and raises event.
         /// </summary>
-        /// <param name="dayLoggedEventArgs"></param>
         private void EndOf24HourPeriod()
         {
             DateTime past24Hours = currentTime.AddHours(-24);
@@ -232,7 +247,7 @@ namespace Gruppe8.HarbNet
 
         /// <summary>
         /// Prints the history of a given ship to console.
-        /// <param name="shipToBePrinted">The ship who's history will be printed.</param>
+        /// <param name="shipToBePrinted">The ship object who's history will be printed.</param>
         /// </summary>
         public void PrintShipHistory(Ship shipToBePrinted)
         {
@@ -243,7 +258,7 @@ namespace Gruppe8.HarbNet
         /// Prints the history of a given ship to console.
         /// </summary>
         /// <param name="shipID">The unique ID of the ship who's history will be printed.</param>
-        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentException">Throws exception if ship is not found in harbor object.</exception>
         public void PrintShipHistory(Guid shipID)
         {
 
@@ -306,9 +321,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if the ship is anchoring.
         /// </summary>
-        /// <param name="ship">The ship that is to be checked if anchoring.</param>
-        /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
-        /// <returns></returns>
+        /// <param name="ship">The ship that is to be checked if is anchoring.</param>
+        /// <param name="lastStatusLog">The last StatusLog in the specified ship's history.</param>
+        /// <returns>Returns true if ship is currently anchoring, if not then false is returned.</returns>
         private bool ShipIsAnchoring(Ship ship, StatusLog lastStatusLog)
         {
             return ShipCanBeAltered(ship, lastStatusLog) && lastStatusLog.Status == Status.Anchoring;
@@ -327,7 +342,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Get the second to last StatusLog object from the ship's history.
         /// </summary>
-        /// <param name="ship">The ship the StatusLog belongs to.</param>
+        /// <param name="ship">The ship object the StatusLog belongs to.</param>
         /// <returns>The second to last StatusLog object.</returns>
         private StatusLog? GetSecondLastStatusLog(Ship ship)
         {
@@ -337,7 +352,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Docking ships to the harbor, the shipStatus is set to docking
+        /// Docking ships to the harbor, the shipStatus is set to docking.
         /// </summary>
         private void DockingShips()
         {
@@ -439,39 +454,39 @@ namespace Gruppe8.HarbNet
 
         }
         /// <summary>
-        /// Checks if the ship is empty and for a single trip
+        /// Checks if the ship is empty and for a single trip.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object that is checked if it is empty and set for single trip.</param>
+        /// <returns>Returns true if ship is empty and set for single trip, if not then false is returned.</returns>
         private static bool EmptySingleTripShip(Ship ship)
         {
             return ship.IsForASingleTrip && ship.ContainersOnBoard.Count == 0;
         }
         /// <summary>
-        /// checks if it's a single trip ship with status anchoring
+        /// checks if it's a single trip ship with status anchoring.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object that is checked if it is set for single trip and is currently anchoring.</param>
+        /// <returns>Returns true if the ship is set for single trip and is currently anchoring, if not then false is returned.</returns>
         private bool SingleTripShipAnchoring(Ship ship)
         {
             return ship.IsForASingleTrip && FreeDockExists(ship) && ship.TransitStatus == TransitStatus.Anchoring;
         }
 
         /// <summary>
-        /// Checks if the ship is not empty and there is a loading dock for it
+        /// Checks if the ship is not empty and there is a loading dock for it.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object that is checked if it is empty and if there is available loading dock.</param>
+        /// <returns>Returns true if the ship contains containers and there is an available loading dock for the ship, if not then false is returned.</returns>
         private bool NonEmptyShipReadyForLoadingDock(Ship ship)
         {
             return harbor.FreeLoadingDockExists(ship.ShipSize) && ship.ContainersOnBoard.Count != 0 && !(ship.IsForASingleTrip && !ContainsTransitStatus(ship));
         }
         /// <summary>
-        /// checks the status of the ship for conditions acceptable for docking
+        /// checks the status of the ship for conditions acceptable for docking.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="lastStatusLog">StatusLog object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object that is checked if it can dock.</param>
+        /// <param name="lastStatusLog">StatusLog object belonging to the specified ship.</param>
+        /// <returns>Returns true if the ship is fit for dockings, if not then false is returned.</returns>
         private static bool ShipCanDock(Ship ship, StatusLog lastStatusLog)
         {
             return ShipCanBeAltered(ship, lastStatusLog) &&
@@ -482,9 +497,9 @@ namespace Gruppe8.HarbNet
                                 (lastStatusLog.Status == Status.UnloadingDone && SingleTripShipInTransit(ship)));
         }
         /// <summary>
-        /// Ship is anchoring to anchorage
+        /// Ship is anchoring to anchorage.
         /// </summary>
-        /// <param name="ship">ship object</param>
+        /// <param name="ship">Ship object that is anchoring to anchorage.</param>
         private void ShipAnchoringToAnchorage(Ship ship)
         {
             ShipAnchoringEventArgs shipAnchoringEventArgs = new(ship, currentTime, "Ship is anchoring to anchorage.", harbor.AnchorageID);
@@ -498,10 +513,10 @@ namespace Gruppe8.HarbNet
             ship.HasBeenAlteredThisHour = true;
         }
         /// <summary>
-        /// Ship is docking to ship dock
+        /// Ship is docking to ship dock.
         /// </summary>
-        /// <param name="ship"></param>
-        /// <param name="shipID"></param>
+        /// <param name="ship">Ship object that is docking to ship dock.</param>
+        /// <param name="shipID">Unique ID for the ship object to be docked to ship dock.</param>
         private void ShipNowDockingToShipDock(Ship ship, Guid shipID)
         {
             Guid dockID = harbor.DockShipToShipDock(shipID);
@@ -515,28 +530,28 @@ namespace Gruppe8.HarbNet
 
         }
         /// <summary>
-        /// checks to see if the ship has no container
+        /// Checks to see if the ship has no container.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object to be checked if it is empty.</param>
+        /// <returns>Returns true if ship contains no containers, if not then false is returned.</returns>
         private static bool ShipHasNoContainers(Ship ship)
         {
             return ship.ContainersOnBoard.Count == 0;
         }
         /// <summary>
-        /// checks if there is a free dock
+        /// Checks if there is a free dock.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object to be docked.</param>
+        /// <returns>Returns true if there is an available dock matching the ship's shipSize enum, if not then false is returned.</returns>
         private bool FreeDockExists(Ship ship)
         {
             return harbor.FreeShipDockExists(ship.ShipSize);
         }
         /// <summary>
-        /// Starting the loading process
+        /// Starting the loading process.
         /// </summary>
-        /// <param name="ship">Ship object</param>
-        /// <param name="dockID">The ID of the dock</param>
+        /// <param name="ship">Ship object that is loading.</param>
+        /// <param name="dockID">Unique ID for the loading dock object the ship object is docked to.</param>
         private void StartLoadingProcess(Ship ship, Guid dockID)
         {
             ShipStartingLoadingEventArgs shipStartingLoadingEventArgs = new(ship, currentTime, "The ship is starting the loading process.", ship.CurrentLocation);
@@ -546,19 +561,19 @@ namespace Gruppe8.HarbNet
             ShipStartingLoading?.Invoke(this, shipStartingLoadingEventArgs);
         }
         /// <summary>
-        /// checks if the the ship is a single trip ship and the status is in transit
+        /// Checks if the ship is a single trip ship and the status is in transit.
         /// </summary>
-        /// <param name="ship"></param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object.</param>
+        /// <returns>Returns true if the ship is set to single trip and the current status is transit, if not false is returned.</returns>
         private static bool SingleTripShipInTransit(Ship ship)
         {
             return (ship.IsForASingleTrip == true && ContainsTransitStatus(ship));
         }
         /// <summary>
-        /// Starting the unload process
+        /// Starting the unload process.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="dockID">the ID of the dock</param>
+        /// <param name="ship">Ship object that is unloading.</param>
+        /// <param name="dockID">Unique ID for the loading dock object the ship object is docked to.</param>
         private void StartUnloadProcess(Ship ship, Guid dockID)
         {
             ShipStartingUnloadingEventArgs shipStartingUnloadingEventArgs = new(ship, currentTime, "The ship is starting the unloading process.", ship.CurrentLocation);
@@ -571,30 +586,30 @@ namespace Gruppe8.HarbNet
             ShipStartingUnloading?.Invoke(this, shipStartingUnloadingEventArgs);
         }
         /// <summary>
-        /// checks if the ship has been trying to dock for more than one hour
+        /// Checks if the ship has been trying to dock for more than one hour.
         /// </summary>
-        /// <param name="lastStatusLog">Statuslog object</param>
-        /// <returns>true or false</returns>
+        /// <param name="lastStatusLog">The last registered Statuslog object.</param>
+        /// <returns>Returns true if the ship has been trying to dock to loading dock for more than one hour, if not then false is returned.</returns>
         private bool ShipDockingForMoreThanOneHour(StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.DockingToLoadingDock && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1;
         }
         /// <summary>
-        /// checks if the ship is coming from transit and is not empty
+        /// Checks if the ship is coming from transit and is not empty.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object that is checked if it is empty and coming from transit.</param>
+        /// <returns>Returns true if ship contains containers and has a tranist status, if not then false is returned.</returns>
         private bool ShipFromTransitWithContainersToUnload(Ship ship)
         {
             return ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count != 0;
         }
 
-      
+
         /// <summary>
-        /// Ship docking to loading dock
+        /// Ship docking to loading dock.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="dockID">the ID of the dock</param>
+        /// <param name="ship">Ship object docking to loading dock.</param>
+        /// <param name="dockID">Unique ID for the loading dock object the ship object is docking to.</param>
         private void ShipDockingToLoadingDock(Ship ship, Guid dockID)
         {
             ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToLoadingDock);
@@ -604,11 +619,11 @@ namespace Gruppe8.HarbNet
             ShipDockedtoLoadingDock?.Invoke(this, shipDockedToLoadingDockEventArgs);
         }
         /// <summary>
-        /// checks if the ship has not been altered this hour and it has a  StatusLog object
+        /// checks if the ship has not been altered this hour and it has a StatusLog object.
         /// </summary>
-        /// <param name="ship"></param>
-        /// <param name="lastStatusLog"></param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">Ship object to check if it has been altered this hour and if it has a StatusLog object.</param>
+        /// <param name="lastStatusLog">The last registered Statuslog object.</param>
+        /// <returns>Returns true if ship has been altered this hour and has a StatusLog object registered, if not then false is returned.</returns>
         private static bool ShipCanBeAltered(Ship ship, StatusLog lastStatusLog)
         {
             return !ship.HasBeenAlteredThisHour && lastStatusLog != null;
@@ -616,7 +631,7 @@ namespace Gruppe8.HarbNet
 
 
         /// <summary>
-        /// unload containers from ship to harbor
+        /// Unload containers from ship to harbor.
         /// </summary>
         private void UnloadingShips()
         {
@@ -653,32 +668,32 @@ namespace Gruppe8.HarbNet
             }
         }
         /// <summary>
-        /// checks if the ship meets the criteria for unloading
+        /// Checks if the ship meets the criteria for unloading.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="lastStatusLog">StatusLog object</param>
-        /// <param name="secondLastStatusLog">StatusLog object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">ship object that is checked if it can unload.</param>
+        /// <param name="lastStatusLog">The last registered Statuslog object.</param>
+        /// <param name="secondLastStatusLog">The second last registered Statuslog object.</param>
+        /// <returns>Returns true if the ship meets the criteria to unload, if not then false is returned.</returns>
         private bool IsShipReadyForUnloading(Ship ship, StatusLog lastStatusLog, StatusLog secondLastStatusLog)
         {
             return ShipCanBeAltered(ship, lastStatusLog) && secondLastStatusLog != null &&
                     (lastStatusLog.Status == Status.Unloading || lastStatusLog.Status == Status.DockedToLoadingDock && secondLastStatusLog != null);
         }
         /// <summary>
-        /// checks if the ship is unloading
+        /// Checks if the ship is unloading.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="lastStatusLog">StatusLog object</param>
-        /// <returns>true or false</returns>
+        /// <param name="ship">ship object that is checked if it is unloading.</param>
+        /// <param name="lastStatusLog">The last registered Statuslog object.</param>
+        /// <returns>Returns true if ship is currently unloading, if not then false is returned.</returns>
         private bool ShipNowUnloading(Ship ship, StatusLog lastStatusLog)
         {
             return ship.ContainersOnBoard.Count != 0 && (lastStatusLog.Status == Status.DockedToLoadingDock || lastStatusLog.Status == Status.Unloading);
         }
         /// <summary>
-        /// Ship is finished unloading containers
+        /// Ship is finished unloading containers.
         /// </summary>
-        /// <param name="ship">Ship object</param>
-        /// <param name="currentLocation">GUID of the current location</param>
+        /// <param name="ship">Ship object to be checked if it is done unloading.</param>
+        /// <param name="currentLocation">Unique ID for the current location specified ship is located.</param>
         private void ShipFinishedUnloading(Ship ship, Guid currentLocation)
         {
             ShipDoneUnloadingEventArgs shipDoneUnloadingEventArgs = new(ship, currentTime, "The ship has finished unloading.", currentLocation);
@@ -687,22 +702,21 @@ namespace Gruppe8.HarbNet
             ShipDoneUnloading?.Invoke(this, shipDoneUnloadingEventArgs);
         }
         /// <summary>
-        /// checks if the ship status is DockedToLoadingDock
+        /// Checks if the ship status is DockedToLoadingDock.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="lastStatusLog">StatusLog Object</param>
-        /// <returns></returns>
+        /// <param name="lastStatusLog">The last registered Statuslog object.</param>
+        /// <returns>Returns true if the last registered status of ship is DockedToLoadingDock, if not then false is returned.</returns>
         private bool ShipIsDockedToLoadingDock(StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.DockedToLoadingDock;
         }
 
         /// <summary>
-        /// Updates the ship status
+        /// Updates the ship status.
         /// </summary>
-        /// <param name="ship">Ship object</param>
-        /// <param name="lastStatusLog">StatusLog Object</param>
-        /// <param name="secondLastStatusLog">StatusLog Object</param>
+        /// <param name="ship">Ship object to get status updated.</param>
+        /// <param name="lastStatusLog">The last registered Statuslog object.</param>
+        /// <param name="secondLastStatusLog">The second last registered Statuslog object.</param>
         private void UpdateShipStatus(Ship ship, StatusLog lastStatusLog, StatusLog secondLastStatusLog)
         {
             Guid currentLocation = lastStatusLog.SubjectLocation;
@@ -741,7 +755,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Simulates the unloading of one ship, for one hour.
         /// </summary>
-        /// <param name="ship">The ship that is being unloaded</param>
+        /// <param name="ship">The ship object that is being unloaded.</param>
         private void UnloadShipForOneHour(Ship ship)
         {
             double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips; 
@@ -767,11 +781,11 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Moves one container from ship to ADV or Truck
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="numberOfContainersForTrucks">Number of containers for trucks to move</param>
-        /// <param name="numberOfContainersForStorage">Number of containers for storage</</param>
-        /// <param name="loadingDock">Loading dock object</param>
-        /// <param name="crane">Crane object</param>
+        /// <param name="ship">Ship object container is unloaded from.</param>
+        /// <param name="numberOfContainersForTrucks">Int value representing the number of containers for trucks to move.</param>
+        /// <param name="numberOfContainersForStorage">Int value representing the number of containers for storage.</param>
+        /// <param name="loadingDock">Loading dock object the container is being moved on.</param>
+        /// <param name="crane">The crane object at the dock that is being used for moving between ship and adv.</param>
         private void MoveOneContainerFromShip(Ship ship, int numberOfContainersForTrucks, int numberOfContainersForStorage, LoadingDock loadingDock, Crane crane)
         {
             Container? container = null;
@@ -803,9 +817,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Moves one container from ship to an ADV.
         /// </summary>
-        /// <param name="ship">The ship the container is being unloaded from.</param>
-        /// <param name="crane">The crane at the dock that is being used for moving between ship and adv.</param>
-        /// <returns>The container that has been unloaded off ship.</returns>
+        /// <param name="ship">The ship object the container is being unloaded from.</param>
+        /// <param name="crane">The crane object at the dock that is being used for moving between ship and adv.</param>
+        /// <returns>Returns the container object that has been unloaded off ship.</returns>
         private Container? MoveContainerFromShipToAdv(Ship ship, Crane crane)
         {
             Adv adv = harbor.GetFreeAdv();
@@ -825,7 +839,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Moves one container from ADV to Storage area crane to storage space.
         /// </summary>
-        /// <param name="container">The container that is being moved to storage</param>
+        /// <param name="container">The container object that is being moved to storage.</param>
         private void MoveContainerFromAdvToStorage(Container container)
         {
             Adv? adv = harbor.GetAdvContainingContainer(container);
@@ -848,8 +862,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Moves one container from ship to crane to truck.
         /// </summary>
-        /// <param name="ship">The ship the container is unloaded from</param>
-        /// <param name="crane">The crane at the dock that is used for moving between ship and truck</param>
+        /// <param name="ship">The ship object the container is unloaded from.</param>
+        /// <param name="crane">The crane object at the dock that is used for moving between ship and truck.</param>
+        /// <returns>Returns the container object that is being moved from the ship to crane to truck.</returns>
         private Container? MoveContainerFromShipToTruck(Ship ship, Crane crane)
         {
 
@@ -876,7 +891,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// undock ship from harbor, and set status to Transit
+        /// Undock ship from harbor, and set status to Transit.
         /// </summary>
         private void UndockingShips()
         {
@@ -979,7 +994,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Finish the undocking process for the ship.
         /// </summary>
-        /// <param name="ship">The ship that is to finish undocking to transit.</param>
+        /// <param name="ship">The ship object that is to finish undocking to transit.</param>
         private void UndockToTransit(Ship ship)
         {
             Guid oldLocation = harbor.UnDockShipFromAnchorageToTransit(ship.ID);
@@ -994,7 +1009,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Start undocking the ship from Anchorage.
         /// </summary>
-        /// <param name="ship">The ship that is to start undocking from Anchorage.</param>
+        /// <param name="ship">The ship object that is to start undocking from Anchorage.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
         private void UndockFromAnchorage(Ship ship, StatusLog lastStatusLog)
         {
@@ -1011,9 +1026,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if ship can undock from loading dock. 
         /// </summary>
-        /// <param name="ship">The ship that is being checked if can undock from loading dock.</param>
+        /// <param name="ship">The ship object that is being checked if can undock from loading dock.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
-        /// <returns></returns>
+        /// <returns>Returns true if the ship object can undock from loading dock, if not false is returned.</returns>
         private bool ShipCanUndockFromDock(Ship ship, StatusLog lastStatusLog)
         {
             bool containsTransitStatus = ContainsTransitStatus(ship);
@@ -1027,9 +1042,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if ship is single-trip-ship and can dock to ship dock.
         /// </summary>
-        /// <param name="ship">The ship that is being checked if is single-trip-ship and able to dock to ship dock.</param>
+        /// <param name="ship">The ship object that is being checked if is single-trip-ship and able to dock to ship dock.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
-        /// <returns></returns>
+        /// <returns>Returns true if the ship object set for single trip can dock to ship dock, if not then false is returned.</returns>
         private bool SingleTripShipCanDockToShipDock(Ship ship, StatusLog lastStatusLog)
         {
             bool containsTransitStatus = ContainsTransitStatus(ship);
@@ -1039,9 +1054,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if ship is in the process docking to ship dock.
         /// </summary>
-        /// <param name="ship">The ship that is to be checked.</param>
-        /// <param name="lastStatusLog"></param>
-        /// <returns></returns>
+        /// <param name="ship">The ship objects that is being checked if it can dock to ship dock.</param>
+        /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
+        /// <returns>Returns true if the ship object can dock to ship dock, if not then false is returned.</returns>
         private bool ShipIsDockingToDock(Ship ship, StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.DockingToShipDock && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1;
@@ -1050,9 +1065,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if the ship is finished loading containers.
         /// </summary>
-        /// <param name="ship">The ship that is to be checked.</param>
+        /// <param name="ship">The ship object that is to be checked if it is done loading containers.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
-        /// <returns></returns>
+        /// <returns>Returns true if the ship object is done loading containers, if not then false is returned.</returns>
         private bool ShipIsFinishedLoadingContainers(Ship ship, StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock;
@@ -1061,18 +1076,19 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if ship is in the process of undocking.
         /// </summary>
-        /// <param name="ship">The ship that is to be checked.</param>
+        /// <param name="ship">The ship object that is to be checked if it is currently undocking.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
-        /// <returns></returns>
+        /// <returns>Returns true if the ship is currently undocking from dock, if not then false is returned.</returns>
         private bool ShipIsUndocking(Ship ship, StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.Undocking && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1;
         }
 
         /// <summary>
-        /// check to see if the ship has the Status "Transit".
+        /// Check to see if the ship has the Status "Transit".
         /// </summary>
-        /// <param name="ship"> The ship to be checked</param>
+        /// <param name="ship"> The ship object to be checked if it is or has been in transit.</param>
+        /// <reuturns>Returns true if the ship object contains the StatusLog Transit, if not then false is returned.</reuturns>
         private static bool ContainsTransitStatus(Ship ship)
         {
             bool containsTransitStatus = false;
@@ -1089,7 +1105,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loading containers onboard ships
+        /// Loading containers onboard ships.
         /// </summary>
         private void LoadingShips()
         {
@@ -1148,10 +1164,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Ship is now undocking from dock
+        /// Ship is now undocking from dock.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="currentLocation">GUID of current location</param>
+        /// <param name="ship">Ship object currently undocking from dock.</param>
+        /// <param name="currentLocation">Unique ID for the current location specified ship is located.</param>
         private void ShipNowUndocking(Ship ship, Guid currentLocation)
         {
             ship.TransitStatus = TransitStatus.Leaving;
@@ -1160,10 +1176,10 @@ namespace Gruppe8.HarbNet
             ShipUndocking?.Invoke(this, shipUndockingEventArgs);
         }
         /// <summary>
-        /// Ship is now finished Loading containers
+        /// Ship is now finished Loading containers.
         /// </summary>
-        /// <param name="ship">Ship object</param>
-        /// <param name="currentLocation">GUID of current location</param>
+        /// <param name="ship">Ship object to be checked if it is done loading containers.</param>
+        /// <param name="currentLocation">Unique ID for the current location specified ship is located.</param>
         private void ShipFinishedLoading(Ship ship, Guid currentLocation)
         {
             ShipDoneLoadingEventArgs shipDoneLoadingEventArgs = new(ship, currentTime, "The ship is done loading.", currentLocation);
@@ -1173,10 +1189,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads the ship for one hour
+        /// Loads the ship for one hour.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="currentLocation">GUID of the current location</param>
+        /// <param name="ship">Ship object to be loading containers for one hour.</param>
+        /// <param name="currentLocation">Unique ID for the current location specified ship is located.</param>
         private void LoadShipForOneHour(Ship ship, Guid currentLocation)
         {
 
@@ -1217,10 +1233,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loading containers on to ship
+        /// Loading containers on to ship.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <returns>Container object of containers moved</returns>
+        /// <param name="ship">Ship object the containers will be loaded on.</param>
+        /// <returns>Returns the container object of containers moved on ship.</returns>
         internal Container? LoadContainerOnShip(Ship ship)
         {
             numberOfStorageContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
@@ -1246,10 +1262,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads one container from Adv to Ship
+        /// Loads one container from Adv to Ship.
         /// </summary>
-        /// <param name="ship">The ship that is loading the container onboard.</param>
-        /// <returns>Container that will be loaded</returns>
+        /// <param name="ship">Ship object that is loading the container onboard.</param>
+        /// <returns>Returns the container object that will be loaded.</returns>
         internal Container? LoadContainerOnStorageAdv(Ship ship)
         {
 
@@ -1291,10 +1307,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Moves a container from storage to ADV
+        /// Moves a container from storage to ADV.
         /// </summary>
-        /// <param name="containerSize">ContainerSize object</param>
-        /// <returns>the container moved</returns>
+        /// <param name="containerSize">ContainerSize enum representing the size of the container.</param>
+        /// <returns>Returns the container object that was moved.</returns>
         private Container? MoveOneContainerFromContainerRowToAdv(ContainerSize containerSize)
         {
             Adv adv = harbor.GetFreeAdv();
@@ -1316,11 +1332,11 @@ namespace Gruppe8.HarbNet
 
         }
         /// <summary>
-        /// Moves a container from the ADV to the ship
+        /// Moves a container from the ADV to the ship.
         /// </summary>
-        /// <param name="container">Container object</param>
-        /// <param name="ship">Ship object</param>
-        /// <returns>Returns the container moved</returns>
+        /// <param name="container">Container object to be moved from ADV to ship.</param>
+        /// <param name="ship">Ship object the container objects are loaded on.</param>
+        /// <returns>Returns the container moved from ADV to ship.</returns>
         private Container? MoveOneContainerFromAdvToShip(Container? container, Ship ship)
         {
             Adv? adv = null;
@@ -1378,21 +1394,22 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checking ship status to see if it's in transit
+        /// Checking ship status to see if it's in transit.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="lastStatusLog">StatusLog object</param>
-        /// <returns>Boolean</returns>
+        /// <param name="ship">Ship object to check status on to see if it's current status is in transit.</param>
+        /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
+        /// <returns>Returns true if the ship's last registered StatusLog is "Transit", if not the false is returned.</returns>
         private bool IsShipInTransit(Ship ship, StatusLog lastStatusLog)
         {
             return ship.HasBeenAlteredThisHour == false && lastStatusLog != null && lastStatusLog.Status == Status.Transit;
         }
+
         /// <summary>
-        /// Checks if ship has returned to harbor
+        /// Checks if ship has returned to harbor.
         /// </summary>
-        /// <param name="ship">ship object</param>
-        /// <param name="LastHistoryStatusLog">Statuslog object</param>
-        /// <returns>Boolean</returns>
+        /// <param name="ship">Ship object to check on to see if it has returned to harbor.</param>
+        /// <param name="LastHistoryStatusLog">The last StatusLog in the ship's history.</param>
+        /// <returns>Returns true if ship has returned to harbor from roundtrip, if not then false is returned.</returns>
         private bool ShipHasReturnedToHarbor(Ship ship, StatusLog LastHistoryStatusLog)
         {
             double DaysSinceTransitStart = (currentTime - LastHistoryStatusLog.PointInTime).TotalDays;
@@ -1401,9 +1418,8 @@ namespace Gruppe8.HarbNet
 
         }
 
-
         /// <summary>
-        /// Loading the truck with containers from storage
+        /// Loading the truck with containers from storage.
         /// </summary>
         private void LoadingTrucksFromStorage()
         {
@@ -1456,7 +1472,7 @@ namespace Gruppe8.HarbNet
             }
         }
         /// <summary>
-        /// Containers from harbor arrived at their destination
+        /// Containers from harbor arrived at their destination.
         /// </summary>
         private void ContainersOnTrucksArrivingToDestination()
         {
@@ -1484,9 +1500,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// The number of containers in storage dedicated to Trucks
+        /// The number of containers in storage dedicated to Trucks.
         /// </summary>
-        /// <returns>(int) number of containers</returns>
+        /// <returns>Returns an int value representing the number of containers in storage dedicated to trucks.</returns>
         private int CalculateNumberOfStorageContainersToTrucks()
         {
             if (harbor.shipsInLoadingDock.Count != 0)
@@ -1501,10 +1517,10 @@ namespace Gruppe8.HarbNet
                 
         }
         /// <summary>
-        /// Moves a container from storage on to truck
+        /// Moves a container from storage on to truck.
         /// </summary>
-        /// <param name="container">Container object</param>
-        /// <returns>Returns the container object moved to the truck</returns>
+        /// <param name="container">Container object to be moved from storage to truck.</param>
+        /// <returns>Returns the container object moved from storage to a truck.</returns>
         private Container? MoveOneContainerFromContainerRowToTruck(Container container)
         {
             Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
@@ -1536,7 +1552,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string that contains information about all ships in the previous simulation.
         /// </summary>
-        /// <returns> a string that contains information about all ships in the previous simulation. Returns empty string if no simulation has been run.</returns>
+        /// <returns>Returns a string value that contains information about all ships in the previous simulation. Returns empty string if no simulation has been run.</returns>
         public String HistoryToString()
         {
             if (History.Count > 0)
@@ -1556,8 +1572,8 @@ namespace Gruppe8.HarbNet
         /// Create String that contains all of the ship's history in the previous simulation.
         /// </summary>
         /// <param name="shipID">The unique ID of the ship the history belongs to.</param>
-        /// <returns>A string of the whole history of the ship.</returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <returns>Returns a string value containing information of the whole history of the ship.</returns>
+        /// <exception cref="ArgumentException">Exception thrown ship does not exist in the harbor object.</exception>
         public string HistoryToString(Guid shipID)
         {
 
@@ -1578,8 +1594,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string containing information about the history of all ships or all containers in the simulation.
         /// </summary>
-        /// <param name="ShipsOrContainers">Sending in the value "ships" returns information on all ships, sending in "containers" return information on all containers</param>
-        /// <returns>Returns a String containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
+        /// <param name="ShipsOrContainers">Sending in the value "ships" returns information on all ships, sending in "containers" return information on all containers.</param>
+        /// <returns>Returns a String value containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
         public String HistoryToString(String ShipsOrContainers)
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
@@ -1610,8 +1626,8 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Returns a string that represents the information about one ship in the simulation.
         /// </summary>
-        /// <param name="ship">The ship you want information on</param>
-        /// <returns>Returns a String containing information about the given ship in the simulation</returns>
+        /// <param name="ship">The ship object in the simulation that information is retrieved from.</param>
+        /// <returns>Returns a String value containing information about the given ship in the simulation.</returns>
         public String HistoryToString(Ship ship)
         {
             return ship.HistoryToString();
@@ -1639,7 +1655,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>The harbor object of the harbor being simulated.</returns>
         public Harbor HarborToBeSimulated { get; internal set; }
-        
+
         /// <summary>
         /// The time the simulation will start from.
         /// </summary>
@@ -1655,9 +1671,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Initializes a new instance of the SimulationStartingEventArgs class.
         /// </summary>
-        /// <param name="harborToBeSimulated">The harbor that is being simulated.</param>
-        /// <param name="startDate"> The time the simulation will start from.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="harborToBeSimulated">The harbor object that is being simulated.</param>
+        /// <param name="startDate">The date and time the simulation starts.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         public SimulationStartingEventArgs(Harbor harborToBeSimulated, DateTime startDate, string description)
         {
             HarborToBeSimulated = harborToBeSimulated;
@@ -1671,21 +1687,24 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class OneHourHasPassedEventArgs : EventArgs
     {
+
         /// <summary>
         /// The time in the simulation the event was raised.
         /// </summary>
+        /// <returns>Returns a DateTime object representing the date and time an event was raised in the simulation.</returns>
         public DateTime CurrentTime { get; internal set; }
 
         /// <summary>
         /// A description of the event.
         /// </summary>
+        /// <returns>Returns a string value containing a description of the event.</returns>
         public string Description { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the OneHourHasPassedEventArgs class.
         /// </summary>
-        /// <param name="currentTime">The time in the simulation the event was raised.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="currentTime">The date and time in the simulation the event was raised.</param>
+        /// <param name="description">A string value containing a description of the event.</param>
         public OneHourHasPassedEventArgs(DateTime currentTime, string description)
         {
             CurrentTime = currentTime;
@@ -1711,10 +1730,10 @@ namespace Gruppe8.HarbNet
         public string Description { get; internal set; }
 
         /// <summary>
-        ///  Initializes a new instance of the SimulationEndedEventArgs class.
+        /// Initializes a new instance of the SimulationEndedEventArgs class.
         /// </summary>
         /// <param name="simulationHistory">A collection of DailyLog objects that together represent the history of the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="description">A string value containing a description of the event.</param>
         public SimulationEndedEventArgs(ReadOnlyCollection<DailyLog> simulationHistory, string description)
         {
             SimulationHistory = simulationHistory;
@@ -1730,27 +1749,27 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// A DailyLog object containing information about the previous day in the simulation.
         /// </summary>
-        /// <returns>DailyLog object containing information about the state of the simulation at the time the object was created</returns>
+        /// <returns>Returns a DailyLog object containing information about the state of the simulation at the time the object was created</returns>
         public DailyLog TodaysLog { get; internal set; }
         
         /// <summary>
         /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
+        /// <returns>Returns a DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime CurrentTime { get; internal set; }
 
         /// <summary>
         /// A description of the event.
         /// </summary>
-        /// <returns>String describing the event.</returns>
+        /// <returns>Returns a String value describing the event.</returns>
         public string Description { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the DayOverEventArgs class.
         /// </summary>
         /// <param name="todaysLog">A DailyLog object containing information about the previous day in the simulation.</param>
-        /// <param name="currentTime">The time in the simulation the event was raised.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="currentTime">The date and time in the simulation the event was raised.</param>
+        /// <param name="description">A string value containing a description of the event.</param>
         public DayOverEventArgs(DailyLog todaysLog, DateTime currentTime, string description)
         {
             TodaysLog = todaysLog;
@@ -1767,41 +1786,41 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// A DailyLog object containing information about the state of the harbor the day the event was raised.
         /// </summary>
-        /// <returns>DailyLog containing information about the state of the harbor the day the event was raised.</returns>
+        /// <returns>Returns a DailyLog containing information about the state of the harbor the day the event was raised.</returns>
         public DailyLog TodaysLog { get; internal set; }
         
         /// <summary>
         /// The time in the simulation the event was raised.
         /// </summary>
-        /// <returns>DateTime object representing the time in the simulation the event was raised</returns>
+        /// <returns>Returns a DateTime object representing the time in the simulation the event was raised</returns>
         public DateTime CurrentTime { get; internal set; }
 
         /// <summary>
         /// A description of the event.
         /// </summary>
-        /// <returns>String describing the event.</returns>
+        /// <returns>Returns a string value containing a description of the event.</returns>
         public string Description { get; internal set; }
 
         /// <summary>
         /// The ship the dayReviewShipLogs logs come from.
         /// </summary>
-        /// <returns>Ship object representing the ship that logged the DayReview logs.</returns>
+        /// <returns>Returns a ship object representing the ship that logged the DayReview logs.</returns>
         public Ship Ship { get; internal set; }
         
         /// <summary>
         /// A list of all logs registered by ship in the past day.
         /// </summary>
-        /// <returns>List with all logs registered by ship in the past day.</returns>
+        /// <returns>Returns an IList with all logs registered by ship in the past day.</returns>
         public IList<StatusLog>? DayReviewShipLogs { get; internal set; }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the DayLoggedEventArgs class.
         /// </summary>
         /// <param name="todaysLog">A DailyLog object containing information about the state of the harbor the day the event was raised.</param>
-        /// <param name="currentTime">The time in the simulation the event was raised.</param>
-        /// <param name="description">A description of the event.</param>
-        /// <param name="ship">The ship the dayReviewShipLogs logs come from.</param>
-        /// <param name="dayReviewShipLogs">A list of all logs registered by ship in the past day.</param>
+        /// <param name="currentTime">The date time in the simulation the event was raised.</param>
+        /// <param name="description">String value containing a description of the event.</param>
+        /// <param name="ship">The ship object the dayReviewShipLogs logs come from.</param>
+        /// <param name="dayReviewShipLogs">An IList of all logs registered by ship in the past day.</param>
         public DayLoggedEventArgs(DailyLog todaysLog, DateTime currentTime, string description, Ship ship, IList<StatusLog>? dayReviewShipLogs)
         {
             TodaysLog = todaysLog;
@@ -1820,24 +1839,26 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The ship involved in the event.
         /// </summary>
+        /// <returns>Returns a ship object that is involved in the event in the simulation.</returns>
         public Ship Ship { get; internal set; }
 
         /// <summary>
-        /// The current time in the simulation.
+        /// The time in the simulation the event was raised.
         /// </summary>
+        /// <returns>Returns a DateTime object representing the date and time an event was raised in the simulation.</returns>
         public DateTime CurrentTime { get; internal set; }
         /// <summary>
         /// A description of the event.
         /// </summary>
-        /// <returns>String describing the event.</returns>
+        /// <returns>Returns a String value describing the event.</returns>
         public string Description { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the BaseShipEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         public BaseShipEventArgs(Ship ship, DateTime currentTime, string description)
         {
             Ship = ship;
@@ -1853,16 +1874,16 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The unique ID of the location the ship undocked from, Anchorage or Dock.
         /// </summary>
-        /// <returns>Guid object representing the ID of the location the ship undocked from</returns>
+        /// <returns>Guid object representing the ID of the location the ship undocked from.</returns>
         public Guid LocationID { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
         /// <param name="locationID">The unique ID of the location the ship undocked from.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         public ShipUndockingEventArgs(Ship ship, DateTime currentTime, string description, Guid locationID)
             : base(ship, currentTime, description)
         {
@@ -1884,9 +1905,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="transitLocationID">The unique ID of the transit location the ship is located at.</param>
         public ShipInTransitEventArgs(Ship ship, DateTime currentTime, string description, Guid transitLocationID) 
             : base(ship, currentTime, description)
@@ -1903,16 +1924,16 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The unique ID of the dock the ship is docking to.
         /// </summary>
-        /// <returns>Guid object representing the ID of the dock the ship is docking to</returns>
+        /// <returns>Returns a Guid object representing the ID of the dock the ship is docking to.</returns>
         public Guid DockID { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
-        /// <param name="dockID">The unique ID of the odck the ship is docking to.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
+        /// <param name="dockID">The unique ID of the dock the ship is docking to.</param>
         public ShipDockingToShipDockEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
             : base(ship, currentTime, description)
         {
@@ -1928,15 +1949,15 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The unique ID of the dock the ship docked to.
         /// </summary>
-        /// <returns>Guid object representing the ID of the dock the ship docked to</returns>
+        /// <returns>Guid object representing the ID of the dock the ship docked to.</returns>
         public Guid DockID { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="dockID">The unique ID of the dock the ship docked to.</param>
         public ShipDockedToShipDockEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID) 
             : base(ship, currentTime, description)
@@ -1960,9 +1981,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="dockID">The unique ID of the dock the ship is docking to.</param>
         public ShipDockingToLoadingDockEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID) 
             : base(ship, currentTime, description)
@@ -1985,9 +2006,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="dockID">The unique ID of the dock the ship docked to.</param>
         public ShipDockedToLoadingDockEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID) 
             : base(ship, currentTime, description)
@@ -2005,14 +2026,15 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The unique ID of the dock the ship is located at and loading from.
         /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship is docking to</returns>
         public Guid DockID { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the ShipStartingUnloadingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="dockID">The unique ID of the dock the ship is located at and loading from.</param>
         public ShipStartingLoadingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
             : base(ship, currentTime, description)
@@ -2035,9 +2057,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="container">The container loaded onboard the ship.</param>
         public ShipLoadedContainerEventArgs(Ship ship, DateTime currentTime, string description, Container container)
             : base(ship, currentTime, description)
@@ -2055,14 +2077,15 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The unique ID of the dock the ship is located and loaded at.
         /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship is docking to</returns>
         public Guid DockID { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the ShipDoneLoadingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="dockID">The unique ID of the dock the ship is located and loaded at.</param>
         public ShipDoneLoadingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
             : base(ship, currentTime, description)
@@ -2079,14 +2102,15 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The unique ID of the dock the ship is located and unloading at.
         /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship is docking to</returns>
         public Guid DockID { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the ShipStartingUnloadingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="dockID">The unique ID of the dock the ship is located and unloading at.</param>
         public ShipStartingUnloadingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
             : base(ship, currentTime, description)
@@ -2109,9 +2133,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="container">The container unloaded from the ship and on the harbor.</param>
         public ShipUnloadedContainerEventArgs(Ship ship, DateTime currentTime, string description, Container container)
             : base(ship, currentTime, description)
@@ -2129,14 +2153,15 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The unique ID of the dock the ship is located and unloaded at.
         /// </summary>
+        /// <returns>Guid object representing the ID of the dock the ship is docking to</returns>
         public Guid DockID { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the ShipDoneUnloadingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="dockID">The unique ID of the dock the ship is located and unloaded at.</param>
         public ShipDoneUnloadingEventArgs(Ship ship, DateTime currentTime, string description, Guid dockID)
             : base(ship, currentTime, description)
@@ -2159,9 +2184,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="anchorageID">The unique ID of the anchorage.</param>
         public ShipAnchoredEventArgs(Ship ship, DateTime currentTime, string description, Guid anchorageID) 
             : base(ship, currentTime, description)
@@ -2184,9 +2209,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Initializes a new instance of the ShipUndockingEventArgs class.
         /// </summary>
-        /// <param name="ship">The ship involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="ship">The ship object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         /// <param name="anchorageID">The unique ID of the anchorage.</param>
         public ShipAnchoringEventArgs(Ship ship, DateTime currentTime, string description, Guid anchorageID) 
             : base(ship, currentTime, description)
@@ -2203,23 +2228,26 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// The truck involved in the event.
         /// </summary>
+        /// <returns>Returns a truck object that is involved in the event in the simulation.</returns>
         public Truck Truck { get; internal set; }
 
         /// <summary>
         /// The current time in the simulation.
         /// </summary>
+        /// <returns>Returns a DateTime object representing the current date and time in the simulation.</returns>
         public DateTime CurrentTime { get; internal set; }
         /// <summary>
         /// A description of the event.
         /// </summary>
+        /// <returns>Returns a string value containing a description of the event.</returns>
         public string Description { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the TruckLoadingFromStorageEvent.
         /// </summary>
-        /// <param name="truck">The truck involved in the event.</param>
-        /// <param name="currentTime">The current time in the simulation.</param>
-        /// <param name="description">A description of the event.</param>
+        /// <param name="truck">The truck object involved in the event.</param>
+        /// <param name="currentTime">The current date and time in the simulation.</param>
+        /// <param name="description">String value containing a description of the event.</param>
         public TruckLoadingFromStorageEventArgs(Truck truck, DateTime currentTime, string description)
         {
             Truck = truck;

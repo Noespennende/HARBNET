@@ -8,10 +8,11 @@ namespace Gruppe8.HarbNet
     /// Interface defining the public API of the Simulation class.
     /// </summary>
     public interface ISimulation
-    {   
+    {
         /// <summary>
         /// A list of DailyLog objects containing information about the status of the harbour troughout the duration of a simulation.
         /// </summary>
+        /// <returns>Returns a readOnlyCollection of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
         public ReadOnlyCollection<DailyLog> History { get; }
         /// <summary>
         /// Starting the simulation
@@ -19,7 +20,7 @@ namespace Gruppe8.HarbNet
         /// <returns>a IList of DailyLog objects each containing information about the state of the harbour on a given day.</returns>
         public IList<DailyLog> Run();
         /// <summary>
-        /// Prints the ships history to console
+        /// Prints history for each ship in the harbor simulation to console.
         /// </summary>
         public void PrintShipHistory();
         /// <summary>
@@ -28,12 +29,12 @@ namespace Gruppe8.HarbNet
         /// </summary>
         public void PrintShipHistory(Ship shipToBePrinted);
         /// <summary>
-        /// Prints the ships history to console
-        ///  <param name="shipName">Name of the ship who's history will be printed</param>
+        /// Prints the history of a given ship to console.
         /// </summary>
+        /// <param name="shipID">The unique ID of the ship who's history will be printed.</param>
         public void PrintShipHistory(Guid shipID);
         /// <summary>
-        /// prints the containers history to console
+        /// Printing each container in the simulations entire history to console.
         /// </summary>
         public void PrintContainerHistory();
         /// <summary>
@@ -47,21 +48,21 @@ namespace Gruppe8.HarbNet
         /// <returns> a string that contains information about all ships in the previous simulation. Returns empty string if no simulation has been run.</returns>
         public String HistoryToString();
         /// <summary>
-        /// Returns a string that represents the current object.
+        /// Returns a string containing information about the history of all ships or all containers in the simulation.
         /// </summary>
         /// <param name="ShipsOrContainers">Sending inn "ships" returns information on all ships, sending inn "containers" return information on all containers</param>
-        /// <returns>Returns a String containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
+        /// <returns>Returns a String value containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
         public String HistoryToString(String ShipsOrContainers);
         /// <summary>
         /// Returns a string that represents the information about one ship in the simulation.
         /// </summary>
-        /// <param name="ship">The ship you want information on</param>
-        /// <returns>Returns a String containing information about the given ship in the simulation</returns>
+        /// <param name="ship">The ship object in the simulation that information is retrieved from.</param>
+        /// <returns>Returns a String value containing information about the given ship in the simulation.</returns>
         public String HistoryToString(Ship ship);
         /// <summary>
         /// Returns a string that represents the information about one ship in the simulation.
         /// </summary>
-        /// <param name="shipID">Name of the ship you want information on</param>
+        /// <param name="shipID">The unique ID of the ship the history belongs to.</param>
         /// <returns>Returns a String containing information about the given ship in the simulation</returns>
         public String HistoryToString(Guid shipID);
     }
