@@ -161,9 +161,13 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in harbor.AllShips)
             {
                 ShipAnchoredEventArgs shipAnchoredEventArgs = new(ship, currentTime, "Ship has anchored to Anchorage.", harbor.AnchorageID);
-                
 
-                if (ship.StartDate == currentTime)
+
+                if (ship.StartDate.Year == currentTime.Year &&
+                    ship.StartDate.Month == currentTime.Month &&
+                    ship.StartDate.Day == currentTime.Day &&
+                    ship.StartDate.Hour == currentTime.Hour &&
+                    ship.StartDate.Minute == currentTime.Minute)
                 {
 
                     harbor.AddNewShipToAnchorage(ship);

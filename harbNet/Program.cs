@@ -12,6 +12,7 @@ namespace Client.HarborName
         static void Main(string[] args)
         {
 
+
             DateTime startTime = DateTime.Now;
             DateTime endTime = DateTime.Now.AddDays(7);
             
@@ -45,7 +46,7 @@ namespace Client.HarborName
             containerStorageList.Add( storageRow1 );
             containerStorageList.Add( storageRow2 );
 
-
+            
             Harbor kjuttaviga = new Harbor(
                 listOfShips: shipsList,
                 listOfContainerStorageRows: containerStorageList,
@@ -61,9 +62,13 @@ namespace Client.HarborName
                 numberOfTrucksArriveToHarborPerHour: 10,
                 percentageOfContainersDirectlyLoadedFromShipToTrucks: 10,
                 percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks: 10,
-                numberOfAgv: 5,
+                numberOfAgvs: 5,
                 loadsPerAgvPerHour: 3
                 );
+            
+
+            // Tar i bruk simplifisert konstruktør overload
+            //Harbor kjuttaviga = new(6, 500, 20, 6, 4, 6, 4, 10);
 
 
             Simulation sim = new Simulation(
