@@ -296,22 +296,6 @@ namespace Gruppe8.HarbNet
                 mediumLoadingDocks++;
             }
 
-            // ** Ship Docks ** 
-
-            int smallShipDocks = numberOfShipDocks / 3;
-            int mediumShipDocks = numberOfShipDocks / 3;
-            int largeShipDocks = numberOfShipDocks / 3;
-
-            if (numberOfShipDocks % 3 == 1)
-            {
-                smallShipDocks++;
-            }
-            if (numberOfShipDocks % 3 == 2)
-            {
-                smallShipDocks++;
-                mediumShipDocks++;
-            }
-
             this.allContainerRows = listOfContainerStorageRows.ToList();
             this.TrucksArrivePerHour = 10;
             this.LoadsPerAgvPerHour = 25;
@@ -323,7 +307,7 @@ namespace Gruppe8.HarbNet
             Initiliaze(
                 listOfShips, 
                 smallLoadingDocks, mediumLoadingDocks, largeLoadingDocks, numberOfCranesNextToLoadingDocks, loadsPerCranePerHour, numberOfCranesOnHarborStorageArea, 
-                smallShipDocks, mediumShipDocks, largeShipDocks, 
+                0, 0, 0, 
                 percentageOfContainersDirectlyLoadedFromShipToTrucks, percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks, numberOfAgvs
                 );
 
