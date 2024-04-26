@@ -80,9 +80,9 @@ namespace Gruppe8.HarbNet
         /// </summary>
         LoadingToTruck,
         /// <summary>
-        /// Loading Container to ADV.
+        /// Loading Container to AGV.
         /// </summary>
-        LoadingToAdv,
+        LoadingToAgv,
         /// <summary>
         /// Truck queuing.
         /// </summary>

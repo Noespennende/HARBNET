@@ -50,10 +50,10 @@ namespace Gruppe8.HarbNet
         /// <return>Returns a Guid representing the harbors transit location.</return>
         public Guid TransitLocationID { get; }
         /// <summary>
-        /// Gets the unique ID for the Adv cargo.
+        /// Gets the unique ID for the Agv cargo.
         /// </summary>
-        /// <return>Returns a Guid representing the harbors Adv cargos.</return>
-        public Guid AdvCargoID { get; }
+        /// <return>Returns a Guid representing the harbors Agv cargos.</return>
+        public Guid AgvCargoID { get; }
         /// <summary>
         /// Gets the unique ID for the truck transit location.
         /// </summary>

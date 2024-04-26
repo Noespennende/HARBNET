@@ -10,12 +10,12 @@ namespace Gruppe8.HarbNet
     /// <summary>
     /// Cranes to be used in a simulation.
     /// </summary>
-    internal class Adv
+    internal class Agv
     {
         /// <summary>
-        /// Gets the unique ID for the Adv.
+        /// Gets the unique ID for the Agv.
         /// </summary>
-        /// <return>Returns a Guid object representing the Advs unique ID.</return>
+        /// <return>Returns a Guid object representing the Agvs unique ID.</return>
         internal Guid ID { get; set; } = Guid.NewGuid();
 
         /// <summary>
@@ -25,32 +25,32 @@ namespace Gruppe8.HarbNet
         internal Container Container { get; set; }
 
         /// <summary>
-        /// Gets the current status of the Adv.
+        /// Gets the current status of the Agv.
         /// </summary>
-        /// <return>Returns a Status enum representing the latest registered status of the Adv.</return>
+        /// <return>Returns a Status enum representing the latest registered status of the Agv.</return>
         internal Status Status { get; set; }
 
         /// <summary>
-        /// Get the current location of the Adv.
+        /// Get the current location of the Agv.
         /// </summary>
-        /// <return>Returns a Guid object representing the latest registered location of the Adv.</return>
+        /// <return>Returns a Guid object representing the latest registered location of the Agv.</return>
         internal Guid Location {  get; set; }
 
         /// <summary>
-        /// Creates a new Adv object.
+        /// Creates a new Agv object.
         /// </summary>
-        /// <param name="location">Unique ID representing the location the Adv to be created will be located.</param>
-        internal Adv (Guid location)
+        /// <param name="location">Unique ID representing the location the Agv to be created will be located.</param>
+        internal Agv (Guid location)
         {
             this.Container = null;
             this.Location = location;
         }
 
         /// <summary>
-        /// Loads container from an object to an Adv.
+        /// Loads container from an object to an Agv.
         /// </summary>
-        /// <param name="containerToBeLoaded">Container object to be loaded to an Adv.</param>
-        /// <return>Returns a Guid object representing the container to be loaded to an Adv.</return>
+        /// <param name="containerToBeLoaded">Container object to be loaded to an Agv.</param>
+        /// <return>Returns a Guid object representing the container to be loaded to an Agv.</return>
         internal Guid LoadContainer(Container containerToBeLoaded)
         {
             this.Container = containerToBeLoaded;
@@ -58,9 +58,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Unloads container from an Adv to another object.
+        /// Unloads container from an Agv to another object.
         /// </summary>
-        /// <return>Returns a container object representing the container to be unloaded from an Adv.</return>
+        /// <return>Returns a container object representing the container to be unloaded from an Agv.</return>
         internal Container UnloadContainer()
         {
             Container containerToBeUnloaded = this.Container;

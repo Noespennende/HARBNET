@@ -768,7 +768,7 @@ namespace Gruppe8.HarbNet
             {
                 if (crane.Container == null)
                 {
-                    int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, crane.ContainersLoadedPerHour);
+                    int maxLoadsPerHour = Math.Min(harbor.LoadsPerAgvPerHour, crane.ContainersLoadedPerHour);
 
                     for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)
                     {
@@ -779,21 +779,21 @@ namespace Gruppe8.HarbNet
             }
         }
         /// <summary>
-        /// Moves one container from ship to ADV or Truck
+        /// Moves one container from ship to AGV or Truck
         /// </summary>
         /// <param name="ship">Ship object container is unloaded from.</param>
         /// <param name="numberOfContainersForTrucks">Int value representing the number of containers for trucks to move.</param>
         /// <param name="numberOfContainersForStorage">Int value representing the number of containers for storage.</param>
         /// <param name="loadingDock">Loading dock object the container is being moved on.</param>
-        /// <param name="crane">The crane object at the dock that is being used for moving between ship and adv.</param>
+        /// <param name="crane">The crane object at the dock that is being used for moving between ship and agv.</param>
         private void MoveOneContainerFromShip(Ship ship, int numberOfContainersForTrucks, int numberOfContainersForStorage, LoadingDock loadingDock, Crane crane)
         {
             Container? container = null;
 
             if (numberOfContainersForStorage != 0 && (ship.ContainersOnBoard.Count - ship.ContainersLeftForTrucks) > 0)
             {
-                container = MoveContainerFromShipToAdv(ship, crane);
-                MoveContainerFromAdvToStorage(container);
+                container = MoveContainerFromShipToAgv(ship, crane);
+                MoveContainerFromAgvToStorage(container);
             }
 
             if (numberOfContainersForTrucks != 0 && harbor.TrucksInQueue.Count != 0)
@@ -815,19 +815,19 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Moves one container from ship to an ADV.
+        /// Moves one container from ship to an AGV.
         /// </summary>
         /// <param name="ship">The ship object the container is being unloaded from.</param>
-        /// <param name="crane">The crane object at the dock that is being used for moving between ship and adv.</param>
+        /// <param name="crane">The crane object at the dock that is being used for moving between ship and agv.</param>
         /// <returns>Returns the container object that has been unloaded off ship.</returns>
-        private Container? MoveContainerFromShipToAdv(Ship ship, Crane crane)
+        private Container? MoveContainerFromShipToAgv(Ship ship, Crane crane)
         {
-            Adv adv = harbor.GetFreeAdv();
+            Agv agv = harbor.GetFreeAgv();
 
-            if (adv != null)
+            if (agv != null)
             {
                 Container unloadedContainer = harbor.ShipToCrane(ship, crane, currentTime);
-                harbor.CraneToAdv(crane, adv, currentTime);
+                harbor.CraneToAgv(crane, agv, currentTime);
 
                 return unloadedContainer;
 
@@ -840,10 +840,10 @@ namespace Gruppe8.HarbNet
         /// Moves one container from ADV to Storage area crane to storage space.
         /// </summary>
         /// <param name="container">The container object that is being moved to storage.</param>
-        private void MoveContainerFromAdvToStorage(Container container)
+        private void MoveContainerFromAgvToStorage(Container container)
         {
-            Adv? adv = harbor.GetAdvContainingContainer(container);
-            if (adv == null)
+            Agv? agv = harbor.GetAgvContainingContainer(container);
+            if (agv == null)
             {
                 return;
             }
@@ -854,7 +854,7 @@ namespace Gruppe8.HarbNet
                 return; 
             }
 
-            harbor.AdvToCrane(crane, adv, currentTime);
+            harbor.AgvToCrane(crane, agv, currentTime);
             harbor.CraneToContainerRow(crane, currentTime);
 
         }
@@ -1200,14 +1200,14 @@ namespace Gruppe8.HarbNet
 
             Crane? testCrane = harbor.GetFreeLoadingDockCrane();
 
-            int maxLoadsPerHour = Math.Min(harbor.LoadsPerAdvPerHour, testCrane.ContainersLoadedPerHour);
+            int maxLoadsPerHour = Math.Min(harbor.LoadsPerAgvPerHour, testCrane.ContainersLoadedPerHour);
             int numberOfRepeats;
             
 
-            if (maxLoadsPerHour == harbor.LoadsPerAdvPerHour)
+            if (maxLoadsPerHour == harbor.LoadsPerAgvPerHour)
             {
                 
-                numberOfRepeats = maxLoadsPerHour * harbor.AdvFree.Count;
+                numberOfRepeats = maxLoadsPerHour * harbor.AgvFree.Count;
             }
             else
             {
@@ -1250,9 +1250,9 @@ namespace Gruppe8.HarbNet
             if (storageCrane.Container == null && dockCrane.Container == null)
             {
 
-                loadedContainer = LoadContainerOnStorageAdv(ship);
+                loadedContainer = LoadContainerOnStorageAgv(ship);
 
-                movedContainer = MoveOneContainerFromAdvToShip(loadedContainer, ship);
+                movedContainer = MoveOneContainerFromAgvToShip(loadedContainer, ship);
 
                 return movedContainer;
 
@@ -1262,11 +1262,11 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads one container from Adv to Ship.
+        /// Loads one container from Agv to Ship.
         /// </summary>
         /// <param name="ship">Ship object that is loading the container onboard.</param>
         /// <returns>Returns the container object that will be loaded.</returns>
-        internal Container? LoadContainerOnStorageAdv(Ship ship)
+        internal Container? LoadContainerOnStorageAgv(Ship ship)
         {
 
             Container? containerToBeLoaded;
@@ -1282,7 +1282,7 @@ namespace Gruppe8.HarbNet
 
                 if (underMaxCapacity && underMaxWeight)
                 {
-                    containerToBeLoaded = MoveOneContainerFromContainerRowToAdv(ContainerSize.Half);
+                    containerToBeLoaded = MoveOneContainerFromContainerRowToAgv(ContainerSize.Half);
 
                     return containerToBeLoaded;
 
@@ -1297,7 +1297,7 @@ namespace Gruppe8.HarbNet
 
                 if (underMaxCapacity && underMaxWeight)
                 {
-                    containerToBeLoaded = MoveOneContainerFromContainerRowToAdv(ContainerSize.Full);
+                    containerToBeLoaded = MoveOneContainerFromContainerRowToAgv(ContainerSize.Full);
 
                     return containerToBeLoaded;
                 }
@@ -1307,13 +1307,13 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Moves a container from storage to ADV.
+        /// Moves a container from storage to AGV.
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size of the container.</param>
         /// <returns>Returns the container object that was moved.</returns>
-        private Container? MoveOneContainerFromContainerRowToAdv(ContainerSize containerSize)
+        private Container? MoveOneContainerFromContainerRowToAgv(ContainerSize containerSize)
         {
-            Adv adv = harbor.GetFreeAdv();
+            Agv agv = harbor.GetFreeAgv();
             Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
             if (storageCrane == null)
             {
@@ -1322,38 +1322,38 @@ namespace Gruppe8.HarbNet
 
             Container? container = harbor.ContainerRowToCrane(containerSize, storageCrane, currentTime);
 
-            if (container == null || adv == null)
+            if (container == null || agv == null)
             {
                 return null;
             }
-            harbor.CraneToAdv(storageCrane, adv, currentTime);
+            harbor.CraneToAgv(storageCrane, agv, currentTime);
 
             return container;
 
         }
         /// <summary>
-        /// Moves a container from the ADV to the ship.
+        /// Moves a container from the AGV to the ship.
         /// </summary>
-        /// <param name="container">Container object to be moved from ADV to ship.</param>
+        /// <param name="container">Container object to be moved from AGV to ship.</param>
         /// <param name="ship">Ship object the container objects are loaded on.</param>
-        /// <returns>Returns the container moved from ADV to ship.</returns>
-        private Container? MoveOneContainerFromAdvToShip(Container? container, Ship ship)
+        /// <returns>Returns the container moved from AGV to ship.</returns>
+        private Container? MoveOneContainerFromAgvToShip(Container? container, Ship ship)
         {
-            Adv? adv = null;
+            Agv? agv = null;
 
             if (container != null) 
             { 
-                adv = harbor.GetAdvContainingContainer(container);
+                agv = harbor.GetAgvContainingContainer(container);
             }
 
             Crane? loadingDockCrane = harbor.GetFreeLoadingDockCrane();
 
-            if (adv == null || loadingDockCrane == null)
+            if (agv == null || loadingDockCrane == null)
             {
                 return null;
             }
             
-            harbor.AdvToCrane(loadingDockCrane, adv, currentTime);
+            harbor.AgvToCrane(loadingDockCrane, agv, currentTime);
             harbor.CraneToShip(loadingDockCrane, ship, currentTime);
             return container;
 

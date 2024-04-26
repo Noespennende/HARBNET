@@ -96,15 +96,15 @@ namespace Gruppe8.HarbNet
         /// <return>Returns an Ilist with Crane objects representing the cranes in the dock in the harbor.</return>
         internal IList<Crane> DockCranes { get; set; } = new List<Crane>();
         /// <summary>
-        /// Gets the working Advs.
+        /// Gets the working Agvs.
         /// </summary>
-        /// <return>Returns an Ilist with Adv objects representing the working Advs in the harbor.</return>
-        internal IList<Adv> AdvWorking { get; set; } = new List<Adv>();
+        /// <return>Returns an Ilist with Agv objects representing the working Agvs in the harbor.</return>
+        internal IList<Agv> AgvWorking { get; set; } = new List<Agv>();
         /// <summary>
-        /// Gets the available Advs.
+        /// Gets the available Agvs.
         /// </summary>
-        /// <return>Returns an Ilist with Adv objects representing the available Advs in the harbor.</return>
-        internal IList<Adv> AdvFree { get; set; } = new List<Adv>();
+        /// <return>Returns an Ilist with Agv objects representing the available Agvs in the harbor.</return>
+        internal IList<Agv> AgvFree { get; set; } = new List<Agv>();
         /// <summary>
         /// Gets the Trucks in transit.
         /// </summary>
@@ -131,10 +131,10 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns an int value representing the amount of trucks in harbor that arrive per hour.</returns>
         internal int TrucksArrivePerHour { get; set; }
         /// <summary>
-        /// Gets the amount of loads each adv do per hour.
+        /// Gets the amount of loads each agv do per hour.
         /// </summary>
-        /// <returns>Returns an int value representing the amount of loads each adv in harbor does per hour.</returns>
-        internal int LoadsPerAdvPerHour { get; set; }
+        /// <returns>Returns an int value representing the amount of loads each agv in harbor does per hour.</returns>
+        internal int LoadsPerAgvPerHour { get; set; }
         /// <summary>
         /// Gets the unique ID for the transit location.
         /// </summary>
@@ -146,10 +146,10 @@ namespace Gruppe8.HarbNet
         /// <return>Returns a Guid representing the harbors anchorages.</return>
         public Guid AnchorageID { get; } = Guid.NewGuid();
         /// <summary>
-        /// Gets the unique ID for the Adv cargo.
+        /// Gets the unique ID for the Agv cargo.
         /// </summary>
-        /// <return>Returns a Guid representing the harbors Adv cargos.</return>
-        public Guid AdvCargoID { get; } = Guid.NewGuid();
+        /// <return>Returns a Guid representing the harbors Agv cargos.</return>
+        public Guid AgvCargoID { get; } = Guid.NewGuid();
         /// <summary>
         /// Gets the unique ID for the truck transit location.
         /// </summary>
@@ -194,19 +194,19 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfTrucksArriveToHarborPerHour">Int value representing the amount of trucks arriving to the harbor per hour</param>
         /// <param name="percentageOfContainersDirectlyLoadedFromShipToTrucks">Int value representing the percentage of containers directly loaded from ship to trucks.</param>
         /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.</param>
-        /// <param name="numberOfAdv">Int value representing the amount of Advs in the harbor to be created.</param>
-        /// <param name="loadsPerAdvPerHour">Int value representing the amount of loads each adv does per hour.</param>
+        /// <param name="numberOfAgv">Int value representing the amount of AGVs in the harbor to be created.</param>
+        /// <param name="loadsPerAgvPerHour">Int value representing the amount of loads each AGV does per hour.</param>
         /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in Harbor if parameter is out of set range.</exception>
         public Harbor(IList<Ship> listOfShips, IList<ContainerStorageRow> listOfContainerStorageRows, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
             int numberOfCranesNextToLoadingDocks, int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea,
             int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks, int numberOfTrucksArriveToHarborPerHour,
             int percentageOfContainersDirectlyLoadedFromShipToTrucks, int percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks,
-            int numberOfAdv, int loadsPerAdvPerHour)
+            int numberOfAgv, int loadsPerAgvPerHour)
         {
 
             this.TrucksArrivePerHour = numberOfTrucksArriveToHarborPerHour;
             this.allContainerRows = listOfContainerStorageRows.ToList();
-            this.LoadsPerAdvPerHour = loadsPerAdvPerHour;
+            this.LoadsPerAgvPerHour = loadsPerAgvPerHour;
 
             if (percentageOfContainersDirectlyLoadedFromShipToTrucks > 100 || percentageOfContainersDirectlyLoadedFromShipToTrucks < 0)
             {
@@ -245,9 +245,9 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            for (int i = 0; i < numberOfAdv; i++)
+            for (int i = 0; i < numberOfAgv; i++)
             {
-                AdvFree.Add(new(HarborDockAreaID));
+                AgvFree.Add(new(HarborDockAreaID));
             }
 
             
@@ -513,79 +513,79 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads container from Crane to Adv
+        /// Loads container from Crane to Agv
         /// </summary>
         /// <param name="crane">The crane object the container is unloaded from.</param>
-        /// <param name="adv">The adv object that loads the container.</param>
-        /// <param name="currentTime">The Date and Time the container is loaded from crane to adv.</param>
-        /// <returns>Returns the container object to be loaded from crane to adv.</returns>
-        /// <exception cref="AdvCantBeLoadedExeption">Exception to be thrown if Adv can't be loaded.</exception>
-        internal Container CraneToAdv(Crane crane, Adv adv, DateTime currentTime)
+        /// <param name="agv">The agv object that loads the container.</param>
+        /// <param name="currentTime">The Date and Time the container is loaded from crane to agv.</param>
+        /// <returns>Returns the container object to be loaded from crane to agv.</returns>
+        /// <exception cref="AgvCantBeLoadedExeption">Exception to be thrown if Agv can't be loaded.</exception>
+        internal Container CraneToAgv(Crane crane, Agv agv, DateTime currentTime)
         {
-            if (!AdvFree.Contains(adv))
+            if (!AgvFree.Contains(agv))
             {
-                if (AdvWorking.Contains(adv))
+                if (AgvWorking.Contains(agv))
                 {
-                    throw new AdvCantBeLoadedExeption("The ADV you are trying to load is already transporting goods and therefore can not load a container from the crane.");
+                    throw new AgvCantBeLoadedExeption("The AGV you are trying to load is already transporting goods and therefore can not load a container from the crane.");
                 } else
                 {
-                    throw new AdvCantBeLoadedExeption("The ADV you are trying to load does not exist in the simulation and therefore can't be loaded.");
+                    throw new AgvCantBeLoadedExeption("The AGV you are trying to load does not exist in the simulation and therefore can't be loaded.");
                 }
                 
             }
 
-            if (!(adv.Container == null))
+            if (!(agv.Container == null))
             {
-                throw new AdvCantBeLoadedExeption("The Adv given already has a container in its storage and therefore has no room for the container the crane is trying to load.");
+                throw new AgvCantBeLoadedExeption("The AGv given already has a container in its storage and therefore has no room for the container the crane is trying to load.");
             }
             Container containerToBeLoaded = crane.UnloadContainer();
             containerToBeLoaded.CurrentPosition = crane.Location;
-            adv.LoadContainer(containerToBeLoaded);
-            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAdv, currentTime);
+            agv.LoadContainer(containerToBeLoaded);
+            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAgv, currentTime);
 
-            AdvFree.Remove(adv);
-            AdvWorking.Add(adv);
+            AgvFree.Remove(agv);
+            AgvWorking.Add(agv);
 
             return containerToBeLoaded;
         }
         /// <summary>
-        /// Loads container from Adv to Crane.
+        /// Loads container from Agv to Crane.
         /// </summary>
         /// <param name="crane">The crane object that loads the container.</param>
-        /// <param name="adv">The Adv object the container is unloaded from.</param>
+        /// <param name="agv">The Agv object the container is unloaded from.</param>
         /// <param name="currentTime">The Date and Time the container is loaded.</param>
-        /// <returns>Returns the container object to be loaded from crane to adv.</returns>
+        /// <returns>Returns the container object to be loaded from crane to agv.</returns>
         /// <exception cref="CraneCantBeLoadedExeption">Exception the be thrown if Crane can't be loaded.</exception>
-        internal Container AdvToCrane(Crane crane, Adv adv, DateTime currentTime)
+        internal Container AgvToCrane(Crane crane, Agv agv, DateTime currentTime)
         {
-            if (adv.Container == null)
+            if (agv.Container == null)
             {
-                throw new CraneCantBeLoadedExeption("The ADV you are trying to unload doesn't have a container in its storage and therefore can't unload to the crane.");
+                throw new CraneCantBeLoadedExeption("The AGV you are trying to unload doesn't have a container in its storage and therefore can't unload to the crane.");
             }
 
-            if (!AdvWorking.Contains(adv))
+            if (!AgvWorking.Contains(agv))
             {
-                if (AdvFree.Contains(adv))
+                if (AgvFree.Contains(agv))
                 {
-                    throw new CraneCantBeLoadedExeption("The ADV you are trying to unload is set as free and therefore is not working to unload cargo. ADVs must be working for cargo to be unloaded.");
+                    throw new CraneCantBeLoadedExeption("The AGV you are trying to unload is set as free and therefore is not working to unload cargo. AGVs must be working for cargo to be unloaded.");
                 } else
                 {
-                    throw new CraneCantBeLoadedExeption("The ADV you are trying to unload does not exist within the simulation and therefore can not unload to the crane");
+                    throw new CraneCantBeLoadedExeption("The AGV you are trying to unload does not exist within the simulation and therefore can not unload to the crane");
                 }
             }
 
             if (!(crane.Container == null))
             {
-                throw new CraneCantBeLoadedExeption("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the ADV");
+                throw new CraneCantBeLoadedExeption("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the AGV");
             }
 
-            Container containerToBeLoaded = adv.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = adv.Location;
+            Container containerToBeLoaded = agv.UnloadContainer();
+            containerToBeLoaded.CurrentPosition = agv.Location;
             crane.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
 
-            AdvWorking.Remove(adv);
-            AdvFree.Add(adv);
+            AgvWorking.Remove(agv);
+            AgvFree.Add(agv);
 
             return containerToBeLoaded;
         }
@@ -645,14 +645,14 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets available adv.
+        /// Gets available agv.
         /// </summary>
-        /// <returns>Returns the first available adv object, if none is available null is returned.</returns>
-        internal Adv GetFreeAdv()
+        /// <returns>Returns the first available agv object, if none is available null is returned.</returns>
+        internal Agv GetFreeAgv()
         {
-            if (AdvFree.Count > 0)
+            if (AgvFree.Count > 0)
             {
-                return AdvFree[0];
+                return AgvFree[0];
             }
 
             return null;
@@ -700,17 +700,17 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets adv containing a container.
+        /// Gets agv containing a container.
         /// </summary>
-        /// <param name="container">The container object to be checked if it's held by an adv.</param>
-        /// <returns>Returns adv object if it hold an container, if it's not holding an container then null is returned</returns>
-        internal Adv? GetAdvContainingContainer(Container container)
+        /// <param name="container">The container object to be checked if it's held by an agv.</param>
+        /// <returns>Returns agv object if it hold an container, if it's not holding an container then null is returned</returns>
+        internal Agv? GetAgvContainingContainer(Container container)
         {
-            foreach (Adv adv in AdvWorking)
+            foreach (Agv agv in AgvWorking)
             {
-                if (adv.Container == container)
+                if (agv.Container == container)
                 {
-                    return adv;
+                    return agv;
                 }
             }
 

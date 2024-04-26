@@ -9,19 +9,19 @@ namespace Gruppe8.HarbNet
     /// <summary>
     /// Exception used to check if a Crane can't be loaded.
     /// </summary>
-    internal class CraneCantBeLoadedExeption : Exception
+    public class CraneCantBeLoadedExeption : Exception
     {
         /// <summary>
         /// Creates new CraneCantBeLoadedException object.
         /// </summary>
-        internal CraneCantBeLoadedExeption() { }
+        public CraneCantBeLoadedExeption() { }
 
 
         /// <summary>
         /// Creates new CraneCantBeLoadedException object.
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
-        internal CraneCantBeLoadedExeption(string message) : base(message)
+        public CraneCantBeLoadedExeption(string message) : base(message)
         {
 
         }
@@ -31,7 +31,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
         /// <param name="innerException">innerException to be thrown when exception is called.</param>
-        internal CraneCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
+        public CraneCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
         {
         }
     }

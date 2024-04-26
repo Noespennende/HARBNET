@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Exception used to check if a Adv can't be loaded.
+    /// Exeption thrown if an attemt is made to load an AGV with a container, but the attempt fail.
     /// </summary>
-    internal class AdvCantBeLoadedExeption : Exception
+    public class AgvCantBeLoadedExeption : Exception
     {
         /// <summary>
         /// 
         /// </summary>
-        internal AdvCantBeLoadedExeption() { }
+        public AgvCantBeLoadedExeption() { }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
-        internal AdvCantBeLoadedExeption(string message) : base(message)
+        public AgvCantBeLoadedExeption(string message) : base(message)
         {
         }
 
@@ -29,7 +29,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
-        internal AdvCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
+        public AgvCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
         {
         }
     }

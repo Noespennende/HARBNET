@@ -61,8 +61,8 @@ namespace Client.HarborName
                 numberOfTrucksArriveToHarborPerHour: 10,
                 percentageOfContainersDirectlyLoadedFromShipToTrucks: 10,
                 percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks: 10,
-                numberOfAdv: 5,
-                loadsPerAdvPerHour: 3
+                numberOfAgv: 5,
+                loadsPerAgvPerHour: 3
                 );
 
 
