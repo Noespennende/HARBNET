@@ -123,9 +123,9 @@ namespace Client.HarborName
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.ContainerSize}'\n");
 
             };
-            sim.DayOver += (sender, e) =>
+            sim.DayEnded += (sender, e) =>
             {
-                DayOverEventArgs args = (DayOverEventArgs)e;
+                DayEndedEventArgs args = (DayEndedEventArgs)e;
 
                 Console.WriteLine($"-----------------------------------");
                 Console.WriteLine($"| {args.CurrentTime} | Day over! |");
@@ -350,9 +350,9 @@ namespace Client.HarborName
                 Console.WriteLine($"| {args.CurrentTime} | A truck has loaded a container and left the harbor \n");
             };
 
-            clientSim.DayOver += (sender, e) =>
+            clientSim.DayEnded += (sender, e) =>
             {
-                DayOverEventArgs args = (DayOverEventArgs)e;
+                DayEndedEventArgs args = (DayEndedEventArgs)e;
 
                 Console.WriteLine($"-----------------------------------");
                 Console.WriteLine($"| {args.CurrentTime} | Day over! |");

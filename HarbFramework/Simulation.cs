@@ -49,7 +49,7 @@ namespace Gruppe8.HarbNet
         public event EventHandler<SimulationEndedEventArgs>? SimulationEnded;
         public event EventHandler<SimulationStartingEventArgs>? SimulationStarting;
         public event EventHandler<OneHourHasPassedEventArgs>? OneHourHasPassed;
-        public event EventHandler<DayOverEventArgs>? DayOver;
+        public event EventHandler<DayEndedEventArgs>? DayEnded;
         public event EventHandler<DayLoggedToSimulationHistoryEventArgs>? DayLoggedToSimulationHistory;
         public event EventHandler<ShipUndockingEventArgs>? ShipUndocking;
         public event EventHandler<ShipInTransitEventArgs>? ShipInTransit;
@@ -63,8 +63,8 @@ namespace Gruppe8.HarbNet
         public event EventHandler<ShipStartingUnloadingEventArgs>? ShipStartingUnloading;
         public event EventHandler<ShipUnloadedContainerEventArgs>? ShipUnloadedContainer;
         public event EventHandler<ShipDoneUnloadingEventArgs>? ShipDoneUnloading;
-        public event EventHandler<ShipAnchoredEventArgs>? ShipAnchored;
         public event EventHandler<ShipAnchoringEventArgs>? ShipAnchoring;
+        public event EventHandler<ShipAnchoredEventArgs>? ShipAnchored;
 
         public event EventHandler<TruckLoadingFromStorageEventArgs>? TruckLoadingFromStorage;
 
@@ -206,8 +206,8 @@ namespace Gruppe8.HarbNet
                 
                 HistoryIList.Add(harborDayLog);
 
-                DayOverEventArgs dayOverEventArgs = new(harborDayLog, currentTime, "The day has passed and the state of the harbor on day-shifty has been logged.");
-                DayOver?.Invoke(this, dayOverEventArgs);
+                DayEndedEventArgs dayOverEventArgs = new(harborDayLog, currentTime, "The day has passed and the state of the harbor on day-shifty has been logged.");
+                DayEnded?.Invoke(this, dayOverEventArgs);
 
                 foreach (Container container in harbor.GetContainersStoredInHarbour())
                 {
@@ -1746,9 +1746,9 @@ namespace Gruppe8.HarbNet
     }
     
     /// <summary>
-    /// The EventArgs class for the DayOver event.
+    /// The EventArgs class for the DayEnded event.
     /// </summary>
-    public class DayOverEventArgs : EventArgs
+    public class DayEndedEventArgs : EventArgs
     {
         /// <summary>
         /// A DailyLog object containing information about the previous day in the simulation.
@@ -1769,12 +1769,12 @@ namespace Gruppe8.HarbNet
         public string Description { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the DayOverEventArgs class.
+        /// Initializes a new instance of the DayEndedEventArgs class.
         /// </summary>
         /// <param name="todaysLog">A DailyLog object containing information about the previous day in the simulation.</param>
         /// <param name="currentTime">The date and time in the simulation the event was raised.</param>
         /// <param name="description">A string value containing a description of the event.</param>
-        public DayOverEventArgs(DailyLog todaysLog, DateTime currentTime, string description)
+        public DayEndedEventArgs(DailyLog todaysLog, DateTime currentTime, string description)
         {
             TodaysLog = todaysLog;
             CurrentTime = currentTime;
