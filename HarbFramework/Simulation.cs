@@ -1278,7 +1278,7 @@ namespace Gruppe8.HarbNet
             bool underMaxWeight;
             bool underMaxCapacity;
 
-            if (ShipHasNoContainers(ship) || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null
+            if (ShipHasNoContainers(ship) || ship.ContainersOnBoard.Last().ContainerSize == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null
                 || harbor.GetStoredContainer(ContainerSize.Full) == null && harbor.GetStoredContainer(ContainerSize.Half) != null)
             {
                 underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Half;
@@ -1293,7 +1293,7 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null
+            else if (ship.ContainersOnBoard.Last().ContainerSize == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null
                 || harbor.GetStoredContainer(ContainerSize.Half) == null && harbor.GetStoredContainer(ContainerSize.Full) != null)
             {
                 underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Full;
@@ -1533,7 +1533,7 @@ namespace Gruppe8.HarbNet
                 return null;
             }
 
-            Container? containerFound = harbor.ContainerRowToCrane(container.Size, storageCrane, currentTime);
+            Container? containerFound = harbor.ContainerRowToCrane(container.ContainerSize, storageCrane, currentTime);
 
             if (container == null)
             {

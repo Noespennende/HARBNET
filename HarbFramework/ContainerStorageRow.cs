@@ -88,7 +88,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the containerSpace the container was added to, null is returned if the size of the container did not match any of the sizeOfContainersStored registered or if there was no available space.</returns>
         internal ContainerSpace AddContainerToFreeSpace(Container container)
         {
-            if (SizeOfContainersStored() == container.Size || SizeOfContainersStored() == ContainerSize.None)
+            if (SizeOfContainersStored() == container.ContainerSize || SizeOfContainersStored() == ContainerSize.None)
             {
                 foreach (ContainerSpace space in RowOfContainerSpaces)
                 {
@@ -98,7 +98,7 @@ namespace Gruppe8.HarbNet
                         space.FreeOne = false;
                         return space;
                     }
-                    if (space.FreeTwo == true || container.Size == ContainerSize.Half)
+                    if (space.FreeTwo == true || container.ContainerSize == ContainerSize.Half)
                     {
                         space.StoredContainerTwo = container.ID;
                         space.FreeTwo = false;
