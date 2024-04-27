@@ -113,7 +113,7 @@ namespace Client.HarborName
             sim.ShipUnloadedContainer += (sender, e) =>
             {
                 ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.ContainerSize}'\n");
 
             };
             sim.DayEnded += (sender, e) =>
@@ -128,7 +128,7 @@ namespace Client.HarborName
             sim.ShipLoadedContainer += (sender, e) =>
             {
                 ShipLoadedContainerEventArgs args = (ShipLoadedContainerEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.ContainerSize}'\n");
             };
             sim.SimulationEnded += (sender, e) =>
             {

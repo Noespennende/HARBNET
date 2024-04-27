@@ -34,7 +34,7 @@ namespace Gruppe8.HarbNet
         /// Gets the containers size
         /// </summary>
         /// <returns>Returns a ContainerSize enum representing the containers size</returns>
-        public ContainerSize Size { get; internal set; }
+        public ContainerSize ContainerSize { get; internal set; }
         /// <summary>
         /// Gets the containers weight in tonn.
         /// </summary>
@@ -59,7 +59,7 @@ namespace Gruppe8.HarbNet
         /// <param name="currentPosition">Unique Guid representing the position the Container to be created will currently be located.</param>
         internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition) {
             this.ID = Guid.NewGuid();
-            this.Size = size;
+            this.ContainerSize = size;
             this.CurrentPosition = currentPosition;
             this.WeightInTonn = WeightInTonn;
         }
@@ -75,7 +75,7 @@ namespace Gruppe8.HarbNet
         internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition, Guid id, IList<StatusLog> containerHistory)
         {
             this.ID = id;
-            this.Size = size;
+            this.ContainerSize = size;
             this.CurrentPosition = currentPosition;
             this.WeightInTonn = WeightInTonn;
             this.HistoryIList = containerHistory;
@@ -149,7 +149,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a String with the container's ID, ContainerSize enum and int value representing it's weight in tonn.</returns>
         public override String ToString()
         {
-            return ($"ID: {ID.ToString()}, Size: {Size}, Weight: {WeightInTonn} tonnes");
+            return ($"ID: {ID.ToString()}, Size: {ContainerSize}, Weight: {WeightInTonn} tonnes");
         }
     }
 }

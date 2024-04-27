@@ -486,7 +486,7 @@ namespace Gruppe8.HarbNet
         {
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.Size == containerSize)
+                if (container.ContainerSize == containerSize)
                 {
                     return container;
                 }
@@ -504,7 +504,7 @@ namespace Gruppe8.HarbNet
             int count = 0;
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.Size == containerSize)
+                if (container.ContainerSize == containerSize)
                 {
                     count++;
                 }
@@ -664,7 +664,7 @@ namespace Gruppe8.HarbNet
 
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.Size == ContainerSize.Half)
+                if (container.ContainerSize == ContainerSize.Half)
                 {
                     half++;
                 }  else

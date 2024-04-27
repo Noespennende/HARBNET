@@ -99,7 +99,7 @@ namespace Gruppe8.HarbNet
                     {
                         containersHistory.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
                     }
-                    containerList.Add(new Container(container.Size, container.WeightInTonn, ship.ID, container.ID, containersHistory));
+                    containerList.Add(new Container(container.ContainerSize, container.WeightInTonn, ship.ID, container.ID, containersHistory));
                 }
                 foreach (StatusLog eventObject in ship.HistoryIList)
                 {
@@ -127,7 +127,7 @@ namespace Gruppe8.HarbNet
                 {
                     eventList.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
                 }
-                duplicatedList.Add(new Container(container.Size, container.WeightInTonn, container.CurrentPosition, container.ID, eventList));
+                duplicatedList.Add(new Container(container.ContainerSize, container.WeightInTonn, container.CurrentPosition, container.ID, eventList));
             }
             return duplicatedList;
         }
@@ -220,7 +220,7 @@ namespace Gruppe8.HarbNet
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -249,7 +249,7 @@ namespace Gruppe8.HarbNet
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -277,7 +277,7 @@ namespace Gruppe8.HarbNet
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -298,7 +298,7 @@ namespace Gruppe8.HarbNet
 
                 foreach (Container container in ContainersInHarbour)
                 {
-                    Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
+                    Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                 }
                         
             }
@@ -313,7 +313,7 @@ namespace Gruppe8.HarbNet
 
                 foreach (Container container in ContainersArrivedAtDestination)
                 {
-                    Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                    Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                 }
 
             }
@@ -432,7 +432,7 @@ namespace Gruppe8.HarbNet
 
                             foreach (Container container in ship.ContainersOnBoard)
                             {
-                                sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                                sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                             }
                         }
 
@@ -461,7 +461,7 @@ namespace Gruppe8.HarbNet
 
                             foreach (Container container in ship.ContainersOnBoard)
                             {
-                                sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                                sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                             }
                         }
 
@@ -489,7 +489,7 @@ namespace Gruppe8.HarbNet
 
                             foreach (Container container in ship.ContainersOnBoard)
                             {
-                                sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                                sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                             }
                         }
 
@@ -510,7 +510,7 @@ namespace Gruppe8.HarbNet
 
                     foreach (Container container in ContainersInHarbour)
                     {
-                        sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                        sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                     }
 
                 }
@@ -525,7 +525,7 @@ namespace Gruppe8.HarbNet
 
                     foreach (Container container in ContainersArrivedAtDestination)
                     {
-                        sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                        sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                     }
 
                 }

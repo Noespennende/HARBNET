@@ -26,7 +26,7 @@ namespace Gruppe8.HarbNet
         /// Gets the containers size.
         /// </summary>
         /// <returns>Returns a ContainerSize enum representing the containers size.</returns>
-        public ContainerSize Size { get; }
+        public ContainerSize ContainerSize { get; }
         /// <summary>
         /// Gets the containers weight in tonn.
         /// </summary>

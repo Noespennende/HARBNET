@@ -602,7 +602,7 @@ namespace Gruppe8.HarbNet
 
             foreach (ContainerStorageRow CR in allContainerRows)
             {
-                if (CR.CheckIfFreeContainerSpaceExists(container.Size))
+                if (CR.CheckIfFreeContainerSpaceExists(container.ContainerSize))
                 {
                     CR.AddContainerToFreeSpace(container);
                     storedContainers.Add(container, CR);
@@ -631,7 +631,7 @@ namespace Gruppe8.HarbNet
             }
 
             foreach (Container container in storedContainers.Keys){
-                if (container.Size == size)
+                if (container.ContainerSize == size)
                 {
                     crane.LoadContainer(container);
                     container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
@@ -1300,7 +1300,7 @@ namespace Gruppe8.HarbNet
         {
             foreach (Container container in storedContainers.Keys)
             {
-                if (container.Size == containerSize)
+                if (container.ContainerSize == containerSize)
                 {
                     return container;
                 }
