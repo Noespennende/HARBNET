@@ -194,20 +194,133 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfTrucksArriveToHarborPerHour">Int value representing the amount of trucks arriving to the harbor per hour</param>
         /// <param name="percentageOfContainersDirectlyLoadedFromShipToTrucks">Int value representing the percentage of containers directly loaded from ship to trucks.</param>
         /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.</param>
-        /// <param name="numberOfAgv">Int value representing the amount of AGVs in the harbor to be created.</param>
+        /// <param name="numberOfAgvs">Int value representing the amount of AGVs in the harbor to be created.</param>
         /// <param name="loadsPerAgvPerHour">Int value representing the amount of loads each AGV does per hour.</param>
         /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in Harbor if parameter is out of set range.</exception>
         public Harbor(IList<Ship> listOfShips, IList<ContainerStorageRow> listOfContainerStorageRows, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks,
             int numberOfCranesNextToLoadingDocks, int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea,
             int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks, int numberOfTrucksArriveToHarborPerHour,
             int percentageOfContainersDirectlyLoadedFromShipToTrucks, int percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks,
-            int numberOfAgv, int loadsPerAgvPerHour)
+            int numberOfAgvs, int loadsPerAgvPerHour)
         {
 
             this.TrucksArrivePerHour = numberOfTrucksArriveToHarborPerHour;
             this.allContainerRows = listOfContainerStorageRows.ToList();
             this.LoadsPerAgvPerHour = loadsPerAgvPerHour;
 
+            AllShips = listOfShips.ToList();
+
+            Initiliaze(
+                listOfShips, numberOfSmallLoadingDocks, numberOfMediumLoadingDocks, numberOfLargeLoadingDocks, numberOfCranesNextToLoadingDocks, 
+                LoadsPerCranePerHour, numberOfCranesOnHarborStorageArea, numberOfSmallShipDocks, numberOfMediumShipDocks, numberOfLargeShipDocks, 
+                percentageOfContainersDirectlyLoadedFromShipToTrucks, percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks, numberOfAgvs
+                );
+
+        }
+
+        /// <summary>
+        /// Creates new harbor object. Overload constructor where ships and container storage rows are automatically created, and default values are used.
+        /// </summary>
+        /// <param name="numberOfShips">Int value representing the number of ships to be created. Does not create single-trip-ships.</param>
+        /// <param name="containerStorageCapacity">Int value representing the amount of containers the harbor storage can store.</param>
+        /// <param name="numberOfStorageRows">Int value representing the amount of rows the harbor storage contains.</param>
+        /// <param name="numberOfLoadingDocks">Int value representing the number of loading docks. Number is distributed between small, medium and large loading docks.</param>
+        /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes next to loading docks to be created in the harbor.</param>
+        /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes in the harbor storage area to be created in the harbor.</param>
+        /// <param name="numberOfAgvs">Int value representing the amount of AGVs in the harbor to be created.</param>
+        /// <param name="loadsPerCranePerHour">Int value representing the amount of loads a crane does per hour.</param>
+        /// <param name="loadsPerAgvPerHour">Int value representing the amount of loads each AGV does per hour.</param>
+        /// <param name="percentageOfContainersDirectlyLoadedFromShipToTrucks">Int value representing the percentage of containers directly loaded from ship to trucks.</param>
+        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in Harbor if parameter is out of set range.</exception>
+        /// 
+        public Harbor(int numberOfShips, int containerStorageCapacity, int numberOfStorageRows, int numberOfLoadingDocks, 
+            int numberOfCranesNextToLoadingDocks, int numberOfCranesOnHarborStorageArea, int numberOfAgvs, 
+            int loadsPerCranePerHour = 35, int trucksArrivePerHour = 10, int loadsPerAgvPerHour = 25, 
+            int percentageOfContainersDirectlyLoadedFromShipToTrucks = 10, int percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks = 15) 
+        {
+            
+
+            // ** Creating Ships ** 
+
+            DateTime startDate = DateTime.Now;
+            List<Ship> listOfShips = new();
+
+            int smallShips = numberOfShips / 3;
+            int mediumShips = numberOfShips / 3;
+            int largeShips = numberOfShips / 3;
+
+            if (numberOfShips % 3 == 1)
+            {
+                smallShips++;
+            }
+            else if (numberOfShips % 3 == 2)
+            {
+                smallShips++;
+                mediumShips++;
+            }
+
+            for (int i = 0; i < smallShips; i++)
+            {
+                listOfShips.Add(new($"Ship Small {i}", ShipSize.Small, startDate, false, 7, 10, 10));
+            }
+            for (int i = 0; i < mediumShips; i++)
+            {
+                listOfShips.Add(new($"Ship Medium {i}", ShipSize.Medium, startDate, false, 7, 25, 25));
+            }
+            for (int i = 0; i < largeShips; i++)
+            {
+                listOfShips.Add(new($"Ship Large {i}", ShipSize.Large, startDate, false, 7, 50, 50));
+            }
+
+
+            AllShips = listOfShips.ToList();
+
+            // ** Creating ContainerRows (Storage Area) ** 
+
+            List<ContainerStorageRow> listOfContainerStorageRows = new();
+
+            int numberOfContainersPerRow = containerStorageCapacity / numberOfStorageRows;
+            for (int i = 0; i < numberOfStorageRows; i++)
+            {
+                listOfContainerStorageRows.Add(new(numberOfContainersPerRow));
+            }
+
+            // ** Loading Docks ** 
+
+            int smallLoadingDocks = numberOfLoadingDocks / 3;
+            int mediumLoadingDocks = numberOfLoadingDocks / 3;
+            int largeLoadingDocks = numberOfLoadingDocks / 3;
+
+            if (numberOfLoadingDocks % 3 == 1)
+            {
+                smallLoadingDocks++;
+            }
+            if (numberOfLoadingDocks % 3 == 2)
+            {
+                smallLoadingDocks++;
+                mediumLoadingDocks++;
+            }
+
+            this.TrucksArrivePerHour = trucksArrivePerHour;
+            this.LoadsPerAgvPerHour = loadsPerAgvPerHour;
+            this.allContainerRows = listOfContainerStorageRows.ToList();
+
+
+            Initiliaze(
+                listOfShips, 
+                smallLoadingDocks, mediumLoadingDocks, largeLoadingDocks, numberOfCranesNextToLoadingDocks, loadsPerCranePerHour, numberOfCranesOnHarborStorageArea, 
+                0, 0, 0, 
+                percentageOfContainersDirectlyLoadedFromShipToTrucks, percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks, numberOfAgvs
+                );
+
+        }
+
+
+        private void Initiliaze(IList<Ship> listOfShips, int numberOfSmallLoadingDocks, int numberOfMediumLoadingDocks, int numberOfLargeLoadingDocks, int numberOfCranesNextToLoadingDocks, 
+            int LoadsPerCranePerHour, int numberOfCranesOnHarborStorageArea, int numberOfSmallShipDocks, int numberOfMediumShipDocks, int numberOfLargeShipDocks, 
+            int percentageOfContainersDirectlyLoadedFromShipToTrucks, int percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks, int numberOfAgv)
+        {
             if (percentageOfContainersDirectlyLoadedFromShipToTrucks > 100 || percentageOfContainersDirectlyLoadedFromShipToTrucks < 0)
             {
                 throw new ArgumentOutOfRangeException("percentageOfContainersDirectlyLoadedFromShipToTrucks must be a number between 0 and 100");
@@ -250,7 +363,7 @@ namespace Gruppe8.HarbNet
                 AgvFree.Add(new(HarborDockAreaID));
             }
 
-            
+
             for (int i = 0; i < numberOfSmallLoadingDocks; i++)
             {
                 allLoadingDocks.Add(new LoadingDock(ShipSize.Small));
@@ -279,12 +392,10 @@ namespace Gruppe8.HarbNet
                 allShipDocks.Add(new ShipDock(ShipSize.Large));
             }
 
-            AllShips = listOfShips.ToList();
-
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
-
         }
+
 
         /// <summary>
         /// Creates container space in harbor based on the amount of numberOfContainerSpace and numberOfContainerRows.
