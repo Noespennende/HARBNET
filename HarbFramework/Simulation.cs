@@ -46,27 +46,27 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns an int value representing the number of containers transported from storage to truck in a hour.</returns>
         private int numberOfStorageContainersToTrucksThisRound;
 
-        public EventHandler? SimulationEnded;
-        public EventHandler? SimulationStarting;
-        public EventHandler? OneHourHasPassed;
-        public EventHandler? DayEnded;
-        public EventHandler? DayLoggedToSimulationHistory;
-        public EventHandler? ShipUndocking;
-        public EventHandler? ShipInTransit;
-        public EventHandler? ShipDockingToShipDock;
-        public EventHandler? ShipDockedToShipDock;
-        public EventHandler? ShipDockingtoLoadingDock;
-        public EventHandler? ShipDockedtoLoadingDock;
-        public EventHandler? ShipStartingLoading;
-        public EventHandler? ShipLoadedContainer;
-        public EventHandler? ShipDoneLoading;
-        public EventHandler? ShipStartingUnloading;
-        public EventHandler? ShipUnloadedContainer;
-        public EventHandler? ShipDoneUnloading;
-        public EventHandler? ShipAnchored;
-        public EventHandler? ShipAnchoring;
+        public event EventHandler<SimulationEndedEventArgs>? SimulationEnded;
+        public event EventHandler<SimulationStartingEventArgs>? SimulationStarting;
+        public event EventHandler<OneHourHasPassedEventArgs>? OneHourHasPassed;
+        public event EventHandler<DayOverEventArgs>? DayOver;
+        public event EventHandler<DayLoggedToSimulationHistoryEventArgs>? DayLoggedToSimulationHistory;
+        public event EventHandler<ShipUndockingEventArgs>? ShipUndocking;
+        public event EventHandler<ShipInTransitEventArgs>? ShipInTransit;
+        public event EventHandler<ShipDockingToShipDockEventArgs>? ShipDockingToShipDock;
+        public event EventHandler<ShipDockedToShipDockEventArgs>? ShipDockedToShipDock;
+        public event EventHandler<ShipDockingToLoadingDockEventArgs>? ShipDockingToLoadingDock;
+        public event EventHandler<ShipDockedToLoadingDockEventArgs>? ShipDockedToLoadingDock;
+        public event EventHandler<ShipStartingLoadingEventArgs>? ShipStartingLoading;
+        public event EventHandler<ShipLoadedContainerEventArgs>? ShipLoadedContainer;
+        public event EventHandler<ShipDoneLoadingEventArgs>? ShipDoneLoading;
+        public event EventHandler<ShipStartingUnloadingEventArgs>? ShipStartingUnloading;
+        public event EventHandler<ShipUnloadedContainerEventArgs>? ShipUnloadedContainer;
+        public event EventHandler<ShipDoneUnloadingEventArgs>? ShipDoneUnloading;
+        public event EventHandler<ShipAnchoredEventArgs>? ShipAnchored;
+        public event EventHandler<ShipAnchoringEventArgs>? ShipAnchoring;
 
-        public EventHandler? TruckLoadingFromStorage;
+        public event EventHandler<TruckLoadingFromStorageEventArgs>? TruckLoadingFromStorage;
 
         /// <summary>
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
@@ -176,7 +176,7 @@ namespace Gruppe8.HarbNet
                     {
                         Guid loadingDock = harbor.StartShipInLoadingDock(ship.ID);
 
-                        ShipDockingToLoadingDock(ship, loadingDock);
+                        ShipIsDockedToLoadingDock(ship, loadingDock);
                     }
                     else if (ship.IsForASingleTrip == true && harbor.GetFreeLoadingDock(ship.ShipSize) == null)
                     {
@@ -207,7 +207,7 @@ namespace Gruppe8.HarbNet
                 HistoryIList.Add(harborDayLog);
 
                 DayOverEventArgs dayOverEventArgs = new(harborDayLog, currentTime, "The day has passed and the state of the harbor on day-shifty has been logged.");
-                DayEnded?.Invoke(this, dayOverEventArgs);
+                DayOver?.Invoke(this, dayOverEventArgs);
 
                 foreach (Container container in harbor.GetContainersStoredInHarbour())
                 {
@@ -226,7 +226,7 @@ namespace Gruppe8.HarbNet
                             dayReviewShipLogs.Add(log);
                         }
                     }
-                    DayLoggedEventArgs dayLoggedEventArgs = new(harborDayLog, currentTime, 
+                    DayLoggedToSimulationHistoryEventArgs dayLoggedEventArgs = new(harborDayLog, currentTime, 
                         "The day has passed and ship movement throughout the day and the state of the harbor on day-shift has been logged.", ship, dayReviewShipLogs);
              
                     DayLoggedToSimulationHistory?.Invoke(this, dayLoggedEventArgs);
@@ -378,7 +378,7 @@ namespace Gruppe8.HarbNet
                     {
                         Guid dockID = lastStatusLog.SubjectLocation;
 
-                        ShipDockingToLoadingDock(ship, dockID);
+                        ShipIsDockedToLoadingDock(ship, dockID);
 
                         if (ShipFromTransitWithContainersToUnload(ship))
                         {
@@ -429,7 +429,7 @@ namespace Gruppe8.HarbNet
                         if (lastStatusLog.Status == Status.Anchored)
                         {
                             dockID = harbor.DockShipToLoadingDock(shipID, currentTime);
-                            ShipDockingToLoadingDock(ship, dockID);
+                            ShipIsDockedToLoadingDock(ship, dockID);
                         }
                     }
                     
@@ -610,17 +610,17 @@ namespace Gruppe8.HarbNet
 
 
         /// <summary>
-        /// Ship docking to loading dock.
+        /// Ship docked to loading dock.
         /// </summary>
         /// <param name="ship">Ship object docking to loading dock.</param>
         /// <param name="dockID">Unique ID for the loading dock object the ship object is docking to.</param>
-        private void ShipDockingToLoadingDock(Ship ship, Guid dockID)
+        private void ShipIsDockedToLoadingDock(Ship ship, Guid dockID)
         {
             ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToLoadingDock);
 
             ShipDockedToLoadingDockEventArgs shipDockedToLoadingDockEventArgs = new(ship, currentTime, "Ship has docked to loading dock.", dockID);
 
-            ShipDockedtoLoadingDock?.Invoke(this, shipDockedToLoadingDockEventArgs);
+            ShipDockedToLoadingDock?.Invoke(this, shipDockedToLoadingDockEventArgs);
         }
         /// <summary>
         /// checks if the ship has not been altered this hour and it has a StatusLog object.
@@ -1785,7 +1785,7 @@ namespace Gruppe8.HarbNet
     /// <summary>
     /// The EventArgs class for the DayLogged event
     /// </summary>
-    public class DayLoggedEventArgs : EventArgs
+    public class DayLoggedToSimulationHistoryEventArgs : EventArgs
     {
         /// <summary>
         /// A DailyLog object containing information about the state of the harbor the day the event was raised.
@@ -1818,14 +1818,14 @@ namespace Gruppe8.HarbNet
         public IList<StatusLog>? DayReviewShipLogs { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the DayLoggedEventArgs class.
+        /// Initializes a new instance of the DayLoggedToSimulationHistoryEventArgs class.
         /// </summary>
         /// <param name="todaysLog">A DailyLog object containing information about the state of the harbor the day the event was raised.</param>
         /// <param name="currentTime">The date time in the simulation the event was raised.</param>
         /// <param name="description">String value containing a description of the event.</param>
         /// <param name="ship">The ship object the dayReviewShipLogs logs come from.</param>
         /// <param name="dayReviewShipLogs">An IList of all logs registered by ship in the past day.</param>
-        public DayLoggedEventArgs(DailyLog todaysLog, DateTime currentTime, string description, Ship ship, IList<StatusLog>? dayReviewShipLogs)
+        public DayLoggedToSimulationHistoryEventArgs(DailyLog todaysLog, DateTime currentTime, string description, Ship ship, IList<StatusLog>? dayReviewShipLogs)
         {
             TodaysLog = todaysLog;
             CurrentTime = currentTime;

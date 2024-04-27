@@ -222,8 +222,8 @@ namespace Gruppe8.HarbNet
         /// Creates new harbor object. Overload constructor where ships and container storage rows are automatically created, and default values are used.
         /// </summary>
         /// <param name="numberOfShips">Int value representing the number of ships to be created. Does not create single-trip-ships.</param>
-        /// <param name="containerStorageCapacity">Int value representing the amount of containers the harbor storage can store.</param>
-        /// <param name="numberOfStorageRows">Int value representing the amount of rows the harbor storage contains.</param>
+        /// <param name="numberOfHarborContainerStorageRows">Int value representing the amount of rows the harbor storage contains.</param>
+        /// /// <param name="containerStorageCapacityInEachStorageRow">Int value representing the amount of containers the harbor storage can store.</param>
         /// <param name="numberOfLoadingDocks">Int value representing the number of loading docks. Number is distributed between small, medium and large loading docks.</param>
         /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes next to loading docks to be created in the harbor.</param>
         /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes in the harbor storage area to be created in the harbor.</param>
@@ -234,7 +234,7 @@ namespace Gruppe8.HarbNet
         /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.</param>
         /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in Harbor if parameter is out of set range.</exception>
         /// 
-        public Harbor(int numberOfShips, int containerStorageCapacity, int numberOfStorageRows, int numberOfLoadingDocks, 
+        public Harbor(int numberOfShips, int containerStorageCapacityInEachStorageRow, int numberOfHarborContainerStorageRows, int numberOfLoadingDocks, 
             int numberOfCranesNextToLoadingDocks, int numberOfCranesOnHarborStorageArea, int numberOfAgvs, 
             int loadsPerCranePerHour = 35, int trucksArrivePerHour = 10, int loadsPerAgvPerHour = 25, 
             int percentageOfContainersDirectlyLoadedFromShipToTrucks = 10, int percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks = 15) 
@@ -280,10 +280,9 @@ namespace Gruppe8.HarbNet
 
             List<ContainerStorageRow> listOfContainerStorageRows = new();
 
-            int numberOfContainersPerRow = containerStorageCapacity / numberOfStorageRows;
-            for (int i = 0; i < numberOfStorageRows; i++)
+            for (int i = 0; i < numberOfHarborContainerStorageRows; i++)
             {
-                listOfContainerStorageRows.Add(new(numberOfContainersPerRow));
+                listOfContainerStorageRows.Add(new(containerStorageCapacityInEachStorageRow));
             }
 
             // ** Loading Docks ** 
