@@ -1570,7 +1570,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns an IDictionary with all loading docks, and their current free-status.
+        /// Returns an IDictionary with the IDs of all loading docks, and their current free-status.
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not.</returns>
         public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks()
@@ -1604,7 +1604,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns an IDictionary with all ship docks, and their current free-status.
+        /// Returns an IDictionary with the IDs of all ship docks, and their current free-status.
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not.</returns>
         public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks()
