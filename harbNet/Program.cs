@@ -87,7 +87,7 @@ namespace Client.HarborName
                 Console.WriteLine($"Simulating {args.HarborToBeSimulated.ID} from {args.StartDate}\n");
                 Thread.Sleep(1000);
             };
-            sim.ShipDockedtoLoadingDock += (sender, e) =>
+            sim.ShipDockedToLoadingDock += (sender, e) =>
             {
                 ShipDockedToLoadingDockEventArgs args = (ShipDockedToLoadingDockEventArgs)e;
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to loading dock with ID {args.DockID}\n");
@@ -125,7 +125,7 @@ namespace Client.HarborName
             };
             sim.DayEnded += (sender, e) =>
             {
-                DayOverEventArgs args = (DayOverEventArgs)e;
+                DayEndedEventArgs args = (DayEndedEventArgs)e;
 
                 Console.WriteLine($"-----------------------------------");
                 Console.WriteLine($"| {args.CurrentTime} | Day over! |");
@@ -274,13 +274,13 @@ namespace Client.HarborName
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' anchored to anchorage with ID {args.AnchorageID}\n");
             };
 
-            clientSim.ShipDockingtoLoadingDock += (sender, e) =>
+            clientSim.ShipDockingToLoadingDock += (sender, e) =>
             {
                 ShipDockingToLoadingDockEventArgs args = (ShipDockingToLoadingDockEventArgs)e;
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' starting docking to loading dock with ID {args.DockID}\n");
             };
 
-            clientSim.ShipDockedtoLoadingDock += (sender, e) =>
+            clientSim.ShipDockedToLoadingDock += (sender, e) =>
             {
                 ShipDockedToLoadingDockEventArgs args = (ShipDockedToLoadingDockEventArgs)e;
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to loading dock with ID {args.DockID}\n");
@@ -353,7 +353,7 @@ namespace Client.HarborName
 
             clientSim.DayEnded += (sender, e) =>
             {
-                DayOverEventArgs args = (DayOverEventArgs)e;
+                DayEndedEventArgs args = (DayEndedEventArgs)e;
 
                 Console.WriteLine($"-----------------------------------");
                 Console.WriteLine($"| {args.CurrentTime} | Day over! |");
@@ -363,7 +363,7 @@ namespace Client.HarborName
      
             clientSim.DayLoggedToSimulationHistory += (sender, e) =>
             {
-                DayLoggedEventArgs args = (DayLoggedEventArgs)e;
+                DayLoggedToSimulationHistoryEventArgs args = (DayLoggedToSimulationHistoryEventArgs)e;
 
                 bool anyLogsPrinted = false;
 
