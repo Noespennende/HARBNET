@@ -132,7 +132,8 @@ namespace Gruppe8.HarbNet
         /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
         /// <param name="containersToBeStoredInCargo">Int value representing the amount of small containers that will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="directDeliveryPercentage">Int value representing the percentage of containers that are directly delivered to their destination.</param>
-        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,IList<IContainer> containersToBeStoredInCargo, int directDeliveryPercentage)
+        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
+            IList<IContainer> containersToBeStoredInCargo, int directDeliveryPercentage)
         {
             this.ID = Guid.NewGuid();
             this.Name = shipName;
