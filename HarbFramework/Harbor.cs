@@ -146,7 +146,7 @@ namespace Gruppe8.HarbNet
         /// <return>Returns a Guid representing the harbors anchorages.</return>
         public Guid AnchorageID { get; } = Guid.NewGuid();
         /// <summary>
-        /// Gets the unique ID for the Agv cargo.
+        /// Gets the unique ID of the location the cargo is, when placed on an AGV.
         /// </summary>
         /// <return>Returns a Guid representing the harbors Agv cargos.</return>
         public Guid AgvCargoID { get; } = Guid.NewGuid();
@@ -221,7 +221,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates new harbor object. Overload constructor where ships and container storage rows are automatically created, and default values are used.
         /// </summary>
-        /// <param name="numberOfShips">Int value representing the number of ships to be created. Does not create single-trip-ships.</param>
+        /// <param name="numberOfShips">Int value representing the number of ships to be created.</param>
         /// <param name="numberOfHarborContainerStorageRows">Int value representing the amount of rows the harbor storage contains.</param>
         /// /// <param name="containerStorageCapacityInEachStorageRow">Int value representing the amount of containers the harbor storage can store.</param>
         /// <param name="numberOfLoadingDocks">Int value representing the number of loading docks. Number is distributed between small, medium and large loading docks.</param>
@@ -234,9 +234,9 @@ namespace Gruppe8.HarbNet
         /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.</param>
         /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in Harbor if parameter is out of set range.</exception>
         /// 
-        public Harbor(int numberOfShips, int containerStorageCapacityInEachStorageRow, int numberOfHarborContainerStorageRows, int numberOfLoadingDocks, 
+        public Harbor(int numberOfShips, int numberOfHarborContainerStorageRows, int containerStorageCapacityInEachStorageRow, int numberOfLoadingDocks, 
             int numberOfCranesNextToLoadingDocks, int numberOfCranesOnHarborStorageArea, int numberOfAgvs, 
-            int loadsPerCranePerHour = 35, int trucksArrivePerHour = 10, int loadsPerAgvPerHour = 25, 
+            int loadsPerCranePerHour = 35, int numberOftrucksArriveToHarborPerHour = 10, int loadsPerAgvPerHour = 25, 
             int percentageOfContainersDirectlyLoadedFromShipToTrucks = 10, int percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks = 15) 
         {
             
@@ -301,7 +301,7 @@ namespace Gruppe8.HarbNet
                 mediumLoadingDocks++;
             }
 
-            this.TrucksArrivePerHour = trucksArrivePerHour;
+            this.TrucksArrivePerHour = numberOftrucksArriveToHarborPerHour;
             this.LoadsPerAgvPerHour = loadsPerAgvPerHour;
             this.allContainerRows = listOfContainerStorageRows.ToList();
 
@@ -1483,9 +1483,9 @@ namespace Gruppe8.HarbNet
         /// Gets the status of all shipdocks if they are avilable or not.
         /// </summary>
         /// <returns>Returns a dictionary containing the Guid of the ship docks and bool values representing the availability of the ship docks.</returns>
-        public Dictionary<Guid, bool> StatusAllShipDocks()
+        public IDictionary<Guid, bool> StatusAllShipDocks()
         {
-            Dictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
+            IDictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
             foreach(ShipDock shipDock in allShipDocks)
             {
                 dockStatus[shipDock.ID] = shipDock.Free;
@@ -1570,21 +1570,19 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if loading dock is available for all dock sizes.
+        /// Returns an IDictionary with all loading docks, and their current free-status.
         /// </summary>
-        /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not. The Dictionary with available loading docks are returned, if no docks are available null is returned.</returns>
+        /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not.</returns>
         public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks()
         {
-            Dictionary<Guid, bool> freeLoadingDock = new Dictionary<Guid, bool>();
+            IDictionary<Guid, bool> freeLoadingDock = new Dictionary<Guid, bool>();
 
             foreach (LoadingDock loadingDock in allLoadingDocks)
             {
-                if (loadingDock.Free == true)
-                {
-                    return freeLoadingDock;
-                }
+                freeLoadingDock.Add(loadingDock.ID, loadingDock.Free);
             }
-            return null;
+
+            return freeLoadingDock;
         }
 
         /// <summary>
@@ -1592,7 +1590,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="dockID">Unique ID of the dock object to be checked if available.</param>
         /// <returns>Returns a boolean that is true if specified loading dock is free, or false if it's not.</returns>
-        bool LoadingDockIsFree(Guid dockID)
+        internal bool LoadingDockIsFree(Guid dockID)
         {
             bool dockIsFree = false;
             foreach (LoadingDock loadingDock in allLoadingDocks)
@@ -1606,21 +1604,19 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if ship dock is available for all dock sizes.
+        /// Returns an IDictionary with all ship docks, and their current free-status.
         /// </summary>
-        /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not. The Dictionary with available ship docks are returned, if no docks are available null is returned.</returns>
+        /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not.</returns>
         public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks()
         {
             Dictionary<Guid, bool> freeShipDock = new Dictionary<Guid, bool>();
 
             foreach (ShipDock shipDock in allShipDocks)
             {
-                if (shipDock.Free == true)
-                {
-                    return freeShipDock;
-                }
+                freeShipDock.Add(shipDock.ID, shipDock.Free);
             }
-            return null;
+
+            return freeShipDock;
         }
 
         /// <summary>
@@ -1629,7 +1625,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Return an IDictionary containing Ship objects and Status enum representing the last registered status of the ships, if they have a status.</returns>
         public IDictionary<Ship, Status> GetStatusAllShips()
         {
-            Dictionary<Ship, Status> statusOfAllShips = new Dictionary<Ship, Status>();
+            IDictionary<Ship, Status> statusOfAllShips = new Dictionary<Ship, Status>();
 
             foreach (Ship ship in AllShips)
             {

@@ -28,8 +28,6 @@ namespace Client.HarborName
                 numberOfFullContainersOnBoard: 20
                 );
 
-            
-
             IList<Ship> shipsList = new List<Ship>();
 
             shipsList.Add( titanic );
@@ -45,9 +43,7 @@ namespace Client.HarborName
 
             containerStorageList.Add( storageRow1 );
             containerStorageList.Add( storageRow2 );
-
             
-            /*
             Harbor kjuttaviga = new Harbor(
                 listOfShips: shipsList,
                 listOfContainerStorageRows: containerStorageList,
@@ -66,11 +62,9 @@ namespace Client.HarborName
                 numberOfAgvs: 5,
                 loadsPerAgvPerHour: 3
                 );
-            */
             
-
             // Tar i bruk simplifisert konstruktør overload
-           Harbor kjuttaviga = new(6, 500, 20, 6, 4, 6, 10);
+            // Harbor kjuttaviga = new(6, 500, 20, 6, 4, 6, 10);
 
 
             Simulation sim = new Simulation(
@@ -148,6 +142,7 @@ namespace Client.HarborName
             };
 
             sim.Run();
+
 
             /*
             
