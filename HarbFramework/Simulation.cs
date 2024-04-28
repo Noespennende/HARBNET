@@ -72,13 +72,13 @@ namespace Gruppe8.HarbNet
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
         /// <returns>Returns a readOnlyCollection of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
-        public ReadOnlyCollection<DailyLog> History { get { return HistoryIList.AsReadOnly(); } }
+        public ReadOnlyCollection<IDailyLog> History { get { return HistoryIList.AsReadOnly(); } }
 
         /// <summary>
         /// Gets an IList of StatusLog objects containing information on status changes troughout a simulation.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes troughout a simulation.</returns>
-        internal IList<DailyLog> HistoryIList { get; } = new List<DailyLog>();
+        internal IList<IDailyLog> HistoryIList { get; } = new List<IDailyLog>();
 
         /// <summary>
         /// Simulation constructor.
@@ -86,9 +86,9 @@ namespace Gruppe8.HarbNet
         /// <param name="harbor">The harbor object which will be used in the simulation.</param>
         /// <param name="simulationStartTime">The date and time the simulation starts.</param>
         /// <param name="simulationEndTime">The date and time the simulation ends.</param>
-        public Simulation(Harbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
+        public Simulation(IHarbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
         {
-            this.harbor = harbor;
+            this.harbor = (Harbor)harbor;
             this.startTime = simulationStartTime;
             this.endTime = simulationEndTime;
         }
@@ -97,7 +97,7 @@ namespace Gruppe8.HarbNet
         /// Running the simulation.
         /// </summary>
         /// <returns>Returns the history of the simulation in the form of log objects where each object contains information about all ships and containers on one day of the simulation.</returns>
-        public IList<DailyLog> Run()
+        public IList<IDailyLog> Run()
         {
 
             this.currentTime = startTime;
@@ -340,7 +340,7 @@ namespace Gruppe8.HarbNet
         /// <returns>The last StatusLog object.</returns>
         private StatusLog GetStatusLog(Ship ship)
         {
-            return ship.HistoryIList.Last();
+            return (StatusLog)ship.HistoryIList.Last();
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace Gruppe8.HarbNet
         private StatusLog? GetSecondLastStatusLog(Ship ship)
         {
             return ship.HistoryIList != null && ship.HistoryIList.Count >= 2
-                    ? ship.HistoryIList[ship.HistoryIList.Count - 2]
+                    ? (StatusLog)ship.HistoryIList[ship.HistoryIList.Count - 2]
                     : null;
         }
 
@@ -1377,7 +1377,7 @@ namespace Gruppe8.HarbNet
                 {
 
                     Guid CurrentPosition = GetStatusLog(ship).SubjectLocation;
-                    StatusLog LastHistoryStatusLog = ship.HistoryIList.Last();
+                    StatusLog LastHistoryStatusLog = (StatusLog)ship.HistoryIList.Last();
 
                     
 
@@ -1725,7 +1725,7 @@ namespace Gruppe8.HarbNet
         /// A collection of DailyLog objects that together represent the history of the simulation.
         /// </summary>
         /// <returns>ReadOnlyCollection of DailyLog objects. Each one contains information about a single day of the simulation.</returns>
-        public ReadOnlyCollection<DailyLog> SimulationHistory { get; internal set; }
+        public ReadOnlyCollection<IDailyLog> SimulationHistory { get; internal set; }
 
         /// <summary>
         /// A description of the event.
@@ -1738,7 +1738,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="simulationHistory">A collection of DailyLog objects that together represent the history of the simulation.</param>
         /// <param name="description">A string value containing a description of the event.</param>
-        public SimulationEndedEventArgs(ReadOnlyCollection<DailyLog> simulationHistory, string description)
+        public SimulationEndedEventArgs(ReadOnlyCollection<IDailyLog> simulationHistory, string description)
         {
             SimulationHistory = simulationHistory;
             Description = description;

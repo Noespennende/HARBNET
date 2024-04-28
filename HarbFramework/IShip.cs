@@ -42,7 +42,7 @@ namespace Gruppe8.HarbNet
         /// Gets a ReadOnlyCollecntion of StatusLog objects containing information on status changes the ship has gone through throughout a simulation.
         /// </summary>
         /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone through throughout a simulation.</returns>
-        public ReadOnlyCollection<StatusLog> History { get; }
+        public ReadOnlyCollection<IStatusLog> History { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>

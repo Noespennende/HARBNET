@@ -55,12 +55,12 @@ namespace Gruppe8.HarbNet
         /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
         /// </summary>
         /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
-        public ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
+        public ReadOnlyCollection<IStatusLog> History { get { return HistoryIList.AsReadOnly(); } }
         /// <summary>
         /// Gets an IList of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
-        internal IList<StatusLog> HistoryIList { get; }
+        internal IList<IStatusLog> HistoryIList { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>
@@ -132,7 +132,7 @@ namespace Gruppe8.HarbNet
         /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
         /// <param name="containersToBeStoredInCargo">Int value representing the amount of small containers that will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="directDeliveryPercentage">Int value representing the percentage of containers that are directly delivered to their destination.</param>
-        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,IList<Container> containersToBeStoredInCargo, int directDeliveryPercentage)
+        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,IList<IContainer> containersToBeStoredInCargo, int directDeliveryPercentage)
         {
             this.ID = Guid.NewGuid();
             this.Name = shipName;
@@ -140,7 +140,7 @@ namespace Gruppe8.HarbNet
             this.StartDate = startDate;
             this.RoundTripInDays = roundTripInDays;
             this.IsForASingleTrip = isForASingleTrip;
-            this.HistoryIList = new List<StatusLog>();
+            this.HistoryIList = new List<IStatusLog>();
             this.DirectDeliveryPercentage = directDeliveryPercentage;
 
             if (isForASingleTrip)
@@ -165,7 +165,10 @@ namespace Gruppe8.HarbNet
                 this.ContainersLoadedPerHour = 4;
             }
 
-            this.ContainersOnBoard = containersToBeStoredInCargo;
+            foreach (IContainer container in containersToBeStoredInCargo)
+            {
+                this.ContainersOnBoard.Add((Container)container);
+            }
            
             HistoryIList.Add(new StatusLog(this.ID, Guid.Empty, startDate, Status.Anchoring));
 
@@ -196,7 +199,7 @@ namespace Gruppe8.HarbNet
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
             this.IsForASingleTrip = isForASingleTrip;
-            this.HistoryIList = new List<StatusLog>();
+            this.HistoryIList = new List<IStatusLog>();
 
             if (shipSize == ShipSize.Large)
             {
@@ -229,7 +232,7 @@ namespace Gruppe8.HarbNet
         /// <param name="id">Unique Guid representing the ship</param>
         /// <param name="containersOnboard">An IList containing Containers objects representing the containers in the ships cargo.</param>
         /// <param name="currentHistory">An IList containing StatusLog objects representing the ships history so far.</param>
-        internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<StatusLog> currentHistory)
+        internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<IStatusLog> currentHistory)
         {
             this.Name = shipName;
             this.ShipSize = shipSize;

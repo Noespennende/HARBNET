@@ -13,12 +13,12 @@ namespace Gruppe8.HarbNet
         /// A list of DailyLog objects containing information about the status of the harbour troughout the duration of a simulation.
         /// </summary>
         /// <returns>Returns a readOnlyCollection of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
-        public ReadOnlyCollection<DailyLog> History { get; }
+        public ReadOnlyCollection<IDailyLog> History { get; }
         /// <summary>
         /// Starting the simulation
         /// </summary>
         /// <returns>a IList of DailyLog objects each containing information about the state of the harbour on a given day.</returns>
-        public IList<DailyLog> Run();
+        public IList<IDailyLog> Run();
         /// <summary>
         /// Prints history for each ship in the harbor simulation to console.
         /// </summary>

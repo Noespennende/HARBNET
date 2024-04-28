@@ -10,7 +10,7 @@ namespace Gruppe8.HarbNet
     /// <summary>
     /// Interface defining the contract the public API of the container class.
     /// </summary>
-    internal interface IContainer
+    public interface IContainer
     {
         /// <summary>
         /// Gets the unique ID for container.

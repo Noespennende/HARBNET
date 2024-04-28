@@ -90,7 +90,7 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in shipListToDuplicate)
             {
                 IList<Container> containerList = new List<Container>();
-                IList<StatusLog> eventList = new List<StatusLog>();
+                IList<IStatusLog> eventList = new List<IStatusLog>();
 
                 foreach (Container container in ship.ContainersOnBoard)
                 {

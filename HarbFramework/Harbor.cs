@@ -1629,7 +1629,7 @@ namespace Gruppe8.HarbNet
 
             foreach (Ship ship in AllShips)
             {
-                StatusLog test = ship.HistoryIList.Last();
+                IStatusLog test = ship.HistoryIList.Last();
                 if (test != null)
                 {
                     statusOfAllShips[ship] = test.Status;
