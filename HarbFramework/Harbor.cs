@@ -1484,9 +1484,9 @@ namespace Gruppe8.HarbNet
         /// Gets the status of all shipdocks if they are avilable or not.
         /// </summary>
         /// <returns>Returns a dictionary containing the Guid of the ship docks and bool values representing the availability of the ship docks.</returns>
-        public Dictionary<Guid, bool> StatusAllShipDocks()
+        public IDictionary<Guid, bool> StatusAllShipDocks()
         {
-            Dictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
+            IDictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
             foreach(ShipDock shipDock in allShipDocks)
             {
                 dockStatus[shipDock.ID] = shipDock.Free;
@@ -1593,7 +1593,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="dockID">Unique ID of the dock object to be checked if available.</param>
         /// <returns>Returns a boolean that is true if specified loading dock is free, or false if it's not.</returns>
-        bool LoadingDockIsFree(Guid dockID)
+        internal bool LoadingDockIsFree(Guid dockID)
         {
             bool dockIsFree = false;
             foreach (LoadingDock loadingDock in allLoadingDocks)
