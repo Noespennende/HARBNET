@@ -768,17 +768,34 @@ namespace Gruppe8.HarbNet
 
             LoadingDock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
 
-            foreach (Crane crane in harbor.DockCranes)
+            Crane? testCrane = harbor.GetFreeLoadingDockCrane();
+
+            int maxLoadsPerHour = 0;
+            int numberOfRepeats;
+
+            if (testCrane != null)
             {
-                if (crane.Container == null)
+                maxLoadsPerHour = Math.Min(harbor.LoadsPerAgvPerHour, testCrane.ContainersLoadedPerHour);
+            }
+
+            if (maxLoadsPerHour == harbor.LoadsPerAgvPerHour)
+            {
+                numberOfRepeats = maxLoadsPerHour * harbor.AgvFree.Count;
+            }
+            else
+            {
+                numberOfRepeats = maxLoadsPerHour * Math.Min(harbor.DockCranes.Count, harbor.HarborStorageAreaCranes.Count);
+            }
+
+            for (int i = 0; i < ship.ContainersOnBoard.Count && i < numberOfRepeats; i++)
+            {
+                Container? movedContainer = MoveOneContainerFromShip(ship, numberOfContainersForTrucks, numberOfContainersForStorage, loadingDock);
+
+                if (movedContainer != null)
                 {
-                    int maxLoadsPerHour = Math.Min(harbor.LoadsPerAgvPerHour, crane.ContainersLoadedPerHour);
+                    ShipUnloadedContainerEventArgs shipUnloadedContainerEventArgs = new(ship, currentTime, "Ship has unloaded one container.", movedContainer);
 
-                    for (int i = 0; i < maxLoadsPerHour && ship.ContainersOnBoard.Count > 0; i++)
-                    {
-                        MoveOneContainerFromShip(ship, numberOfContainersForTrucks, numberOfContainersForStorage, loadingDock, crane);
-
-                    }
+                    ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs);
                 }
             }
         }
@@ -790,48 +807,48 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfContainersForStorage">Int value representing the number of containers for storage.</param>
         /// <param name="loadingDock">Loading dock object the container is being moved on.</param>
         /// <param name="crane">The crane object at the dock that is being used for moving between ship and agv.</param>
-        private void MoveOneContainerFromShip(Ship ship, int numberOfContainersForTrucks, int numberOfContainersForStorage, LoadingDock loadingDock, Crane crane)
+        private Container MoveOneContainerFromShip(Ship ship, int numberOfContainersForTrucks, int numberOfContainersForStorage, LoadingDock loadingDock)
         {
             Container? container = null;
 
             if (numberOfContainersForStorage != 0 && (ship.ContainersOnBoard.Count - ship.ContainersLeftForTrucks) > 0)
             {
-                container = MoveContainerFromShipToAgv(ship, crane);
-                MoveContainerFromAgvToStorage(container);
+                container = MoveContainerFromShipToAgv(ship);
+
+                if (container != null)
+                {
+                    MoveContainerFromAgvToStorage(container);
+                }
             }
 
             if (numberOfContainersForTrucks != 0 && harbor.TrucksInQueue.Count != 0)
             {
-                container = MoveContainerFromShipToTruck(ship, crane);
+                container = MoveContainerFromShipToTruck(ship);
                 if (container != null)
                 {
                     harbor.SendTruckOnTransit(loadingDock, container);
                 }
             }
 
-            if (container != null)
-            {
-                ShipUnloadedContainerEventArgs shipUnloadedContainerEventArgs = new(ship, currentTime, "Ship has unloaded one container.", container);
-
-                ShipUnloadedContainer?.Invoke(this, shipUnloadedContainerEventArgs);
-
-            }
+            return container;
         }
 
         /// <summary>
         /// Moves one container from ship to an AGV.
         /// </summary>
         /// <param name="ship">The ship object the container is being unloaded from.</param>
-        /// <param name="crane">The crane object at the dock that is being used for moving between ship and agv.</param>
         /// <returns>Returns the container object that has been unloaded off ship.</returns>
-        private Container? MoveContainerFromShipToAgv(Ship ship, Crane crane)
+        private Container? MoveContainerFromShipToAgv(Ship ship)
         {
+            Crane? craneDock = harbor.GetFreeLoadingDockCrane();
+
             Agv agv = harbor.GetFreeAgv();
+
 
             if (agv != null)
             {
-                Container unloadedContainer = harbor.ShipToCrane(ship, crane, currentTime);
-                harbor.CraneToAgv(crane, agv, currentTime);
+                Container unloadedContainer = harbor.ShipToCrane(ship, craneDock, currentTime);
+                harbor.CraneToAgv(craneDock, agv, currentTime);
 
                 return unloadedContainer;
 
@@ -867,12 +884,12 @@ namespace Gruppe8.HarbNet
         /// Moves one container from ship to crane to truck.
         /// </summary>
         /// <param name="ship">The ship object the container is unloaded from.</param>
-        /// <param name="crane">The crane object at the dock that is used for moving between ship and truck.</param>
         /// <returns>Returns the container object that is being moved from the ship to crane to truck.</returns>
-        private Container? MoveContainerFromShipToTruck(Ship ship, Crane crane)
+        private Container? MoveContainerFromShipToTruck(Ship ship)
         {
-
             LoadingDock loadingDock = harbor.GetLoadingDockContainingShip(ship.ID);
+
+            Crane? craneDock = harbor.GetFreeLoadingDockCrane();
 
             Truck? truck = harbor.GetFreeTruck();
             harbor.RemoveTruckFromQueue(truck);
@@ -882,13 +899,13 @@ namespace Gruppe8.HarbNet
             {
                 return null;
             }
-            if (crane == null)
+            if (craneDock == null)
             {
                 return null;
             }
             
-            Container container = harbor.ShipToCrane(ship, crane, currentTime);
-            harbor.CraneToTruck(crane, truck, currentTime);
+            Container container = harbor.ShipToCrane(ship, craneDock, currentTime);
+            harbor.CraneToTruck(craneDock, truck, currentTime);
             ship.ContainersLeftForTrucks--;
 
             return container;
@@ -1052,7 +1069,7 @@ namespace Gruppe8.HarbNet
         private bool SingleTripShipCanDockToShipDock(Ship ship, StatusLog lastStatusLog)
         {
             bool containsTransitStatus = ContainsTransitStatus(ship);
-            return ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock && FreeDockExists(ship) != null;
+            return ship.IsForASingleTrip == true && containsTransitStatus && lastStatusLog.Status != Status.DockingToShipDock && FreeDockExists(ship) != false;
         }
 
         /// <summary>
@@ -1141,7 +1158,6 @@ namespace Gruppe8.HarbNet
                                 ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.Loading);
                             }
                             LoadShipForOneHour(ship, currentLocation);
-
                         }
 
                         else
@@ -1199,18 +1215,20 @@ namespace Gruppe8.HarbNet
         /// <param name="currentLocation">Unique ID for the current location specified ship is located.</param>
         private void LoadShipForOneHour(Ship ship, Guid currentLocation)
         {
-
             numberOfStorageContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
 
             Crane? testCrane = harbor.GetFreeLoadingDockCrane();
 
-            int maxLoadsPerHour = Math.Min(harbor.LoadsPerAgvPerHour, testCrane.ContainersLoadedPerHour);
+            int maxLoadsPerHour = 0;
             int numberOfRepeats;
-            
+
+            if (testCrane != null)
+            {
+                maxLoadsPerHour = Math.Min(harbor.LoadsPerAgvPerHour, testCrane.ContainersLoadedPerHour);
+            }
 
             if (maxLoadsPerHour == harbor.LoadsPerAgvPerHour)
-            {
-                
+            { 
                 numberOfRepeats = maxLoadsPerHour * harbor.AgvFree.Count;
             }
             else
