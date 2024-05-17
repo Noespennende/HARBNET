@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Gruppe8.HarbNet.PublicApiAbstractions;
 
 namespace Gruppe8.HarbNet
 {
@@ -12,13 +13,13 @@ namespace Gruppe8.HarbNet
     /// ContainerRow used as storage space for containers in harbor.
     /// Each container storage row represents one row of storage spaces where containers can be stored.
     /// </summary>
-    public class ContainerStorageRow : IContainerStorageRow
+    public class ContainerStorageRow : StorageArea
     {
         /// <summary>
         /// Gets the unique ID for the ContainerRow.
         /// </summary>
         /// <returns>Returns a Guid object representing the containerRows unique ID.</returns>
-        public Guid ID { get; } = Guid.NewGuid();
+        public override Guid ID { get; } = Guid.NewGuid();
 
         /// <summary>
         /// Gets a IList of ContainerSpace objects containing information about the storage space in the ContainerRow.
@@ -88,7 +89,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the containerSpace the container was added to, null is returned if the size of the container did not match any of the sizeOfContainersStored registered or if there was no available space.</returns>
         internal ContainerSpace AddContainerToFreeSpace(Container container)
         {
-            if (SizeOfContainersStored() == container.ContainerSize || SizeOfContainersStored() == ContainerSize.None)
+            if (SizeOfContainersStored() == container.Size || SizeOfContainersStored() == ContainerSize.None)
             {
                 foreach (ContainerSpace space in RowOfContainerSpaces)
                 {
@@ -98,7 +99,7 @@ namespace Gruppe8.HarbNet
                         space.FreeOne = false;
                         return space;
                     }
-                    if (space.FreeTwo == true || container.ContainerSize == ContainerSize.Half)
+                    if (space.FreeTwo == true || container.Size == ContainerSize.Half)
                     {
                         space.StoredContainerTwo = container.ID;
                         space.FreeTwo = false;
@@ -244,7 +245,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="size">ContinerSize enum the ContainerSpace use to be checked for availability.</param>
         /// <returns>Returns an int value representing the total amount of available ContainerSpace.</returns>
-        public int NumberOfFreeContainerSpaces (ContainerSize size)
+        public override int NumberOfFreeContainerSpaces (ContainerSize size)
         {
             int count = 0;
             ContainerSize sizeOfContainersStored = SizeOfContainersStored();
@@ -271,7 +272,7 @@ namespace Gruppe8.HarbNet
         /// Gets all the ContainerSize enums from the containers stored in RowOfContainerSpaces.
         /// </summary>
         /// <returns>Returns the ContainerSize enum representing the containers size from the ContainerSpaces in RowOfContainerSpaces that contains containers, if no ContainerSize is found, none is returned.</returns>
-        public ContainerSize SizeOfContainersStored()
+        public override ContainerSize SizeOfContainersStored()
         {
             foreach (ContainerSpace space in RowOfContainerSpaces)
             {
@@ -290,7 +291,7 @@ namespace Gruppe8.HarbNet
         /// Gets an IList with Guid objects representing the ID of the stored containers registered in RowOfContainerSpaces.
         /// </summary>
         /// <returns>Returns a IList with Guid objects from all the containers stored in RowOfContainerSpaces.</returns>
-        public IList<Guid> GetIDOfAllStoredContainers()
+        public override IList<Guid> GetIDOfAllStoredContainers()
         {
             IList<Guid> idList = new List<Guid>();
 

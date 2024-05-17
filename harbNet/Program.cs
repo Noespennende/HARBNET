@@ -12,8 +12,6 @@ namespace Client.HarborName
         static void Main(string[] args)
         {
 
-
-
             
             //CLIENT HARBOR 
             // Denne koden representerer ett eksempel av hvordan kunden kan opprette en simulering for havnen som er gitt i oppgaven.
@@ -159,7 +157,7 @@ namespace Client.HarborName
             clientSim.ShipUnloadedContainer += (sender, e) =>
             {
                 ShipUnloadedContainerEventArgs args = (ShipUnloadedContainerEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.ContainerSize}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' unloaded container of size '{args.Container.Size}'\n");
 
             };
 
@@ -180,7 +178,7 @@ namespace Client.HarborName
             clientSim.ShipLoadedContainer += (sender, e) =>
             {
                 ShipLoadedContainerEventArgs args = (ShipLoadedContainerEventArgs)e;
-                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.ContainerSize}'\n");
+                Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' loaded container of size '{args.Container.Size}'\n");
             };
 
             clientSim.ShipDoneLoading += (sender, e) =>

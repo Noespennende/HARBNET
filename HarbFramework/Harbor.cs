@@ -1,4 +1,4 @@
-﻿using Gruppe8.HarbNet;
+﻿using Gruppe8.HarbNet.PublicApiAbstractions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,13 +18,13 @@ namespace Gruppe8.HarbNet
     /// <summary>
     /// Harbor to be used in a simulation
     /// </summary>
-    public class Harbor : IHarbor
+    public class Harbor : Port
     {
         /// <summary>
         /// Gets the unique ID for the harbor.
         /// </summary>
         /// <return>Returns a Guid object representing the harbors unique ID.</return>
-        public Guid ID { get; internal set; } = Guid.NewGuid();
+        public override Guid ID { get; internal set; } = Guid.NewGuid();
         /// <summary>
         /// Gets all loading docks.
         /// </summary>
@@ -89,7 +89,7 @@ namespace Gruppe8.HarbNet
         /// Get all containers that have left the harbor and arived at their destination
         /// </summary>
         /// <return>Returns a IList of all containers that have arrived at their destination during a simulation</return>
-        public IList<Container> ArrivedAtDestination { get; internal set; } = new List<Container>();
+        public override IList<Container> ArrivedAtDestination { get; internal set; } = new List<Container>();
         /// <summary>
         /// Gets cranes in dock.
         /// </summary>
@@ -139,42 +139,42 @@ namespace Gruppe8.HarbNet
         /// Gets the unique ID for the transit location.
         /// </summary>
         /// <return>Returns a Guid representing the harbors transit location.</return>
-        public Guid TransitLocationID { get; } = Guid.NewGuid();
+        public override Guid TransitLocationID { get; } = Guid.NewGuid();
         /// <summary>
         /// Gets the unique ID for the anchorage.
         /// </summary>
         /// <return>Returns a Guid representing the harbors anchorages.</return>
-        public Guid AnchorageID { get; } = Guid.NewGuid();
+        public override Guid AnchorageID { get; } = Guid.NewGuid();
         /// <summary>
         /// Gets the unique ID of the location the cargo is, when placed on an AGV.
         /// </summary>
         /// <return>Returns a Guid representing the harbors Agv cargos.</return>
-        public Guid AgvCargoID { get; } = Guid.NewGuid();
+        public override Guid AgvCargoID { get; } = Guid.NewGuid();
         /// <summary>
         /// Gets the unique ID for the truck transit location.
         /// </summary>
         /// <return>Returns a Guid representing the harbors truck transit locations.</return>
-        public Guid TruckTransitLocationID { get; } = Guid.NewGuid();
+        public override Guid TruckTransitLocationID { get; } = Guid.NewGuid();
         /// <summary>
         /// Gets the unique ID for the truck queue location.
         /// </summary>
         /// <return>Returns a Guid representing the harbors truck queue locations.</return>
-        public Guid TruckQueueLocationID { get; } = Guid.NewGuid();
+        public override Guid TruckQueueLocationID { get; } = Guid.NewGuid();
         /// <summary>
         /// Gets the unique ID for the harbor storage area.
         /// </summary>
         /// <return>Returns a Guid representing the harbors storage areas.</return>
-        public Guid HarborStorageAreaID { get; } = Guid.NewGuid();
+        public override Guid HarborStorageAreaID { get; } = Guid.NewGuid();
         /// <summary>
         /// Gets the unique ID for the dock area.
         /// </summary>
         /// <return>Returns a Guid representing the harbors dock areas.</return>
-        public Guid HarborDockAreaID { get; } = Guid.NewGuid();
+        public override Guid HarborDockAreaID { get; } = Guid.NewGuid();
         /// <summary>
         /// The ID of a containers destination.
         /// </summary>
         /// <return>The ID of a containers destination.</return>
-        public Guid DestinationID { get; } = Guid.NewGuid();
+        public override Guid DestinationID { get; } = Guid.NewGuid();
 
 
         /// <summary>
@@ -712,7 +712,7 @@ namespace Gruppe8.HarbNet
 
             foreach (ContainerStorageRow CR in allContainerRows)
             {
-                if (CR.CheckIfFreeContainerSpaceExists(container.ContainerSize))
+                if (CR.CheckIfFreeContainerSpaceExists(container.Size))
                 {
                     CR.AddContainerToFreeSpace(container);
                     storedContainers.Add(container, CR);
@@ -741,7 +741,7 @@ namespace Gruppe8.HarbNet
             }
 
             foreach (Container container in storedContainers.Keys){
-                if (container.ContainerSize == size)
+                if (container.Size == size)
                 {
                     crane.LoadContainer(container);
                     container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
@@ -1410,7 +1410,7 @@ namespace Gruppe8.HarbNet
         {
             foreach (Container container in storedContainers.Keys)
             {
-                if (container.ContainerSize == containerSize)
+                if (container.Size == containerSize)
                 {
                     return container;
                 }
@@ -1463,7 +1463,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ShipID">Unique ID of the ship object to get status from.</param>
         /// <returns>Returns a Status enum representing the last registered status of specified ship if the ship has a history, if no status is registered null is returned.</returns>
-        public Status GetShipStatus(Guid ShipID)
+        public override Status GetShipStatus(Guid ShipID)
         {
             StatusLog lastStatusChange = null;
             StringBuilder sb = new StringBuilder();
@@ -1483,7 +1483,7 @@ namespace Gruppe8.HarbNet
         /// Gets the status of all shipdocks if they are avilable or not.
         /// </summary>
         /// <returns>Returns a dictionary containing the Guid of the ship docks and bool values representing the availability of the ship docks.</returns>
-        public IDictionary<Guid, bool> StatusAllShipDocks()
+        internal IDictionary<Guid, bool> StatusAllShipDocks()
         {
             IDictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
             foreach(ShipDock shipDock in allShipDocks)
@@ -1497,7 +1497,7 @@ namespace Gruppe8.HarbNet
         /// Gets the status of all loading docks if they are available or not.
         /// </summary>
         /// <returns>Returns a string value representing all the dock IDs and if they are available or not.</returns>
-        public string GetStatusAllLoadingDocks()
+        public override string GetStatusAllLoadingDocks()
         {
             StringBuilder sb = new StringBuilder();
             Dictionary<LoadingDock, bool> dockStatus = new Dictionary<LoadingDock, bool>();
@@ -1519,7 +1519,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ContainerId">Unique ID of the container object to get last registered status from.</param>
         /// <returns>Returns a string value representing the container ID and their last registered status from Status enums.</returns>
-        public string GetContainerStatus(Guid ContainerId)
+        public override string GetContainerStatus(Guid ContainerId)
         {
             StringBuilder sb = new StringBuilder();
             Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
@@ -1548,7 +1548,7 @@ namespace Gruppe8.HarbNet
         /// Gets the status of all containers.
         /// </summary>
         /// <returns>Returns a string value representing the container ID and their last registered status from Status enums.</returns>
-        public string GetAllContainerStatus()
+        public override string GetAllContainerStatus()
         {
             StringBuilder sb = new StringBuilder();
             Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
@@ -1573,7 +1573,7 @@ namespace Gruppe8.HarbNet
         /// Returns an IDictionary with the IDs of all loading docks, and their current free-status.
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not.</returns>
-        public IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks()
+        public override IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks()
         {
             IDictionary<Guid, bool> freeLoadingDock = new Dictionary<Guid, bool>();
 
@@ -1607,7 +1607,7 @@ namespace Gruppe8.HarbNet
         /// Returns an IDictionary with the IDs of all ship docks, and their current free-status.
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not.</returns>
-        public IDictionary<Guid, bool> ShipDockIsFreeForAllDocks()
+        public override IDictionary<Guid, bool> ShipDockIsFreeForAllDocks()
         {
             Dictionary<Guid, bool> freeShipDock = new Dictionary<Guid, bool>();
 
@@ -1623,13 +1623,13 @@ namespace Gruppe8.HarbNet
         /// Gets the last registered status from all ships.
         /// </summary>
         /// <returns>Return an IDictionary containing Ship objects and Status enum representing the last registered status of the ships, if they have a status.</returns>
-        public IDictionary<Ship, Status> GetStatusAllShips()
+        public override IDictionary<Ship, Status> GetStatusAllShips()
         {
             IDictionary<Ship, Status> statusOfAllShips = new Dictionary<Ship, Status>();
 
             foreach (Ship ship in AllShips)
             {
-                IStatusLog test = ship.HistoryIList.Last();
+                StatusRecord test = ship.HistoryIList.Last();
                 if (test != null)
                 {
                     statusOfAllShips[ship] = test.Status;

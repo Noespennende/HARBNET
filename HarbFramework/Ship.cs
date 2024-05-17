@@ -1,5 +1,4 @@
-﻿using Gruppe8.HarbNet;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using Gruppe8.HarbNet.PublicApiAbstractions;
 
 namespace Gruppe8.HarbNet
 {
@@ -14,28 +14,28 @@ namespace Gruppe8.HarbNet
     /// Ships to be used in a simulation.
     /// </summary>
 
-    public class Ship : IShip
+    public class Ship : CargoVessel
     {
         /// <summary>
         /// Gets the unique ID for the ship.
         /// </summary>
         /// <returns>Returns a Guid object representing the ships unique ID.</returns>
-        public Guid ID { get; }
+        public override Guid ID { get; }
         /// <summary>
         /// Gets the ships size. 
         /// </summary>
         /// <returns>Returns a ShipSize enumm representing the ships size.</returns>
-        public ShipSize ShipSize { get; internal set; }
+        public override ShipSize ShipSize { get; internal set; }
         /// <summary>
         /// Gets the ships name. 
         /// </summary>
         /// <returns>Returns a string value representing the ships name.</returns>
-        public String Name { get; internal set; }
+        public override String Name { get; internal set; }
         /// <summary>
         /// Gets the date and time the ship first started its voyage.
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the ship first started its voyage.</returns>
-        public DateTime StartDate { get; internal set; }
+        public override DateTime StartDate { get; internal set; }
         /// <summary>
         /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour.
         /// </summary>
@@ -45,47 +45,47 @@ namespace Gruppe8.HarbNet
         /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour.
         /// </summary>
         /// <returns>Returns an int value representing the number of days the ship uses to do a round trip at sea.</returns>
-        public int RoundTripInDays { get; internal set; }
+        public override int RoundTripInDays { get; internal set; }
         /// <summary>
         /// Gets the ID of the ships current location.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the ships current location.</returns>
-        public Guid CurrentLocation { get; internal set; }
+        public override Guid CurrentLocation { get; internal set; }
         /// <summary>
         /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
         /// </summary>
         /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
-        public ReadOnlyCollection<IStatusLog> History { get { return HistoryIList.AsReadOnly(); } }
+        public override ReadOnlyCollection<StatusRecord> History { get { return HistoryIList.AsReadOnly(); } }
         /// <summary>
         /// Gets an IList of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
-        internal IList<IStatusLog> HistoryIList { get; }
+        internal IList<StatusRecord> HistoryIList { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>
         /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
-        public IList<Container> ContainersOnBoard {  get; } = new List<Container>();
+        public override IList<Container> ContainersOnBoard {  get; } = new List<Container>();
         /// <summary>
         /// The capacity of containers the ship can hold.
         /// </summary>
         /// <returns>Returns an int value representing the amount of containers a ship can hold.</returns>
-        public int ContainerCapacity { get; internal set; }
+        public override int ContainerCapacity { get; internal set; }
         /// <summary>
         /// Gets the ships max weight the ship in tonns can be before it sinks.
         /// </summary>
         /// <returns>Returns an int value representing the max weight the ship can be in tonns.</returns>
-        public int MaxWeightInTonn {  get; internal set; }
+        public override int MaxWeightInTonn {  get; internal set; }
         /// <summary>
         /// Gets the weight of the ship when its storage is empty.
         /// </summary>
         /// <returns>Returns an int value representing the weight of the ship when the storage is empty.</returns>
-        public int BaseWeightInTonn { get; internal set; }
+        public override int BaseWeightInTonn { get; internal set; }
         /// <summary>
         /// Gets the current weight of the ship including the cargo weight. 
         /// </summary>
         /// <returns>Returns an int value representing the current weight of the ship.</returns>
-        public int CurrentWeightInTonn { get; internal set; }
+        public override int CurrentWeightInTonn { get; internal set; }
         /// <summary>
         /// Gets and sets the number of containers the ship can load onboard in one hour.
         /// </summary>
@@ -133,7 +133,7 @@ namespace Gruppe8.HarbNet
         /// <param name="containersToBeStoredInCargo">Int value representing the amount of small containers that will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="directDeliveryPercentage">Int value representing the percentage of containers that are directly delivered to their destination.</param>
         public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
-            IList<IContainer> containersToBeStoredInCargo, int directDeliveryPercentage)
+            IList<StorageUnit> containersToBeStoredInCargo, int directDeliveryPercentage)
         {
             this.ID = Guid.NewGuid();
             this.Name = shipName;
@@ -141,7 +141,7 @@ namespace Gruppe8.HarbNet
             this.StartDate = startDate;
             this.RoundTripInDays = roundTripInDays;
             this.IsForASingleTrip = isForASingleTrip;
-            this.HistoryIList = new List<IStatusLog>();
+            this.HistoryIList = new List<StatusRecord>();
             this.DirectDeliveryPercentage = directDeliveryPercentage;
 
             if (isForASingleTrip)
@@ -166,7 +166,7 @@ namespace Gruppe8.HarbNet
                 this.ContainersLoadedPerHour = 4;
             }
 
-            foreach (IContainer container in containersToBeStoredInCargo)
+            foreach (StorageUnit container in containersToBeStoredInCargo)
             {
                 this.ContainersOnBoard.Add((Container)container);
             }
@@ -200,7 +200,7 @@ namespace Gruppe8.HarbNet
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
             this.IsForASingleTrip = isForASingleTrip;
-            this.HistoryIList = new List<IStatusLog>();
+            this.HistoryIList = new List<StatusRecord>();
 
             if (shipSize == ShipSize.Large)
             {
@@ -233,7 +233,7 @@ namespace Gruppe8.HarbNet
         /// <param name="id">Unique Guid representing the ship</param>
         /// <param name="containersOnboard">An IList containing Containers objects representing the containers in the ships cargo.</param>
         /// <param name="currentHistory">An IList containing StatusLog objects representing the ships history so far.</param>
-        internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<IStatusLog> currentHistory)
+        internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<StatusRecord> currentHistory)
         {
             this.Name = shipName;
             this.ShipSize = shipSize;
@@ -490,7 +490,7 @@ namespace Gruppe8.HarbNet
         {
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.ContainerSize == containerSize)
+                if (container.Size == containerSize)
                 {
                     return container;
                 }
@@ -508,7 +508,7 @@ namespace Gruppe8.HarbNet
             int count = 0;
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.ContainerSize == containerSize)
+                if (container.Size == containerSize)
                 {
                     count++;
                 }
@@ -608,7 +608,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Prints the ships entire history to console.
         /// </summary>
-        public void PrintHistory()
+        public override void PrintHistory()
         {
             Console.WriteLine($"Ship name: {Name}, Ship ID {ID}");
             Console.WriteLine("------------------------------------");
@@ -624,7 +624,7 @@ namespace Gruppe8.HarbNet
         /// Returns the ships entire history in the form of a string.
         /// </summary>
         /// <returns> a String containing the ships entire history.</returns>
-        public String HistoryToString()
+        public override String HistoryToString()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -668,7 +668,7 @@ namespace Gruppe8.HarbNet
 
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.ContainerSize == ContainerSize.Half)
+                if (container.Size == ContainerSize.Half)
                 {
                     half++;
                 }  else

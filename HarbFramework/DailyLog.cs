@@ -6,49 +6,50 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Gruppe8.HarbNet.PublicApiAbstractions;
 
 namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Daily logs to be stored in a simulations history. Holds information about the state of the harbor on a specific day of a simulation.
     /// </summary>
-    public class DailyLog : IDailyLog
+    public class DailyLog : HistoryRecord
     {
         /// <summary>
         /// Gets the date and time the DailyLog's info were logged.
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the info were logged</returns>
-        public DateTime Time { get; internal set; }
+        public override DateTime Time { get; internal set; }
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containting information of all ships in anchorage at the date and time when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing all the ships in anchorage when the DailyLog object was created.</returns>
-        public ReadOnlyCollection<Ship> ShipsInAnchorage { get; }
+        public override ReadOnlyCollection<Ship> ShipsInAnchorage { get; }
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containing information of all the ships in transit when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships in transit when the DailyLog object was created.</returns>
-        public ReadOnlyCollection<Ship> ShipsInTransit { get; }
+        public override ReadOnlyCollection<Ship> ShipsInTransit { get; }
         /// <summary>
         /// Gets a ReadOnlyCollection of container objects containing information of all the containers stored in harbour when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Container object representing the containers stored in when the DailyLog object was created.</returns>
-        public ReadOnlyCollection<Container> ContainersInHarbour { get; }
+        public override ReadOnlyCollection<Container> ContainersInHarbour { get; }
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containing information of all the ships docked in a loading dock when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the docked in a loading dock when the DailyLog object was created.</returns>
-        public ReadOnlyCollection<Ship> ShipsDockedInLoadingDocks { get; }
+        public override ReadOnlyCollection<Ship> ShipsDockedInLoadingDocks { get; }
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containing information of all the ships docked to ship docks when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships docked to ship docks when the DailyLog object was created.</returns>
-        public ReadOnlyCollection<Ship> ShipsDockedInShipDocks { get; }
+        public override ReadOnlyCollection<Ship> ShipsDockedInShipDocks { get; }
         /// <summary>
         /// Gets a ReadOnlyCollection of container objects containing information of all the containers that have arrived to their destination during the simulation.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection of container objects containing information of all the containers that have arrived to their destination during the simulation.</returns>
-        public ReadOnlyCollection<Container> ContainersArrivedAtDestination { get; }
+        public override ReadOnlyCollection<Container> ContainersArrivedAtDestination { get; }
 
         /// <summary>
         /// Creates a Dailylog object which holds information about the state of the simulation at a specific day.
@@ -90,7 +91,7 @@ namespace Gruppe8.HarbNet
             foreach (Ship ship in shipListToDuplicate)
             {
                 IList<Container> containerList = new List<Container>();
-                IList<IStatusLog> eventList = new List<IStatusLog>();
+                IList<StatusRecord> eventList = new List<StatusRecord>();
 
                 foreach (Container container in ship.ContainersOnBoard)
                 {
@@ -99,7 +100,7 @@ namespace Gruppe8.HarbNet
                     {
                         containersHistory.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
                     }
-                    containerList.Add(new Container(container.ContainerSize, container.WeightInTonn, ship.ID, container.ID, containersHistory));
+                    containerList.Add(new Container(container.Size, container.WeightInTonn, ship.ID, container.ID, containersHistory));
                 }
                 foreach (StatusLog eventObject in ship.HistoryIList)
                 {
@@ -127,7 +128,7 @@ namespace Gruppe8.HarbNet
                 {
                     eventList.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.PointInTime, containerEvent.Status));
                 }
-                duplicatedList.Add(new Container(container.ContainerSize, container.WeightInTonn, container.CurrentPosition, container.ID, eventList));
+                duplicatedList.Add(new Container(container.Size, container.WeightInTonn, container.CurrentPosition, container.ID, eventList));
             }
             return duplicatedList;
         }
@@ -135,7 +136,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Prints the wereabouts and info regarding all the ships in the DailyLog.
         /// </summary>
-        public void PrintInfoForAllShips()
+        public override void PrintInfoForAllShips()
         {
             Console.WriteLine("\n---------------------------------");
             Console.WriteLine("DATE:" + Time.ToString());
@@ -200,7 +201,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Prints the wereabouts and info regarding all the containers in the DailyLog.
         /// </summary>
-        public void PrintInfoForAllContainers()
+        public override void PrintInfoForAllContainers()
         {
             Console.WriteLine("\n---------------------------------");
             Console.WriteLine("DATE:" + Time.ToString());
@@ -220,7 +221,7 @@ namespace Gruppe8.HarbNet
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -249,7 +250,7 @@ namespace Gruppe8.HarbNet
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -277,7 +278,7 @@ namespace Gruppe8.HarbNet
 
                         foreach (Container container in ship.ContainersOnBoard)
                         {
-                            Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
+                            Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                         }
                     }
 
@@ -298,7 +299,7 @@ namespace Gruppe8.HarbNet
 
                 foreach (Container container in ContainersInHarbour)
                 {
-                    Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
+                    Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
                 }
                         
             }
@@ -313,7 +314,7 @@ namespace Gruppe8.HarbNet
 
                 foreach (Container container in ContainersArrivedAtDestination)
                 {
-                    Console.WriteLine("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                    Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                 }
 
             }
@@ -327,7 +328,7 @@ namespace Gruppe8.HarbNet
         /// Returns a string that contains information about all ships on the given day of a simulation.
         /// </summary>
         /// <returns>Returns a String containing information about all ships on the given day of a simulation.</returns>
-        public String HistoryToString()
+        public override String HistoryToString()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -403,7 +404,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ShipsOrContainers">User can choose to write either "ships" or "containers" as input. "ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing information about all ships or containers on the given day of a simulation.</returns>
-        public String HistoryToString(String ShipsOrContainers) 
+        public override String HistoryToString(String ShipsOrContainers) 
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
             {
@@ -432,7 +433,7 @@ namespace Gruppe8.HarbNet
 
                             foreach (Container container in ship.ContainersOnBoard)
                             {
-                                sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                                sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                             }
                         }
 
@@ -461,7 +462,7 @@ namespace Gruppe8.HarbNet
 
                             foreach (Container container in ship.ContainersOnBoard)
                             {
-                                sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                                sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                             }
                         }
 
@@ -489,7 +490,7 @@ namespace Gruppe8.HarbNet
 
                             foreach (Container container in ship.ContainersOnBoard)
                             {
-                                sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                                sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                             }
                         }
 
@@ -510,7 +511,7 @@ namespace Gruppe8.HarbNet
 
                     foreach (Container container in ContainersInHarbour)
                     {
-                        sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                        sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                     }
 
                 }
@@ -525,7 +526,7 @@ namespace Gruppe8.HarbNet
 
                     foreach (Container container in ContainersArrivedAtDestination)
                     {
-                        sb.Append("CONTAINER SIZE: " + container.ContainerSize + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
+                        sb.Append("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID + "\n");
                     }
 
                 }

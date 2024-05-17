@@ -2,19 +2,20 @@
 using System.ComponentModel;
 using System.Text;
 using System.Xml.Linq;
+using Gruppe8.HarbNet.PublicApiAbstractions;
 
 namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Class to run a simulation of a harbour.
     /// </summary>
-    public class Simulation : ISimulation
+    public class Simulation : Reconstruction
     {
         /// <summary>
         /// Gets the date and time when the simulation started.
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time when the simulation started.</returns>
-        private DateTime startTime;
+        private  DateTime startTime;
 
         /// <summary>
         /// Gets the current date and time in simulation.
@@ -72,13 +73,13 @@ namespace Gruppe8.HarbNet
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
         /// <returns>Returns a readOnlyCollection of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
-        public ReadOnlyCollection<IDailyLog> History { get { return HistoryIList.AsReadOnly(); } }
+        public override ReadOnlyCollection<HistoryRecord> History { get { return HistoryIList.AsReadOnly(); } }
 
         /// <summary>
         /// Gets an IList of StatusLog objects containing information on status changes troughout a simulation.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes troughout a simulation.</returns>
-        internal IList<IDailyLog> HistoryIList { get; } = new List<IDailyLog>();
+        internal IList<HistoryRecord> HistoryIList { get; } = new List<HistoryRecord>();
 
         /// <summary>
         /// Simulation constructor.
@@ -86,7 +87,7 @@ namespace Gruppe8.HarbNet
         /// <param name="harbor">The harbor object which will be used in the simulation.</param>
         /// <param name="simulationStartTime">The date and time the simulation starts.</param>
         /// <param name="simulationEndTime">The date and time the simulation ends.</param>
-        public Simulation(IHarbor harbor, DateTime simulationStartTime, DateTime simulationEndTime)
+        public Simulation(Port harbor, DateTime simulationStartTime, DateTime simulationEndTime)
         {
             this.harbor = (Harbor)harbor;
             this.startTime = simulationStartTime;
@@ -97,7 +98,7 @@ namespace Gruppe8.HarbNet
         /// Running the simulation.
         /// </summary>
         /// <returns>Returns the history of the simulation in the form of log objects where each object contains information about all ships and containers on one day of the simulation.</returns>
-        public IList<IDailyLog> Run()
+        public override IList<HistoryRecord> Run()
         {
 
             this.currentTime = startTime;
@@ -241,7 +242,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Prints history for each ship in the harbor simulation to console.
         /// </summary>
-        public void PrintShipHistory()
+        public override void PrintShipHistory()
         {
             foreach (DailyLog log in History)
             {
@@ -253,7 +254,7 @@ namespace Gruppe8.HarbNet
         /// Prints the history of a given ship to console.
         /// <param name="shipToBePrinted">The ship object who's history will be printed.</param>
         /// </summary>
-        public void PrintShipHistory(Ship shipToBePrinted)
+        public override void PrintShipHistory(Ship shipToBePrinted)
         {
             shipToBePrinted.PrintHistory();
         }
@@ -263,7 +264,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">The unique ID of the ship who's history will be printed.</param>
         /// <exception cref="ArgumentException">Throws exception if ship is not found in harbor object.</exception>
-        public void PrintShipHistory(Guid shipID)
+        public override void PrintShipHistory(Guid shipID)
         {
 
 
@@ -286,7 +287,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Printing each container in the simulations entire history to console.
         /// </summary>
-        public void PrintContainerHistory()
+        public override void PrintContainerHistory()
         {
             foreach (DailyLog log in History)
             {
@@ -1278,7 +1279,7 @@ namespace Gruppe8.HarbNet
             bool underMaxWeight;
             bool underMaxCapacity;
 
-            if (ShipHasNoContainers(ship) || ship.ContainersOnBoard.Last().ContainerSize == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null
+            if (ShipHasNoContainers(ship) || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && harbor.GetStoredContainer(ContainerSize.Half) != null
                 || harbor.GetStoredContainer(ContainerSize.Full) == null && harbor.GetStoredContainer(ContainerSize.Half) != null)
             {
                 underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Half;
@@ -1293,7 +1294,7 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            else if (ship.ContainersOnBoard.Last().ContainerSize == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null
+            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && harbor.GetStoredContainer(ContainerSize.Full) != null
                 || harbor.GetStoredContainer(ContainerSize.Half) == null && harbor.GetStoredContainer(ContainerSize.Full) != null)
             {
                 underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Full;
@@ -1533,7 +1534,7 @@ namespace Gruppe8.HarbNet
                 return null;
             }
 
-            Container? containerFound = harbor.ContainerRowToCrane(container.ContainerSize, storageCrane, currentTime);
+            Container? containerFound = harbor.ContainerRowToCrane(container.Size, storageCrane, currentTime);
 
             if (container == null)
             {
@@ -1557,7 +1558,7 @@ namespace Gruppe8.HarbNet
         /// Returns a string that contains information about all ships in the previous simulation.
         /// </summary>
         /// <returns>Returns a string value that contains information about all ships in the previous simulation. Returns empty string if no simulation has been run.</returns>
-        public String HistoryToString()
+        public override String HistoryToString()
         {
             if (History.Count > 0)
             {
@@ -1578,7 +1579,7 @@ namespace Gruppe8.HarbNet
         /// <param name="shipID">The unique ID of the ship the history belongs to.</param>
         /// <returns>Returns a string value containing information of the whole history of the ship.</returns>
         /// <exception cref="ArgumentException">Exception thrown ship does not exist in the harbor object.</exception>
-        public string HistoryToString(Guid shipID)
+        public override string HistoryToString(Guid shipID)
         {
 
             foreach (Ship ship in harbor.AllShips)
@@ -1600,7 +1601,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ShipsOrContainers">Sending in the value "ships" returns information on all ships, sending in "containers" return information on all containers.</param>
         /// <returns>Returns a String value containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
-        public String HistoryToString(String ShipsOrContainers)
+        public override String HistoryToString(String ShipsOrContainers)
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
             {
@@ -1632,7 +1633,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ship">The ship object in the simulation that information is retrieved from.</param>
         /// <returns>Returns a String value containing information about the given ship in the simulation.</returns>
-        public String HistoryToString(Ship ship)
+        public override String HistoryToString(Ship ship)
         {
             return ship.HistoryToString();
         }
@@ -1725,7 +1726,7 @@ namespace Gruppe8.HarbNet
         /// A collection of DailyLog objects that together represent the history of the simulation.
         /// </summary>
         /// <returns>ReadOnlyCollection of DailyLog objects. Each one contains information about a single day of the simulation.</returns>
-        public ReadOnlyCollection<IDailyLog> SimulationHistory { get; internal set; }
+        public ReadOnlyCollection<HistoryRecord> SimulationHistory { get; internal set; }
 
         /// <summary>
         /// A description of the event.
@@ -1738,7 +1739,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="simulationHistory">A collection of DailyLog objects that together represent the history of the simulation.</param>
         /// <param name="description">A string value containing a description of the event.</param>
-        public SimulationEndedEventArgs(ReadOnlyCollection<IDailyLog> simulationHistory, string description)
+        public SimulationEndedEventArgs(ReadOnlyCollection<HistoryRecord> simulationHistory, string description)
         {
             SimulationHistory = simulationHistory;
             Description = description;
