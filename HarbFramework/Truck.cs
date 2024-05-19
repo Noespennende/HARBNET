@@ -7,34 +7,34 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
-    public class Truck
+    internal class Truck
     {
         /// <summary>
         /// Gets the unique ID for the truck.
         /// </summary>
         /// <returns>Returns a Guid object representing the trucks unique ID.</returns>
-        public Guid ID { get; internal set; } = Guid.NewGuid();
+        internal Guid ID { get;  set; } = Guid.NewGuid();
         /// <summary>
         /// Gets the ID of the trucks location.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the trucks location.</returns>
-        public Guid Location { get; internal set; }
+        internal Guid Location { get; set; }
         /// <summary>
         /// Gets the current status of the truck.
         /// </summary>
         /// <return>Returns a Status enum representing the latest registered status of the truck.</return>
-        public Status Status { get; internal set; }
+        internal Status Status { get; set; }
         /// <summary>
         /// Gets container.
         /// </summary>
         /// <returns>Returns a container object.</returns>
-        public Container? Container { get; internal set; }
+        internal Container? Container { get; set; }
 
         /// <summary>
         /// Creates new truck object.
         /// </summary>
         /// <param name="location">Guid object representing the location of the truck to be created.</param>
-        public Truck (Guid location)
+        internal Truck (Guid location)
         {
             this.Location = location;
             this.Status = Status.Queuing;
