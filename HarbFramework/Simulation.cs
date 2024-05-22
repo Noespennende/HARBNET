@@ -647,8 +647,14 @@ namespace Gruppe8.HarbNet
 
                 StatusLog? secondLastStatusLog = GetSecondLastStatusLog(ship);
 
+                bool ShipIsReadyForUnloading = false;
 
-                if (IsShipReadyForUnloading(ship,lastStatusLog,secondLastStatusLog))
+                if (secondLastStatusLog != null)
+                {
+                   ShipIsReadyForUnloading = IsShipReadyForUnloading(ship, lastStatusLog, secondLastStatusLog);
+                }
+
+                if (ShipIsReadyForUnloading)
                 {
 
                     Guid currentPosition = lastStatusLog.SubjectLocation;
@@ -722,12 +728,12 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">Ship object to get status updated.</param>
         /// <param name="lastStatusLog">The last registered Statuslog object.</param>
         /// <param name="secondLastStatusLog">The second last registered Statuslog object.</param>
-        private void UpdateShipStatus(Ship ship, StatusLog lastStatusLog, StatusLog secondLastStatusLog)
+        private void UpdateShipStatus(Ship ship, StatusLog lastStatusLog, StatusLog? secondLastStatusLog)
         {
             Guid currentLocation = lastStatusLog.SubjectLocation;
 
             // Denne tror jeg kan slettes
-            if (secondLastStatusLog.Status == Status.DockedToShipDock)
+            if (secondLastStatusLog?.Status == Status.DockedToShipDock)
             {
                 StartUnloadProcess(ship, currentLocation);
             }
@@ -808,7 +814,7 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfContainersForStorage">Int value representing the number of containers for storage.</param>
         /// <param name="loadingDock">Loading dock object the container is being moved on.</param>
         /// <param name="crane">The crane object at the dock that is being used for moving between ship and agv.</param>
-        private Container MoveOneContainerFromShip(Ship ship, int numberOfContainersForTrucks, int numberOfContainersForStorage, LoadingDock loadingDock)
+        private Container? MoveOneContainerFromShip(Ship ship, int numberOfContainersForTrucks, int numberOfContainersForStorage, LoadingDock loadingDock)
         {
             Container? container = null;
 
@@ -846,7 +852,7 @@ namespace Gruppe8.HarbNet
             Agv agv = harbor.GetFreeAgv();
 
 
-            if (agv != null)
+            if (agv != null && craneDock!= null)
             {
                 Container unloadedContainer = harbor.ShipToCrane(ship, craneDock, currentTime);
                 harbor.CraneToAgv(craneDock, agv, currentTime);
@@ -893,8 +899,12 @@ namespace Gruppe8.HarbNet
             Crane? craneDock = harbor.GetFreeLoadingDockCrane();
 
             Truck? truck = harbor.GetFreeTruck();
-            harbor.RemoveTruckFromQueue(truck);
-            loadingDock.AssignTruckToTruckLoadingSpot(truck);
+            
+            if (truck != null)
+            {
+                harbor.RemoveTruckFromQueue(truck);
+                loadingDock.AssignTruckToTruckLoadingSpot(truck);
+            }
 
             if (truck == null)
             {
@@ -1135,7 +1145,7 @@ namespace Gruppe8.HarbNet
             {
 
                 StatusLog lastStatusLog = GetStatusLog(ship);
-                StatusLog secondLastStatusLog = GetSecondLastStatusLog(ship);
+                StatusLog? secondLastStatusLog = GetSecondLastStatusLog(ship);
 
                 bool shipIsNotSingleTripAndIsDoneUnloading = (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip != true));
                 bool shipIsSingleTripAndHasLastUnloadedAndHasNotBeenOnTrip = (lastStatusLog.Status == Status.UnloadingDone && (ship.IsForASingleTrip == true && !ContainsTransitStatus(ship)));
@@ -1270,7 +1280,7 @@ namespace Gruppe8.HarbNet
             Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
             Crane? dockCrane = harbor.GetFreeLoadingDockCrane();
 
-            if (storageCrane.Container == null && dockCrane.Container == null)
+            if (storageCrane?.Container == null && dockCrane?.Container == null)
             {
 
                 loadedContainer = LoadContainerOnStorageAgv(ship);
@@ -1477,8 +1487,12 @@ namespace Gruppe8.HarbNet
                                 containersToTruck++;
                                 truck = harbor.SendTruckOnTransit(container);
 
-                                TruckLoadingFromStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, currentTime, "One truck has loaded a container and has left");
-                                TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
+                                if (truck != null)
+                                {
+                                    TruckLoadingFromStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, currentTime, "One truck has loaded a container and has left");
+                                    TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
+                                }
+                                
                             }
                         }
 
