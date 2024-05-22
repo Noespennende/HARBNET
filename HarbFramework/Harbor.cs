@@ -1388,7 +1388,6 @@ namespace Gruppe8.HarbNet
         /// <param name="containerSize">The containerSize enum representing the size the containerRow has to fit.</param>
         /// <returns>Returns a Guid representing the available containerRow of specified size.</returns>
         /// <exception cref="ArgumentException">Throws exception if containerSize is not found.</exception>
-        /// <exception cref="ArgumentException">Throws exception if containerSize is not found.</exception>
         internal ContainerStorageRow GetContainerRowWithFreeSpace(ContainerSize containerSize)
         {
             foreach (ContainerStorageRow containerRow in allContainerRows)
