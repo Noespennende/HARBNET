@@ -1203,6 +1203,13 @@ namespace Gruppe8.HarbNet
         {
             ship.TransitStatus = TransitStatus.Leaving;
             ship.AddStatusChangeToHistory(currentTime, currentLocation, Status.Undocking);
+
+            foreach (Container container in ship.ContainersOnBoard)
+            {
+                container.AddStatusChangeToHistory(Status.Transit, currentTime);
+            }
+
+
             ShipUndockingEventArgs shipUndockingEventArgs = new(ship, currentTime, "Ship is undocking from dock.", currentLocation);
             ShipUndocking?.Invoke(this, shipUndockingEventArgs);
         }

@@ -333,8 +333,7 @@ namespace Gruppe8.HarbNet
 
                 Container container = new Container(size, (int)size, ID);
 
-                container.AddStatusChangeToHistory(Status.InStorage, time);
-
+                container.AddStatusChangeToHistory(Status.Transit, time);
                 ContainersOnBoard.Add(container);
                 CurrentWeightInTonn += container.WeightInTonn;
             }
@@ -476,7 +475,7 @@ namespace Gruppe8.HarbNet
         /// <param name="currentLocation">Guid object representing the location the ship is located when the status change occured.</param>
         /// <param name="status">Status enum representing the new status change that occured.</param>
         /// <returns>Returns StatusLog object containing information about the ship at the time the StatusLog were created.</returns>
-        internal StatusLog AddStatusChangeToHistory (DateTime currentTime, Guid currentLocation, Status status)
+        internal StatusLog AddStatusChangeToHistory(DateTime currentTime, Guid currentLocation, Status status)
         {
             StatusLog currentStatusChange = new StatusLog(ID,currentLocation, currentTime, status);
             HistoryIList.Add(currentStatusChange);
