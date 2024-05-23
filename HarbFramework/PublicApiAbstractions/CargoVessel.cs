@@ -3,87 +3,89 @@
 namespace Gruppe8.HarbNet.PublicApiAbstractions
 {
     /// <summary>
-    /// Abstract class defining the public API for CargoVessels such as the Ship class.
+    /// Abstract class defining the public API contract for CargoVessels such as the Ship class.
     /// </summary>
     public abstract class CargoVessel
     {
         /// <summary>
-        /// Gets the unique ID for the ship.
+        /// Gets the unique ID for the Cargo Vessel.
         /// </summary>
-        /// <returns>Returns a Guid object representing the ships unique ID.</returns>
+        /// <returns>Returns a Guid object representing the Cargo Vessel's unique ID.</returns>
         public abstract Guid ID { get; }
         /// <summary>
-        /// Gets the ships size. 
+        /// Gets the size of the Cargo Vessel. 
         /// </summary>
-        /// <returns>Returns a ShipSize enumm representing the ships size.</returns>
+        /// <returns>Returns a ShipSize enumm representing the size of the Cargo Vessel.</returns>
         public abstract ShipSize ShipSize { get; internal set; }
         /// <summary>
-        /// Gets the ships name. 
+        /// Gets the name of the Cargo Vessel. 
         /// </summary>
-        /// <returns>Returns a string value representing the ships name.</returns>
+        /// <returns>Returns a string value representing the Cargo Vessel's name.</returns>
         public abstract String Name { get; internal set; }
         /// <summary>
-        /// Gets the date and time the ship first started its voyage.
+        /// Gets the date and time the Cargo Vessel started its first voyage in the simulation.
         /// </summary>
-        /// <returns>Returns a DateTime object representing the date and time the ship first started its voyage.</returns>
+        /// <returns>Returns a DateTime object representing the date and time the Cargo Vessel started its first voyage in the simulation.</returns>
         public abstract DateTime StartDate { get; internal set; }
         /// <summary>
-        /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour.
+        /// Gets the number of days the Cargo Vessel uses to complete a roundtrip to its delivery destination before returning to harbour. The int value represents
+        /// how many days it takes from the Cargo Vessel leaving its harbor for its delivery destination before it arrives back at the harbor again.
         /// </summary>
-        /// <returns>Returns an int value representing the number of days the ship uses to do a round trip at sea.</returns>
+        /// <returns>Returns an int value representing the number of days the Cargo Vessel uses to do a round trip to its delivery destination and back to the user's harbor.</returns>
         public abstract int RoundTripInDays { get; internal set; }
         /// <summary>
-        /// Gets the ID of the ships current location.
+        /// Gets the ID of the Cargo Vessel's current location.
         /// </summary>
-        /// <returns>Returns a Guid object representing the ID of the ships current location.</returns>
+        /// <returns>Returns a Guid object representing the ID of the Cargo Vessel's current location.</returns>
         public abstract Guid CurrentLocation { get; internal set; }
         /// <summary>
-        /// Gets a ReadOnlyCollecntion of StatusLog objects containing information on status changes the ship has gone through throughout a simulation.
+        /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the Cargo Vessel has gone through throughout a simulation.
+        /// Each object in the collection represent information about one status change to the Cargo Vessel. 
         /// </summary>
-        /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone through throughout a simulation.</returns>
-        public abstract ReadOnlyCollection<StatusRecord> History { get; }
+        /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the Cargo Vessel has gone through throughout a simulation.</returns>
+        public abstract ReadOnlyCollection<StatusLog> History { get; }
         /// <summary>
-        /// Gets all the containers in the ships storage.
+        /// Gets all the containers in the Cargo Vessel's storage.
         /// </summary>
-        /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
+        /// <returns>Returns an IList with Container objects representing the containers in the Cargo Vessel's storage.</returns>
         public abstract IList<Container> ContainersOnBoard { get; }
         /// <summary>
-        /// Gets the container capacity of the ship.
+        /// Gets the container capacity of the Cargo Vessel
         /// </summary>
-        /// <returns>Returns an int value representing the max number of containers the ship can store.</returns>
+        /// <returns>Returns an int value representing the max number of containers the Cargo Vessel can store.</returns>
         public abstract int ContainerCapacity { get; internal set; }
         /// <summary>
-        /// Gets the ships max weight the ship in tonns can be before it sinks.
+        /// Gets the Cargo Vessel's max weight in tonns. This number represents the maximum weight the Cargo Vessel can reach before it becomes dangerous.
         /// </summary>
-        /// <returns>Returns an int value representing the max weight the ship can be in tonns.</returns>
+        /// <returns>Returns an int value representing the max weight in tonns the Cargo Vessel can be before it becomes dangerous.</returns>
         public abstract int MaxWeightInTonn { get; internal set; }
         /// <summary>
-        /// Gets the weight of the ship when its storage is empty.
+        /// Gets the weight in tonns of the Cargo Vessel when its storage is empty.
         /// </summary>
-        /// <returns>Returns an int value representing the weight of the ship when the storage is empty.</returns>
+        /// <returns>Returns an int value representing the weight in tonns of the Cargo Vessel when the storage is empty.</returns>
         public abstract int BaseWeightInTonn { get; internal set; }
         /// <summary>
-        /// Gets the current weight of the ship including the cargo weight. 
+        /// Gets the current weight in tonns of the Cargo Vessel including the weight of its cargo. 
         /// </summary>
-        /// <returns>Returns an int value representing the current weight of the ship.</returns>
+        /// <returns>Returns an int value representing the current weight in tonns of the Cargo Vessel including the weight of its cargo.</returns>
         public abstract int CurrentWeightInTonn { get; internal set; }
         /// <summary>
-        /// Prints the ships entire history to console.
+        /// Prints the Cargo Vessel's entire history to console.
         /// </summary>
         public abstract void PrintHistory();
         /// <summary>
-        /// Returns the ships entire history in the form of a string.
+        /// Returns the Cargo Vessel's entire history in the form of a string.
         /// </summary>
-        /// <returns> a String containing the ships entire history.</returns>
+        /// <returns> a String containing the Cargo Vessel's entire history.</returns>
         public abstract String HistoryToString();
         /// <summary>
-        /// Returns a string with the Ships ID, name, size, startdate, round trip time, amount on containers of the differenct containerSizes on board, base weight in tonn, current weight in tonn and max weigth in tonn the ship can handle.
+        /// Returns a string with information about the Cargo Vessel.
         /// </summary>
-        /// <returns> a String containing information about the ship.</returns>
+        /// <returns> a String containing information about the Cargo Vessel.</returns>
         public abstract override String ToString();
 
         /// <summary>
-        /// Constructor used to create objects for the class.
+        /// Constructor used to create objects of the CargoVessel class.
         /// </summary>
         internal CargoVessel()
         {

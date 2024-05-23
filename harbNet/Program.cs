@@ -267,6 +267,7 @@ namespace Client.HarborName
 
             clientSim.Run();
 
+
             //unsubscribing from event
             clientSim.SimulationStarting -= (sender, e) =>
             {

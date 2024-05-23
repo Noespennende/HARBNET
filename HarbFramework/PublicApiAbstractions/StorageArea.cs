@@ -1,35 +1,35 @@
 ﻿namespace Gruppe8.HarbNet.PublicApiAbstractions
 {
     /// <summary>
-    /// Abstract class defining the public API for StorageAreas such as ContainerStorageRow
+    /// Abstract class defining the public API for StorageAreas such as the ContainerStorageRow class. Each storage Area can only store containers of one size at the time.
     /// </summary>
     public abstract class StorageArea
     {
         /// <summary>
-        /// Gets the unique ID for the containerRow.
+        /// Gets the unique ID of the StorageArea.
         /// </summary>
-        /// <returns>Returns a Guid object representing the containerRows unique ID.</returns>
+        /// <returns>Returns a Guid object representing the StorageAreaæs unique ID.</returns>
         public abstract Guid ID { get; }
         /// <summary>
-        /// Gets the amount of available ContainerSpace in RowOfContainerSpaces.
+        /// Gets the amount of available ContainerSpace in the StorageArea.
         /// </summary>
-        /// <param name="size">ContinerSize enum the ContainerSpace use to be checked for availability.</param>
-        /// <returns>Returns an int value representing the total amount of available ContainerSpace.</returns>
+        /// <param name="size">ContinerSize enum representing the size of the free container spaces to be counted.</param>
+        /// <returns>Returns an int value representing the total amount of available Container space of the given size.</returns>
         public abstract int NumberOfFreeContainerSpaces(ContainerSize size);
         /// <summary>
-        /// Gets all the ContainerSize enums from the containers stored in RowOfContainerSpaces.
+        /// Gets the size of the containers stored in the StorageArea.
         /// </summary>
-        /// <returns>Returns the ContainerSize enum representing the containers size from the ContainerSpaces in RowOfContainerSpaces that contains containers, if no ContainerSize is found, none is returned.</returns>
+        /// <returns>Returns a ContainerSize enum representing the size of the containers stored in the StorageArea, if no ContainerSize is found,the enum size of "none" is returned.</returns>
         public abstract ContainerSize SizeOfContainersStored();
         /// <summary>
-        /// Gets an IList with Guid objects representing the ID of the stored containers registered in RowOfContainerSpaces.
+        /// Gets an IList with Guid objects representing the ID of all stored containers in the StorageArea.
         /// </summary>
-        /// <returns>Returns a IList with Guid objects from all the containers stored in RowOfContainerSpaces.</returns>
+        /// <returns>Returns a IList with Guid objects from all the containers stored in the StorageArea.</returns>
         public abstract IList<Guid> GetIDOfAllStoredContainers();
         /// <summary>
-        /// Returns a String with the Storage Row ID, the RowOfContainerSpaces list and amount of stored containers registered.
+        /// Returns a string containing information about the StorageArea.
         /// </summary>
-        /// <returns>Returns a String with the Storage Row ID, the RowOfContainerSpaceList IList with ContainerSpace objects and an int value representing the amount of stored containers registered.</returns>
+        /// <returns>Returns a String value containing information about the StorageArea.</returns>
         public abstract override string ToString();
 
         /// <summary>

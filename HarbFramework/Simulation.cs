@@ -73,13 +73,13 @@ namespace Gruppe8.HarbNet
         /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
         /// <returns>Returns a readOnlyCollection of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
-        public override ReadOnlyCollection<HistoryRecord> History { get { return HistoryIList.AsReadOnly(); } }
+        public override ReadOnlyCollection<DailyLog> History { get { return HistoryIList.AsReadOnly(); } }
 
         /// <summary>
         /// Gets an IList of StatusLog objects containing information on status changes troughout a simulation.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes troughout a simulation.</returns>
-        internal IList<HistoryRecord> HistoryIList { get; } = new List<HistoryRecord>();
+        internal IList<DailyLog> HistoryIList { get; } = new List<DailyLog>();
 
         /// <summary>
         /// Simulation constructor.
@@ -98,7 +98,7 @@ namespace Gruppe8.HarbNet
         /// Running the simulation.
         /// </summary>
         /// <returns>Returns the history of the simulation in the form of log objects where each object contains information about all ships and containers on one day of the simulation.</returns>
-        public override IList<HistoryRecord> Run()
+        public override IList<DailyLog> Run()
         {
 
             this.currentTime = startTime;
@@ -1758,7 +1758,7 @@ namespace Gruppe8.HarbNet
         /// A collection of DailyLog objects that together represent the history of the simulation.
         /// </summary>
         /// <returns>ReadOnlyCollection of DailyLog objects. Each one contains information about a single day of the simulation.</returns>
-        public ReadOnlyCollection<HistoryRecord> SimulationHistory { get; internal set; }
+        public ReadOnlyCollection<DailyLog> SimulationHistory { get; internal set; }
 
         /// <summary>
         /// A description of the event.
@@ -1771,7 +1771,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="simulationHistory">A collection of DailyLog objects that together represent the history of the simulation.</param>
         /// <param name="description">A string value containing a description of the event.</param>
-        public SimulationEndedEventArgs(ReadOnlyCollection<HistoryRecord> simulationHistory, string description)
+        public SimulationEndedEventArgs(ReadOnlyCollection<DailyLog> simulationHistory, string description)
         {
             SimulationHistory = simulationHistory;
             Description = description;

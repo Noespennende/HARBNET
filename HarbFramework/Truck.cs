@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gruppe8.HarbNet.PublicApiAbstractions;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,28 +8,28 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
-    internal class Truck
+    public class Truck : CargoVehicle
     {
         /// <summary>
         /// Gets the unique ID for the truck.
         /// </summary>
         /// <returns>Returns a Guid object representing the trucks unique ID.</returns>
-        internal Guid ID { get;  set; } = Guid.NewGuid();
+        public override Guid ID { get; internal set; } = Guid.NewGuid();
         /// <summary>
         /// Gets the ID of the trucks location.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the trucks location.</returns>
-        internal Guid Location { get; set; }
+        public override Guid Location { get; internal set; }
         /// <summary>
         /// Gets the current status of the truck.
         /// </summary>
         /// <return>Returns a Status enum representing the latest registered status of the truck.</return>
-        internal Status Status { get; set; }
+        public override Status Status { get; internal set; }
         /// <summary>
-        /// Gets container.
+        /// Gets the container in the viechles storage.
         /// </summary>
         /// <returns>Returns a container object.</returns>
-        internal Container? Container { get; set; }
+        public override Container? Container { get; internal set; }
 
         /// <summary>
         /// Creates new truck object.

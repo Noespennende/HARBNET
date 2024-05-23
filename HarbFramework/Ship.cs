@@ -55,12 +55,12 @@ namespace Gruppe8.HarbNet
         /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
         /// </summary>
         /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
-        public override ReadOnlyCollection<StatusRecord> History { get { return HistoryIList.AsReadOnly(); } }
+        public override ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
         /// <summary>
         /// Gets an IList of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
-        internal IList<StatusRecord> HistoryIList { get; }
+        internal IList<StatusLog> HistoryIList { get; }
         /// <summary>
         /// Gets all the containers in the ships storage.
         /// </summary>
@@ -120,7 +120,7 @@ namespace Gruppe8.HarbNet
         /// Gets the amount of containers left for the trucks to load.
         /// </summary>
         /// <returns>Returns the int value of the amount of containers left for the trucks to load.</returns>
-        internal int ContainersLeftForTrucks { get; set; } = 0; // Kanskje forandre logikken som trenger denne // NB NB!! Note to Mathilde: Pass på at denne settes på nytt når skipet lastes igjen!! /kommentar slettes senere
+        internal int ContainersLeftForTrucks { get; set; } = 0; 
 
         /// <summary>
         /// Creates a new ship object.
@@ -141,7 +141,7 @@ namespace Gruppe8.HarbNet
             this.StartDate = startDate;
             this.RoundTripInDays = roundTripInDays;
             this.IsForASingleTrip = isForASingleTrip;
-            this.HistoryIList = new List<StatusRecord>();
+            this.HistoryIList = new List<StatusLog>();
             this.DirectDeliveryPercentage = directDeliveryPercentage;
 
             if (isForASingleTrip)
@@ -200,7 +200,7 @@ namespace Gruppe8.HarbNet
             this.RoundTripInDays = roundTripInDays;
             this.ContainersOnBoard = new List<Container>();
             this.IsForASingleTrip = isForASingleTrip;
-            this.HistoryIList = new List<StatusRecord>();
+            this.HistoryIList = new List<StatusLog>();
 
             if (shipSize == ShipSize.Large)
             {
@@ -232,8 +232,8 @@ namespace Gruppe8.HarbNet
         /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
         /// <param name="id">Unique Guid representing the ship</param>
         /// <param name="containersOnboard">An IList containing Containers objects representing the containers in the ships cargo.</param>
-        /// <param name="currentHistory">An IList containing StatusLog objects representing the ships history so far.</param>
-        internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<StatusRecord> currentHistory)
+        /// <param name="currentHistory">An IList containing StatusRecord objects representing the ships history so far.</param>
+        internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<StatusLog> currentHistory)
         {
             this.Name = shipName;
             this.ShipSize = shipSize;
