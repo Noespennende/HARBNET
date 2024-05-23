@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Exception used to check if a Crane can't be loaded.
+    /// Exception thrown if an attempt is made to load a Crane with a container, but the attempt fail or if the Crane does not exist.
     /// </summary>
     public class CraneCantBeLoadedExeption : Exception
     {

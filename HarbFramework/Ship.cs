@@ -264,6 +264,7 @@ namespace Gruppe8.HarbNet
         /// Sets container capacity, Base Weight (in tonn) and Max weight based on the ships size.
         /// </summary>
         /// <param name="shipSize">ShipSize enum representing the size of the ship</param>
+        /// <exception cref="ArgumentException">Throws exception if shipSize is not found.</exception>
         private void SetBaseShipInformation(ShipSize shipSize)
         {
             if (shipSize == ShipSize.Small)
@@ -447,6 +448,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if the ships current weight does not exeede its maxweight and that the ships container capacity is not exeeded. Throws exeptions if they are.
         /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains too many containers than the ship size can handle.</exception>
         private void CheckForValidWeight()
         {
             if (CurrentWeightInTonn > MaxWeightInTonn)
@@ -486,6 +488,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size of the container to be retrieved.</param>
         /// <returns>Returns a container object of the given size from the ships storage if one exists, if none of gived containerSize is found null is returned.</returns>
+        /// <exception cref="ArgumentException">Exception thrown if containerSize is not found.</exception>
         internal Container GetContainer(ContainerSize containerSize)
         {
             foreach (Container container in ContainersOnBoard)
