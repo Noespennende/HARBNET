@@ -1573,16 +1573,16 @@ namespace Gruppe8.HarbNet
         /// Returns an IDictionary with the IDs of all loading docks, and their current free-status.
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not.</returns>
-        public override IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks()
+        public override IDictionary<Guid, bool> GetAvailabilityStatusForAllLoadingDocks()
         {
-            IDictionary<Guid, bool> freeLoadingDock = new Dictionary<Guid, bool>();
+            IDictionary<Guid, bool> availabilityStatuses = new Dictionary<Guid, bool>();
 
             foreach (LoadingDock loadingDock in allLoadingDocks)
             {
-                freeLoadingDock.Add(loadingDock.ID, loadingDock.Free);
+                availabilityStatuses.Add(loadingDock.ID, loadingDock.Free);
             }
 
-            return freeLoadingDock;
+            return availabilityStatuses;
         }
 
         /// <summary>
@@ -1607,16 +1607,16 @@ namespace Gruppe8.HarbNet
         /// Returns an IDictionary with the IDs of all ship docks, and their current free-status.
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not.</returns>
-        public override IDictionary<Guid, bool> ShipDockIsFreeForAllDocks()
+        public override IDictionary<Guid, bool> GetAvailabilityStatusForAllShipDocks()
         {
-            Dictionary<Guid, bool> freeShipDock = new Dictionary<Guid, bool>();
+            Dictionary<Guid, bool> availabilityStatuses = new Dictionary<Guid, bool>();
 
             foreach (ShipDock shipDock in allShipDocks)
             {
-                freeShipDock.Add(shipDock.ID, shipDock.Free);
+                availabilityStatuses.Add(shipDock.ID, shipDock.Free);
             }
 
-            return freeShipDock;
+            return availabilityStatuses;
         }
 
         /// <summary>

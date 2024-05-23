@@ -273,7 +273,7 @@ namespace Gruppe8.HarbNet
                 if (ship.ID.Equals(shipID))
                 {
                     ship.PrintHistory();
-                    break;
+                    return;
                 }
 
             

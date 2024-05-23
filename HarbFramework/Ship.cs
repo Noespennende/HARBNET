@@ -218,7 +218,6 @@ namespace Gruppe8.HarbNet
             SetBaseShipInformation(shipSize);
 
             AddContainersOnBoard(ContainerSize.Half, numberOfHalfContainersOnBoard);
-            //AddContainersOnBoard(ContainerSize.Medium, numberOfMediumContainersOnBoard);
             AddContainersOnBoard(ContainerSize.Full, numberOfFullContainersOnBoard);
         }
 
@@ -337,6 +336,7 @@ namespace Gruppe8.HarbNet
                 container.AddStatusChangeToHistory(Status.InStorage, time);
 
                 ContainersOnBoard.Add(container);
+                CurrentWeightInTonn += container.WeightInTonn;
             }
            
         }

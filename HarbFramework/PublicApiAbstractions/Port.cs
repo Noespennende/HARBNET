@@ -18,7 +18,7 @@ namespace Gruppe8.HarbNet.PublicApiAbstractions
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not. The key value is a Guid object
         /// representing the unque ID of a given dock. The value is a bool representing wether or not the dock is free. A bool value of True means the coresponding dock is free.</returns>
-        public abstract IDictionary<Guid, bool> LoadingDockIsFreeForAllDocks();
+        public abstract IDictionary<Guid, bool> GetAvailabilityStatusForAllLoadingDocks();
         /// <summary>
         /// Get all containers that have left the Port and arived at their destination
         /// </summary>
@@ -89,7 +89,7 @@ namespace Gruppe8.HarbNet.PublicApiAbstractions
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not. The key value is a Guid object
         /// representing the unque ID of a given dock. The value is a bool representing wether or not the dock is free. A bool value of True means the coresponding dock is free.</returns>
-        public abstract IDictionary<Guid, bool> ShipDockIsFreeForAllDocks();
+        public abstract IDictionary<Guid, bool> GetAvailabilityStatusForAllShipDocks();
 
         /// <summary>
         /// Gets the current status of specified container.
