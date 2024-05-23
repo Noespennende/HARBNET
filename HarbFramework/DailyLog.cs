@@ -234,14 +234,14 @@ namespace Gruppe8.HarbNet
             else
             {
                 Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN ANCHORAGE");
-            }
+            } 
 
 
             if (ShipsInTransit.Count > 0)
             {
                 Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN TRANSIT:");
                 bool infoPrinted = false;
-                foreach (Ship ship in ShipsDockedInLoadingDocks)
+                foreach (Ship ship in ShipsInTransit)
                 {
                     if (ship.ContainersOnBoard.Count > 0)
                     {
@@ -264,7 +264,7 @@ namespace Gruppe8.HarbNet
             {
                 Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN TRANSIT");
             }
-
+            
             if (ShipsDockedInLoadingDocks.Count > 0)
             {
                 Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN LOADING DOCKS:");
