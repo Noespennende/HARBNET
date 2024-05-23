@@ -61,7 +61,7 @@ namespace Gruppe8.HarbNet
         /// <param name="containersAtDestination">An IList with container objects with all the containers stored in their target destination at the time given.</param>
         /// <param name="shipsDockedInLoadingDocks">An IList with ship objects containing all the ships docked in loading docks at the time given.</param>
         /// <param name="ShipsDockedInShipDocks">An IList with ship objects containing all the ships docked in ship docks at the time given.</param>
-        internal DailyLog(DateTime time, IList<Ship> shipsInAnchorage, IList<Ship> shipsInTransit, IList<Container> containersInHarbour, IList<Container> containersAtDestination, IList<Ship> shipsDockedInLoadingDocks, IList<Ship> ShipsDockedInShipDocks)
+        internal DailyLog(DateTime time, IList<Ship> shipsInAnchorage, IList<Ship> shipsInTransit, IList<Container> containersInHarbour, IList<Container> containersAtDestination, IList<Ship> shipsDockedInLoadingDocks, IList<Ship> shipsDockedInShipDocks)
         {
             this.Time = time;
 
@@ -71,7 +71,7 @@ namespace Gruppe8.HarbNet
 
             this.ShipsDockedInLoadingDocks = new ReadOnlyCollection<Ship>(DuplicateShipList(shipsDockedInLoadingDocks));
 
-            this.ShipsDockedInShipDocks = new ReadOnlyCollection<Ship>(DuplicateShipList(shipsDockedInLoadingDocks));
+            this.ShipsDockedInShipDocks = new ReadOnlyCollection<Ship>(DuplicateShipList(shipsDockedInShipDocks));
 
             this.ContainersInHarbour = new ReadOnlyCollection<Container>(DuplicateContainerList(containersInHarbour));
 
@@ -235,8 +235,8 @@ namespace Gruppe8.HarbNet
             {
                 Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN ANCHORAGE");
             } 
-
-
+            
+            
             if (ShipsInTransit.Count > 0)
             {
                 Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN TRANSIT:");
@@ -292,7 +292,7 @@ namespace Gruppe8.HarbNet
             {
                 Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN LOADING DOCKS");
             }
-
+            
             if (ContainersInHarbour.Count > 0)
             {
                 Console.WriteLine("\nCONTAINERS IN HARBOR STORAGE:");
