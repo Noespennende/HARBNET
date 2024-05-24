@@ -8,28 +8,28 @@ using System.Threading.Tasks;
 
 namespace Gruppe8.HarbNet
 {
-    public class Truck : CargoVehicle
+    public class Truck
     {
         /// <summary>
         /// Gets the unique ID for the truck.
         /// </summary>
         /// <returns>Returns a Guid object representing the trucks unique ID.</returns>
-        public override Guid ID { get; internal set; } = Guid.NewGuid();
+        public Guid ID { get; internal set; } = Guid.NewGuid();
         /// <summary>
         /// Gets the ID of the trucks location.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the trucks location.</returns>
-        public override Guid Location { get; internal set; }
+        public Guid Location { get; internal set; }
         /// <summary>
         /// Gets the current status of the truck.
         /// </summary>
         /// <return>Returns a Status enum representing the latest registered status of the truck.</return>
-        public override Status Status { get; internal set; }
+        public Status Status { get; internal set; }
         /// <summary>
         /// Gets the container in the viechles storage.
         /// </summary>
         /// <returns>Returns a container object.</returns>
-        public override Container? Container { get; internal set; }
+        public Container? Container { get; internal set; }
 
         /// <summary>
         /// Creates new truck object.

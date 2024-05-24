@@ -9,7 +9,7 @@ namespace Gruppe8.HarbNet
     /// <summary>
     /// Class to run a simulation of a harbour.
     /// </summary>
-    public class SimpleSimulation : Advanced.Simulation
+    public class SimpleSimulation : Simulation
     {
         /// <summary>
         /// Gets the date and time when the simulation started.
