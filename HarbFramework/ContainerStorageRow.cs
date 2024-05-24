@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Gruppe8.HarbNet.PublicApiAbstractions;
+using Gruppe8.HarbNet.Advanced;
 
 namespace Gruppe8.HarbNet
 {

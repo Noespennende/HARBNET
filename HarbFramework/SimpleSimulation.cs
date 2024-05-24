@@ -2,14 +2,14 @@
 using System.ComponentModel;
 using System.Text;
 using System.Xml.Linq;
-using Gruppe8.HarbNet.PublicApiAbstractions;
+using Gruppe8.HarbNet.Advanced;
 
 namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Class to run a simulation of a harbour.
     /// </summary>
-    public class Simulation : Reconstruction
+    public class SimpleSimulation : Advanced.Simulation
     {
         /// <summary>
         /// Gets the date and time when the simulation started.
@@ -87,7 +87,7 @@ namespace Gruppe8.HarbNet
         /// <param name="harbor">The harbor object which will be used in the simulation.</param>
         /// <param name="simulationStartTime">The date and time the simulation starts.</param>
         /// <param name="simulationEndTime">The date and time the simulation ends.</param>
-        public Simulation(Port harbor, DateTime simulationStartTime, DateTime simulationEndTime)
+        public SimpleSimulation(Port harbor, DateTime simulationStartTime, DateTime simulationEndTime)
         {
             this.harbor = (Harbor)harbor;
             this.startTime = simulationStartTime;

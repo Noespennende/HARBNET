@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet.PublicApiAbstractions
+namespace Gruppe8.HarbNet.Advanced
 {
 
     /// <summary>
@@ -12,7 +12,6 @@ namespace Gruppe8.HarbNet.PublicApiAbstractions
     /// </summary>
     public abstract class CargoVehicle
     {
-
         /// <summary>
         /// Gets the unique ID for the viechle.
         /// </summary>

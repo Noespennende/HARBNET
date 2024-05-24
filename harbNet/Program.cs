@@ -99,7 +99,7 @@ namespace Client.HarborName
     
             Harbor clientHarbor = new Harbor(clientShips, storageRows, 1, 1, 1, 7, (((100 * 5) / 24)/7), 10, numberOfSmallShipDocks, 1, numberOfLargeShipDocks,30,15,10,20, 3);
 
-            Simulation clientSim = new Simulation(clientHarbor, clientStartTime, clientEndTime);
+            SimpleSimulation clientSim = new SimpleSimulation(clientHarbor, clientStartTime, clientEndTime);
 
             //subscribing to events
 

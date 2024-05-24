@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet.PublicApiAbstractions
+namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Abstract class defining the public API of StorageUnits such as the container class.

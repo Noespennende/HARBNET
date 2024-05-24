@@ -1,4 +1,4 @@
-﻿namespace Gruppe8.HarbNet.PublicApiAbstractions
+﻿namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Abstract class defining the public API for StorageAreas such as the ContainerStorageRow class. Each storage Area can only store containers of one size at the time.

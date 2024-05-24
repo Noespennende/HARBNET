@@ -1,12 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text;
 
-namespace Gruppe8.HarbNet.PublicApiAbstractions
+namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Abstract class defining the public API for Reconstructions such as the Simulation class.
     /// </summary>
-    public abstract class Reconstruction
+    public abstract class Simulation
     {
         /// <summary>
         /// A list of DailyLog objects containing information about the status of the harbour troughout the duration of a simulation.

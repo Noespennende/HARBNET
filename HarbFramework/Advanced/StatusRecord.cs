@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gruppe8.HarbNet.PublicApiAbstractions
+namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Abstract class defining the public API of StatusRecords such as the StatusLog class. Each object of this class represents one status change that happened to the subject

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace Gruppe8.HarbNet.PublicApiAbstractions
+namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Abstract class defining the public API contract for CargoVessels such as the Ship class.

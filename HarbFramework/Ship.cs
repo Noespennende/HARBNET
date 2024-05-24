@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
-using Gruppe8.HarbNet.PublicApiAbstractions;
+using Gruppe8.HarbNet.Advanced;
 
 namespace Gruppe8.HarbNet
 {
