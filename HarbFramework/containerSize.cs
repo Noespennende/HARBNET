@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Size of containers.
+    /// Enum representing the size of a container.
     /// </summary>
     public enum ContainerSize
     {
@@ -16,11 +16,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         None = 0,
         /// <summary>
-        /// Half container. Weight: 10 tonn.
+        /// Half-sized container. Weight: 10 tonn.
         /// </summary>
         Half = 10,
         /// <summary>
-        /// Full container. Weight: 20 tonn.
+        /// Full-sized container. Weight: 20 tonn.
         /// </summary>
         Full = 20,
     }

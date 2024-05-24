@@ -8,38 +8,38 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Cranes to be used in a simulation.
+    /// Agv class representing Agv viechles. Automated Guided Viechles that can deliver containers from point A to B in the harbor area.
     /// </summary>
     internal class Agv
     {
         /// <summary>
         /// Gets the unique ID for the Agv.
         /// </summary>
-        /// <return>Returns a Guid object representing the Agvs unique ID.</return>
+        /// <return>Returns a Guid object representing the Agv's unique ID.</return>
         internal Guid ID { get; set; } = Guid.NewGuid();
 
         /// <summary>
-        /// Gets a container.
+        /// Represents the container stored in the AGV's cargo.
         /// </summary>
-        /// <return>Returns a container object.</return>
+        /// <return>Returns a container object representing the container stored in the AGV's cargo.</return>
         internal Container Container { get; set; }
 
         /// <summary>
-        /// Gets the current status of the Agv.
+        /// Represents the current status of the AGV.
         /// </summary>
-        /// <return>Returns a Status enum representing the latest registered status of the Agv.</return>
+        /// <return>Returns a Status enum representing the current status og the AGV.</return>
         internal Status Status { get; set; }
 
         /// <summary>
-        /// Get the current location of the Agv.
+        /// Get the ID of the current location of the AGV.
         /// </summary>
-        /// <return>Returns a Guid object representing the latest registered location of the Agv.</return>
+        /// <return>Returns a Guid object representing the current location of the AGV.</return>
         internal Guid Location {  get; set; }
 
         /// <summary>
-        /// Creates a new Agv object.
+        /// Create new objects of the AGV class.
         /// </summary>
-        /// <param name="location">Unique ID representing the location the Agv to be created will be located.</param>
+        /// <param name="location">Guid object representing the ID of the location the Agv will start at.</param>
         internal Agv (Guid location)
         {
             this.Container = null;
@@ -47,10 +47,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads container from an object to an Agv.
+        /// Loads a container on to the AGV's cargo.
         /// </summary>
-        /// <param name="containerToBeLoaded">Container object to be loaded to an Agv.</param>
-        /// <return>Returns a Guid object representing the container to be loaded to an Agv.</return>
+        /// <param name="containerToBeLoaded">Container object to be loaded to the AGV's cargo.</param>
+        /// <return>Returns a Guid object representing the ID of the container loaded to the AGV's cargo.</return>
         internal Guid LoadContainer(Container containerToBeLoaded)
         {
             this.Container = containerToBeLoaded;
@@ -58,9 +58,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Unloads container from an Agv to another object.
+        /// Unloads the container in the AGV's cargo.
         /// </summary>
-        /// <return>Returns a container object representing the container to be unloaded from an Agv.</return>
+        /// <return>Returns a container object representing the container that was unloaded from the AGV's cargo.</return>
         internal Container UnloadContainer()
         {
             Container containerToBeUnloaded = this.Container;

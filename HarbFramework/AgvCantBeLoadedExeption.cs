@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Exception thrown if an attempt is made to load a AGV with a container, but the attempt fail or if the AGV does not exist.
+    /// Exception thrown if a failed attemt was made to load a container to an AGV's cargo. This can happen either because the AGV does not exist within the
+    /// simulation or because the AGV already has a container in its storage.
     /// </summary>
     public class AgvCantBeLoadedExeption : Exception
     {
