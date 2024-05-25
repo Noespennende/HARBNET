@@ -222,7 +222,7 @@ namespace Gruppe8.HarbNet
                     foreach (StatusLog log in ship.HistoryIList)
                     {
 
-                        if (log.PointInTime >= past24Hours && log.PointInTime <= currentTime)
+                        if (log.Timestamp >= past24Hours && log.Timestamp <= currentTime)
                         {
                             dayReviewShipLogs.Add(log);
                         }
@@ -597,7 +597,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship has been trying to dock to loading dock for more than one hour, if not then false is returned.</returns>
         private bool ShipDockingForMoreThanOneHour(StatusLog lastStatusLog)
         {
-            return lastStatusLog.Status == Status.DockingToLoadingDock && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1;
+            return lastStatusLog.Status == Status.DockingToLoadingDock && (currentTime - lastStatusLog.Timestamp).TotalHours >= 1;
         }
         /// <summary>
         /// Checks if the ship is coming from transit and is not empty.
@@ -1091,7 +1091,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship object can dock to ship dock, if not then false is returned.</returns>
         private bool ShipIsDockingToDock(Ship ship, StatusLog lastStatusLog)
         {
-            return lastStatusLog.Status == Status.DockingToShipDock && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1;
+            return lastStatusLog.Status == Status.DockingToShipDock && (currentTime - lastStatusLog.Timestamp).TotalHours >= 1;
         }
 
         /// <summary>
@@ -1113,7 +1113,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship is currently undocking from dock, if not then false is returned.</returns>
         private bool ShipIsUndocking(Ship ship, StatusLog lastStatusLog)
         {
-            return lastStatusLog.Status == Status.Undocking && (currentTime - lastStatusLog.PointInTime).TotalHours >= 1;
+            return lastStatusLog.Status == Status.Undocking && (currentTime - lastStatusLog.Timestamp).TotalHours >= 1;
         }
 
         /// <summary>
@@ -1452,7 +1452,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if ship has returned to harbor from roundtrip, if not then false is returned.</returns>
         private bool ShipHasReturnedToHarbor(Ship ship, StatusLog LastHistoryStatusLog)
         {
-            double DaysSinceTransitStart = (currentTime - LastHistoryStatusLog.PointInTime).TotalDays;
+            double DaysSinceTransitStart = (currentTime - LastHistoryStatusLog.Timestamp).TotalDays;
             return DaysSinceTransitStart >= ship.RoundTripInDays;
 
 
@@ -1528,14 +1528,14 @@ namespace Gruppe8.HarbNet
                 {
                     StatusLog? lastLogContainer = container.HistoryIList.Last();
 
-                    if ((currentTime - lastLogContainer.PointInTime).TotalHours >= 1)
+                    if ((currentTime - lastLogContainer.Timestamp).TotalHours >= 1)
                     {
                         Container arrivedContainer = truck.UnloadContainer();
                         harbor.ArrivedAtDestination.Add(arrivedContainer);
 
                         truck.Location = harbor.DestinationID;
 
-                        arrivedContainer.CurrentPosition = harbor.DestinationID;
+                        arrivedContainer.CurrentLocation = harbor.DestinationID;
                         arrivedContainer.AddStatusChangeToHistory(Status.ArrivedAtDestination, currentTime);
                     }
                 }

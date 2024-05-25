@@ -232,7 +232,7 @@ namespace Client.HarborName
                 {
                     foreach (StatusLog log in args.DayReviewShipLogs)
                     {
-                        Console.WriteLine($"| {log.PointInTime} | {args.Ship.Name} | Status: {log.Status} |");
+                        Console.WriteLine($"| {log.Timestamp} | {args.Ship.Name} | Status: {log.Status} |");
                         anyLogsPrinted = true;
                     }
                 }

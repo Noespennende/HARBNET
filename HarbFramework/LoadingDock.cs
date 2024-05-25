@@ -75,21 +75,5 @@ namespace Gruppe8.HarbNet
             }
             return null;
         }
-
-        // FIKSES ELLER FJERNES NÅR HARBOR HAR IMPLEMENTASJON FOR ALLE LOADINGDOCK-CRANER 
-        /*
-        internal Crane? GetFreeLoadingDockCrane()
-        {
-            foreach (Crane crane in AssignedCranes)
-            {
-                if (crane.Container == null)
-                {
-                    return crane;
-                }
-            }
-            return null;
-        }
-        */
-
     }
 }

@@ -17,7 +17,7 @@ namespace Gruppe8.HarbNet.Advanced
         /// Gets the date and time the HistoryRecord's information were recorded.
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the information of the HistoryRecord were recorded</returns>
-        public abstract DateTime Time { get; internal set; }
+        public abstract DateTime Timestamp { get; internal set; }
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containting information of all ships in anchorage at the date and time when the HistoryRecord object were created.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Gruppe8.HarbNet.Advanced
         /// Gets a ReadOnlyCollection of container objects containing information of all the containers stored in harbour when the HistoryRecord object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Container object representing all the containers stored in when the HistoryRecord object was created.</returns>
-        public abstract ReadOnlyCollection<Container> ContainersInHarbour { get; }
+        public abstract ReadOnlyCollection<Container> ContainersInHarbor { get; }
         /// <summary>
         /// Gets a ReadOnlyCollection of container objects containing information of all the containers that has arrived to their destination during the simulation.
         /// </summary>

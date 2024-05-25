@@ -10,18 +10,18 @@ namespace Gruppe8.HarbNet
     /// Exception thrown if a failed attemt was made to load a container to an AGV's cargo. This can happen either because the AGV does not exist within the
     /// simulation or because the AGV already has a container in its storage.
     /// </summary>
-    public class AgvCantBeLoadedExeption : Exception
+    public class AgvCantBeLoadedException : Exception
     {
         /// <summary>
         /// Creates new AgvCantBeLoadedException.
         /// </summary>
-        public AgvCantBeLoadedExeption() { }
+        public AgvCantBeLoadedException() { }
 
         /// <summary>
         /// Creates new AgvCantBeLoadedException.
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
-        public AgvCantBeLoadedExeption(string message) : base(message)
+        public AgvCantBeLoadedException(string message) : base(message)
         {
         }
 
@@ -30,7 +30,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
         /// <param name="innerException">innerException to be thrown when exception is called.</param>
-        public AgvCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
+        public AgvCantBeLoadedException(String message, Exception innerException) : base(message, innerException)
         {
         }
     }
