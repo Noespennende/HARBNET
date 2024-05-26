@@ -44,10 +44,10 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns an int value representing the containers weight in tonns.</returns>
         public override int WeightInTonn { get; internal set; }
         /// <summary>
-        /// Gets the location ID of the container's current possition.
+        /// Gets the location ID of the container's current location.
         /// </summary>
-        /// <returns>Returns a Guid object representing the ID of the containers current position.</returns>
-        public override Guid CurrentPosition { get; internal set; }
+        /// <returns>Returns a Guid object representing the ID of the containers current location.</returns>
+        public override Guid CurrentLocation { get; internal set; }
         /// <summary>
         /// Gets a number representing how many days the Container has been stored in the Harbor's storage.
         /// </summary>
@@ -63,7 +63,7 @@ namespace Gruppe8.HarbNet
         internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition) {
             this.ID = Guid.NewGuid();
             this.Size = size;
-            this.CurrentPosition = currentPosition;
+            this.CurrentLocation = currentPosition;
             this.WeightInTonn = WeightInTonn;
         }
 
@@ -79,7 +79,7 @@ namespace Gruppe8.HarbNet
         {
             this.ID = id;
             this.Size = size;
-            this.CurrentPosition = currentPosition;
+            this.CurrentLocation = currentPosition;
             this.WeightInTonn = WeightInTonn;
             this.HistoryIList = containerHistory;
         }
@@ -92,7 +92,7 @@ namespace Gruppe8.HarbNet
         /// <param name="currentTime">DateTime object representing the date and time the status change occured./param>
         internal void AddStatusChangeToHistory (Status status, DateTime currentTime)
         {
-            HistoryIList.Add(new StatusLog(ID, CurrentPosition, currentTime, status));
+            HistoryIList.Add(new StatusLog(ID, CurrentLocation, currentTime, status));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Gruppe8.HarbNet
             Console.WriteLine($"Container ID: {ID.ToString()}"); 
             foreach (StatusLog sl in HistoryIList)
             {
-                Console.WriteLine($"Date: {sl.PointInTime} Status: {sl.Status}\n");
+                Console.WriteLine($"Date: {sl.Timestamp} Status: {sl.Status}\n");
             }
         }
 
@@ -142,7 +142,7 @@ namespace Gruppe8.HarbNet
 
             sb.Append($"Container ID: {ID.ToString()}\n");
             foreach (StatusLog sl in HistoryIList) {
-                sb.Append($"Container Id: {sl.Subject} Date: {sl.PointInTime} Status: {sl.Status}\n");
+                sb.Append($"Container Id: {sl.Subject} Date: {sl.Timestamp} Status: {sl.Status}\n");
             }
             return sb.ToString();
         }

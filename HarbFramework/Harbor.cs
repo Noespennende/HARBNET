@@ -436,10 +436,10 @@ namespace Gruppe8.HarbNet
         {
             if (!(crane.Container == null))
             {
-                throw new CraneCantBeLoadedExeption("The crane you are trying to load already holds a container in its cargo and therefore can not load another one from the ship.");
+                throw new CraneCantBeLoadedException("The crane you are trying to load already holds a container in its cargo and therefore can not load another one from the ship.");
             }
             Container containerToBeLoaded = ship.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = ship.CurrentLocation;
+            containerToBeLoaded.CurrentLocation = ship.CurrentLocation;
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
             crane.LoadContainer(containerToBeLoaded);
 
@@ -457,7 +457,7 @@ namespace Gruppe8.HarbNet
         internal Container CraneToShip(Crane crane, Ship ship, DateTime currentTime)
         {
             Container containerToBeLoaded = crane.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = crane.Location;
+            containerToBeLoaded.CurrentLocation = crane.Location;
             containerToBeLoaded.AddStatusChangeToHistory(Status.Loading, currentTime);
             ship.AddContainer(containerToBeLoaded);
             
@@ -471,28 +471,28 @@ namespace Gruppe8.HarbNet
         /// <param name="truck">Truck object that loads the container.</param>
         /// <param name="currentTime">The Date and time container is loaded from crane to truck.</param>
         /// <returns>Returns the container object to be loaded from crane to truck.</returns>
-        /// <exception cref="TruckCantBeLoadedExeption">Exception to be thrown if truck can't be loaded.</exception>
+        /// <exception cref="TruckCantBeLoadedException">Exception to be thrown if truck can't be loaded.</exception>
         internal Container CraneToTruck(Crane crane, Truck truck, DateTime currentTime)
         {
             if (!TrucksInQueue.Contains(truck))
             {
                 if (TrucksInTransit.Contains(truck))
                 {
-                    throw new TruckCantBeLoadedExeption("The truck you are trying to load is already in transit away from the harbor and therefore can't load the container from the crane");
+                    throw new TruckCantBeLoadedException("The truck you are trying to load is already in transit away from the harbor and therefore can't load the container from the crane");
                 } else
                 {
-                    throw new TruckCantBeLoadedExeption("The truck you are trying to load does not exist in the simulation and therefore can't load the container from the crane.");
+                    throw new TruckCantBeLoadedException("The truck you are trying to load does not exist in the simulation and therefore can't load the container from the crane.");
                 }
                 
             }
 
             if (!(truck.Container == null))
             {
-                throw new TruckCantBeLoadedExeption("The truck you are trying to load already has a container in its storage and therefore don't have room for the container from the given crane");
+                throw new TruckCantBeLoadedException("The truck you are trying to load already has a container in its storage and therefore don't have room for the container from the given crane");
             }
 
             Container containerToBeLoaded = crane.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = crane.Location;
+            containerToBeLoaded.CurrentLocation = crane.Location;
             truck.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToTruck, currentTime);
             
@@ -639,29 +639,29 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="crane">The crane object the container is unloaded from.</param>
         /// <param name="agv">The agv object that loads the container.</param>
-        /// <param name="currentTime">The Date and Time the container is loaded from crane to agv.</param>
+        /// <param name="currentTime">The Date and Timestamp the container is loaded from crane to agv.</param>
         /// <returns>Returns the container object to be loaded from crane to agv.</returns>
-        /// <exception cref="AgvCantBeLoadedExeption">Exception to be thrown if Agv can't be loaded.</exception>
+        /// <exception cref="AgvCantBeLoadedException">Exception to be thrown if Agv can't be loaded.</exception>
         internal Container CraneToAgv(Crane crane, Agv agv, DateTime currentTime)
         {
             if (!AgvFree.Contains(agv))
             {
                 if (AgvWorking.Contains(agv))
                 {
-                    throw new AgvCantBeLoadedExeption("The AGV you are trying to load is already transporting goods and therefore can not load a container from the crane.");
+                    throw new AgvCantBeLoadedException("The AGV you are trying to load is already transporting goods and therefore can not load a container from the crane.");
                 } else
                 {
-                    throw new AgvCantBeLoadedExeption("The AGV you are trying to load does not exist in the simulation and therefore can't be loaded.");
+                    throw new AgvCantBeLoadedException("The AGV you are trying to load does not exist in the simulation and therefore can't be loaded.");
                 }
                 
             }
 
             if (!(agv.Container == null))
             {
-                throw new AgvCantBeLoadedExeption("The AGv given already has a container in its storage and therefore has no room for the container the crane is trying to load.");
+                throw new AgvCantBeLoadedException("The AGV given already has a container in its storage and therefore has no room for the container the crane is trying to load.");
             }
             Container containerToBeLoaded = crane.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = crane.Location;
+            containerToBeLoaded.CurrentLocation = crane.Location;
             agv.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAgv, currentTime);
 
@@ -675,34 +675,34 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="crane">The crane object that loads the container.</param>
         /// <param name="agv">The Agv object the container is unloaded from.</param>
-        /// <param name="currentTime">The Date and Time the container is loaded.</param>
+        /// <param name="currentTime">The Date and Timestamp the container is loaded.</param>
         /// <returns>Returns the container object to be loaded from crane to agv.</returns>
-        /// <exception cref="CraneCantBeLoadedExeption">Exception the be thrown if Crane can't be loaded.</exception>
+        /// <exception cref="CraneCantBeLoadedException">Exception the be thrown if Crane can't be loaded.</exception>
         internal Container AgvToCrane(Crane crane, Agv agv, DateTime currentTime)
         {
             if (agv.Container == null)
             {
-                throw new CraneCantBeLoadedExeption("The AGV you are trying to unload doesn't have a container in its storage and therefore can't unload to the crane.");
+                throw new CraneCantBeLoadedException("The AGV you are trying to unload doesn't have a container in its storage and therefore can't unload to the crane.");
             }
 
             if (!AgvWorking.Contains(agv))
             {
                 if (AgvFree.Contains(agv))
                 {
-                    throw new CraneCantBeLoadedExeption("The AGV you are trying to unload is set as free and therefore is not working to unload cargo. AGVs must be working for cargo to be unloaded.");
+                    throw new CraneCantBeLoadedException("The AGV you are trying to unload is set as free and therefore is not working to unload cargo. AGVs must be working for cargo to be unloaded.");
                 } else
                 {
-                    throw new CraneCantBeLoadedExeption("The AGV you are trying to unload does not exist within the simulation and therefore can not unload to the crane");
+                    throw new CraneCantBeLoadedException("The AGV you are trying to unload does not exist within the simulation and therefore can not unload to the crane");
                 }
             }
 
             if (!(crane.Container == null))
             {
-                throw new CraneCantBeLoadedExeption("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the AGV");
+                throw new CraneCantBeLoadedException("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the AGV");
             }
 
             Container containerToBeLoaded = agv.UnloadContainer();
-            containerToBeLoaded.CurrentPosition = agv.Location;
+            containerToBeLoaded.CurrentLocation = agv.Location;
             crane.LoadContainer(containerToBeLoaded);
             containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
 
@@ -744,12 +744,12 @@ namespace Gruppe8.HarbNet
         /// <param name="crane">Crane object that loads the container.</param>
         /// <param name="currentTime">The date and time the container is loaded.</param>
         /// <returns>Returns the container object to be loaded from container row to crane, if container is not found then null is returned.</returns>
-        /// <exception cref="CraneCantBeLoadedExeption">Throws exception if crane can't be loaded.</exception>
+        /// <exception cref="CraneCantBeLoadedException">Throws exception if crane can't be loaded.</exception>
         internal Container ContainerRowToCrane(ContainerSize size, Crane crane,DateTime currentTime)
         {
             if (!(crane.Container == null))
             {
-                throw new CraneCantBeLoadedExeption("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the harbor storage area");
+                throw new CraneCantBeLoadedException("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the harbor storage area");
             }
 
             foreach (Container container in storedContainers.Keys){
@@ -1451,7 +1451,7 @@ namespace Gruppe8.HarbNet
             storedContainers.Add(containerToBeUnloaded, containerRow);
 
             ContainerSpace containerSpace = containerRow.AddContainerToFreeSpace(containerToBeUnloaded);
-            containerToBeUnloaded.CurrentPosition = containerSpace.ID;
+            containerToBeUnloaded.CurrentLocation = containerSpace.ID;
             containerToBeUnloaded.AddStatusChangeToHistory(Status.InStorage, currentTime);
 
             return containerSpace.ID;

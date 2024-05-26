@@ -7,31 +7,32 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Exception thrown if an attempt is made to load a Truck with a container, but the attempt fail or if the Truck does not exist.
+    /// Exception thrown if an attempt is made to load a Crane with a container, but the attempt fail or if the Crane does not exist.
     /// </summary>
-    public class TruckCantBeLoadedExeption : Exception
+    public class CraneCantBeLoadedException : Exception
     {
         /// <summary>
-        /// Creates new TruckCantBeLoadedException object.
+        /// Creates new CraneCantBeLoadedException object.
         /// </summary>
-        public TruckCantBeLoadedExeption() { }
+        public CraneCantBeLoadedException() { }
 
 
         /// <summary>
-        /// Creates new TruckCantBeLoadedException object.
+        /// Creates new CraneCantBeLoadedException object.
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
-        public TruckCantBeLoadedExeption(string message) : base(message) {
-            
+        public CraneCantBeLoadedException(string message) : base(message)
+        {
+
         }
 
         /// <summary>
-        /// Creates new TruckCantBeLoadedException object.
+        /// Creates new CraneCantBeLoadedException object.
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
         /// <param name="innerException">innerException to be thrown when exception is called.</param>
-        public TruckCantBeLoadedExeption(String message, Exception innerException) : base(message, innerException)
-        { 
+        public CraneCantBeLoadedException(String message, Exception innerException) : base(message, innerException)
+        {
         }
     }
 }

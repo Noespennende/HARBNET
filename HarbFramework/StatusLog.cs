@@ -26,7 +26,7 @@ namespace Gruppe8.HarbNet
         /// Gets the date and time the status change occured. 
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the subjects status change occured.</returns>
-        public DateTime PointInTime { get; internal set; }
+        public DateTime Timestamp { get; internal set; }
         /// <summary>
         /// Gets the current status of the subject.
         /// </summary>
@@ -44,7 +44,7 @@ namespace Gruppe8.HarbNet
         {
             this.Subject = subject;
             this.SubjectLocation = subjectLocation;
-            this.PointInTime = pointInTime;
+            this.Timestamp = pointInTime;
             this.Status = status;
         }
 
@@ -54,7 +54,7 @@ namespace Gruppe8.HarbNet
         /// <returns> a String containing information about the subject on a given point in time.</returns>
          override public string ToString()
         {
-            return ("Date: " + PointInTime.ToString() + ", Subject ID: " + Subject.ToString() + ", Location: " + SubjectLocation.ToString() + ", Status: " + Status.ToString());
+            return ("Date: " + Timestamp.ToString() + ", Subject ID: " + Subject.ToString() + ", Location: " + SubjectLocation.ToString() + ", Status: " + Status.ToString());
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Gruppe8.HarbNet.Advanced
         /// Gets the ID if the StorageUnit's current position.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the StorageUnit's current position.</returns>
-        public abstract Guid CurrentPosition { get; internal set; }
+        public abstract Guid CurrentLocation { get; internal set; }
         /// <summary>
         /// Gets current status of the StorageUnit.
         /// </summary>

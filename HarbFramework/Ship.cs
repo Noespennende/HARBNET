@@ -460,11 +460,11 @@ namespace Gruppe8.HarbNet
             }
             else if (this.ShipSize == ShipSize.Medium && ContainersOnBoard.Count > ContainerCapacity)
             {
-                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for small ships is max 50 containers");
+                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for medium ships is max 50 containers");
             }
             else if (this.ShipSize == ShipSize.Large && ContainersOnBoard.Count > ContainerCapacity)
             {
-                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for small ships is max 100 containers");
+                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for large ships is max 100 containers");
             }
         }
 
@@ -586,7 +586,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks the status the ship had for the given date and Time.
+        /// Checks the status the ship had for the given date and Timestamp.
         /// </summary>
         ///  <param name="time">Date and time where status of ship is to be checked.</param>
         /// <returns>Returns a status enum with the status the ship had at the given DateTime.</returns>
@@ -595,11 +595,11 @@ namespace Gruppe8.HarbNet
             Status shipStatus = new Status();
             foreach (StatusLog statusLogObject in HistoryIList)
             {
-                if (statusLogObject.PointInTime < time)
+                if (statusLogObject.Timestamp < time)
                 {
                     shipStatus = statusLogObject.Status;
                 }
-                else if (statusLogObject.PointInTime > time)
+                else if (statusLogObject.Timestamp > time)
                 {
                     break;
                 }
@@ -617,7 +617,7 @@ namespace Gruppe8.HarbNet
             foreach (StatusLog his in HistoryIList)
             {
 
-                Console.WriteLine($"Date: {his.PointInTime} Status: {his.Status}|\n");
+                Console.WriteLine($"Date: {his.Timestamp} Status: {his.Status}|\n");
 
             }
         }
@@ -635,7 +635,7 @@ namespace Gruppe8.HarbNet
 
             foreach (StatusLog his in HistoryIList)
             {
-                sb.Append($"Date: {his.PointInTime} Status: {his.Status}\n");
+                sb.Append($"Date: {his.Timestamp} Status: {his.Status}\n");
             }
             return sb.ToString();
         }
