@@ -1453,10 +1453,14 @@ namespace Gruppe8.HarbNet
         /// Gets a ContainerStorageRow whitch has free space for a container of the given size
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size the containerRow has to have available space for.</param>
-        /// <returns>Returns a ContainerStorageRow object with available space to store a container of the given size.</returns>
+        /// <returns>Returns a ContainerStorageRow object with available space to store a container of the given size if one exist. Otherwise returns null.</returns>
         /// <exception cref="ArgumentException">Throws this exeption if an invalid ContainerSize is given</exception>
-        internal ContainerStorageRow GetContainerRowWithFreeSpace(ContainerSize containerSize)
+        internal ContainerStorageRow? GetContainerRowWithFreeSpace(ContainerSize containerSize)
         {
+            if (containerSize == ContainerSize.None)
+            {
+                throw new ArgumentException("Invalid input. That containerSize is not meant for concrete implementation. Valid containerSize is: containerSize.Half or ContainerSize.Full.", nameof(containerSize));
+            }
             foreach (ContainerStorageRow containerRow in AllContainerRows)
             {
                 if (containerRow.CheckIfFreeContainerSpaceExists(containerSize))
@@ -1464,8 +1468,8 @@ namespace Gruppe8.HarbNet
                     return containerRow;
                 }
             }
-            throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: containerSize.Small, containerSize.Medium or containerSize.Large.", nameof(containerSize));
 
+            return null;
         }
 
         /// <summary>
