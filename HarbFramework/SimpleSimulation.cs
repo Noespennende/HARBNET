@@ -721,22 +721,16 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Updates the ship status.
+        /// Update the given ships status and adds the statuschange to the ship's history.
         /// </summary>
         /// <param name="ship">Ship object to get status updated.</param>
-        /// <param name="lastStatusLog">The last registered Statuslog object.</param>
-        /// <param name="secondLastStatusLog">The second last registered Statuslog object.</param>
+        /// <param name="lastStatusLog">The most recent registered Statuslog object in the ship's history.</param>
+        /// <param name="secondLastStatusLog">The second last registered Statuslog object in the ship's history.</param>
         private void UpdateShipStatus(Ship ship, StatusLog lastStatusLog, StatusLog? secondLastStatusLog)
         {
             Guid currentLocation = lastStatusLog.SubjectLocation;
 
-            // Denne tror jeg kan slettes
-            if (secondLastStatusLog?.Status == Status.DockedToShipDock)
-            {
-                StartUnloadProcess(ship, currentLocation);
-            }
-
-            else if (ShipHasNoContainers(ship) && !SingleTripShipInTransit(ship))
+            if (ShipHasNoContainers(ship) && !SingleTripShipInTransit(ship))
             {
 
                 ShipFinishedUnloading(ship, currentLocation);
@@ -762,9 +756,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Simulates the unloading of one ship, for one hour.
+        /// Unloads containers from the given ship's cargo on to the harbor for one hour.
         /// </summary>
-        /// <param name="ship">The ship object that is being unloaded.</param>
+        /// <param name="ship">The ship object that is to be unloaded.</param>
         private void UnloadShipForOneHour(Ship ship)
         {
             double percentTrucks = harbor.PercentOfContainersDirectlyLoadedFromShips; 
@@ -805,13 +799,12 @@ namespace Gruppe8.HarbNet
             }
         }
         /// <summary>
-        /// Moves one container from ship to AGV or Truck
+        /// Moves one container from ship the ship's cargo to the given number of AGVs or Trucks
         /// </summary>
-        /// <param name="ship">Ship object container is unloaded from.</param>
+        /// <param name="ship">Ship object in witch containers is to be unloaded from.</param>
         /// <param name="numberOfContainersForTrucks">Int value representing the number of containers for trucks to move.</param>
-        /// <param name="numberOfContainersForStorage">Int value representing the number of containers for storage.</param>
-        /// <param name="loadingDock">Loading dock object the container is being moved on.</param>
-        /// <param name="crane">The crane object at the dock that is being used for moving between ship and agv.</param>
+        /// <param name="numberOfContainersForStorage">Int value representing the number of containers to be moved to the harbor's storage.</param>
+        /// <param name="loadingDock">Loading dock object the ship is docked to.</param>
         private Container? MoveOneContainerFromShip(Ship ship, int numberOfContainersForTrucks, int numberOfContainersForStorage, LoadingDock loadingDock)
         {
             Container? container = null;
@@ -839,10 +832,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Moves one container from ship to an AGV.
+        /// Moves one container from the given ship's cargo to an AGV.
         /// </summary>
         /// <param name="ship">The ship object the container is being unloaded from.</param>
-        /// <returns>Returns the container object that has been unloaded off ship.</returns>
+        /// <returns>Returns the container object that has been unloaded from the ship.</returns>
         private Container? MoveContainerFromShipToAgv(Ship ship)
         {
             Crane? craneDock = harbor.GetFreeLoadingDockCrane();
@@ -865,9 +858,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Moves one container from ADV to Storage area crane to storage space.
+        /// Moves the given container from ADV's storage to a crane at the harbor's storage area.
         /// </summary>
-        /// <param name="container">The container object that is being moved to storage.</param>
+        /// <param name="container">The container object that is to be moved to the harbor's storage.</param>
         private void MoveContainerFromAgvToStorage(Container container)
         {
             Agv? agv = harbor.GetAgvContainingContainer(container);
@@ -888,7 +881,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Moves one container from ship to crane to truck.
+        /// Unloads a container from the given ship's cargo on to a crane and then on to an available trucks cargo.
         /// </summary>
         /// <param name="ship">The ship object the container is unloaded from.</param>
         /// <returns>Returns the container object that is being moved from the ship to crane to truck.</returns>
@@ -926,7 +919,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Undock ship from harbor, and set status to Transit.
+        /// Undock ship from harbor, and set its status to Transit.
         /// </summary>
         private void UndockingShips()
         {
@@ -1032,7 +1025,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Finish the undocking process for the ship.
+        /// Finishes the undocking process for a ship and adds the statuschange to the ship's history.
         /// </summary>
         /// <param name="ship">The ship object that is to finish undocking to transit.</param>
         private void UndockToTransit(Ship ship)
@@ -1047,10 +1040,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Start undocking the ship from Anchorage.
+        /// Start the undocking process for the given ship from Anchorage.
         /// </summary>
         /// <param name="ship">The ship object that is to start undocking from Anchorage.</param>
-        /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
+        /// <param name="lastStatusLog">The most recent StatusLog in the ship's history.</param>
         private void UndockFromAnchorage(Ship ship, StatusLog lastStatusLog)
         {
             Guid currentLocation = lastStatusLog.SubjectLocation;
@@ -1198,7 +1191,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Ship is now undocking from dock.
+        /// Starts the process of undocking the given ship from a dock. Updates the ships history with the statuschange.
         /// </summary>
         /// <param name="ship">Ship object currently undocking from dock.</param>
         /// <param name="currentLocation">Unique ID for the current location specified ship is located.</param>
@@ -1217,7 +1210,7 @@ namespace Gruppe8.HarbNet
             ShipUndocking?.Invoke(this, shipUndockingEventArgs);
         }
         /// <summary>
-        /// Ship is now finished Loading containers.
+        /// Ship is now finished Loading containers. Adds the statuschange to the ship's history.
         /// </summary>
         /// <param name="ship">Ship object to be checked if it is done loading containers.</param>
         /// <param name="currentLocation">Unique ID for the current location specified ship is located.</param>
@@ -1230,7 +1223,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads the ship for one hour.
+        /// Loads the given ship with containers for one hour.
         /// </summary>
         /// <param name="ship">Ship object to be loading containers for one hour.</param>
         /// <param name="currentLocation">Unique ID for the current location specified ship is located.</param>
@@ -1276,7 +1269,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loading containers on to ship.
+        /// Loading container on to ship.
         /// </summary>
         /// <param name="ship">Ship object the containers will be loaded on.</param>
         /// <returns>Returns the container object of containers moved on ship.</returns>
@@ -1302,7 +1295,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads one container from Agv to Ship.
+        /// Loads one container from Agv to the given Ship.
         /// </summary>
         /// <param name="ship">Ship object that is loading the container onboard.</param>
         /// <returns>Returns the container object that will be loaded.</returns>
@@ -1347,7 +1340,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Moves a container from storage to AGV.
+        /// Moves a container from the harbor storage to AGV.
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size of the container.</param>
         /// <returns>Returns the container object that was moved.</returns>
@@ -1372,7 +1365,7 @@ namespace Gruppe8.HarbNet
 
         }
         /// <summary>
-        /// Moves a container from the AGV to the ship.
+        /// Moves the given container from the AGV to the given ship.
         /// </summary>
         /// <param name="container">Container object to be moved from AGV to ship.</param>
         /// <param name="ship">Ship object the container objects are loaded on.</param>
@@ -1400,13 +1393,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns ships in transit to harbor.
+        /// Checks if any of the ships currently in transit is ready to enter the harbor, if so adds the ship to the anchorage.
         /// </summary>
         private void InTransitShips()
         {
             foreach (Ship ship in harbor.ShipsInTransit.Keys)
             {
-                //StatusLog lastStatusLog = ship.HistoryIList.Last();
                 StatusLog lastStatusLog = GetStatusLog(ship);
 
                 if (IsShipInTransit(ship, lastStatusLog))
@@ -1429,32 +1421,30 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checking ship status to see if it's in transit.
+        /// Checking the given ship's status to see if it's in transit.
         /// </summary>
         /// <param name="ship">Ship object to check status on to see if it's current status is in transit.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
-        /// <returns>Returns true if the ship's last registered StatusLog is "Transit", if not the false is returned.</returns>
+        /// <returns>Returns true if the ship's most recent registered StatusLog is "Transit", if not the false is returned.</returns>
         private bool IsShipInTransit(Ship ship, StatusLog lastStatusLog)
         {
             return ship.HasBeenAlteredThisHour == false && lastStatusLog != null && lastStatusLog.Status == Status.Transit;
         }
 
         /// <summary>
-        /// Checks if ship has returned to harbor.
+        /// Checks if the given ship has returned to harbor.
         /// </summary>
         /// <param name="ship">Ship object to check on to see if it has returned to harbor.</param>
         /// <param name="LastHistoryStatusLog">The last StatusLog in the ship's history.</param>
-        /// <returns>Returns true if ship has returned to harbor from roundtrip, if not then false is returned.</returns>
+        /// <returns>Returns true if the given ship has returned to harbor from its roundtrip, if not then false is returned.</returns>
         private bool ShipHasReturnedToHarbor(Ship ship, StatusLog LastHistoryStatusLog)
         {
             double DaysSinceTransitStart = (currentTime - LastHistoryStatusLog.Timestamp).TotalDays;
             return DaysSinceTransitStart >= ship.RoundTripInDays;
-
-
         }
 
         /// <summary>
-        /// Loading the truck with containers from storage.
+        /// Loading the truck with containers from the harbor's storage area.
         /// </summary>
         private void LoadingTrucksFromStorage()
         {
@@ -1511,7 +1501,7 @@ namespace Gruppe8.HarbNet
             }
         }
         /// <summary>
-        /// Containers from harbor arrived at their destination.
+        /// Checks if containers have arrived by truck to their final destination. If so updates the containers History with the new status.
         /// </summary>
         private void ContainersOnTrucksArrivingToDestination()
         {
@@ -1539,9 +1529,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// The number of containers in storage dedicated to Trucks.
+        /// Gives a number representing the amount of containers in the harbor storage area that should be directly loaded on to trucks.
         /// </summary>
-        /// <returns>Returns an int value representing the number of containers in storage dedicated to trucks.</returns>
+        /// <returns>Returns an int value representing the number of containers in storage to be loaded on to trucks.</returns>
         private int CalculateNumberOfStorageContainersToTrucks()
         {
             if (harbor.shipsInLoadingDock.Count != 0)
@@ -1556,7 +1546,7 @@ namespace Gruppe8.HarbNet
                 
         }
         /// <summary>
-        /// Moves a container from storage on to truck.
+        /// Moves the given container the harbor storage area on to a available truck.
         /// </summary>
         /// <param name="container">Container object to be moved from storage to truck.</param>
         /// <returns>Returns the container object moved from storage to a truck.</returns>
@@ -1589,9 +1579,11 @@ namespace Gruppe8.HarbNet
 
 
         /// <summary>
-        /// Returns a string that contains information about all ships in the previous simulation.
+        /// Returns a string that contains information about the entire history of each ship in the harbor simulation. Information in the string includes the historical data regarding the
+        /// Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
+        /// all ships at the end of every day of the simulation.
         /// </summary>
-        /// <returns>Returns a string value that contains information about all ships in the previous simulation. Returns empty string if no simulation has been run.</returns>
+        /// <returns> a string that contains information about all ships in the previous simulation. Returns an empty string if no simulation has been run.</returns>
         public override String HistoryToString()
         {
             if (History.Count > 0)
@@ -1608,11 +1600,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Create String that contains all of the ship's history in the previous simulation.
+        /// Gives a string containing information of the ship matching the given shipID's entire history. Information in the String includes the ship's name, ID,
+        /// Date and Time of all status changes and the coresponding status the ship had at those times.
         /// </summary>
         /// <param name="shipID">The unique ID of the ship the history belongs to.</param>
-        /// <returns>Returns a string value containing information of the whole history of the ship.</returns>
-        /// <exception cref="ArgumentException">Exception thrown ship does not exist in the harbor object.</exception>
+        /// <returns>Returns a string value containing information about the ship's entire history.</returns>
+        /// <exception cref="ArgumentException">Exception thrown ship does not exist within the simulation.</exception>
         public override string HistoryToString(Guid shipID)
         {
 
@@ -1622,19 +1615,17 @@ namespace Gruppe8.HarbNet
                 {
                     return ship.HistoryToString();
                 }
-
-
             }
 
             throw new ArgumentException("The ship you are trying to get the history from does not exist in the Harbor object the simulation is using. In order for the simulation to be able to provide a String of the ships history " +
-                "the ship must exist within the harbor the simulation is simulating.");
+                "the ship must be added to the harbor the simulation is using.");
         }
 
         /// <summary>
-        /// Returns a string containing information about the history of all ships or all containers in the simulation.
+        /// Returns a string containing information about the entire history of each ship or each container in the simulation.
         /// </summary>
-        /// <param name="ShipsOrContainers">Sending in the value "ships" returns information on all ships, sending in "containers" return information on all containers.</param>
-        /// <returns>Returns a String value containing information about all ships or containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been ran.</returns>
+        /// <param name="ShipsOrContainers">Sending inn "ships" returns the history of all ships in the previous simulation. Sending inn "containers" return the history of each container in the previous simulation</param>
+        /// <returns>Returns a String value containing the entire history of all ships or all containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been run.</returns>
         public override String HistoryToString(String ShipsOrContainers)
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
@@ -1663,18 +1654,18 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string that represents the information about one ship in the simulation.
+        /// Gives a string containing information of the given ship entire history. Information in the String includes the ship's name, ID,
+        /// Date and Time of all status changes and the coresponding status the ship had at those times.
         /// </summary>
         /// <param name="ship">The ship object in the simulation that information is retrieved from.</param>
-        /// <returns>Returns a String value containing information about the given ship in the simulation.</returns>
+        /// <returns>Returns a string value containing information about the given ship's entire history.</returns>
         public override String HistoryToString(Ship ship)
         {
             return ship.HistoryToString();
         }
 
-
         /// <summary>
-        /// Returns a string that contains information about the start time, end time of the simulation and the ID of the harbour used.
+        /// Returns a string that contains information about the start time of the simulation, end time of the simulation and the ID of the harbour used.
         /// </summary>
         /// <returns> a string that contains information about the start time, end time of the simulation and the ID of the harbour used.</returns>
         public override string ToString()
