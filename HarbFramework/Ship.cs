@@ -2,16 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Gruppe8.HarbNet.Advanced;
 
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Ships to be used in a simulation.
+    /// Ship class defining ships to be used in a simulation. A ship is a CargoVessel that can transport Containers 
+    /// from A to B on the ochean.
     /// </summary>
 
     public class Ship : CargoVessel
@@ -22,59 +25,65 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid object representing the ships unique ID.</returns>
         public override Guid ID { get; }
         /// <summary>
-        /// Gets the ships size. 
+        /// Gets the ships size. The ship's size determins the base and max weight of the ship as well as how much cargo it can hold.
         /// </summary>
         /// <returns>Returns a ShipSize enumm representing the ships size.</returns>
         public override ShipSize ShipSize { get; internal set; }
         /// <summary>
         /// Gets the ships name. 
         /// </summary>
-        /// <returns>Returns a string value representing the ships name.</returns>
+        /// <returns>Returns a string value representing the name of the ship.</returns>
         public override String Name { get; internal set; }
         /// <summary>
-        /// Gets the date and time the ship first started its voyage.
+        /// Gets the date and time the ship will arrive to the harbor for the first time.
         /// </summary>
-        /// <returns>Returns a DateTime object representing the date and time the ship first started its voyage.</returns>
+        /// <returns>Returns a DateTime object representing the date and time the ship will arrive to the harbor for the first time.</returns>
         public override DateTime StartDate { get; internal set; }
         /// <summary>
-        /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour.
+        /// Gets the TransitStatus of the ship. The transit status indicates at witch part of the transit the ship is currently.
+        /// For example wether or not it is leaving or arriving to the harbor.
         /// </summary>
-        /// <returns>Returns an int value representing the number of days the ship uses to do a round trip at sea.</returns>
+        /// <returns>Returns a TransitStatus enum representing where in the transit cycle the ship is currently</returns>
         internal TransitStatus TransitStatus { get; set; }
         /// <summary>
-        /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour.
+        /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
+        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the Harbor again.
         /// </summary>
         /// <returns>Returns an int value representing the number of days the ship uses to do a round trip at sea.</returns>
         public override int RoundTripInDays { get; internal set; }
         /// <summary>
-        /// Gets the ID of the ships current location.
+        /// Gets the location ID of the ships current location.
         /// </summary>
-        /// <returns>Returns a Guid object representing the ID of the ships current location.</returns>
+        /// <returns>Returns a Guid object representing the location ID of the ships current location.</returns>
         public override Guid CurrentLocation { get; internal set; }
         /// <summary>
-        /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
+        /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the Ship has gone through throughout a simulation.
+        /// Each StatusLog object contains information about one status change that happened to the Ship. Together the list holds information about the entire
+        /// history of status changes that happened to the ship.
         /// </summary>
         /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
         public override ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
         /// <summary>
-        /// Gets an IList of StatusLog objects containing information on status changes the ship has gone trough troughout a simulation.
+        /// Gets a IList of StatusLog objects containing information on status changes the Ship has gone through throughout a simulation.
+        /// Each StatusLog object contains information about one status change that happened to the Ship. Together the list holds information about the entire
+        /// history of status changes that happened to the ship.
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
         internal IList<StatusLog> HistoryIList { get; }
         /// <summary>
-        /// Gets all the containers in the ships storage.
+        /// Gets all the containers in the ship's storage.
         /// </summary>
         /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
         public override IList<Container> ContainersOnBoard {  get; } = new List<Container>();
         /// <summary>
-        /// The capacity of containers the ship can hold.
+        /// The maximum amount of containers the ship can hold. Both half sized and full sized containers counts as 1 container.
         /// </summary>
-        /// <returns>Returns an int value representing the amount of containers a ship can hold.</returns>
+        /// <returns>Returns an int value representing the maximum amount of containers a ship can hold.</returns>
         public override int ContainerCapacity { get; internal set; }
         /// <summary>
-        /// Gets the ships max weight the ship in tonns can be before it sinks.
+        /// Gets the max weight in tonns the ship is allowed to reach.
         /// </summary>
-        /// <returns>Returns an int value representing the max weight the ship can be in tonns.</returns>
+        /// <returns>Returns an int value representing the max weight in tonns the ship is allowed to reach.</returns>
         public override int MaxWeightInTonn {  get; internal set; }
         /// <summary>
         /// Gets the weight of the ship when its storage is empty.
@@ -82,58 +91,59 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns an int value representing the weight of the ship when the storage is empty.</returns>
         public override int BaseWeightInTonn { get; internal set; }
         /// <summary>
-        /// Gets the current weight of the ship including the cargo weight. 
+        /// Gets the current weight of the ship including the cargo weight. This includes both the base weight of the ship
+        /// in addition to the weight of all its cargo.
         /// </summary>
         /// <returns>Returns an int value representing the current weight of the ship.</returns>
         public override int CurrentWeightInTonn { get; internal set; }
         /// <summary>
-        /// Gets and sets the number of containers the ship can load onboard in one hour.
+        /// Gets the maximum number of containers the ship can load in one hour. A container load is defined as loading a container
+        /// from the a harbor loading crane and in to its own storage.
         /// </summary>
-        /// <returns>Returns an int value representing the number of containers the ship can load onboard in one hour.</returns>
+        /// <returns>Returns an int value representing the number of containers the ship can load or unload in one hour.</returns>
         internal int ContainersLoadedPerHour { get; set; }
         /// <summary>
-        /// Gets and sets the number of containers the ship can take out of its own storage and load to harbour in one hour.
+        /// Gets and sets the number of containers the ship unload from its own storage an on to a Harbor loading crane.
         /// </summary>
-        /// <returns>Returns an int value representing the number of containers can berth in one hour.</returns>
+        /// <returns>Returns an int value representing the number of containers can be unloaded from the ships cargo in one hour.</returns>
         internal int BaseBerthingTimeInHours { get; set; }
         /// <summary>
-        /// Gets and sets the number of hours it takes for the ship to dock or undock to harbour.
+        /// Gets and sets a number indicating the number of hours it takes for the ship to dock or undock to a harbor dock.
         /// </summary>
         /// <returns>Returns an int value representing the number of hours it takes for the ship to dock or undock to harbour.</returns>
         internal int BaseDockingTimeInHours { get; set; }
         /// <summary>
-        /// Gets and sets a bolean representing if the ship will only do one single trip.
+        /// Gets and sets a bolean representing if the ship will only do one single trip. If this value is true it means the ship
+        /// will only perform one voyage before permanently docking to an available ship dock in the harbor.
         /// </summary>
         /// <returns>Returns a boolean that is true if the ship will only do one single trip and false otherwise.</returns>
         internal bool IsForASingleTrip { get; set; } = false;
         /// <summary>
-        /// Checks if ship has been altered this hour.
+        /// Checks if the ship has performed any action this hour. 
         /// </summary>
-        /// <returns>Returns a bool that is true if ship has been altered this hour, or false if ship has not been altered.</returns>
+        /// <returns>Returns a bool that is true if ship has performed an action this past hour, or false if ship has performed no action.</returns>
         internal bool HasBeenAlteredThisHour = false;
         /// <summary>
-        /// Gets the percentege of direct deliviries.
+        /// Gets and sets a number indicating the percentage of Containers that will be directly unloaded from the ship's storage and on to trucks on the Harbor.
+        /// A value of 100 represents 100%. A value of 50 represnets 50%.
         /// </summary>
-        /// <returns>Returns the int value representing the percentege of direct deliveries.</returns>
-        internal int DirectDeliveryPercentage { get; set; } = 0;
-        /// <summary>
-        /// Gets the amount of containers left for the trucks to load.
-        /// </summary>
-        /// <returns>Returns the int value of the amount of containers left for the trucks to load.</returns>
-        internal int ContainersLeftForTrucks { get; set; } = 0; 
+        /// <returns>Returns the int value indicating the percentage of containers in the ships storage that will be directly unloaded from the ship and on to trucks on the harbor.</returns>
+        internal int ContainersLeftForTrucks { get; set; } = 0;
 
         /// <summary>
-        /// Creates a new ship object.
+        /// Creates a new object of the Ship class. A ship is a CargoVessel that can transport Containers 
+        /// from A to B on the ochean.
         /// </summary>
         /// <param name="shipName">Name of the ship object to be created.</param>
-        /// <param name="shipSize">shipSize enum representing the size of the ship to be created.</param>
-        /// <param name="startDate">Date and time for when the ship will start its first voyage.</param>
-        /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
-        /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
-        /// <param name="containersToBeStoredInCargo">Int value representing the amount of small containers that will be in the ships storage when it enters the harbor for the first time.</param>
-        /// <param name="directDeliveryPercentage">Int value representing the percentage of containers that are directly delivered to their destination.</param>
+        /// <param name="shipSize">shipSize enum representing the size of the ship to be created. The ship's size determins the base and max weight of the ship as well as how much cargo it can hold.</param>
+        /// <param name="startDate">Date and time for when the ship will arrive to the harbor for the first time.</param>
+        /// <param name="isForASingleTrip">A bolean representing if the ship will only do one single trip. If this value is true it means the ship
+        /// will only perform one voyage before permanently docking to an available ship dock in the harbor.</param>
+        /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
+        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the Harbor again.</param>
+        /// <param name="containersToBeStoredInCargo">IList of Container objects that will be placed in the Ship's cargo when it first arrives to the Harbor</param>
         public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
-            IList<StorageUnit> containersToBeStoredInCargo, int directDeliveryPercentage)
+            IList<StorageUnit> containersToBeStoredInCargo)
         {
             this.ID = Guid.NewGuid();
             this.Name = shipName;
@@ -142,7 +152,6 @@ namespace Gruppe8.HarbNet
             this.RoundTripInDays = roundTripInDays;
             this.IsForASingleTrip = isForASingleTrip;
             this.HistoryIList = new List<StatusLog>();
-            this.DirectDeliveryPercentage = directDeliveryPercentage;
 
             if (isForASingleTrip)
             {
@@ -180,13 +189,16 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Creates a new ship object.
+        /// Creates a new object of the Ship class. A ship is a CargoVessel that can transport Containers 
+        /// from A to B on the ochean.
         /// </summary>
         /// <param name="shipName">Name of the ship object to be created.</param>
-        /// <param name="shipSize">shipSize enum representing the size of the ship to be created.</param>
-        /// <param name="startDate">Date and time for when the ship will start its first voyage.</param>
-        /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
-        /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
+        /// <param name="shipSize">shipSize enum representing the size of the ship to be created. The ship's size determins the base and max weight of the ship as well as how much cargo it can hold.</param>
+        /// <param name="startDate">Date and time for when the ship will arrive to the harbor for the first time.</param>
+        /// <param name="isForASingleTrip">A bolean representing if the ship will only do one single trip. If this value is true it means the ship
+        /// will only perform one voyage before permanently docking to an available ship dock in the harbor.</param>
+        /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
+        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the Harbor again.</param>
         /// <param name="numberOfHalfContainersOnBoard">Int value representing the amount of Small containers that will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="numberOfFullContainersOnBoard">Int value representing the amount of Large containers that will be in the ships storage when it enters the harbor for the first time.</param>
         public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
@@ -222,16 +234,19 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Creates a new ship object.
+        /// Creates a new object of the Ship class. A ship is a CargoVessel that can transport Containers 
+        /// from A to B on the ochean.
         /// </summary>
         /// <param name="shipName">Name of the ship object to be created.</param>
-        /// <param name="shipSize">shipSize enum representing the size of the ship to be created.</param>
-        /// <param name="startDate">Date and time for when the ship will start its first voyage.</param>
-        /// <param name="isForASingleTrip">True if the ship should only do one trip, false otherwise.</param>
-        /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour.</param>
-        /// <param name="id">Unique Guid representing the ship</param>
+        /// <param name="shipSize">shipSize enum representing the size of the ship to be created. The ship's size determins the base and max weight of the ship as well as how much cargo it can hold.</param>
+        /// <param name="startDate">Date and time for when the ship will arrive to the harbor for the first time.</param>
+        /// <param name="isForASingleTrip">A bolean representing if the ship will only do one single trip. If this value is true it means the ship
+        /// will only perform one voyage before permanently docking to an available ship dock in the harbor.</param>
+        /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
+        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the Harbor again.</param>
+        /// <param name="id">Unique Guid that will be set as the ship's ID</param>
         /// <param name="containersOnboard">An IList containing Containers objects representing the containers in the ships cargo.</param>
-        /// <param name="currentHistory">An IList containing StatusRecord objects representing the ships history so far.</param>
+        /// <param name="currentHistory">An IList containing StatusRecord objects representing the ships history so far in the simulation.</param>
         internal Ship(String shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays, Guid id, IList<Container> containersOnboard, IList<StatusLog> currentHistory)
         {
             this.Name = shipName;
@@ -260,10 +275,11 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Sets container capacity, Base Weight (in tonn) and Max weight based on the ships size.
+        /// Sets basic infomation for the ship based on the ship's size. The information set includes
+        /// container capacity, Base Weight (in tonn) and Max weight based on the ships size.
         /// </summary>
         /// <param name="shipSize">ShipSize enum representing the size of the ship</param>
-        /// <exception cref="ArgumentException">Throws exception if shipSize is not found.</exception>
+        /// <exception cref="ArgumentException">Throws ArgumentException if shipSize is not found.</exception>
         private void SetBaseShipInformation(ShipSize shipSize)
         {
             if (shipSize == ShipSize.Small)
@@ -312,9 +328,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Creates a container and adds it onboard the ship.
+        /// Creates a new Container object and adds it to the ship's storage.
         /// </summary>
-        /// <param name="time">The Date and time the container is created.</param>
+        /// <param name="time">DateTime object representing the Date and time of the simulation the Container is created.</param>
         internal void GenerateContainer(DateTime time)
         {
             if (ContainersOnBoard.Count < ContainerCapacity)
@@ -341,10 +357,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the number of containers for trucks to load.
+        /// Gets a number indicating the amount of containers that will be directly loaded from the ship's cargo on to trucks in the harbor.
+        /// The number is calculated based on the percentage value given to the method.
         /// </summary>
-        /// <param name="percentTrucks">Int value representing the percentage of containers that is to be loaded directly on trucks from ship.</param>
-        /// <returns>Returns the int value of the total amount of containers for trucks to load.</returns>
+        /// <param name="percentTrucks">Double value representing the percentage of containers that is to be loaded directly on trucks from the ships cargo.
+        /// a value of 1 indicates 100%, a value of 0.5 indicates 50%.</param>
+        /// <returns>Returns the int value representing the the total amount of containers for trucks to load.</returns>
         internal int GetNumberOfContainersToTrucks(double percentTrucks)
         {
             double decimalNumberOfContainers = ContainersOnBoard.Count * percentTrucks;
@@ -365,10 +383,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the number of containers going to storage on ship.
+        /// Gets a value indicating the number of containers that will be loaded to the Harbors storage area from the ships cargo. The number is calculated
+        /// based on the percentage value given to the method.
         /// </summary>
-        /// <param name="percentTrucks">The percentage of containers that is to be loaded directly on trucks from ship.</param>
-        /// <returns>Returns the int value of the total amount of containers in storage onboard ship.</returns>
+        /// <param name="percentTrucks">Double value representing the percentage of containers that is to be loaded directly on trucks from the ships cargo.
+        /// a value of 1 indicates 100%, a value of 0.5 indicates 50%.</param>
+        /// <returns>Returns the int value of the total amount of containers in the ship's storage that will be loaded to the Harbors Storage area.</returns>
         internal int GetNumberOfContainersToStorage(double percentTrucks)
         {
             int numberOfContainersToStorage = ContainersOnBoard.Count - GetNumberOfContainersToTrucks(percentTrucks);
@@ -377,12 +397,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Generate new containers and adds them to the ship storage.
+        /// Generate new container objects and adds them to the ship's storage.
         /// </summary>
-        /// <param name="numberOfcontainersOnBoard">Int value representing the number of containers to be added to the ships storage.</param>
-        private void AddContainersOnBoard(int numberOfcontainersOnBoard)
+        /// <param name="numberOfContainersToBeAddedToStorage">Int value representing the number of containers to be added to the ships storage.</param>
+        private void AddContainersOnBoard(int numberOfContainersToBeAddedToStorage)
         {
-            for (int i = 0; i < numberOfcontainersOnBoard; i++)
+            for (int i = 0; i < numberOfContainersToBeAddedToStorage; i++)
             {
                 if (i % 3 == 0)
                 {
@@ -412,14 +432,15 @@ namespace Gruppe8.HarbNet
                 }
             }
         }
+
         /// <summary>
-        /// Adds numbers of different size containers on board.
+        /// Generate new containers of the given size and adds them to the ship's storage.
         /// </summary>
-        /// <param name="containerSize">ContainerSize enum representing the size of the container.</param>
-        /// <param name="numberOfcontainersOnBoard">Int value representing the number of containers on board.</param>
-        private void AddContainersOnBoard(ContainerSize containerSize, int numberOfcontainersOnBoard)
+        /// <param name="containerSize">ContainerSize enum representing the size of the container's to be added to the ship's storage.</param>
+        /// <param name="numberOfContainersToBeAddedToStorage">Int value representing the number of containers to be added to the ship's storage.</param>
+        private void AddContainersOnBoard(ContainerSize containerSize, int numberOfContainersToBeAddedToStorage)
         {
-            for (int i = 0; i < numberOfcontainersOnBoard; i++)
+            for (int i = 0; i < numberOfContainersToBeAddedToStorage; i++)
             { 
                 CheckForValidWeight();
                 Container ContainertoAdd = null;
@@ -445,9 +466,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if the ships current weight does not exeede its maxweight and that the ships container capacity is not exeeded. Throws exeptions if they are.
+        /// Checks if the ships current weight does not exeede its maxweight and that the ships container capacity is not exeeded. Throws ArgumentOutOfRangeException if they are.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains too many containers than the ship size can handle.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
         private void CheckForValidWeight()
         {
             if (CurrentWeightInTonn > MaxWeightInTonn)
@@ -469,11 +490,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Generates a new StatusLog object and adds it to the ships history.
+        /// Generates a new StatusLog object and adds it to the ships history. This method is used to record information about a single
+        /// status change that happened to the Ship.
         /// </summary>
         /// <param name="currentTime">Date and time the status change occured.</param>
         /// <param name="currentLocation">Guid object representing the location the ship is located when the status change occured.</param>
-        /// <param name="status">Status enum representing the new status change that occured.</param>
+        /// <param name="status">Status enum representing the new status of the ship.</param>
         /// <returns>Returns StatusLog object containing information about the ship at the time the StatusLog were created.</returns>
         internal StatusLog AddStatusChangeToHistory(DateTime currentTime, Guid currentLocation, Status status)
         {
@@ -486,10 +508,14 @@ namespace Gruppe8.HarbNet
         /// Gets a container of the given size from the ships storage.
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size of the container to be retrieved.</param>
-        /// <returns>Returns a container object of the given size from the ships storage if one exists, if none of gived containerSize is found null is returned.</returns>
-        /// <exception cref="ArgumentException">Exception thrown if containerSize is not found.</exception>
+        /// <returns>Returns a container object of the given size from the ships storage if one exists, if none of the gived containerSize is found null is returned.</returns>
+        /// <exception cref="ArgumentException">Exception thrown if given a ContainerSize enum value that is not valid for concrete implementation.</exception>
         internal Container GetContainer(ContainerSize containerSize)
         {
+            if (containerSize == ContainerSize.None)
+            {
+                throw new ArgumentException("Invalid input. Container's of that size is not meant for concrete implementation. Please use ContainerSize 'Half' or 'Full' instead.", nameof(containerSize));
+            }
             foreach (Container container in ContainersOnBoard)
             {
                 if (container.Size == containerSize)
@@ -497,14 +523,15 @@ namespace Gruppe8.HarbNet
                     return container;
                 }
             }
-            throw new ArgumentException("Invalid input. Container in that size does not exist. Choose between containerSize.Small, containerSize.Medium or containerSize.Large", nameof(containerSize));
+
+            return null;
         }
 
         /// <summary>
-        /// Gets the count of the number of containers of the given size in the ships storage.
+        /// Gets a number indicating the amount of containers of the given size that exists in the Ship's storage.
         /// </summary>
-        /// <param name="containerSize">ContainerSize enum representing the size of the container to be counted.</param>
-        /// <returns>Returns an int value representing the containers of the given size in the ships storage.</returns>
+        /// <param name="containerSize">ContainerSize enum representing the size of the container's to be counted.</param>
+        /// <returns>Returns an int value representing the amount of the given size containers that exists in the ships storage.</returns>
         internal int GetNumberOfContainersOnBoard (ContainerSize containerSize)
         {
             int count = 0;
@@ -519,10 +546,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Removes the container with the given ID from the Ships storage.
+        /// Removes the container with the given ID from the Ship's storage.
         /// </summary>
-        /// <param name="containerID">Unique ID for the container object to be removed from the ships storage.</param>
-        /// <returns>Returns true if the container was found and removed from ship, false if not.</returns>
+        /// <param name="containerID">Unique ID for the container object to be removed from the ship's storage.</param>
+        /// <returns>Returns true if the container was found and removed from ship's storage, false if not.</returns>
         internal bool RemoveContainer (Guid containerID)
         {
             foreach(Container container in ContainersOnBoard)
@@ -538,7 +565,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Adds the specified container to the ships storage.
+        /// Adds the given container to the ship's storage.
         /// </summary>
         /// <param name="container">Container object to be added to the ships storage.</param>
         internal void AddContainer (Container container)
@@ -548,23 +575,23 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Sets the HasBeenAlteredThisHour variable to false.
+        /// Sets the HasBeenAlteredThisHour variable to false. HasBeenAlteredThisHour indicates if the ship has performed an avtion this hour of the simulation.
         /// </summary>
         internal void SetHasBeenAlteredThisHourToFalse()
         {
             HasBeenAlteredThisHour = false;
         }
         /// <summary>
-        /// Sets the HasBeenAlteredThisHour variable to true.
+        /// Sets the HasBeenAlteredThisHour variable to true. HasBeenAlteredThisHour indicates if the ship has performed an avtion this hour of the simulation.
         /// </summary>
         internal void SetHasBeenAlteredThisHourToTrue()
         {
             HasBeenAlteredThisHour = true;
         }
         /// <summary>
-        /// Gets the value of the HasBeenAlteredThisHour variable.
+        /// Gets the value of the HasBeenAlteredThisHour variable. HasBeenAlteredThisHour indicates if the ship has performed an avtion this hour of the simulation.
         /// </summary>
-        /// <returns>Returns the boolean value of the HasBeenAlteredThisHour variable.</returns>
+        /// <returns>Returns the boolean value of the HasBeenAlteredThisHour variable. True if the ship has performed an action this hour of the simulation, false otherwise.</returns>
         internal bool GetHasBeenAlteredThisHour()
         {
             return HasBeenAlteredThisHour;
@@ -573,7 +600,7 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets the current status of the ship.
         /// </summary>
-        /// <returns>Returns a status enum with the current status of the ship.</returns>
+        /// <returns>Returns a status enum representing the current status of the ship.</returns>
         internal Status GetCurrentStatus()
         {
             if(HistoryIList.Count > 0)
@@ -586,9 +613,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks the status the ship had for the given date and Timestamp.
+        /// Checks witch status the ship had at the given date and time.
         /// </summary>
-        ///  <param name="time">Date and time where status of ship is to be checked.</param>
+        ///  <param name="time">Date and time of witch the status of the ship is to be returned.</param>
         /// <returns>Returns a status enum with the status the ship had at the given DateTime.</returns>
         internal Status GetStatusAtPointInTime(DateTime time)
         {
@@ -608,7 +635,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Prints the ships entire history to console.
+        /// Prints the ships entire history to console. Information printed includes the ship's name, ID, Date and Time of all status changes and the coresponding status the ship had at those times.
         /// </summary>
         public override void PrintHistory()
         {
@@ -623,9 +650,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns the ships entire history in the form of a string.
+        /// Gives a string containing information of the ship's entire history. Information in the String includes the ship's name, ID, Date and Time of all status changes and the coresponding status the ship had at those times.
         /// </summary>
-        /// <returns> a String containing the ships entire history.</returns>
+        /// <returns> a String containing information about the ship's entire history.</returns>
         public override String HistoryToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -641,9 +668,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Unloads container from ship.
+        /// Unloads container from ship's cargo.
         /// </summary>
-        /// <returns>Returns null if there is zero containers on board, or the container object that will be unloaded</returns>
+        /// <returns>Returns null if there is zero containers on board, otherwise returns the Container object that is unloaded from the ship's cargo.</returns>
         internal Container? UnloadContainer()
         {
             if(ContainersOnBoard.Count <= 0)

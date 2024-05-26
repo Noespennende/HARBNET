@@ -23,7 +23,8 @@ namespace Gruppe8.HarbNet
         public override Guid ID { get; }
         /// <summary>
         /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the container has gone through throughout a simulation.
-        /// Each StatusLog object contains information about one status change that happened to the container. 
+        /// Each StatusLog object contains information about one status change that happened to the container. Together the list holds information about the entire
+        /// history of status changes that happened to the Container.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with StatusLog objects with information on status changes the container has gone through throughout a simulation.</returns>
         public override ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }

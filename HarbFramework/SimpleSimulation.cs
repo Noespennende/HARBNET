@@ -176,7 +176,7 @@ namespace Gruppe8.HarbNet
 
                     if (ship.IsForASingleTrip == true && harbor.GetFreeLoadingDock(ship.ShipSize) != null)
                     {
-                        Guid loadingDock = harbor.StartShipInLoadingDock(ship.ID);
+                        Guid loadingDock = harbor.MoveShipFromAnchorageToLoadingDock(ship.ID);
 
                         ShipIsDockedToLoadingDock(ship, loadingDock);
                     }

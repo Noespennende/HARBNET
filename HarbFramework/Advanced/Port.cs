@@ -18,18 +18,7 @@ namespace Gruppe8.HarbNet.Advanced
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not. The key value is a Guid object
         /// representing the unque ID of a given dock. The value is a bool representing wether or not the dock is free. A bool value of True means the coresponding dock is free.</returns>
-        public abstract IDictionary<Guid, bool> GetAvailabilityStatusForAllLoadingDocks();
-        /// <summary>
-        /// Get all containers that have left the Port and arived at their destination
-        /// </summary>
-        /// <return>Returns a IList containing all the containers that have arrived at their destination during a simulation</return>
         public abstract IList<Container> ArrivedAtDestination { get; internal set; }
-        /// <summary>
-        /// Gets a IDictionary containing information about the status of all the ships in the simulation.
-        /// </summary>
-        /// <return>Returns a IDictionary containing information about the status of all the ships in the simulation. The Keyvalue in the dictonary is a ship object representing the ship
-        /// and the Value is a Status enum representing the current status of the ship.</return>
-        public abstract IDictionary<Ship, Status> GetStatusAllShips();
         /// <summary>
         /// Gets the unique ID for the location representing the Port's anchorage.
         /// </summary>
@@ -75,7 +64,19 @@ namespace Gruppe8.HarbNet.Advanced
         /// Returns a string with information about the status of all loading docks in the port. A loading dock is a dock used for loading cargo from and to Ships.
         /// </summary>
         /// <returns>String value containing information about the status of all the loading docks in the port.</returns>
+        public abstract IDictionary<Guid, bool> GetAvailabilityStatusForAllLoadingDocks();
+        /// <summary>
+        /// Get all containers that have left the Port and arived at their destination
+        /// </summary>
+        /// <return>Returns a IList containing all the containers that have arrived at their destination during a simulation</return>
         public abstract string GetStatusAllLoadingDocks();
+
+        /// <summary>
+        /// Gets a IDictionary containing information about the status of all the ships in the simulation.
+        /// </summary>
+        /// <return>Returns a IDictionary containing information about the status of all the ships in the simulation. The Keyvalue in the dictonary is a ship object representing the ship
+        /// and the Value is a Status enum representing the current status of the ship.</return>
+        public abstract IDictionary<Ship, Status> GetStatusAllShips();
 
         /// <summary>
         /// Gets the last registered status of a specific ship object.
@@ -92,7 +93,7 @@ namespace Gruppe8.HarbNet.Advanced
         public abstract IDictionary<Guid, bool> GetAvailabilityStatusForAllShipDocks();
 
         /// <summary>
-        /// Gets the current status of specified container.
+        /// Gets the current status of the container with the given ID.
         /// </summary>
         /// <param name="ContainerId">Guid object represting the unique ID of the container object in which the current status is to be returned.</param>
         /// <returns>Returns a string value representing the container's ID and their last registered status.</returns>
