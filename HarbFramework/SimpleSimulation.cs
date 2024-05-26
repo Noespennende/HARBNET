@@ -66,22 +66,22 @@ namespace Gruppe8.HarbNet
         public event EventHandler<ShipAnchoringEventArgs>? ShipAnchoring;
         public event EventHandler<ShipAnchoredEventArgs>? ShipAnchored;
 
-        public event EventHandler<TruckLoadingFromStorageEventArgs>? TruckLoadingFromStorage;
+        public event EventHandler<TruckLoadingFromHarborStorageEventArgs>? TruckLoadingFromStorage;
 
         /// <summary>
-        /// History for all ships and containers in the simulation in the form of Log objects. Each Log object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
+        /// History for all ships and containers in the simulation in the form of DailyLog objects. Each DailyLog object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
-        /// <returns>Returns a readOnlyCollection of log objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
+        /// <returns>Returns a readOnlyCollection of Dailylog objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
         public override ReadOnlyCollection<DailyLog> History { get { return HistoryIList.AsReadOnly(); } }
 
         /// <summary>
-        /// Gets an IList of StatusLog objects containing information on status changes troughout a simulation.
+        /// History for all ships and containers in the simulation in the form of DailyLog objects. Each DailyLog object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
-        /// <returns>Returns an IList with StatusLog objects with information on status changes troughout a simulation.</returns>
+        /// <returns>Returns a IList of Dailylog objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
         internal IList<DailyLog> HistoryIList { get; } = new List<DailyLog>();
 
         /// <summary>
-        /// Simulation constructor.
+        /// Creates an object of the SimpleSimulation class. This object can be used to run a simulation on a harbor.
         /// </summary>
         /// <param name="harbor">The harbor object which will be used in the simulation.</param>
         /// <param name="simulationStartTime">The date and time the simulation starts.</param>
@@ -241,7 +241,8 @@ namespace Gruppe8.HarbNet
 
 
         /// <summary>
-        /// Prints history for each ship in the harbor simulation to console.
+        /// Prints to console the historical data regarding the Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
+        /// all ships in the simulation for each day the simulation was run.
         /// </summary>
         public override void PrintShipHistory()
         {
@@ -252,7 +253,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Prints the history of a given ship to console.
+        /// Prints the history of the given ship to console.
         /// <param name="shipToBePrinted">The ship object who's history will be printed.</param>
         /// </summary>
         public override void PrintShipHistory(Ship shipToBePrinted)
@@ -1481,7 +1482,7 @@ namespace Gruppe8.HarbNet
 
                                 if (truck != null)
                                 {
-                                    TruckLoadingFromStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, currentTime, "One truck has loaded a container and has left");
+                                    TruckLoadingFromHarborStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, currentTime, "One truck has loaded a container and has left");
                                     TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
                                 }
                                 
@@ -1676,7 +1677,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the SimulationStarting event.
+    /// The EventArgs class for the SimulationStarting event. This event is raised when the simulation starts.
     /// </summary>
     public class SimulationStartingEventArgs : EventArgs
     {
@@ -1713,7 +1714,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the OneHourHasPassed event.
+    /// The EventArgs class for the OneHourHasPassed event. This event is raised every hour of the simulation.
     /// </summary>
     public class OneHourHasPassedEventArgs : EventArgs
     {
@@ -1743,14 +1744,14 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the SimulationEnded event.
+    /// The EventArgs class for the SimulationEnded event. This event is raised when the simulation ends.
     /// </summary>
     public class SimulationEndedEventArgs : EventArgs
     {
         /// <summary>
-        /// A collection of DailyLog objects that together represent the history of the simulation.
+        /// Returns the history for all ships and containers in the simulation in the form of DailyLog objects. Each DailyLog object stores information for one day in the simulation and contains information about the location and status of all ships and containers that day.
         /// </summary>
-        /// <returns>ReadOnlyCollection of DailyLog objects. Each one contains information about a single day of the simulation.</returns>
+        /// <returns>Returns a IList of Dailylog objects each representing one day of the simulation. Together the list represent the entire history of one simulation.</returns>
         public ReadOnlyCollection<DailyLog> SimulationHistory { get; internal set; }
 
         /// <summary>
@@ -1852,7 +1853,7 @@ namespace Gruppe8.HarbNet
         }
     }
     /// <summary>
-    /// The EventArgs class for the ShipUndocked event.
+    /// The EventArgs class for the ShipUndocked event. This event is raised when a ship undocks from any dock.
     /// </summary>
     public class ShipUndockingEventArgs : BaseShipEventArgs
     {
@@ -1877,7 +1878,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the ShipInTransit event.
+    /// The EventArgs class for the ShipInTransit event. This event is raised when a ship enters transit.
     /// </summary>
     public class ShipInTransitEventArgs : BaseShipEventArgs
     {
@@ -1902,7 +1903,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the ShipDockingToShipDock event.
+    /// The EventArgs class for the ShipDockingToShipDock event. This event is raised when a ship is docking to a harbor shipdock.
     /// </summary>
     public class ShipDockingToShipDockEventArgs : BaseShipEventArgs
     {
@@ -1927,7 +1928,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the shipDockedToShipDock event.
+    /// The EventArgs class for the shipDockedToShipDock event. This event is raised when a ship has successfully docked to a harbor shipdock.
     /// </summary>
     public class ShipDockedToShipDockEventArgs : BaseShipEventArgs
     {
@@ -1953,7 +1954,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the shipDockingToLoadingDock event.
+    /// The EventArgs class for the shipDockingToLoadingDock event. This event is raised when a ship is docking to a harbor loading dock.
     /// </summary>
     public class ShipDockingToLoadingDockEventArgs : BaseShipEventArgs
     {
@@ -1976,9 +1977,9 @@ namespace Gruppe8.HarbNet
             DockID = dockID;
         }
     }
-   
+
     /// <summary>
-    /// The EventArgs class for the shipDockedToLoadingDock event.
+    /// The EventArgs class for the shipDockedToLoadingDock event. This event is raised when a ship has successfully docked to a harbor loading dock.
     /// </summary>
     public class ShipDockedToLoadingDockEventArgs : BaseShipEventArgs
     {
@@ -2004,7 +2005,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the ShipStartingLoading event.
+    /// The EventArgs class for the ShipStartingLoading event. This event is raised when a ship starts to load containers from the harbor in to the ship's cargohold.
     /// </summary>
     public class ShipStartingLoadingEventArgs : BaseShipEventArgs
     {
@@ -2029,7 +2030,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the ShipLoadedContainer event.
+    /// The EventArgs class for the ShipLoadedContainer event. This event is raised when a container is loaded onboard a ships cargo.
     /// </summary>
     public class ShipLoadedContainerEventArgs : BaseShipEventArgs
     {
@@ -2055,7 +2056,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the ShipStartingUnloading event.
+    /// The EventArgs class for the ShipStartingUnloading event. This event is raised when a ship is done loading cargo from the harbor.
     /// </summary>
     public class ShipDoneLoadingEventArgs : BaseShipEventArgs
     {
@@ -2080,7 +2081,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the ShipStartingUnloading event.
+    /// The EventArgs class for the ShipStartingUnloading event. This event is raised when a ship starts unloading its cargo to the harbor.
     /// </summary>
     public class ShipStartingUnloadingEventArgs : BaseShipEventArgs
     {
@@ -2105,7 +2106,7 @@ namespace Gruppe8.HarbNet
     }
     
     /// <summary>
-    /// The EventArgs class for the ShipUnloadedContainer event.
+    /// The EventArgs class for the ShipUnloadedContainer event. This event is raised when a container is unloaded from a ships cargo.
     /// </summary>
     public class ShipUnloadedContainerEventArgs : BaseShipEventArgs
     {
@@ -2131,7 +2132,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the ShipDoneUnloading event.
+    /// The EventArgs class for the ShipDoneUnloading event. This event is raised when a ship is done unloading its cargo to the harbor.
     /// </summary>
     public class ShipDoneUnloadingEventArgs : BaseShipEventArgs
     {
@@ -2156,7 +2157,7 @@ namespace Gruppe8.HarbNet
     }
     
     /// <summary>
-    /// The EventArgs class for the ShipAnchored event.
+    /// The EventArgs class for the ShipAnchored event. This event is raised when a ship has anchored to the anchorage.
     /// </summary>
     public class ShipAnchoredEventArgs : BaseShipEventArgs
     {
@@ -2181,7 +2182,7 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the ShipAnchoring event.
+    /// The EventArgs class for the ShipAnchoring event. This event is raised when a ship has started the process of anchoring to the anchorage.
     /// </summary>
     public class ShipAnchoringEventArgs : BaseShipEventArgs
     {
@@ -2206,9 +2207,9 @@ namespace Gruppe8.HarbNet
     }
 
     /// <summary>
-    /// The EventArgs class for the TruckLoadingFromStorage event.
+    /// The EventArgs class for the TruckLoadingFromStorage event. This event is raised when a truck is loading a container from the harbor's storage
     /// </summary>
-    public class TruckLoadingFromStorageEventArgs : EventArgs
+    public class TruckLoadingFromHarborStorageEventArgs : EventArgs
     {
         /// <summary>
         /// The truck involved in the event.
@@ -2233,7 +2234,7 @@ namespace Gruppe8.HarbNet
         /// <param name="truck">The truck object involved in the event.</param>
         /// <param name="currentTime">The current date and time in the simulation.</param>
         /// <param name="description">String value containing a description of the event.</param>
-        public TruckLoadingFromStorageEventArgs(Truck truck, DateTime currentTime, string description)
+        public TruckLoadingFromHarborStorageEventArgs(Truck truck, DateTime currentTime, string description)
         {
             Truck = truck;
             CurrentTime = currentTime;

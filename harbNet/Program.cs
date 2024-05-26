@@ -208,7 +208,7 @@ namespace Client.HarborName
 
             clientSim.TruckLoadingFromStorage += (sender, e) =>
             {
-                TruckLoadingFromStorageEventArgs args = (TruckLoadingFromStorageEventArgs)e;
+                TruckLoadingFromHarborStorageEventArgs args = (TruckLoadingFromHarborStorageEventArgs)e;
                 Console.WriteLine($"| {args.CurrentTime} | A truck has loaded a container and left the harbor \n");
             };
 
