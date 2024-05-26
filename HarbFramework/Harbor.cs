@@ -847,9 +847,8 @@ namespace Gruppe8.HarbNet
         /// Docks ship to loading dock.
         /// </summary>
         /// <param name="shipID">unique ID of ship object to be docked</param>
-        /// <param name="currentTime">The date and time the ship is docked.</param>
         /// <returns>Returns a Guid object representing the dock the ship gets docked to, if available loading dock matching the ShipSize enum does not exist nothing is returned.</returns>
-        internal Guid DockShipToLoadingDock(Guid shipID, DateTime currentTime)
+        internal Guid DockShipToLoadingDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             
@@ -884,9 +883,8 @@ namespace Gruppe8.HarbNet
         /// Docking ship from ship dock to loading dock.
         /// </summary>
         /// <param name="shipID">Unique ID of ship object to be docked from ship dock to loading dock.</param>
-        /// <param name="currentTime">The date and time ship is docked from ship dock to loading dock.</param>
         /// <returns>Returns a Guid object representing the loading dock the ship gets docked to, if available loading dock matching the ShipSize enum does not exist nothing is returned.</returns>
-        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID, DateTime currentTime)
+        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromShipDock(shipID);
 
@@ -992,9 +990,8 @@ namespace Gruppe8.HarbNet
         /// Ship in loading dock got get moved to dock for ships in transit.
         /// </summary>
         /// <param name="shipID">Unique ID of the ship object to be moved to transit.</param>
-        /// <param name="currentTime">The date and time the ship object is undocked from loading dock to tranist.</param>
         /// <returns>Returns a Guid object representing the loading dock the ship gets docked from, if correct dock does not exist nothing is returned.</returns>
-        internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID, DateTime currentTime)
+        internal Guid UnDockShipFromLoadingDockToTransit(Guid shipID)
         {
             Ship shipToBeUndocked = GetShipFromLoadingDock(shipID);
        
@@ -1566,12 +1563,12 @@ namespace Gruppe8.HarbNet
         {
             StringBuilder sb = new();
             Dictionary<Container, Status> containerStatus = new();
-            Status lastStatus = Status.None;
+
             foreach (Container container in storedContainers.Keys)
             {
                 if (container != null && container.HistoryIList != null && container.HistoryIList.Count > 0)
                 {
-                    lastStatus = container.HistoryIList.Last().Status;
+                    Status lastStatus = container.HistoryIList.LastOrDefault()?.Status ?? Status.None;
                     containerStatus[container] = lastStatus;
 
                     foreach (var keyvalue in containerStatus)
