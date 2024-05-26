@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Status for subjects in transit.
+    /// Status for subjects in transit to a destination.
     /// </summary>
     internal enum TransitStatus
     {

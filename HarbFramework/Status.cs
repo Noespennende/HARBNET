@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Status for ships and containers.
+    /// Enum representing the status for ships and containers.
     /// </summary>
     public enum Status
     {

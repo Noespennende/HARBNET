@@ -141,6 +141,7 @@ namespace Gruppe8.HarbNet
                 EndOf24HourPeriod();
 
 
+
                 OneHourHasPassedEventArgs oneHourHasPassedEventArgs = new(currentTime, "One hour has passed in the simulation, which equals to one 'round'");
                 OneHourHasPassed?.Invoke(this, oneHourHasPassedEventArgs);
 

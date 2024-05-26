@@ -3,30 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Gruppe8.HarbNet.Advanced;
 
 namespace Gruppe8.HarbNet
 {
+    /// <summary>
+    /// LoadingDocks used in a simulation. LoadingDocks are docks where ships can load or unload their cargo from or to the Harbor. 
+    /// </summary>
     internal class LoadingDock : Dock
     {
         /// <summary>
-        /// Gets all truck loading spots.
+        /// Gets a dictionary containing the location ID of a spot where trucks can load cargo directly from ships and the truck currently occupying this spot.
         /// </summary>
-        /// <returns>Returns a dictionary with all trucks that are in a loading spot.</returns>
+        /// <returns>Returns a IDictionary with the Guid object representing the location ID of a spot where a truck can load cargo directly from a ship as keys
+        /// and the truck currently occupying this spot as values.</returns>
         internal IDictionary<Guid, Truck?> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck?>();
         
         /// <summary>
-        /// Creates a new LoadingDock object.
+        /// Creates a new LoadingDock object
         /// </summary>
-        /// <param name="shipSize">ShipSize enum representing the size of the ship the loading dock to be created can hold.</param>
+        /// <param name="shipSize">ShipSize enum representing the size of ships that can dock to the LoadingDock. A LoadingDock can only hold
+        /// ships of the cooresponding size.</param>
         internal LoadingDock(ShipSize shipSize) : base(shipSize)
         {
             this.Size = shipSize;
         }
 
         /// <summary>
-        /// Assigns truck to available loading spot.
+        /// Assings the given truck to an available loadingspot. A loading spot is a place where trucks can load cargo directly from ships.
         /// </summary>
-        /// <param name="truck">Truck object to be assigned loading spot.</param>
+        /// <param name="truck">Truck object to be assigned to a loading spot.</param>
         /// <returns>Returns truck object if truck was assined loading spot, if not assigned null is returned.</returns>
         internal Truck? AssignTruckToTruckLoadingSpot(Truck truck)
         {
@@ -42,10 +48,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if truck exists in loading spot.
+        /// Checks if the given truck is stationed at one of the loadingspots in the LoadingDock.
         /// </summary>
         /// <param name="truck">Truck object to be checked if assigned to a loading spot.</param>
-        /// <returns>Returns a bool value. True is returned if truck exists in loading spot, if not false is returned.</returns>
+        /// <returns>Returns a bool value. True is returned if truck exists in one of the docks loadingspots, if not false is returned.</returns>
         internal bool TruckExistsInTruckLoadingSpots(Truck truck)
         {
             foreach (var spot in TruckLoadingSpots)
@@ -59,10 +65,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Removes truck from loading spot.
+        /// Removes the given truck from the LoadingDocks loadingspot.
         /// </summary>
         /// <param name="truck">Truck object to be removed from loading spot.</param>
-        /// <returns>Returns truck object if removed from loading spot, if not null is returned.</returns>
+        /// <returns>Returns the truck object if removed from a loading spot, if not null is returned.</returns>
         internal Truck? RemoveTruckFromTruckLoadingSpot(Truck truck)
         {
             foreach (var spot in TruckLoadingSpots)
@@ -75,21 +81,5 @@ namespace Gruppe8.HarbNet
             }
             return null;
         }
-
-        // FIKSES ELLER FJERNES NÅR HARBOR HAR IMPLEMENTASJON FOR ALLE LOADINGDOCK-CRANER 
-        /*
-        internal Crane? GetFreeLoadingDockCrane()
-        {
-            foreach (Crane crane in AssignedCranes)
-            {
-                if (crane.Container == null)
-                {
-                    return crane;
-                }
-            }
-            return null;
-        }
-        */
-
     }
 }

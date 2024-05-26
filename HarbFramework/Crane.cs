@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Cranes to be used in a simulation.
+    /// Cranes used to load and unload containers to and from ships, trucks and the Harbor's own storage area. 
     /// </summary>
     internal class Crane
     {
@@ -18,26 +18,30 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid object representing the cranes unique ID.</returns>
         internal Guid ID { get; set; }
         /// <summary>
-        /// Gets the container object
+        /// Gets the Container object representing the container currently stored in the cranes cargo.
         /// </summary>
-        /// <returns>Returns the container object that will be loaded or unloaded by the crane.</returns>
+        /// <returns>Returns a Container object representing the container currently stored in the cranes cargo.
+        /// If no container exist Null is returned.</returns>
         internal Container Container { get; set; }
         /// <summary>
-        /// Gets the containers loaded per hour.
+        /// Gets a number representing the amount of loads the Crane can do in an hour.
+        /// One load is defined by the crane loading one container on to its cargo or unload one container from its cargo.
         /// </summary>
-        /// <returns>Returns the int value representing the amount of containers loaded per hour.</returns>
+        /// <returns>Returns the int value representing the amount of loads the container can perform in one hour of the simulation.</returns>
         internal int ContainersLoadedPerHour { get; set; }
         /// <summary>
-        /// Gets the unique ID for the cranes current location
+        /// Gets the ID of the containers current location. 
         /// </summary>
-        /// <returns>Returns a Guid object representing the location of the crane</returns>
+        /// <returns>Returns a Guid object representing the ID of the cranes current location</returns>
         internal Guid Location { get; set; }
 
         /// <summary>
-        /// Creates a new crane object.
+        /// Constructor used to create objects of the crane class. A crane can be used to load and unload containers to and from ships,
+        /// trucks and the Harbor's own storage area
         /// </summary>
-        /// <param name="containersLoadedPerHour">Int value representing the amount on containers loaded by the crane per hour.</param>
-        /// <param name="location">Unique Guid representing the location the Container to be created will currently be located.</param>
+        /// <param name="containersLoadedPerHour">Int value representing the amount of loads the Crane can do in an hour.
+        /// One load is defined by the crane loading one container on to its cargo or unload one container from its cargo.</param>
+        /// <param name="location">Guid containing the ID of the location the crane will be placed at.</param>
         internal Crane (int containersLoadedPerHour, Guid location)
         {
             this.ID = Guid.NewGuid();
@@ -47,10 +51,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Container loaded by Crane.
+        /// Loads the given container on to the cranes storage.
         /// </summary>
         /// <param name="containerToBeLoaded">The container object to be loaded by the Crane.</param>
-        /// <returns>Returns the Guid object representing the unique ID of container to be loaded.</returns>
+        /// <returns>Returns the Guid object representing the unique ID of the container that was loaded on to the cranes storage.</returns>
         internal Guid LoadContainer (Container containerToBeLoaded)
         {
             this.Container = containerToBeLoaded;
@@ -58,9 +62,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Container unloaded from Crane.
+        /// Unloads the currently loaded container from the cranes storage. Crane current cargo is then set to null.
         /// </summary>
-        /// <returns>Returns the Container object to be unloaded.</returns>
+        /// <returns>Returns a Container object representing the container unloaded from the cranes storage. Returns null if no container
+        /// is found in the cranes storage.</returns>
         internal Container UnloadContainer ()
         {
             Container containerToBeUnloaded = this.Container;

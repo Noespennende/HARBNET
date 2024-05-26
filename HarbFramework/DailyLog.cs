@@ -11,37 +11,41 @@ using Gruppe8.HarbNet.Advanced;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Daily logs to be stored in a simulations history. Holds information about the state of the harbor on a specific day of a simulation.
+    /// Class used to record historical events in a simulation. Each object of this class holds information about the state of the harbor on one
+    /// spesific day of the simulation.
     /// </summary>
     public class DailyLog : HistoryRecord
     {
         /// <summary>
-        /// Gets the date and time the DailyLog's info were logged.
+        /// Gets the date and time the DailyLog's info were logged. The information stored in the daily log represents a snapshot of the harbor
+        /// on the date and time represented in this member.
         /// </summary>
-        /// <returns>Returns a DateTime object representing the date and time the info were logged</returns>
+        /// <returns>Returns a DateTime object representing the date and time the info in the DailyLog object were logged</returns>
         public override DateTime Time { get; internal set; }
         /// <summary>
-        /// Gets a ReadOnlyCollection of ship objects containting information of all ships in anchorage at the date and time when the DailyLog object were created.
+        /// Gets a ReadOnlyCollection of ship objects containting information of all ships that were in anchorage at the date and time when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing all the ships in anchorage when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsInAnchorage { get; }
         /// <summary>
-        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships in transit when the DailyLog object were created.
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships that were in transit when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships in transit when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsInTransit { get; }
         /// <summary>
-        /// Gets a ReadOnlyCollection of container objects containing information of all the containers stored in harbour when the DailyLog object were created.
+        /// Gets a ReadOnlyCollection of container objects containing information of all the containers that were stored in harbour when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Container object representing the containers stored in when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Container> ContainersInHarbour { get; }
         /// <summary>
-        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships docked in a loading dock when the DailyLog object were created.
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships that were docked in a loading dock when the DailyLog object were created.
+        /// Loading docks are docks where ships can load and unload containers from/to their cargo to/from the Harbor.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the docked in a loading dock when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsDockedInLoadingDocks { get; }
         /// <summary>
-        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships docked to ship docks when the DailyLog object were created.
+        /// Gets a ReadOnlyCollection of ship objects containing information of all the ships that were docked to ship docks when the DailyLog object were created.
+        /// Ship docks are docks where ships can be stored when they are done with their cargo delivery.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships docked to ship docks when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsDockedInShipDocks { get; }
@@ -52,9 +56,9 @@ namespace Gruppe8.HarbNet
         public override ReadOnlyCollection<Container> ContainersArrivedAtDestination { get; }
 
         /// <summary>
-        /// Creates a Dailylog object which holds information about the state of the simulation at a specific day.
+        /// Creates a Dailylog object which holds historical data about the state of the simulation at a specific day. 
         /// </summary>
-        /// <param name="time">The date and time the information is being logged.</param>
+        /// <param name="time">The date and time of the simulation the information is being logged.</param>
         /// <param name="shipsInAnchorage">An IList with ship objects containing all the ships in anchorage at the time given.</param>
         /// <param name="shipsInTransit">An IList with ship objects containing all the ships in transit at the time given.</param>
         /// <param name="containersInHarbour">An IList with container objects with all the containers stored in harbour at the time given.</param>
@@ -80,9 +84,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Duplicate a shipList making copies of all objects in it in a new list.
+        /// Duplicate a shipList making copies of all objects within the list and adds them to a new list.
         /// </summary>
-        /// <param name="shipListToDuplicate">The IList containing Ship objects to be duplicated.</param>
+        /// <param name="shipListToDuplicate">The IList containing the Ship objects to be duplicated.</param>
         /// <returns>Returns a Collection containing Ship objects, which are duplications of all objects in the shipListToDuplicate.</returns>
         private Collection <Ship> DuplicateShipList(IList<Ship> shipListToDuplicate)
         {
@@ -113,9 +117,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Duplicate a container list making copies of all objects in it in a new list.
+        /// Duplicate a container list making copies of all objects within the list and adds them to a new list.
         /// </summary>
-        /// <param name="containersToDuplicate">The IList containing Container objects to be duplicated.</param>
+        /// <param name="containersToDuplicate">The IList containing the Container objects to be duplicated.</param>
         /// <returns>Returns a Collection containing Container objects, which are duplications of all objects in the containersToDuplicate.</returns>
         private Collection<Container> DuplicateContainerList(IList<Container> containersToDuplicate)
         {
@@ -134,7 +138,8 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Prints the wereabouts and info regarding all the ships in the DailyLog.
+        /// Prints to console the historical data regarding the Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
+        /// all ships at the time in the simulation the DailyLog object were created.
         /// </summary>
         public override void PrintInfoForAllShips()
         {
@@ -199,7 +204,8 @@ namespace Gruppe8.HarbNet
 
         }
         /// <summary>
-        /// Prints the wereabouts and info regarding all the containers in the DailyLog.
+        /// Prints to console the historical data regarding the location, Size, Weight, status and ID of all containers in the simulation at the time and date the DailyLog object
+        /// were created.
         /// </summary>
         public override void PrintInfoForAllContainers()
         {
@@ -325,9 +331,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string that contains information about all ships on the given day of a simulation.
+        /// Returns a string containing the historical data regarding the Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
+        /// all ships at the time in the simulation the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a String containing information about all ships on the given day of a simulation.</returns>
+        /// <returns>Returns a String containing the historical data regarding all ships at the time in the simulation the DailyLog object were created.</returns>
         public override String HistoryToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -400,10 +407,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string that contains information about all ships or containers on the given day of a simulation.
+        /// Returns a string the historical data regarding the location, Size, Weight, status and ID of all containers in the simulation at the time and date the DailyLog object
+        /// were created or containing the historical data regarding the Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
+        /// all ships at the time in the simulation the DailyLog object were created.
         /// </summary>
         /// <param name="ShipsOrContainers">User can choose to write either "ships" or "containers" as input. "ships" returns information on all ships, "containers" return information on all containers</param>
-        /// <returns>Returns a String containing information about all ships or containers on the given day of a simulation.</returns>
+        /// <returns>Returns a String containing historical data about all ships or all containers at the time in the simulation the DailyLog object were created..</returns>
         public override String HistoryToString(String ShipsOrContainers) 
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
@@ -543,9 +552,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string with the date and time, amount of ships in anchorage, amount of ships docked in loading docks, amount of ships docked in ship dock, amount of ships in transit, amount of containers in harbor and amount of containers that have arrived at their destination.
+        /// Returns a string containing information about the date and time the DailyLog object were created and the amount of ships in anchorage, amount of ships docked in loading docks, amount of ships docked in ship dock, amount of ships in transit, amount of containers in harbor and amount of containers that have arrived at their destination
+        /// at the moment the DailyLog object were created.
         /// </summary>
-        /// <returns>Returns a String containing the time the DailyLog object represents and the number of ships in all locations.</returns>
+        /// <returns>Returns a String containing the time the DailyLog object were created and the number of ships in all locations at this time.</returns>
         public override string ToString()
         {
             return ($"Time: {Time.ToString()}, Ships in anchorage {ShipsInAnchorage.Count}, Ships in loading docks: {ShipsDockedInLoadingDocks.Count}, Ships in ship dock: {ShipsDockedInShipDocks.Count}, Ships in transit: " +

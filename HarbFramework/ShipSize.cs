@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Size of ships
+    /// Enum representing the size of ships
     /// </summary>
     public enum ShipSize
     {
@@ -18,14 +18,14 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Small ship. base weight: 5000 tonns, container capacity: 20.
         /// </summary>
-        Small,
+        Small = 5000,
         /// <summary>
         /// Medium ship, base weight: 50000 tonns, container capacity: 50
         /// </summary>
-        Medium,
+        Medium = 50000,
         /// <summary>
         /// Large ship, base weight: 100000 tonns, container capacity: 100
         /// </summary>
-        Large
+        Large = 100000
     }
 }
