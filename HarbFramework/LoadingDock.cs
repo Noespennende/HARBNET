@@ -52,8 +52,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="truck">Truck object to be checked if assigned to a loading spot.</param>
         /// <returns>Returns a bool value. True is returned if truck exists in one of the docks loadingspots, if not false is returned.</returns>
-        internal bool TruckExistsInTruckLoadingSpots(Truck truck)
+        internal bool TruckExistsInTruckLoadingSpots(Truck? truck)
         {
+            if (truck == null) 
+                return false;
+
             foreach (var spot in TruckLoadingSpots)
             {
                 if (spot.Value == truck)

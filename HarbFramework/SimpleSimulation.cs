@@ -147,7 +147,7 @@ namespace Gruppe8.HarbNet
 
                 continue;
             }
-            SimulationEndedEventArgs simulationEndedEventArgs = new SimulationEndedEventArgs(History, "The simulation has reached the end time and has ended.");
+            SimulationEndedEventArgs simulationEndedEventArgs = new(History, "The simulation has reached the end time and has ended.");
 
             SimulationEnded?.Invoke(this, simulationEndedEventArgs);
 
@@ -203,7 +203,7 @@ namespace Gruppe8.HarbNet
             DateTime past24Hours = currentTime.AddHours(-24);
             if (currentTime.Hour == 0)
             {
-                DailyLog harborDayLog = new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.ArrivedAtDestination,
+                DailyLog harborDayLog = new(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.ArrivedAtDestination,
                     harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock());
                 
                 HistoryIList.Add(harborDayLog);
@@ -364,7 +364,6 @@ namespace Gruppe8.HarbNet
         {
 
             List<Ship> Anchorage = harbor.Anchorage.ToList();
-            List<Ship> ShipsInShipDock = new(harbor.shipsInShipDock.Keys);
             List<Ship> ShipsInLoadingDock = new(harbor.shipsInLoadingDock.Keys);
 
             foreach (Ship ship in ShipsInLoadingDock)
@@ -430,7 +429,7 @@ namespace Gruppe8.HarbNet
 
                         if (lastStatusLog.Status == Status.Anchored)
                         {
-                            dockID = harbor.DockShipToLoadingDock(shipID, currentTime);
+                            dockID = harbor.DockShipToLoadingDock(shipID);
                             ShipIsDockedToLoadingDock(ship, dockID);
                         }
                     }
@@ -657,8 +656,6 @@ namespace Gruppe8.HarbNet
 
                 if (ShipIsReadyForUnloading)
                 {
-
-                    Guid currentPosition = lastStatusLog.SubjectLocation;
                     Guid dockID = lastStatusLog.SubjectLocation;
 
                     if (ShipNowUnloading(ship, lastStatusLog))
@@ -850,16 +847,18 @@ namespace Gruppe8.HarbNet
         {
             Crane? craneDock = harbor.GetFreeLoadingDockCrane();
 
-            Agv agv = harbor.GetFreeAgv();
+            Agv? agv = harbor.GetFreeAgv();
 
 
             if (agv != null && craneDock!= null)
             {
-                Container unloadedContainer = harbor.ShipToCrane(ship, craneDock, currentTime);
-                harbor.CraneToAgv(craneDock, agv, currentTime);
+                Container? unloadedContainer = harbor.ShipToCrane(ship, craneDock, currentTime);
+                if (unloadedContainer != null)
+                {
+                    harbor.CraneToAgv(craneDock, agv, currentTime);
 
-                return unloadedContainer;
-
+                    return unloadedContainer;
+                } 
             }
 
             return null;
@@ -916,9 +915,12 @@ namespace Gruppe8.HarbNet
                 return null;
             }
             
-            Container container = harbor.ShipToCrane(ship, craneDock, currentTime);
-            harbor.CraneToTruck(craneDock, truck, currentTime);
-            ship.ContainersLeftForTrucks--;
+            Container? container = harbor.ShipToCrane(ship, craneDock, currentTime);
+            if (container == null)
+            {
+                harbor.CraneToTruck(craneDock, truck, currentTime);
+                ship.ContainersLeftForTrucks--;
+            }
 
             return container;
         }
@@ -952,22 +954,25 @@ namespace Gruppe8.HarbNet
                         ship.TransitStatus = TransitStatus.Leaving;
                     }
 
-                    else if (ShipIsDockingToDock(ship, lastStatusLog))
+                    else if (ShipIsDockingToShipDock(lastStatusLog))
                     {
                         Guid dockID = lastStatusLog.SubjectLocation;
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToShipDock);
+
+                        ShipDockedToShipDockEventArgs shipDockedToShipDockEventArgs = new(ship, currentTime, "Ship has docked to ship dock.", dockID);
+                        ShipDockedToShipDock?.Invoke(this, shipDockedToShipDockEventArgs);
                     }
 
-                    else if (ShipIsFinishedLoadingContainers(ship, lastStatusLog))
+                    else if (ShipIsFinishedLoadingContainers(lastStatusLog))
                     {
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Undocking);
                         ship.TransitStatus = TransitStatus.Leaving;
                     }
 
-                    else if (ShipIsUndocking(ship, lastStatusLog))
+                    else if (ShipIsUndocking(lastStatusLog))
                     {
 
-                        harbor.UnDockShipFromLoadingDockToTransit(shipID, currentTime);
+                        harbor.UnDockShipFromLoadingDockToTransit(shipID);
                         ship.AddStatusChangeToHistory(currentTime, harbor.TransitLocationID, Status.Transit);
 
                         ShipInTransitEventArgs shipInTransitEventArgs = new(ship, currentTime, "Ship has left the harbor and is in transit.", harbor.TransitLocationID);
@@ -990,10 +995,12 @@ namespace Gruppe8.HarbNet
                 {
                     bool containsTransitStatus = ContainsTransitStatus(ship);
 
-                    if (ShipIsDockingToDock(ship, lastStatusLog))
+                    if (ShipIsDockingToShipDock(lastStatusLog))
                     {
                         Guid dockID = lastStatusLog.SubjectLocation;
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToShipDock);
+                        ShipDockedToShipDockEventArgs shipDockedToShipDockEventArgs = new(ship, currentTime, "Ship has docked to ship dock.", dockID);
+                        ShipDockedToShipDock?.Invoke(this, shipDockedToShipDockEventArgs);
                     }
                     ship.HasBeenAlteredThisHour = true;
 
@@ -1014,7 +1021,7 @@ namespace Gruppe8.HarbNet
                         UndockFromAnchorage(ship, lastStatusLog);
                     }
 
-                    else if (ShipIsUndocking(ship, lastStatusLog))
+                    else if (ShipIsUndocking(lastStatusLog))
                     {
                         UndockToTransit(ship);
                     }
@@ -1064,8 +1071,6 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship object can undock from loading dock, if not false is returned.</returns>
         private bool ShipCanUndockFromDock(Ship ship, StatusLog lastStatusLog)
         {
-            bool containsTransitStatus = ContainsTransitStatus(ship);
-
             return ship.HasBeenAlteredThisHour == false && lastStatusLog != null &&
                     (lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone || 
                     (lastStatusLog.Status == Status.DockedToLoadingDock && ship.IsForASingleTrip && !ContainsTransitStatus(ship)) ||
@@ -1087,10 +1092,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if ship is in the process docking to ship dock.
         /// </summary>
-        /// <param name="ship">The ship objects that is being checked if it can dock to ship dock.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
         /// <returns>Returns true if the ship object can dock to ship dock, if not then false is returned.</returns>
-        private bool ShipIsDockingToDock(Ship ship, StatusLog lastStatusLog)
+        private bool ShipIsDockingToShipDock(StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.DockingToShipDock && (currentTime - lastStatusLog.Timestamp).TotalHours >= 1;
         }
@@ -1098,10 +1102,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if the ship is finished loading containers.
         /// </summary>
-        /// <param name="ship">The ship object that is to be checked if it is done loading containers.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
         /// <returns>Returns true if the ship object is done loading containers, if not then false is returned.</returns>
-        private bool ShipIsFinishedLoadingContainers(Ship ship, StatusLog lastStatusLog)
+        private bool ShipIsFinishedLoadingContainers(StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.LoadingDone || lastStatusLog.Status == Status.DockedToLoadingDock;
         }
@@ -1109,10 +1112,9 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Checks if ship is in the process of undocking.
         /// </summary>
-        /// <param name="ship">The ship object that is to be checked if it is currently undocking.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
         /// <returns>Returns true if the ship is currently undocking from dock, if not then false is returned.</returns>
-        private bool ShipIsUndocking(Ship ship, StatusLog lastStatusLog)
+        private bool ShipIsUndocking(StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.Undocking && (currentTime - lastStatusLog.Timestamp).TotalHours >= 1;
         }
@@ -1281,22 +1283,19 @@ namespace Gruppe8.HarbNet
         internal Container? LoadContainerOnShip(Ship ship)
         {
             numberOfStorageContainersToShipThisRound = harbor.NumberOfContainersInStorageToShips();
-
-            Container? loadedContainer = null;
-            Container? movedContainer = null;
-
             Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
             Crane? dockCrane = harbor.GetFreeLoadingDockCrane();
 
             if (storageCrane?.Container == null && dockCrane?.Container == null)
             {
 
-                loadedContainer = LoadContainerOnStorageAgv(ship);
+                Container? loadedContainer = LoadContainerOnStorageAgv(ship);
 
-                movedContainer = MoveOneContainerFromAgvToShip(loadedContainer, ship);
-
-                return movedContainer;
-
+                if (loadedContainer != null)
+                {
+                    Container? movedContainer = MoveOneContainerFromAgvToShip(loadedContainer, ship);
+                    return movedContainer;
+                }
             }
 
             return null;
@@ -1354,7 +1353,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the container object that was moved.</returns>
         private Container? MoveOneContainerFromContainerRowToAgv(ContainerSize containerSize)
         {
-            Agv agv = harbor.GetFreeAgv();
+            Agv? agv = harbor.GetFreeAgv();
             Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
             if (storageCrane == null)
             {
@@ -1412,11 +1411,6 @@ namespace Gruppe8.HarbNet
 
                 if (IsShipInTransit(ship, lastStatusLog))
                 {
-
-                    Guid CurrentPosition = GetStatusLog(ship).SubjectLocation;
-                    StatusLog LastHistoryStatusLog = (StatusLog)ship.HistoryIList.Last();
-
-                    
 
                     if (ShipHasReturnedToHarbor(ship, lastStatusLog))
                     {
@@ -1602,7 +1596,7 @@ namespace Gruppe8.HarbNet
         {
             if (History.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
 
                 foreach (DailyLog log in History)
                 {
@@ -1651,7 +1645,7 @@ namespace Gruppe8.HarbNet
             {
                 if (History.Count > 0)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    StringBuilder sb = new();
 
                     foreach (DailyLog log in History)
                     {
