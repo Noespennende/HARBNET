@@ -51,7 +51,6 @@ namespace Gruppe8.HarbNet
         public event EventHandler<SimulationStartingEventArgs>? SimulationStarting;
         public event EventHandler<OneHourHasPassedEventArgs>? OneHourHasPassed;
         public event EventHandler<DayEndedEventArgs>? DayEnded;
-        public event EventHandler<DayLoggedToSimulationHistoryEventArgs>? DayLoggedToSimulationHistory;
         public event EventHandler<ShipUndockingEventArgs>? ShipUndocking;
         public event EventHandler<ShipInTransitEventArgs>? ShipInTransit;
         public event EventHandler<ShipDockingToShipDockEventArgs>? ShipDockingToShipDock;
@@ -208,14 +207,13 @@ namespace Gruppe8.HarbNet
                 
                 HistoryIList.Add(harborDayLog);
 
-                DayEndedEventArgs dayOverEventArgs = new(harborDayLog, currentTime, "The day has passed and the state of the harbor on day-shifty has been logged.");
-                DayEnded?.Invoke(this, dayOverEventArgs);
 
                 foreach (Container container in harbor.GetContainersStoredInHarbour())
                 {
                     container.AddAnotherDayInStorage();
                 }
 
+                Dictionary<Ship, List<StatusLog>> dayReviewAllShipLogs = new();
                 foreach (Ship ship in harbor.AllShips)
                 {
                     List<StatusLog> dayReviewShipLogs = new();
@@ -228,11 +226,13 @@ namespace Gruppe8.HarbNet
                             dayReviewShipLogs.Add(log);
                         }
                     }
-                    DayLoggedToSimulationHistoryEventArgs dayLoggedEventArgs = new(harborDayLog, currentTime, 
-                        "The day has passed and ship movement throughout the day and the state of the harbor on day-shift has been logged.", ship, dayReviewShipLogs);
-             
-                    DayLoggedToSimulationHistory?.Invoke(this, dayLoggedEventArgs);
+
+                    dayReviewAllShipLogs.Add(ship, dayReviewShipLogs);
                 }
+
+
+                DayEndedEventArgs dayOverEventArgs = new(harborDayLog,dayReviewAllShipLogs, currentTime, "The day has passed and the state of the harbor on day-shifty has been logged.");
+                DayEnded?.Invoke(this, dayOverEventArgs);
 
             }
 
@@ -1781,7 +1781,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a DailyLog object containing information about the state of the simulation at the time the object was created</returns>
         public DailyLog TodaysLog { get; internal set; }
-        
+
+        /// <summary>
+        /// A Dictionary collection containing all ships and their logs from the previous day in the simulation.
+        /// </summary>
+        /// <returns>Returns a Dictionary collection containing Ship-List pairs, where List is the history of the ship from the previous day.</returns>
+        public Dictionary<Ship, List<StatusLog>> DayReviewAllShipLogs { get; internal set; }
+
         /// <summary>
         /// The time in the simulation the event was raised.
         /// </summary>
@@ -1798,66 +1804,15 @@ namespace Gruppe8.HarbNet
         /// Initializes a new instance of the DayEndedEventArgs class.
         /// </summary>
         /// <param name="todaysLog">A DailyLog object containing information about the previous day in the simulation.</param>
+        /// <param name="dayReviewAllShipLogs">A Dictionary collection with Ship-List pair, where the List is the history of the ship from the previous day.</param>
         /// <param name="currentTime">The date and time in the simulation the event was raised.</param>
         /// <param name="description">A string value containing a description of the event.</param>
-        public DayEndedEventArgs(DailyLog todaysLog, DateTime currentTime, string description)
+        public DayEndedEventArgs(DailyLog todaysLog, Dictionary<Ship, List<StatusLog>> dayReviewAllShipLogs, DateTime currentTime, string description)
         {
             TodaysLog = todaysLog;
+            DayReviewAllShipLogs = dayReviewAllShipLogs;
             CurrentTime = currentTime;
             Description = description;
-        }
-    }
-   
-    /// <summary>
-    /// The EventArgs class for the DayLogged event
-    /// </summary>
-    public class DayLoggedToSimulationHistoryEventArgs : EventArgs
-    {
-        /// <summary>
-        /// A DailyLog object containing information about the state of the harbor the day the event was raised.
-        /// </summary>
-        /// <returns>Returns a DailyLog containing information about the state of the harbor the day the event was raised.</returns>
-        public DailyLog TodaysLog { get; internal set; }
-        
-        /// <summary>
-        /// The time in the simulation the event was raised.
-        /// </summary>
-        /// <returns>Returns a DateTime object representing the time in the simulation the event was raised</returns>
-        public DateTime CurrentTime { get; internal set; }
-
-        /// <summary>
-        /// A description of the event.
-        /// </summary>
-        /// <returns>Returns a string value containing a description of the event.</returns>
-        public string Description { get; internal set; }
-
-        /// <summary>
-        /// The ship the dayReviewShipLogs logs come from.
-        /// </summary>
-        /// <returns>Returns a ship object representing the ship that logged the DayReview logs.</returns>
-        public Ship Ship { get; internal set; }
-        
-        /// <summary>
-        /// A list of all logs registered by ship in the past day.
-        /// </summary>
-        /// <returns>Returns an IList with all logs registered by ship in the past day.</returns>
-        public IList<StatusLog>? DayReviewShipLogs { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the DayLoggedToSimulationHistoryEventArgs class.
-        /// </summary>
-        /// <param name="todaysLog">A DailyLog object containing information about the state of the harbor the day the event was raised.</param>
-        /// <param name="currentTime">The date time in the simulation the event was raised.</param>
-        /// <param name="description">String value containing a description of the event.</param>
-        /// <param name="ship">The ship object the dayReviewShipLogs logs come from.</param>
-        /// <param name="dayReviewShipLogs">An IList of all logs registered by ship in the past day.</param>
-        public DayLoggedToSimulationHistoryEventArgs(DailyLog todaysLog, DateTime currentTime, string description, Ship ship, IList<StatusLog>? dayReviewShipLogs)
-        {
-            TodaysLog = todaysLog;
-            CurrentTime = currentTime;
-            Description = description;
-            Ship = ship;
-            DayReviewShipLogs = dayReviewShipLogs;
         }
     }
 

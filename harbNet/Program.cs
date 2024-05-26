@@ -220,39 +220,39 @@ namespace Client.HarborName
                 Console.WriteLine($"| {args.CurrentTime} | Day over! |");
                 Console.WriteLine($"-----------------------------------");
 
-            };
-     
-            clientSim.DayLoggedToSimulationHistory += (sender, e) =>
-            {
-                DayLoggedToSimulationHistoryEventArgs args = (DayLoggedToSimulationHistoryEventArgs)e;
+                
 
-                bool anyLogsPrinted = false;
-
-                Console.WriteLine($"** Here is a quick summary of {args.Ship.Name}'s movements today: **");
-                if (args.DayReviewShipLogs != null && args.DayReviewShipLogs.Any())
+                foreach (Ship ship in args.DayReviewAllShipLogs.Keys)
                 {
-                    foreach (StatusLog log in args.DayReviewShipLogs)
+                    bool anyLogsPrinted = false;
+                    List<StatusLog> DayReviewShipLogs = args.DayReviewAllShipLogs[ship];
+                    Console.WriteLine($"** Here is a quick summary of {ship.Name}'s movements today: **");
+                    if (DayReviewShipLogs != null && DayReviewShipLogs.Count != 0)
                     {
-                        Console.WriteLine($"| {log.Timestamp} | {args.Ship.Name} | Status: {log.Status} |");
-                        anyLogsPrinted = true;
+                        foreach (StatusLog log in DayReviewShipLogs)
+                        {
+                            Console.WriteLine($"| {log.Timestamp} | {ship.Name} | Status: {log.Status} |");
+                            anyLogsPrinted = true;
+                        }
                     }
+
+                    if (!anyLogsPrinted)
+                    {
+                        if (ship.History.Count != 0)
+                        {
+                            Console.WriteLine($"Looks like today has been a pretty quiet day for {ship.Name} in the ol' Harbor-ino");
+                            Console.WriteLine($"Believe it or not, {ship.Name} is still in {ship.History.Last().Status}!\n");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Looks like we're still waiting for {ship.Name} to start!");
+                            Console.WriteLine($"It's start date is {ship.StartDate}. It is currently {args.CurrentTime}\n");
+                        }
+                    }
+                    Console.WriteLine("-----------------------------------");
+                    Console.WriteLine("");
                 }
 
-                if (!anyLogsPrinted)
-                {
-                    if (args.Ship.History.Count != 0)
-                    {
-                        Console.WriteLine($"Looks like today has been a pretty quiet day for {args.Ship.Name} in the ol' Harbor-ino");
-                        Console.WriteLine($"Believe it or not, {args.Ship.Name} is still in {args.Ship.History.Last().Status}!\n");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Looks like we're still waiting for {args.Ship.Name} to start!");
-                        Console.WriteLine($"It's start date is {args.Ship.StartDate}. It is currently {args.CurrentTime}\n");
-                    }
-                }
-                Console.WriteLine("-----------------------------------");
-                Console.WriteLine("");
             };
             
             clientSim.SimulationEnded += (sender, e) =>

@@ -516,11 +516,13 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the container object that was loaded to the ship's storage from the crane.</returns>
         internal Container CraneToShip(Crane crane, Ship ship, DateTime currentTime)
         {
-            Container containerToBeLoaded = crane.UnloadContainer();
-            containerToBeLoaded.CurrentLocation = crane.Location;
-            containerToBeLoaded.AddStatusChangeToHistory(Status.Loading, currentTime);
-            ship.AddContainer(containerToBeLoaded);
-            
+            Container? containerToBeLoaded = crane.UnloadContainer();
+            if (containerToBeLoaded != null)
+            {
+                containerToBeLoaded.CurrentLocation = crane.Location;
+                containerToBeLoaded.AddStatusChangeToHistory(Status.Loading, currentTime);
+                ship.AddContainer(containerToBeLoaded);
+            }
             return containerToBeLoaded;
         }
 
@@ -703,7 +705,7 @@ namespace Gruppe8.HarbNet
         /// <param name="currentTime">The Date and Time the container is loaded from crane to the agv.</param>
         /// <returns>Returns the container object that were loaded from the crane to the Agv.</returns>
         /// <exception cref="AgvCantBeLoadedException">Exception to be thrown if Agv can't be loaded.</exception>
-        internal Container CraneToAgv(Crane crane, Agv agv, DateTime currentTime)
+        internal Container? CraneToAgv(Crane crane, Agv agv, DateTime currentTime)
         {
             if (!AgvFree.Contains(agv))
             {
@@ -714,20 +716,23 @@ namespace Gruppe8.HarbNet
                 {
                     throw new AgvCantBeLoadedException("The AGV you are trying to load does not exist in the simulation and therefore can't be loaded.");
                 }
-                
             }
 
             if (!(agv.Container == null))
             {
                 throw new AgvCantBeLoadedException("The AGV given already has a container in its storage and therefore has no room for the container the crane is trying to load.");
             }
-            Container containerToBeLoaded = crane.UnloadContainer();
-            containerToBeLoaded.CurrentLocation = crane.Location;
-            agv.LoadContainer(containerToBeLoaded);
-            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAgv, currentTime);
+            Container? containerToBeLoaded = crane.UnloadContainer();
+            
+            if (containerToBeLoaded != null)
+            {
+                containerToBeLoaded.CurrentLocation = crane.Location;
+                agv.LoadContainer(containerToBeLoaded);
+                containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToAgv, currentTime);
 
-            AgvFree.Remove(agv);
-            AgvWorking.Add(agv);
+                AgvFree.Remove(agv);
+                AgvWorking.Add(agv);
+            }
 
             return containerToBeLoaded;
         }

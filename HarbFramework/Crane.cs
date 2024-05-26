@@ -22,7 +22,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Container object representing the container currently stored in the cranes cargo.
         /// If no container exist Null is returned.</returns>
-        internal Container Container { get; set; }
+        internal Container? Container { get; set; }
         /// <summary>
         /// Gets a number representing the amount of loads the Crane can do in an hour.
         /// One load is defined by the crane loading one container on to its cargo or unload one container from its cargo.
@@ -42,7 +42,7 @@ namespace Gruppe8.HarbNet
         /// <param name="containersLoadedPerHour">Int value representing the amount of loads the Crane can do in an hour.
         /// One load is defined by the crane loading one container on to its cargo or unload one container from its cargo.</param>
         /// <param name="location">Guid containing the ID of the location the crane will be placed at.</param>
-        internal Crane (int containersLoadedPerHour, Guid location)
+        internal Crane(int containersLoadedPerHour, Guid location)
         {
             this.ID = Guid.NewGuid();
             this.ContainersLoadedPerHour = containersLoadedPerHour;
@@ -55,7 +55,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerToBeLoaded">The container object to be loaded by the Crane.</param>
         /// <returns>Returns the Guid object representing the unique ID of the container that was loaded on to the cranes storage.</returns>
-        internal Guid LoadContainer (Container containerToBeLoaded)
+        internal Guid LoadContainer(Container containerToBeLoaded)
         {
             this.Container = containerToBeLoaded;
             return containerToBeLoaded.ID;
@@ -66,9 +66,9 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Container object representing the container unloaded from the cranes storage. Returns null if no container
         /// is found in the cranes storage.</returns>
-        internal Container UnloadContainer ()
+        internal Container? UnloadContainer()
         {
-            Container containerToBeUnloaded = this.Container;
+            Container? containerToBeUnloaded = this.Container;
             this.Container = null;
             return containerToBeUnloaded;
 
