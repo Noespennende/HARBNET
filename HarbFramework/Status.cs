@@ -88,7 +88,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         Queuing,
         /// <summary>
-        /// Container has arrived at destination
+        /// Container has arrived at its final destination
         /// </summary>
         ArrivedAtDestination,
 
