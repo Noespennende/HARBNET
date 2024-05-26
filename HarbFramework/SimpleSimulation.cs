@@ -147,7 +147,7 @@ namespace Gruppe8.HarbNet
 
                 continue;
             }
-            SimulationEndedEventArgs simulationEndedEventArgs = new SimulationEndedEventArgs(History, "The simulation has reached the end time and has ended.");
+            SimulationEndedEventArgs simulationEndedEventArgs = new(History, "The simulation has reached the end time and has ended.");
 
             SimulationEnded?.Invoke(this, simulationEndedEventArgs);
 
@@ -203,7 +203,7 @@ namespace Gruppe8.HarbNet
             DateTime past24Hours = currentTime.AddHours(-24);
             if (currentTime.Hour == 0)
             {
-                DailyLog harborDayLog = new DailyLog(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.ArrivedAtDestination,
+                DailyLog harborDayLog = new(currentTime, harbor.Anchorage, harbor.GetShipsInTransit(), harbor.GetContainersStoredInHarbour(), harbor.ArrivedAtDestination,
                     harbor.GetShipsInLoadingDock(), harbor.GetShipsInShipDock());
                 
                 HistoryIList.Add(harborDayLog);
@@ -961,6 +961,7 @@ namespace Gruppe8.HarbNet
                     {
                         Guid dockID = lastStatusLog.SubjectLocation;
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToShipDock);
+
                         ShipDockedToShipDockEventArgs shipDockedToShipDockEventArgs = new(ship, currentTime, "Ship has docked to ship dock.", dockID);
                         ShipDockedToShipDock?.Invoke(this, shipDockedToShipDockEventArgs);
                     }
@@ -1611,7 +1612,7 @@ namespace Gruppe8.HarbNet
         {
             if (History.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
 
                 foreach (DailyLog log in History)
                 {
@@ -1660,7 +1661,7 @@ namespace Gruppe8.HarbNet
             {
                 if (History.Count > 0)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    StringBuilder sb = new();
 
                     foreach (DailyLog log in History)
                     {

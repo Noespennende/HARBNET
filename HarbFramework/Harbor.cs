@@ -79,7 +79,7 @@ namespace Gruppe8.HarbNet
         /// Gets a list containing all the ContainerStorageRows in the simulation.
         /// </summary>
         /// <return>Returns an Ilist with ContainerStorageRow objects representing all the containerRows in the harbor.</return>
-        internal IList<ContainerStorageRow> allContainerRows { get; set; }
+        internal IList<ContainerStorageRow> AllContainerRows { get; set; }
         /// <summary>
         /// Gets a dictionary containing all containers in the harbor storage area and the ContainerStorageRow they are stored in.
         /// </summary>
@@ -217,7 +217,7 @@ namespace Gruppe8.HarbNet
         {
 
             this.TrucksArrivePerHour = numberOfTrucksArriveToHarborPerHour;
-            this.allContainerRows = listOfContainerStorageRows.ToList();
+            this.AllContainerRows = listOfContainerStorageRows.ToList();
             this.LoadsPerAgvPerHour = loadsPerAgvPerHour;
 
             AllShips = listOfShips.ToList();
@@ -315,7 +315,7 @@ namespace Gruppe8.HarbNet
 
             this.TrucksArrivePerHour = numberOftrucksArriveToHarborPerHour;
             this.LoadsPerAgvPerHour = loadsPerAgvPerHour;
-            this.allContainerRows = listOfContainerStorageRows.ToList();
+            this.AllContainerRows = listOfContainerStorageRows.ToList();
 
 
             Initiliaze(
@@ -422,7 +422,7 @@ namespace Gruppe8.HarbNet
                 containerRows.Add(new ContainerStorageRow(numberOfContainerSpaces));
             }
 
-            this.allContainerRows = containerRows;
+            this.AllContainerRows = containerRows;
         }
 
         /// <summary>
@@ -726,7 +726,7 @@ namespace Gruppe8.HarbNet
         {
             Container container = crane.UnloadContainer();
 
-            foreach (ContainerStorageRow CR in allContainerRows)
+            foreach (ContainerStorageRow CR in AllContainerRows)
             {
                 if (CR.CheckIfFreeContainerSpaceExists(container.Size))
                 {
@@ -841,23 +841,6 @@ namespace Gruppe8.HarbNet
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Finds the number of available container spaces in ContainerStorageRow.
-        /// </summary>
-        /// <param name="size">The containerSize enum representing the Size of container to be created.</param>
-        /// <returns>Returns an int value representing how many available container spaces of specified ContainerSize enum there are.</returns>
-        internal int numberOfFreeContainerSpaces (ContainerSize size)
-        {
-            int count = 0;
-
-            foreach (ContainerStorageRow containerRow in allContainerRows)
-            {
-                count += containerRow.NumberOfFreeContainerSpaces(size);
-            }
-
-            return count;
         }
 
         /// <summary>
@@ -1149,7 +1132,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns an IList with Ship object containing all ships docked in loading dock.</returns>
         internal List<Ship> DockedShipsInLoadingDock()
         {
-            List<Ship> ships = new List<Ship>();
+            List<Ship> ships = new();
 
             foreach (var item in shipsInLoadingDock)
             {
@@ -1167,7 +1150,7 @@ namespace Gruppe8.HarbNet
         internal void RestockContainers(Ship ship, DateTime time)
         {
             int size = ship.ContainersOnBoard.Count;
-            Random rand = new Random();
+            Random rand = new();
             for (int i = 0; i < size; i++)
             {
                 Container? container = ship.UnloadContainer();
@@ -1394,7 +1377,7 @@ namespace Gruppe8.HarbNet
             }
 
             int count = 0;
-            foreach (ContainerStorageRow containerRow in allContainerRows)
+            foreach (ContainerStorageRow containerRow in AllContainerRows)
             {
                 count += containerRow.NumberOfFreeContainerSpaces(containerSize);
             }
@@ -1421,7 +1404,7 @@ namespace Gruppe8.HarbNet
         /// <exception cref="ArgumentException">Throws exception if containerSize is not found.</exception>
         internal ContainerStorageRow GetContainerRowWithFreeSpace(ContainerSize containerSize)
         {
-            foreach (ContainerStorageRow containerRow in allContainerRows)
+            foreach (ContainerStorageRow containerRow in AllContainerRows)
             {
                 if (containerRow.CheckIfFreeContainerSpaceExists(containerSize))
                 {
@@ -1497,7 +1480,7 @@ namespace Gruppe8.HarbNet
         public override Status GetShipStatus(Guid ShipID)
         {
             StatusLog? lastStatusChange = null;
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (Ship ship in AllShips)
             {
                 if (ship.ID == ShipID && ship.HistoryIList != null && ship.HistoryIList.Count > 0)
@@ -1530,8 +1513,8 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a string value representing all the dock IDs and if they are available or not.</returns>
         public override string GetStatusAllLoadingDocks()
         {
-            StringBuilder sb = new StringBuilder();
-            Dictionary<LoadingDock, bool> dockStatus = new Dictionary<LoadingDock, bool>();
+            StringBuilder sb = new();
+            Dictionary<LoadingDock, bool> dockStatus = new();
 
             foreach (LoadingDock loadingDock in allLoadingDocks)
             {
@@ -1552,8 +1535,8 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a string value representing the container ID and their last registered status from Status enums.</returns>
         public override string GetContainerStatus(Guid ContainerId)
         {
-            StringBuilder sb = new StringBuilder();
-            Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
+            StringBuilder sb = new();
+            Dictionary<Container, Status> containerStatus = new();
             foreach (Container container in storedContainers.Keys)
             {
                 if (container.ID == ContainerId)
@@ -1581,8 +1564,8 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a string value representing the container ID and their last registered status from Status enums.</returns>
         public override string GetAllContainerStatus()
         {
-            StringBuilder sb = new StringBuilder();
-            Dictionary<Container, Status> containerStatus = new Dictionary<Container, Status>();
+            StringBuilder sb = new();
+            Dictionary<Container, Status> containerStatus = new();
             Status lastStatus = Status.None;
             foreach (Container container in storedContainers.Keys)
             {
@@ -1640,7 +1623,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not.</returns>
         public override IDictionary<Guid, bool> GetAvailabilityStatusForAllShipDocks()
         {
-            Dictionary<Guid, bool> availabilityStatuses = new Dictionary<Guid, bool>();
+            Dictionary<Guid, bool> availabilityStatuses = new();
 
             foreach (ShipDock shipDock in allShipDocks)
             {

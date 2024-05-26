@@ -319,7 +319,7 @@ namespace Gruppe8.HarbNet
         {
             if (ContainersOnBoard.Count < ContainerCapacity)
             {
-                Random rand = new Random();
+                Random rand = new();
                 ContainerSize size;
 
                 if (rand.Next(0, 2) == 0)
@@ -331,7 +331,7 @@ namespace Gruppe8.HarbNet
                     size = ContainerSize.Half;
                 }
 
-                Container container = new Container(size, (int)size, ID);
+                Container container = new(size, (int)size, ID);
 
                 container.AddStatusChangeToHistory(Status.Transit, time);
                 ContainersOnBoard.Add(container);
@@ -387,7 +387,7 @@ namespace Gruppe8.HarbNet
                 if (i % 3 == 0)
                 {
                     CheckForValidWeight();
-                    Container smallContainer = new Container(ContainerSize.Half, 10, this.ID);
+                    Container smallContainer = new(ContainerSize.Half, 10, this.ID);
                     smallContainer.HistoryIList.Add(new StatusLog(smallContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(smallContainer);
                     CurrentWeightInTonn += smallContainer.WeightInTonn;
@@ -405,7 +405,7 @@ namespace Gruppe8.HarbNet
                 if (i % 3 == 2)
                 {
                     CheckForValidWeight();
-                    Container largeContainer = new Container(ContainerSize.Full, 15, this.ID);
+                    Container largeContainer = new(ContainerSize.Full, 15, this.ID);
                     largeContainer.HistoryIList.Add(new StatusLog(largeContainer.ID, this.ID, StartDate, Status.Transit));
                     ContainersOnBoard.Add(largeContainer);
                     CurrentWeightInTonn += largeContainer.WeightInTonn;
@@ -425,7 +425,7 @@ namespace Gruppe8.HarbNet
                 Container? ContainertoAdd = null;
             
                 if(containerSize == ContainerSize.Half) { 
-                   ContainertoAdd = new Container(ContainerSize.Half, 10, this.ID);
+                   ContainertoAdd = new(ContainerSize.Half, 10, this.ID);
                 }
                 if (containerSize == ContainerSize.Full)
                 {
@@ -473,7 +473,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns StatusLog object containing information about the ship at the time the StatusLog were created.</returns>
         internal StatusLog AddStatusChangeToHistory(DateTime currentTime, Guid currentLocation, Status status)
         {
-            StatusLog currentStatusChange = new StatusLog(ID,currentLocation, currentTime, status);
+            StatusLog currentStatusChange = new(ID,currentLocation, currentTime, status);
             HistoryIList.Add(currentStatusChange);
             return currentStatusChange;
         }
@@ -588,7 +588,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a status enum with the status the ship had at the given DateTime.</returns>
         internal Status GetStatusAtPointInTime(DateTime time)
         {
-            Status shipStatus = new Status();
+            Status shipStatus = new();
             foreach (StatusLog statusLogObject in HistoryIList)
             {
                 if (statusLogObject.Timestamp < time)
@@ -624,7 +624,7 @@ namespace Gruppe8.HarbNet
         /// <returns> a String containing the ships entire history.</returns>
         public override String HistoryToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.Append($"Ship name: {Name}, Ship ID {ID}" + "\n");
             sb.Append("------------------------------------\n");
