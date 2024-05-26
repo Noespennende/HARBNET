@@ -850,16 +850,18 @@ namespace Gruppe8.HarbNet
         {
             Crane? craneDock = harbor.GetFreeLoadingDockCrane();
 
-            Agv agv = harbor.GetFreeAgv();
+            Agv? agv = harbor.GetFreeAgv();
 
 
             if (agv != null && craneDock!= null)
             {
-                Container unloadedContainer = harbor.ShipToCrane(ship, craneDock, currentTime);
-                harbor.CraneToAgv(craneDock, agv, currentTime);
+                Container? unloadedContainer = harbor.ShipToCrane(ship, craneDock, currentTime);
+                if (unloadedContainer != null)
+                {
+                    harbor.CraneToAgv(craneDock, agv, currentTime);
 
-                return unloadedContainer;
-
+                    return unloadedContainer;
+                } 
             }
 
             return null;
@@ -916,9 +918,12 @@ namespace Gruppe8.HarbNet
                 return null;
             }
             
-            Container container = harbor.ShipToCrane(ship, craneDock, currentTime);
-            harbor.CraneToTruck(craneDock, truck, currentTime);
-            ship.ContainersLeftForTrucks--;
+            Container? container = harbor.ShipToCrane(ship, craneDock, currentTime);
+            if (container == null)
+            {
+                harbor.CraneToTruck(craneDock, truck, currentTime);
+                ship.ContainersLeftForTrucks--;
+            }
 
             return container;
         }
@@ -1354,7 +1359,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns the container object that was moved.</returns>
         private Container? MoveOneContainerFromContainerRowToAgv(ContainerSize containerSize)
         {
-            Agv agv = harbor.GetFreeAgv();
+            Agv? agv = harbor.GetFreeAgv();
             Crane? storageCrane = harbor.GetFreeStorageAreaCrane();
             if (storageCrane == null)
             {

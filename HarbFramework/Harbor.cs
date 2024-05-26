@@ -432,16 +432,20 @@ namespace Gruppe8.HarbNet
         /// <param name="crane">Crane object that loads the container.</param>
         /// <param name="currentTime">The Date and time container is loaded from ship to crane.</param>
         /// <returns>Returns the container object to be loaded from ship to crane.</returns>
-        internal Container ShipToCrane(Ship ship, Crane crane, DateTime currentTime)
+        internal Container? ShipToCrane(Ship ship, Crane crane, DateTime currentTime)
         {
             if (!(crane.Container == null))
             {
                 throw new CraneCantBeLoadedException("The crane you are trying to load already holds a container in its cargo and therefore can not load another one from the ship.");
             }
-            Container containerToBeLoaded = ship.UnloadContainer();
-            containerToBeLoaded.CurrentLocation = ship.CurrentLocation;
-            containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
-            crane.LoadContainer(containerToBeLoaded);
+            Container? containerToBeLoaded = ship.UnloadContainer();
+            
+            if (containerToBeLoaded != null)
+            { 
+                containerToBeLoaded.CurrentLocation = ship.CurrentLocation;
+                containerToBeLoaded.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
+                crane.LoadContainer(containerToBeLoaded);
+            }
 
             return containerToBeLoaded;
 
@@ -537,7 +541,7 @@ namespace Gruppe8.HarbNet
 
             foreach (var pair in loadingDock.TruckLoadingSpots)
             {
-                if (pair.Value.Container == container)
+                if (pair.Value?.Container == container)
                 {
                     truck = pair.Value; 
                     break; 
@@ -745,7 +749,7 @@ namespace Gruppe8.HarbNet
         /// <param name="currentTime">The date and time the container is loaded.</param>
         /// <returns>Returns the container object to be loaded from container row to crane, if container is not found then null is returned.</returns>
         /// <exception cref="CraneCantBeLoadedException">Throws exception if crane can't be loaded.</exception>
-        internal Container ContainerRowToCrane(ContainerSize size, Crane crane,DateTime currentTime)
+        internal Container? ContainerRowToCrane(ContainerSize size, Crane crane,DateTime currentTime)
         {
             if (!(crane.Container == null))
             {
@@ -770,7 +774,7 @@ namespace Gruppe8.HarbNet
         /// Gets available agv.
         /// </summary>
         /// <returns>Returns the first available agv object, if none is available null is returned.</returns>
-        internal Agv GetFreeAgv()
+        internal Agv? GetFreeAgv()
         {
             if (AgvFree.Count > 0)
             {
@@ -867,23 +871,26 @@ namespace Gruppe8.HarbNet
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             
             ShipSize size = shipToBeDocked.ShipSize;
-            LoadingDock loadingDock;
+            LoadingDock? loadingDock;
 
             if (FreeLoadingDockExists(size))
             {
                 loadingDock = GetFreeLoadingDock(size);
 
-                loadingDock.DockedShip = shipToBeDocked.ID;
-                loadingDock.Free = false;
+                if (loadingDock != null) 
+                { 
+                    loadingDock.DockedShip = shipToBeDocked.ID;
+                    loadingDock.Free = false;
 
-                shipToBeDocked.CurrentLocation = loadingDock.ID;
+                    shipToBeDocked.CurrentLocation = loadingDock.ID;
 
-                shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
+                    shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
 
-                RemoveShipFromAnchorage(shipToBeDocked.ID);
-                RemoveLoadingDockFromFreeLoadingDocks(loadingDock.ID);
-               
-                return loadingDock.ID;
+                    RemoveShipFromAnchorage(shipToBeDocked.ID);
+                    RemoveLoadingDockFromFreeLoadingDocks(loadingDock.ID);
+
+                    return loadingDock.ID;
+                }
             }
 
             return Guid.Empty; 
@@ -901,24 +908,27 @@ namespace Gruppe8.HarbNet
             Ship shipToBeDocked = GetShipFromShipDock(shipID);
 
             ShipSize size = shipToBeDocked.ShipSize;
-            LoadingDock loadingDock;
+            LoadingDock? loadingDock;
 
             if (FreeLoadingDockExists(size))
             {
                 loadingDock = GetFreeLoadingDock(size);
 
-                loadingDock.DockedShip = shipToBeDocked.ID;
-                loadingDock.Free = false;
+                if(loadingDock != null)
+                {
+                    loadingDock.DockedShip = shipToBeDocked.ID;
+                    loadingDock.Free = false;
 
-                shipToBeDocked.CurrentLocation = loadingDock.ID;
+                    shipToBeDocked.CurrentLocation = loadingDock.ID;
 
-                shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
+                    shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
 
-                UnDockShipFromShipDockToLoadingDock(shipID);
+                    UnDockShipFromShipDockToLoadingDock(shipID);
 
-                RemoveLoadingDockFromFreeLoadingDocks(loadingDock.ID);
-                
-                return loadingDock.ID;
+                    RemoveLoadingDockFromFreeLoadingDocks(loadingDock.ID);
+
+                    return loadingDock.ID;
+                }
             }
 
             return Guid.Empty;
@@ -970,20 +980,24 @@ namespace Gruppe8.HarbNet
         {
             Ship shipToBeDocked = GetShipFromAnchorage(shipID);
             ShipSize size = shipToBeDocked.ShipSize;
-            LoadingDock loadingDock;
+            LoadingDock? loadingDock;
 
             if (FreeLoadingDockExists(size))
             {
                 loadingDock = GetFreeLoadingDock(size);
-                loadingDock.DockedShip = shipToBeDocked.ID;
-                loadingDock.Free = false;
-                shipToBeDocked.CurrentLocation = loadingDock.ID;
+                
+                if (loadingDock != null)
+                {
+                    loadingDock.DockedShip = shipToBeDocked.ID;
+                    loadingDock.Free = false;
+                    shipToBeDocked.CurrentLocation = loadingDock.ID;
 
-                shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
-                freeLoadingDocks.Remove(loadingDock);
-                RemoveShipFromAnchorage(shipID);
+                    shipsInLoadingDock.Add(shipToBeDocked, loadingDock);
+                    freeLoadingDocks.Remove(loadingDock);
+                    RemoveShipFromAnchorage(shipID);
 
-                return loadingDock.ID;
+                    return loadingDock.ID;
+                }
 
             }
 
@@ -1156,9 +1170,12 @@ namespace Gruppe8.HarbNet
             Random rand = new Random();
             for (int i = 0; i < size; i++)
             {
-                Container container = ship.UnloadContainer();
-                container.AddStatusChangeToHistory(Status.ArrivedAtDestination, time);
-                ArrivedAtDestination.Add(container);
+                Container? container = ship.UnloadContainer();
+                if (container != null)
+                {
+                    container.AddStatusChangeToHistory(Status.ArrivedAtDestination, time);
+                    ArrivedAtDestination.Add(container);
+                }
             }
 
             for (int i = 0; i < rand.Next(ship.ContainerCapacity/3, ship.ContainerCapacity - 1); i++)
@@ -1208,7 +1225,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">The shipSize enum representing the Size of ships to fit in loading dock.</param>
         /// <returns>Returns loadingdock if there is available loading docks for the defined shipsize, if no docks are available null is returned.</returns>
-        internal LoadingDock GetFreeLoadingDock(ShipSize shipSize)
+        internal LoadingDock? GetFreeLoadingDock(ShipSize shipSize)
         {
 
             foreach (LoadingDock loadingDock in freeLoadingDocks)
@@ -1220,7 +1237,6 @@ namespace Gruppe8.HarbNet
 
             }
             return null;
-            //throw new ArgumentException("Invalid input. That shipSize does not exist. Valid shipSize is: shipSize.Small, shipSize.Medium or shipSize.Large.", nameof(shipSize));
         }
 
         /// <summary>
@@ -1300,26 +1316,29 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Guid object representing the ship dock the ship object undocked from, if there are no ships to be undocked null is returned.</returns>
         internal Guid UnDockShipFromShipDockToLoadingDock(Guid shipID)
         {
-            Ship shipToBeUndocked = GetShipFromShipDock(shipID);
+            Ship? shipToBeUndocked = GetShipFromShipDock(shipID);
 
             if (shipToBeUndocked != null)
             {
-                ShipDock shipDock = shipsInShipDock[shipToBeUndocked];
+                ShipDock? shipDock = shipsInShipDock[shipToBeUndocked];
 
                 shipDock.DockedShip = Guid.Empty;
                 shipDock.Free = true;
 
-                LoadingDock loadingDock = GetFreeLoadingDock(shipToBeUndocked.ShipSize);
+                LoadingDock? loadingDock = GetFreeLoadingDock(shipToBeUndocked.ShipSize);
 
-                shipToBeUndocked.CurrentLocation = loadingDock.ID;
-                shipsInShipDock.Remove(shipToBeUndocked);
-                freeShipDocks.Add(shipDock);
-                if (!shipsInLoadingDock.ContainsKey(shipToBeUndocked))
+                if (loadingDock != null)
                 {
-                    shipsInLoadingDock.Add(shipToBeUndocked, loadingDock);
-                }
+                    shipToBeUndocked.CurrentLocation = loadingDock.ID;
+                    shipsInShipDock.Remove(shipToBeUndocked);
+                    freeShipDocks.Add(shipDock);
+                    if (!shipsInLoadingDock.ContainsKey(shipToBeUndocked))
+                    {
+                        shipsInLoadingDock.Add(shipToBeUndocked, loadingDock);
+                    }
 
-                return shipDock.ID;
+                    return shipDock.ID;
+                }
             }
 
             return Guid.Empty;
@@ -1418,7 +1437,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">The containerSize enum representing the size the containers to be retrieved.</param>
         /// <returns>Returns a Guid object representing the stored container objects of specified containerSize, if container of specified size is not found null is returned.</returns>
-        internal Container GetStoredContainer(ContainerSize containerSize)
+        internal Container? GetStoredContainer(ContainerSize containerSize)
         {
             foreach (Container container in storedContainers.Keys)
             {
@@ -1477,7 +1496,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a Status enum representing the last registered status of specified ship if the ship has a history, if no status is registered null is returned.</returns>
         public override Status GetShipStatus(Guid ShipID)
         {
-            StatusLog lastStatusChange = null;
+            StatusLog? lastStatusChange = null;
             StringBuilder sb = new StringBuilder();
             foreach (Ship ship in AllShips)
             {

@@ -422,15 +422,11 @@ namespace Gruppe8.HarbNet
             for (int i = 0; i < numberOfcontainersOnBoard; i++)
             { 
                 CheckForValidWeight();
-                Container ContainertoAdd = null;
+                Container? ContainertoAdd = null;
             
                 if(containerSize == ContainerSize.Half) { 
                    ContainertoAdd = new Container(ContainerSize.Half, 10, this.ID);
                 }
-                /*if (containerSize == ContainerSize.Medium)
-                {
-                    ContainertoAdd = new Container(ContainerSize.Medium, 15, this.ID);
-                }*/
                 if (containerSize == ContainerSize.Full)
                 {
                     ContainertoAdd = new Container(ContainerSize.Full, 20, this.ID);
