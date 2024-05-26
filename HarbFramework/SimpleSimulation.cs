@@ -957,10 +957,12 @@ namespace Gruppe8.HarbNet
                         ship.TransitStatus = TransitStatus.Leaving;
                     }
 
-                    else if (ShipIsDockingToDock(ship, lastStatusLog))
+                    else if (ShipIsDockingToShipDock(ship, lastStatusLog))
                     {
                         Guid dockID = lastStatusLog.SubjectLocation;
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToShipDock);
+                        ShipDockedToShipDockEventArgs shipDockedToShipDockEventArgs = new(ship, currentTime, "Ship has docked to ship dock.", dockID);
+                        ShipDockedToShipDock?.Invoke(this, shipDockedToShipDockEventArgs);
                     }
 
                     else if (ShipIsFinishedLoadingContainers(ship, lastStatusLog))
@@ -995,10 +997,12 @@ namespace Gruppe8.HarbNet
                 {
                     bool containsTransitStatus = ContainsTransitStatus(ship);
 
-                    if (ShipIsDockingToDock(ship, lastStatusLog))
+                    if (ShipIsDockingToShipDock(ship, lastStatusLog))
                     {
                         Guid dockID = lastStatusLog.SubjectLocation;
                         ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToShipDock);
+                        ShipDockedToShipDockEventArgs shipDockedToShipDockEventArgs = new(ship, currentTime, "Ship has docked to ship dock.", dockID);
+                        ShipDockedToShipDock?.Invoke(this, shipDockedToShipDockEventArgs);
                     }
                     ship.HasBeenAlteredThisHour = true;
 
@@ -1095,7 +1099,7 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">The ship objects that is being checked if it can dock to ship dock.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
         /// <returns>Returns true if the ship object can dock to ship dock, if not then false is returned.</returns>
-        private bool ShipIsDockingToDock(Ship ship, StatusLog lastStatusLog)
+        private bool ShipIsDockingToShipDock(Ship ship, StatusLog lastStatusLog)
         {
             return lastStatusLog.Status == Status.DockingToShipDock && (currentTime - lastStatusLog.Timestamp).TotalHours >= 1;
         }
