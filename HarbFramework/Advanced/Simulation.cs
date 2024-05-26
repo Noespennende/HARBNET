@@ -4,7 +4,7 @@ using System.Text;
 namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
-    /// Abstract class defining the public API for Reconstructions such as the Simulation class.
+    /// Abstract class defining the public API for Simulations such as the SimpleSimulation class.
     /// </summary>
     public abstract class Simulation
     {

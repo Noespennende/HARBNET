@@ -942,6 +942,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipID">Guid object representing the unique ID of ship to be undocked from a ship dock and docked to a loading dock.</param>
         /// <returns>Returns a Guid object representing the ID of the loading dock the ship gets docked to, if available loading dock matching the ship's size does not exist an empty Guid object is returned.</returns>
+        internal Guid DockShipFromShipDockToLoadingDock(Guid shipID)
         {
             Ship shipToBeDocked = GetShipFromShipDock(shipID);
 
@@ -952,7 +953,7 @@ namespace Gruppe8.HarbNet
             {
                 loadingDock = GetFreeLoadingDock(size);
 
-                if(loadingDock != null)
+                if (loadingDock != null)
                 {
                     loadingDock.DockedShip = shipToBeDocked.ID;
                     loadingDock.Free = false;
@@ -1446,7 +1447,7 @@ namespace Gruppe8.HarbNet
         {
             return storedContainers.Count;
 
-        } 
+        }
 
         /// <summary>
         /// Gets a ContainerStorageRow whitch has free space for a container of the given size
@@ -1454,6 +1455,7 @@ namespace Gruppe8.HarbNet
         /// <param name="containerSize">ContainerSize enum representing the size the containerRow has to have available space for.</param>
         /// <returns>Returns a ContainerStorageRow object with available space to store a container of the given size.</returns>
         /// <exception cref="ArgumentException">Throws this exeption if an invalid ContainerSize is given</exception>
+        internal ContainerStorageRow GetContainerRowWithFreeSpace(ContainerSize containerSize)
         {
             foreach (ContainerStorageRow containerRow in AllContainerRows)
             {
@@ -1462,7 +1464,8 @@ namespace Gruppe8.HarbNet
                     return containerRow;
                 }
             }
-            return null;
+            throw new ArgumentException("Invalid input. That containerSize does not exist. Valid containerSize is: containerSize.Small, containerSize.Medium or containerSize.Large.", nameof(containerSize));
+
         }
 
         /// <summary>
