@@ -431,6 +431,12 @@ namespace Gruppe8.HarbNet
                         if (lastStatusLog.Status == Status.Anchored)
                         {
                             dockID = harbor.DockShipToLoadingDock(shipID);
+                            ShipIsDockingToLoadingDock(ship, dockID);
+                        }
+
+                        if (lastStatusLog.Status == Status.DockingToLoadingDock)
+                        {
+                            dockID = lastStatusLog.SubjectLocation;
                             ShipIsDockedToLoadingDock(ship, dockID);
                         }
                     }
@@ -610,12 +616,25 @@ namespace Gruppe8.HarbNet
             return ContainsTransitStatus(ship) && ship.ContainersOnBoard.Count != 0;
         }
 
+        /// <summary>
+        /// Ship docking to loading dock.
+        /// </summary>
+        /// <param name="ship">Ship object docking to loading dock.</param>
+        /// <param name="dockID">Unique ID for the loading dock object the ship object is docking to.</param>
+        private void ShipIsDockingToLoadingDock(Ship ship, Guid dockID)
+        {
+            ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockingToLoadingDock);
+
+            ShipDockingToLoadingDockEventArgs shipDockingToLoadingDockEventArgs = new(ship, currentTime, "Ship is docking to loading dock.", dockID);
+
+            ShipDockingToLoadingDock?.Invoke(this, shipDockingToLoadingDockEventArgs);
+        }
 
         /// <summary>
         /// Ship docked to loading dock.
         /// </summary>
-        /// <param name="ship">Ship object docking to loading dock.</param>
-        /// <param name="dockID">Unique ID for the loading dock object the ship object is docking to.</param>
+        /// <param name="ship">Ship object docked to loading dock.</param>
+        /// <param name="dockID">Unique ID for the loading dock object the ship object is docked to.</param>
         private void ShipIsDockedToLoadingDock(Ship ship, Guid dockID)
         {
             ship.AddStatusChangeToHistory(currentTime, dockID, Status.DockedToLoadingDock);
