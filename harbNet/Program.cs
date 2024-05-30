@@ -12,7 +12,8 @@ namespace Client.HarborName
         static void Main(string[] args)
         {
 
- 
+            
+
             //CLIENT HARBOR 
             // Denne koden representerer ett eksempel av hvordan kunden kan opprette en simulering for havnen som er gitt i oppgaven.
             // Det finnes flere måter å gjøre dette på i APIet og koden under er bare ett eksempel på hvordan dette kan gjøres. 

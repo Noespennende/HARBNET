@@ -143,7 +143,7 @@ namespace Gruppe8.HarbNet
         /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the Harbor again.</param>
         /// <param name="containersToBeStoredInCargo">IList of Container objects that will be placed in the Ship's cargo when it first arrives to the Harbor</param>
         public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
-            IList<StorageUnit> containersToBeStoredInCargo)
+            IList<Container> containersToBeStoredInCargo)
         {
             this.ID = Guid.NewGuid();
             this.Name = shipName;
@@ -175,7 +175,7 @@ namespace Gruppe8.HarbNet
                 this.ContainersLoadedPerHour = 4;
             }
 
-            foreach (StorageUnit container in containersToBeStoredInCargo)
+            foreach (Container container in containersToBeStoredInCargo)
             {
                 this.ContainersOnBoard.Add((Container)container);
             }
