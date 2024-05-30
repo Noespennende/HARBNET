@@ -43,7 +43,14 @@ namespace Gruppe8.HarbNet.Advanced
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the StorageUnit's current position.</returns>
         public abstract Guid CurrentLocation { get; internal set; }
-        
+
+        /// <summary>
+        /// Constructor for the StorageUnit class.
+        /// </summary>
+        internal StorageUnit()
+        {
+        }
+
         /// <summary>
         /// Gets current status of the StorageUnit.
         /// </summary>
@@ -66,12 +73,5 @@ namespace Gruppe8.HarbNet.Advanced
         /// </summary>
         /// <returns>Returns a String with the container's ID, Size and int value representing it's weight in tonn.</returns>
         public abstract override string ToString();
-
-        /// <summary>
-        /// Constructor for the StorageUnit class.
-        /// </summary>
-        internal StorageUnit() 
-        { 
-        }
     }
 }

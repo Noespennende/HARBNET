@@ -11,7 +11,14 @@
         /// </summary>
         /// <returns>Returns a Guid object representing the StorageAreaæs unique ID.</returns>
         public abstract Guid ID { get; }
-        
+
+        /// <summary>
+        /// Constructor for the StorageArea class.
+        /// </summary>
+        internal StorageArea()
+        {
+        }
+
         /// <summary>
         /// Gets the amount of available ContainerSpace in the StorageArea.
         /// </summary>
@@ -36,13 +43,5 @@
         /// </summary>
         /// <returns>Returns a String value containing information about the StorageArea.</returns>
         public abstract override string ToString();
-
-        /// <summary>
-        /// Constructor for the StorageArea class.
-        /// </summary>
-        internal StorageArea() 
-        { 
-        }
-
     }
 }

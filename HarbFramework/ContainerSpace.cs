@@ -60,6 +60,5 @@ namespace Gruppe8.HarbNet
             StoredContainerOne = Guid.Empty;
             StoredContainerTwo = Guid.Empty;
         }
-
     }
 }

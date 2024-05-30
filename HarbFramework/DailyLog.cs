@@ -96,68 +96,6 @@ namespace Gruppe8.HarbNet
 
         }
 
-
-        /// <summary>
-        /// Duplicate a shipList making copies of all objects within the list and adds them to a new list.
-        /// </summary>
-        /// <param name="shipListToDuplicate">The IList containing the Ship objects to be duplicated.</param>
-        /// <returns>Returns a Collection containing Ship objects, which are duplications of all objects in the shipListToDuplicate.</returns>
-        private Collection<Ship> DuplicateShipList(IList<Ship> shipListToDuplicate)
-        {
-            Collection<Ship> duplicatedList = new Collection<Ship>();
-
-            foreach (Ship ship in shipListToDuplicate)
-            {
-                IList<Container> containerList = new List<Container>();
-                IList<StatusLog> eventList = new List<StatusLog>();
-
-                foreach (Container container in ship.ContainersOnBoard)
-                {
-                    IList<StatusLog> containersHistory = new List<StatusLog>();
-
-                    foreach (StatusLog containerEvent in container.HistoryIList)
-                    {
-                        containersHistory.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.Timestamp, containerEvent.Status));
-                    }
-
-                    containerList.Add(new Container(container.Size, container.WeightInTonn, ship.ID, container.ID, containersHistory));
-                }
-
-                foreach (StatusLog eventObject in ship.HistoryIList)
-                {
-                    eventList.Add(new StatusLog(eventObject.Subject, eventObject.SubjectLocation, eventObject.Timestamp, eventObject.Status));
-                }
-
-                duplicatedList.Add(new Ship(ship.Name, ship.ShipSize, ship.StartDate, ship.IsForASingleTrip, ship.RoundTripInDays, ship.ID, containerList, eventList));
-            }
-
-            return duplicatedList;
-        }
-
-        /// <summary>
-        /// Duplicate a container list making copies of all objects within the list and adds them to a new list.
-        /// </summary>
-        /// <param name="containersToDuplicate">The IList containing the Container objects to be duplicated.</param>
-        /// <returns>Returns a Collection containing Container objects, which are duplications of all objects in the containersToDuplicate.</returns>
-        private Collection<Container> DuplicateContainerList(IList<Container> containersToDuplicate)
-        {
-            Collection<Container> duplicatedList = new Collection<Container>();
-
-            foreach (Container container in containersToDuplicate)
-            {
-                IList<StatusLog> eventList = new List<StatusLog>();
-
-                foreach (StatusLog containerEvent in container.HistoryIList)
-                {
-                    eventList.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.Timestamp, containerEvent.Status));
-                }
-
-                duplicatedList.Add(new Container(container.Size, container.WeightInTonn, container.CurrentLocation, container.ID, eventList));
-            }
-
-            return duplicatedList;
-        }
-
         /// <summary>
         /// Prints to console the historical data regarding the Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
         /// all ships at the time in the simulation the DailyLog object were created.
@@ -625,6 +563,65 @@ namespace Gruppe8.HarbNet
                 $"Containers arrived at their destination: {ContainersArrivedAtDestination.Count}";
         }
 
-       
+        /// <summary>
+        /// Duplicate a shipList making copies of all objects within the list and adds them to a new list.
+        /// </summary>
+        /// <param name="shipListToDuplicate">The IList containing the Ship objects to be duplicated.</param>
+        /// <returns>Returns a Collection containing Ship objects, which are duplications of all objects in the shipListToDuplicate.</returns>
+        private Collection<Ship> DuplicateShipList(IList<Ship> shipListToDuplicate)
+        {
+            Collection<Ship> duplicatedList = new Collection<Ship>();
+
+            foreach (Ship ship in shipListToDuplicate)
+            {
+                IList<Container> containerList = new List<Container>();
+                IList<StatusLog> eventList = new List<StatusLog>();
+
+                foreach (Container container in ship.ContainersOnBoard)
+                {
+                    IList<StatusLog> containersHistory = new List<StatusLog>();
+
+                    foreach (StatusLog containerEvent in container.HistoryIList)
+                    {
+                        containersHistory.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.Timestamp, containerEvent.Status));
+                    }
+
+                    containerList.Add(new Container(container.Size, container.WeightInTonn, ship.ID, container.ID, containersHistory));
+                }
+
+                foreach (StatusLog eventObject in ship.HistoryIList)
+                {
+                    eventList.Add(new StatusLog(eventObject.Subject, eventObject.SubjectLocation, eventObject.Timestamp, eventObject.Status));
+                }
+
+                duplicatedList.Add(new Ship(ship.Name, ship.ShipSize, ship.StartDate, ship.IsForASingleTrip, ship.RoundTripInDays, ship.ID, containerList, eventList));
+            }
+
+            return duplicatedList;
+        }
+
+        /// <summary>
+        /// Duplicate a container list making copies of all objects within the list and adds them to a new list.
+        /// </summary>
+        /// <param name="containersToDuplicate">The IList containing the Container objects to be duplicated.</param>
+        /// <returns>Returns a Collection containing Container objects, which are duplications of all objects in the containersToDuplicate.</returns>
+        private Collection<Container> DuplicateContainerList(IList<Container> containersToDuplicate)
+        {
+            Collection<Container> duplicatedList = new Collection<Container>();
+
+            foreach (Container container in containersToDuplicate)
+            {
+                IList<StatusLog> eventList = new List<StatusLog>();
+
+                foreach (StatusLog containerEvent in container.HistoryIList)
+                {
+                    eventList.Add(new StatusLog(containerEvent.Subject, containerEvent.SubjectLocation, containerEvent.Timestamp, containerEvent.Status));
+                }
+
+                duplicatedList.Add(new Container(container.Size, container.WeightInTonn, container.CurrentLocation, container.ID, eventList));
+            }
+
+            return duplicatedList;
+        }
     }
 }

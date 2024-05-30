@@ -15,7 +15,6 @@ namespace Gruppe8.HarbNet
         /// Gets the date and time when the simulation started.
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time when the simulation started.</returns>
-      
         private readonly DateTime _startTime;
 
         /// <summary>
@@ -67,27 +66,6 @@ namespace Gruppe8.HarbNet
             _endTime = simulationEndTime;
         }
 
-        public event EventHandler<SimulationEndedEventArgs>? SimulationEnded;
-        public event EventHandler<SimulationStartingEventArgs>? SimulationStarting;
-        public event EventHandler<OneHourHasPassedEventArgs>? OneHourHasPassed;
-        public event EventHandler<DayEndedEventArgs>? DayEnded;
-        public event EventHandler<ShipUndockingEventArgs>? ShipUndocking;
-        public event EventHandler<ShipInTransitEventArgs>? ShipInTransit;
-        public event EventHandler<ShipDockingToShipDockEventArgs>? ShipDockingToShipDock;
-        public event EventHandler<ShipDockedToShipDockEventArgs>? ShipDockedToShipDock;
-        public event EventHandler<ShipDockingToLoadingDockEventArgs>? ShipDockingToLoadingDock;
-        public event EventHandler<ShipDockedToLoadingDockEventArgs>? ShipDockedToLoadingDock;
-        public event EventHandler<ShipStartingLoadingEventArgs>? ShipStartingLoading;
-        public event EventHandler<ShipLoadedContainerEventArgs>? ShipLoadedContainer;
-        public event EventHandler<ShipDoneLoadingEventArgs>? ShipDoneLoading;
-        public event EventHandler<ShipStartingUnloadingEventArgs>? ShipStartingUnloading;
-        public event EventHandler<ShipUnloadedContainerEventArgs>? ShipUnloadedContainer;
-        public event EventHandler<ShipDoneUnloadingEventArgs>? ShipDoneUnloading;
-        public event EventHandler<ShipAnchoringEventArgs>? ShipAnchoring;
-        public event EventHandler<ShipAnchoredEventArgs>? ShipAnchored;
-
-        public event EventHandler<TruckLoadingFromHarborStorageEventArgs>? TruckLoadingFromStorage;
-
         /// <summary>
         /// Running the simulation.
         /// </summary>
@@ -98,17 +76,17 @@ namespace Gruppe8.HarbNet
             _currentTime = _startTime;
 
             SimulationStartingEventArgs simulationStartingEventArgs = new(_harbor, _currentTime, "The simulation has started");
-            
+
             SimulationStarting?.Invoke(this, simulationStartingEventArgs);
 
             HistoryIList.Add(
                 new DailyLog(
-                    _currentTime, 
-                    _harbor.Anchorage, 
-                    _harbor.GetShipsInTransit(), 
-                    _harbor.GetContainersStoredInHarbour(), 
+                    _currentTime,
+                    _harbor.Anchorage,
+                    _harbor.GetShipsInTransit(),
+                    _harbor.GetContainersStoredInHarbour(),
                     _harbor.ArrivedAtDestination,
-                    _harbor.GetShipsInLoadingDock(), 
+                    _harbor.GetShipsInLoadingDock(),
                     _harbor.GetShipsInShipDock()));
 
             while (_currentTime < _endTime)
@@ -153,6 +131,241 @@ namespace Gruppe8.HarbNet
 
             return History;
 
+        }
+
+        /// <summary>
+        /// Prints to console the historical data regarding the Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
+        /// all ships in the simulation for each day the simulation was run.
+        /// </summary>
+        public override void PrintShipHistory()
+        {
+            foreach (DailyLog log in History)
+            {
+                log.PrintInfoForAllShips();
+            }
+        }
+
+        /// <summary>
+        /// Prints the history of the given ship to console.
+        /// <param name="shipToBePrinted">The ship object who's history will be printed.</param>
+        /// </summary>
+        public override void PrintShipHistory(Ship shipToBePrinted)
+        {
+            shipToBePrinted.PrintHistory();
+        }
+
+        /// <summary>
+        /// Prints the history of a given ship to console.
+        /// </summary>
+        /// <param name="shipID">The unique ID of the ship who's history will be printed.</param>
+        /// <exception cref="ArgumentException">Throws exception if ship is not found in harbor object.</exception>
+        public override void PrintShipHistory(Guid shipID)
+        {
+            foreach (Ship ship in _harbor.AllShips)
+            {
+                if (ship.ID.Equals(shipID))
+                {
+                    ship.PrintHistory();
+                    return;
+                }
+            }
+
+            throw new ArgumentException(
+                "The ship you are trying to print does not exist in the harbor the simulation is using. " +
+                "In order for the simulation to be able to print the ships history the ship must be part of the simulated harbor.");
+        }
+
+        /// <summary>
+        /// Printing each container in the simulations entire history to console.
+        /// </summary>
+        public override void PrintContainerHistory()
+        {
+            foreach (DailyLog log in History)
+            {
+                log.PrintInfoForAllContainers();
+            }
+        }
+
+        /// <summary>
+        /// Returns a string that contains information about the entire history of each ship in the harbor simulation. Information in the string includes the historical data regarding the
+        /// Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
+        /// all ships at the end of every day of the simulation.
+        /// </summary>
+        /// <returns> a string that contains information about all ships in the previous simulation. Returns an empty string if no simulation has been run.</returns>
+        public override string HistoryToString()
+        {
+            if (History.Count > 0)
+            {
+                StringBuilder sb = new();
+
+                foreach (DailyLog log in History)
+                {
+                    sb.Append(log.HistoryToString());
+                }
+
+                return sb.ToString();
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Gives a string containing information of the ship matching the given shipID's entire history. Information in the String includes the ship's name, ID,
+        /// Date and Time of all status changes and the coresponding status the ship had at those times.
+        /// </summary>
+        /// <param name="shipID">The unique ID of the ship the history belongs to.</param>
+        /// <returns>Returns a string value containing information about the ship's entire history.</returns>
+        /// <exception cref="ArgumentException">Exception thrown ship does not exist within the simulation.</exception>
+        public override string HistoryToString(Guid shipID)
+        {
+
+            foreach (Ship ship in _harbor.AllShips)
+            {
+                if (ship.ID.Equals(shipID))
+                {
+                    return ship.HistoryToString();
+                }
+            }
+
+            throw new ArgumentException(
+                "The ship you are trying to get the history from does not exist in the harbor object the simulation is using. " +
+                "In order for the simulation to be able to provide a String of the ships history " +
+                "the ship must be added to the harbor the simulation is using.");
+        }
+
+        /// <summary>
+        /// Returns a string containing information about the entire history of each ship or each container in the simulation.
+        /// </summary>
+        /// <param name="ShipsOrContainers">Sending inn "ships" returns the history of all ships in the previous simulation. Sending inn "containers" return the history of each container in the previous simulation</param>
+        /// <returns>Returns a String value containing the entire history of all ships or all containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been run.</returns>
+        public override string HistoryToString(String ShipsOrContainers)
+        {
+            if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
+            {
+                return HistoryToString();
+            }
+
+            else if (ShipsOrContainers.ToLower().Equals("containers") || ShipsOrContainers.ToLower().Equals("container"))
+            {
+                if (History.Count > 0)
+                {
+                    StringBuilder sb = new();
+
+                    foreach (DailyLog log in History)
+                    {
+                        sb.Append(log.HistoryToString("containers"));
+                    }
+                    return sb.ToString();
+                }
+
+                else
+                {
+                    return "";
+                }
+            }
+
+            else
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Gives a string containing information of the given ship entire history. Information in the String includes the ship's name, ID,
+        /// Date and Time of all status changes and the coresponding status the ship had at those times.
+        /// </summary>
+        /// <param name="ship">The ship object in the simulation that information is retrieved from.</param>
+        /// <returns>Returns a string value containing information about the given ship's entire history.</returns>
+        public override string HistoryToString(Ship ship)
+        {
+            return ship.HistoryToString();
+        }
+
+        /// <summary>
+        /// Returns a string that contains information about the start time of the simulation, end time of the simulation and the ID of the harbour used.
+        /// </summary>
+        /// <returns> a string that contains information about the start time, end time of the simulation and the ID of the harbour used.</returns>
+        public override string ToString()
+        {
+            return ($"Simulation start time: {_startTime}, end time: {_endTime}, harbor ID: {_harbor.ID}");
+        }
+
+        /// <summary>
+        /// Loading container on to ship.
+        /// </summary>
+        /// <param name="ship">Ship object the containers will be loaded on.</param>
+        /// <returns>Returns the container object of containers moved on ship.</returns>
+        internal Container? LoadContainerOnShip(Ship ship)
+        {
+            _numberOfStorageContainersToShipThisRound = _harbor.NumberOfContainersInStorageToShips();
+            Crane? storageCrane = _harbor.GetFreeStorageAreaCrane();
+            Crane? dockCrane = _harbor.GetFreeLoadingDockCrane();
+
+            if (storageCrane?.Container == null && dockCrane?.Container == null)
+            {
+
+                Container? loadedContainer = LoadContainerOnStorageAgv(ship);
+
+                if (loadedContainer != null)
+                {
+                    Container? movedContainer = MoveOneContainerFromAgvToShip(loadedContainer, ship);
+                    return movedContainer;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Loads one container from Agv to the given Ship.
+        /// </summary>
+        /// <param name="ship">Ship object that is loading the container onboard.</param>
+        /// <returns>Returns the container object that will be loaded.</returns>
+        internal Container? LoadContainerOnStorageAgv(Ship ship)
+        {
+
+            Container? containerToBeLoaded;
+
+            bool underMaxWeight;
+            bool underMaxCapacity;
+
+            bool shipHasNoContainers = ShipHasNoContainers(ship);
+            bool lastContainerIsFullSize = ship.ContainersOnBoard.LastOrDefault()?.Size == ContainerSize.Full;
+            bool harborStorageHasHalfContainer = _harbor.GetStoredContainer(ContainerSize.Half) != null;
+            bool harborStorageHasFullContainer = _harbor.GetStoredContainer(ContainerSize.Full) != null;
+
+            if (shipHasNoContainers
+                || (lastContainerIsFullSize && harborStorageHasHalfContainer)
+                || (!harborStorageHasFullContainer && harborStorageHasHalfContainer))
+            {
+                underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Half;
+                underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
+
+                if (underMaxCapacity && underMaxWeight)
+                {
+                    containerToBeLoaded = MoveOneContainerFromContainerRowToAgv(ContainerSize.Half);
+
+                    return containerToBeLoaded;
+                }
+            }
+
+            else if (!lastContainerIsFullSize && harborStorageHasFullContainer
+                || (!harborStorageHasHalfContainer && harborStorageHasFullContainer))
+            {
+                underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Full;
+                underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
+
+                if (underMaxCapacity && underMaxWeight)
+                {
+                    containerToBeLoaded = MoveOneContainerFromContainerRowToAgv(ContainerSize.Full);
+
+                    return containerToBeLoaded;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -246,59 +459,6 @@ namespace Gruppe8.HarbNet
             }
 
             _currentTime = _currentTime.AddHours(1);
-        }
-
-        /// <summary>
-        /// Prints to console the historical data regarding the Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
-        /// all ships in the simulation for each day the simulation was run.
-        /// </summary>
-        public override void PrintShipHistory()
-        {
-            foreach (DailyLog log in History)
-            {
-                log.PrintInfoForAllShips();
-            }
-        }
-
-        /// <summary>
-        /// Prints the history of the given ship to console.
-        /// <param name="shipToBePrinted">The ship object who's history will be printed.</param>
-        /// </summary>
-        public override void PrintShipHistory(Ship shipToBePrinted)
-        {
-            shipToBePrinted.PrintHistory();
-        }
-
-        /// <summary>
-        /// Prints the history of a given ship to console.
-        /// </summary>
-        /// <param name="shipID">The unique ID of the ship who's history will be printed.</param>
-        /// <exception cref="ArgumentException">Throws exception if ship is not found in harbor object.</exception>
-        public override void PrintShipHistory(Guid shipID)
-        {
-            foreach (Ship ship in _harbor.AllShips)
-            {
-                if (ship.ID.Equals(shipID))
-                {
-                    ship.PrintHistory();
-                    return;
-                }
-            }
-
-            throw new ArgumentException(
-                "The ship you are trying to print does not exist in the harbor the simulation is using. " +
-                "In order for the simulation to be able to print the ships history the ship must be part of the simulated harbor.");
-        }
-
-        /// <summary>
-        /// Printing each container in the simulations entire history to console.
-        /// </summary>
-        public override void PrintContainerHistory()
-        {
-            foreach (DailyLog log in History)
-            {
-                log.PrintInfoForAllContainers();
-            }
         }
 
         /// <summary>
@@ -1327,82 +1487,6 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loading container on to ship.
-        /// </summary>
-        /// <param name="ship">Ship object the containers will be loaded on.</param>
-        /// <returns>Returns the container object of containers moved on ship.</returns>
-        internal Container? LoadContainerOnShip(Ship ship)
-        {
-            _numberOfStorageContainersToShipThisRound = _harbor.NumberOfContainersInStorageToShips();
-            Crane? storageCrane = _harbor.GetFreeStorageAreaCrane();
-            Crane? dockCrane = _harbor.GetFreeLoadingDockCrane();
-
-            if (storageCrane?.Container == null && dockCrane?.Container == null)
-            {
-
-                Container? loadedContainer = LoadContainerOnStorageAgv(ship);
-
-                if (loadedContainer != null)
-                {
-                    Container? movedContainer = MoveOneContainerFromAgvToShip(loadedContainer, ship);
-                    return movedContainer;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Loads one container from Agv to the given Ship.
-        /// </summary>
-        /// <param name="ship">Ship object that is loading the container onboard.</param>
-        /// <returns>Returns the container object that will be loaded.</returns>
-        internal Container? LoadContainerOnStorageAgv(Ship ship)
-        {
-
-            Container? containerToBeLoaded;
-
-            bool underMaxWeight;
-            bool underMaxCapacity;
-
-            bool shipHasNoContainers = ShipHasNoContainers(ship);
-            bool lastContainerIsFullSize = ship.ContainersOnBoard.LastOrDefault()?.Size == ContainerSize.Full;
-            bool harborStorageHasHalfContainer = _harbor.GetStoredContainer(ContainerSize.Half) != null;
-            bool harborStorageHasFullContainer = _harbor.GetStoredContainer(ContainerSize.Full) != null;
-
-            if (shipHasNoContainers 
-                || (lastContainerIsFullSize && harborStorageHasHalfContainer)
-                || (!harborStorageHasFullContainer && harborStorageHasHalfContainer))
-            {
-                underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Half;
-                underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
-
-                if (underMaxCapacity && underMaxWeight)
-                {
-                    containerToBeLoaded = MoveOneContainerFromContainerRowToAgv(ContainerSize.Half);
-
-                    return containerToBeLoaded;
-                }
-            }
-
-            else if (!lastContainerIsFullSize && harborStorageHasFullContainer
-                || (!harborStorageHasHalfContainer && harborStorageHasFullContainer))
-            {
-                underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Full;
-                underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
-
-                if (underMaxCapacity && underMaxWeight)
-                {
-                    containerToBeLoaded = MoveOneContainerFromContainerRowToAgv(ContainerSize.Full);
-
-                    return containerToBeLoaded;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Moves a container from the harbor storage to AGV.
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size of the container.</param>
@@ -1632,109 +1716,24 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
-        /// <summary>
-        /// Returns a string that contains information about the entire history of each ship in the harbor simulation. Information in the string includes the historical data regarding the
-        /// Location, Name, size, status, max weight, Current weight, container capacity, number of containers onboard and ID of 
-        /// all ships at the end of every day of the simulation.
-        /// </summary>
-        /// <returns> a string that contains information about all ships in the previous simulation. Returns an empty string if no simulation has been run.</returns>
-        public override string HistoryToString()
-        {
-            if (History.Count > 0)
-            {
-                StringBuilder sb = new();
-
-                foreach (DailyLog log in History)
-                {
-                    sb.Append(log.HistoryToString());
-                }
-
-                return sb.ToString();
-            }
-            else 
-            { 
-                return ""; 
-            }
-        }
-
-        /// <summary>
-        /// Gives a string containing information of the ship matching the given shipID's entire history. Information in the String includes the ship's name, ID,
-        /// Date and Time of all status changes and the coresponding status the ship had at those times.
-        /// </summary>
-        /// <param name="shipID">The unique ID of the ship the history belongs to.</param>
-        /// <returns>Returns a string value containing information about the ship's entire history.</returns>
-        /// <exception cref="ArgumentException">Exception thrown ship does not exist within the simulation.</exception>
-        public override string HistoryToString(Guid shipID)
-        {
-
-            foreach (Ship ship in _harbor.AllShips)
-            {
-                if (ship.ID.Equals(shipID))
-                {
-                    return ship.HistoryToString();
-                }
-            }
-
-            throw new ArgumentException(
-                "The ship you are trying to get the history from does not exist in the harbor object the simulation is using. " +
-                "In order for the simulation to be able to provide a String of the ships history " +
-                "the ship must be added to the harbor the simulation is using.");
-        }
-
-        /// <summary>
-        /// Returns a string containing information about the entire history of each ship or each container in the simulation.
-        /// </summary>
-        /// <param name="ShipsOrContainers">Sending inn "ships" returns the history of all ships in the previous simulation. Sending inn "containers" return the history of each container in the previous simulation</param>
-        /// <returns>Returns a String value containing the entire history of all ships or all containers of the simulation. Returns an empty string if wrong value is given in param or no simulation has been run.</returns>
-        public override string HistoryToString(String ShipsOrContainers)
-        {
-            if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
-            {
-                return HistoryToString();
-            }
-
-            else if (ShipsOrContainers.ToLower().Equals("containers") || ShipsOrContainers.ToLower().Equals("container"))
-            {
-                if (History.Count > 0)
-                {
-                    StringBuilder sb = new();
-
-                    foreach (DailyLog log in History)
-                    {
-                        sb.Append(log.HistoryToString("containers"));
-                    }
-                    return sb.ToString();
-                }
-
-                else 
-                { return ""; 
-                }
-            }
-
-            else
-            {
-                return "";
-            }
-        }
-
-        /// <summary>
-        /// Gives a string containing information of the given ship entire history. Information in the String includes the ship's name, ID,
-        /// Date and Time of all status changes and the coresponding status the ship had at those times.
-        /// </summary>
-        /// <param name="ship">The ship object in the simulation that information is retrieved from.</param>
-        /// <returns>Returns a string value containing information about the given ship's entire history.</returns>
-        public override string HistoryToString(Ship ship)
-        {
-            return ship.HistoryToString();
-        }
-
-        /// <summary>
-        /// Returns a string that contains information about the start time of the simulation, end time of the simulation and the ID of the harbour used.
-        /// </summary>
-        /// <returns> a string that contains information about the start time, end time of the simulation and the ID of the harbour used.</returns>
-        public override string ToString()
-        {
-            return ($"Simulation start time: {_startTime}, end time: {_endTime}, harbor ID: {_harbor.ID}");
-        }
+        public event EventHandler<SimulationEndedEventArgs>? SimulationEnded;
+        public event EventHandler<SimulationStartingEventArgs>? SimulationStarting;
+        public event EventHandler<OneHourHasPassedEventArgs>? OneHourHasPassed;
+        public event EventHandler<DayEndedEventArgs>? DayEnded;
+        public event EventHandler<ShipUndockingEventArgs>? ShipUndocking;
+        public event EventHandler<ShipInTransitEventArgs>? ShipInTransit;
+        public event EventHandler<ShipDockingToShipDockEventArgs>? ShipDockingToShipDock;
+        public event EventHandler<ShipDockedToShipDockEventArgs>? ShipDockedToShipDock;
+        public event EventHandler<ShipDockingToLoadingDockEventArgs>? ShipDockingToLoadingDock;
+        public event EventHandler<ShipDockedToLoadingDockEventArgs>? ShipDockedToLoadingDock;
+        public event EventHandler<ShipStartingLoadingEventArgs>? ShipStartingLoading;
+        public event EventHandler<ShipLoadedContainerEventArgs>? ShipLoadedContainer;
+        public event EventHandler<ShipDoneLoadingEventArgs>? ShipDoneLoading;
+        public event EventHandler<ShipStartingUnloadingEventArgs>? ShipStartingUnloading;
+        public event EventHandler<ShipUnloadedContainerEventArgs>? ShipUnloadedContainer;
+        public event EventHandler<ShipDoneUnloadingEventArgs>? ShipDoneUnloading;
+        public event EventHandler<ShipAnchoringEventArgs>? ShipAnchoring;
+        public event EventHandler<ShipAnchoredEventArgs>? ShipAnchored;
+        public event EventHandler<TruckLoadingFromHarborStorageEventArgs>? TruckLoadingFromStorage;
     }
 }

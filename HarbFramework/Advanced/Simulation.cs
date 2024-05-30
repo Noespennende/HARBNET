@@ -44,12 +44,6 @@ namespace Gruppe8.HarbNet.Advanced
         public abstract void PrintContainerHistory();
         
         /// <summary>
-        /// Returns a string that contains information about the start time, end time of the simulation and the ID of the harbour used.
-        /// </summary>
-        /// <returns> a string that contains information about the start time, end time of the simulation and the ID of the harbour used.</returns>
-        public abstract override string ToString();
-        
-        /// <summary>
         /// Returns a string that contains information about the entire history of each ship in the previous _harbor simulation.
         /// </summary>
         /// <returns> a string that contains information about all ships in the previous simulation. Returns empty string if no simulation has been run.</returns>
@@ -75,5 +69,11 @@ namespace Gruppe8.HarbNet.Advanced
         /// <param name="shipID">The unique ID of the ship the history belongs to.</param>
         /// <returns>Returns a String value containing information about the entire history of the given ship in the simulation.</returns>
         public abstract string HistoryToString(Guid shipID);
+
+        /// <summary>
+        /// Returns a string that contains information about the start time, end time of the simulation and the ID of the harbour used.
+        /// </summary>
+        /// <returns> a string that contains information about the start time, end time of the simulation and the ID of the harbour used.</returns>
+        public abstract override string ToString();
     }
 }

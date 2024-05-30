@@ -76,7 +76,5 @@ namespace Gruppe8.HarbNet
             Container = null;
             return containerToBeUnloaded;
         }
-
-
     }
 }

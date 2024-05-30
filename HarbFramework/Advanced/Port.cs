@@ -72,6 +72,13 @@ namespace Gruppe8.HarbNet.Advanced
         public abstract Guid DestinationID { get; }
         
         /// <summary>
+        /// Constructor for the Port class.
+        /// </summary>
+        internal Port() 
+        { 
+        }
+
+        /// <summary>
         /// Returns a string with information about the status of all loading docks in the port. A loading dock is a dock used for loading cargo from and to Ships.
         /// </summary>
         /// <returns>String value containing information about the status of all the loading docks in the port.</returns>
@@ -122,12 +129,5 @@ namespace Gruppe8.HarbNet.Advanced
         /// </summary>
         /// <returns>Returns a string value containing information about the Port.</returns>
         public abstract override string ToString();
-
-        /// <summary>
-        /// Constructor for the Port class.
-        /// </summary>
-        internal Port() 
-        { 
-        }
     }
 }

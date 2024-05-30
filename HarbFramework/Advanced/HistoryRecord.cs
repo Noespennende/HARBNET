@@ -55,7 +55,14 @@ namespace Gruppe8.HarbNet.Advanced
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection of container objects containing information of all the containers that has arrived to their destination during the simulation.</returns>
         public abstract ReadOnlyCollection<Container> ContainersArrivedAtDestination { get; }
-        
+
+        /// <summary>
+        /// Constructor for the HistoryRecord class.
+        /// </summary>
+        internal HistoryRecord()
+        {
+        }
+
         /// <summary>
         /// Prints the wereabouts and information regarding all the ships in the HistoryRecord.
         /// </summary>
@@ -85,11 +92,5 @@ namespace Gruppe8.HarbNet.Advanced
         /// <returns>Returns a String containing information stored in the HistoryRecord.</returns>
         public abstract override string ToString();
 
-        /// <summary>
-        /// Constructor for the HistoryRecord class.
-        /// </summary>
-        internal HistoryRecord() 
-        { 
-        }
     }
 }
