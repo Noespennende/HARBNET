@@ -174,14 +174,17 @@ namespace Gruppe8.HarbNet
                 {
                     _harbor.AddNewShipToAnchorage(ship);
 
-                    if (ship.IsForASingleTrip == true && _harbor.GetFreeLoadingDock(ship.ShipSize) != null)
+                    bool isSingleTripShip = ship.IsForASingleTrip == true;
+                    bool freeLoadingDockExists = _harbor.GetFreeLoadingDock(ship.ShipSize) != null;
+
+                    if (isSingleTripShip && freeLoadingDockExists)
                     {
                         Guid loadingDock = _harbor.MoveShipFromAnchorageToLoadingDock(ship.ID);
 
                         ShipIsDockedToLoadingDock(ship, loadingDock);
                     }
 
-                    else if (ship.IsForASingleTrip == true && _harbor.GetFreeLoadingDock(ship.ShipSize) == null)
+                    else if (isSingleTripShip && !freeLoadingDockExists)
                     {
                         ship.AddStatusChangeToHistory(_currentTime, _harbor.AnchorageID, Status.Anchored);
                         ShipAnchored?.Invoke(this, shipAnchoredEventArgs);
@@ -352,8 +355,10 @@ namespace Gruppe8.HarbNet
         /// <returns>The second to last StatusLog object.</returns>
         private StatusLog? GetSecondLastStatusLog(Ship ship)
         {
-            return ship.HistoryIList != null && ship.HistoryIList.Count >= 2 ? 
-                ship.HistoryIList[ship.HistoryIList.Count - 2] : null;
+            return 
+                ship.HistoryIList != null && ship.HistoryIList.Count >= 2 
+                ? ship.HistoryIList[ship.HistoryIList.Count - 2] 
+                : null;
         }
 
         /// <summary>
@@ -369,11 +374,11 @@ namespace Gruppe8.HarbNet
                 Guid shipID = ship.ID;
                 StatusLog lastStatusLog = GetStatusLog(ship);
 
-                if (
-                    ShipCanBeAltered(ship, lastStatusLog) &&
-                        (lastStatusLog.Status == Status.DockingToLoadingDock || 
-                        (lastStatusLog.Status == Status.UnloadingDone && 
-                        SingleTripShipInTransit(ship))))
+                bool shipCanBeAltered = ShipCanBeAltered(ship, lastStatusLog);
+                bool singleTripShipReadyForShipDock = lastStatusLog.Status == Status.UnloadingDone && SingleTripShipHasBeenInTransit(ship);
+
+                if (shipCanBeAltered 
+                    && (lastStatusLog.Status == Status.DockingToLoadingDock || singleTripShipReadyForShipDock))
                 {
                     if (ShipDockingForMoreThanOneHour(lastStatusLog))
                     {
@@ -392,9 +397,9 @@ namespace Gruppe8.HarbNet
                         }
                     }
 
-                    else if (EmptySingleTripShip(ship) && FreeDockExists(ship))
+                    else if (EmptySingleTripShip(ship) && FreeShipDockExists(ship))
                     {
-                        if (FreeDockExists(ship) && SingleTripShipInTransit(ship)
+                        if (FreeShipDockExists(ship) && SingleTripShipHasBeenInTransit(ship)
                             && ShipHasNoContainers(ship) && _currentTime != _startTime
                             && lastStatusLog.Status != Status.DockingToShipDock)
                         {
@@ -404,7 +409,7 @@ namespace Gruppe8.HarbNet
 
                     else if (
                         ship.IsForASingleTrip && 
-                        !FreeDockExists(ship) && 
+                        !FreeShipDockExists(ship) && 
                         ship.TransitStatus == TransitStatus.Anchoring)
                     {
                         ShipAnchoringToAnchorage(ship);
@@ -439,13 +444,12 @@ namespace Gruppe8.HarbNet
                     }
                     
                     else if (SingleTripShipAnchoring(ship))
-                    {                
-                        if (
-                            FreeDockExists(ship) && 
-                                SingleTripShipInTransit(ship) && 
-                                    ShipHasNoContainers(ship) && 
-                                        _currentTime != _startTime && 
-                                            lastStatusLog.Status != Status.DockingToShipDock)
+                    { 
+                        if (FreeShipDockExists(ship) 
+                            && SingleTripShipHasBeenInTransit(ship) 
+                            && ShipHasNoContainers(ship) 
+                            && _currentTime != _startTime 
+                            && lastStatusLog.Status != Status.DockingToShipDock)
                         {
                             dockID = _harbor.DockShipToShipDock(shipID);
 
@@ -453,12 +457,11 @@ namespace Gruppe8.HarbNet
                         }
                     }
 
-                    else if (
-                        ship.IsForASingleTrip && 
-                            !(FreeDockExists(ship)) &&
-                                ContainsTransitStatus(ship) && 
-                                    ShipHasNoContainers(ship) && 
-                                        lastStatusLog.Status == Status.Anchoring)
+                    else if (ship.IsForASingleTrip 
+                            && !(FreeShipDockExists(ship)) 
+                            && ContainsTransitStatus(ship) 
+                            && ShipHasNoContainers(ship) 
+                            && lastStatusLog.Status == Status.Anchoring)
                     {
                         ship.AddStatusChangeToHistory(_currentTime, lastStatusLog.SubjectLocation, Status.Anchored);
                     }
@@ -485,7 +488,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship is set for single trip and is currently anchoring, if not then false is returned.</returns>
         private bool SingleTripShipAnchoring(Ship ship)
         {
-            return ship.IsForASingleTrip && FreeDockExists(ship) && ship.TransitStatus == TransitStatus.Anchoring;
+            return ship.IsForASingleTrip && FreeShipDockExists(ship) && ship.TransitStatus == TransitStatus.Anchoring;
         }
 
         /// <summary>
@@ -495,10 +498,11 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship contains containers and there is an available loading dock for the ship, if not then false is returned.</returns>
         private bool NonEmptyShipReadyForLoadingDock(Ship ship)
         {
-            return 
-                _harbor.FreeLoadingDockExists(ship.ShipSize) && 
-                    ship.ContainersOnBoard.Count != 0 && 
-                        !(ship.IsForASingleTrip && !ContainsTransitStatus(ship));
+            bool freeLoadingDockExists = _harbor.FreeLoadingDockExists(ship.ShipSize);
+            bool shipHasContainers = ship.ContainersOnBoard.Count != 0;
+            bool singleTripNotYetTransited = !(ship.IsForASingleTrip && !ContainsTransitStatus(ship));
+
+            return freeLoadingDockExists && shipHasContainers && singleTripNotYetTransited;
         }
         
         /// <summary>
@@ -509,13 +513,12 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship is fit for dockings, if not then false is returned.</returns>
         private static bool ShipCanDock(Ship ship, StatusLog lastStatusLog)
         {
-            return 
-                ShipCanBeAltered(ship, lastStatusLog) && (
-                    lastStatusLog.Status == Status.Anchored ||
-                    lastStatusLog.Status == Status.DockedToShipDock ||
-                    lastStatusLog.Status == Status.DockingToLoadingDock ||
-                    lastStatusLog.Status == Status.DockingToShipDock || (
-                    lastStatusLog.Status == Status.UnloadingDone && SingleTripShipInTransit(ship)));
+            bool shipIsReadyToDock = lastStatusLog.Status == Status.Anchored || lastStatusLog.Status == Status.DockedToShipDock ||
+                lastStatusLog.Status == Status.DockingToLoadingDock || lastStatusLog.Status == Status.DockingToShipDock;
+
+            bool singleTripShipIsReadyForShipDock = lastStatusLog.Status == Status.UnloadingDone && SingleTripShipHasBeenInTransit(ship);
+
+            return ShipCanBeAltered(ship, lastStatusLog) && shipIsReadyToDock || singleTripShipIsReadyForShipDock;
         }
         
         /// <summary>
@@ -568,7 +571,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ship">Ship object to be docked.</param>
         /// <returns>Returns true if there is an available dock matching the ship's shipSize enum, if not then false is returned.</returns>
-        private bool FreeDockExists(Ship ship)
+        private bool FreeShipDockExists(Ship ship)
         {
             return _harbor.FreeShipDockExists(ship.ShipSize);
         }
@@ -588,11 +591,11 @@ namespace Gruppe8.HarbNet
         }
         
         /// <summary>
-        /// Checks if the ship is a single trip ship and the status is in transit.
+        /// Checks if the ship is a single trip ship and has been in transit in the simulation.
         /// </summary>
         /// <param name="ship">Ship object.</param>
-        /// <returns>Returns true if the ship is set to single trip and the current status is transit, if not false is returned.</returns>
-        private static bool SingleTripShipInTransit(Ship ship)
+        /// <returns>Returns true if the ship is set to single trip and has been in transit in the simulation, if not false is returned.</returns>
+        private static bool SingleTripShipHasBeenInTransit(Ship ship)
         {
             return (ship.IsForASingleTrip == true && ContainsTransitStatus(ship));
         }
@@ -719,12 +722,9 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship meets the criteria to unload, if not then false is returned.</returns>
         private bool IsShipReadyForUnloading(Ship ship, StatusLog lastStatusLog, StatusLog secondLastStatusLog)
         {
-            return 
-                ShipCanBeAltered(ship, lastStatusLog) && 
-                    secondLastStatusLog != null && (
-                        lastStatusLog.Status == Status.Unloading || 
-                        lastStatusLog.Status == Status.DockedToLoadingDock && 
-                            secondLastStatusLog != null);
+            bool shipCanUnload = lastStatusLog.Status == Status.Unloading || lastStatusLog.Status == Status.DockedToLoadingDock;
+
+            return ShipCanBeAltered(ship, lastStatusLog) && secondLastStatusLog != null && shipCanUnload;
         }
         
         /// <summary>
@@ -735,10 +735,10 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if ship is currently unloading, if not then false is returned.</returns>
         private bool ShipNowUnloading(Ship ship, StatusLog lastStatusLog)
         {
-            return 
-                ship.ContainersOnBoard.Count != 0 && (
-                    lastStatusLog.Status == Status.DockedToLoadingDock || 
-                    lastStatusLog.Status == Status.Unloading);
+            bool shipIsNotEmpty = ship.ContainersOnBoard.Count != 0;
+            bool shipCanTryUnloading = lastStatusLog.Status == Status.DockedToLoadingDock || lastStatusLog.Status == Status.Unloading;
+            
+            return shipIsNotEmpty && shipCanTryUnloading;
         }
         
         /// <summary>
@@ -774,14 +774,14 @@ namespace Gruppe8.HarbNet
         {
             Guid currentLocation = lastStatusLog.SubjectLocation;
 
-            if (ShipHasNoContainers(ship) && !SingleTripShipInTransit(ship))
+            if (ShipHasNoContainers(ship) && !SingleTripShipHasBeenInTransit(ship))
             {
                 ShipFinishedUnloading(ship, currentLocation);
 
                 StartLoadingProcess(ship, currentLocation);
             }
 
-            else if (ShipHasNoContainers(ship) && SingleTripShipInTransit(ship))
+            else if (ShipHasNoContainers(ship) && SingleTripShipHasBeenInTransit(ship))
             {
                 ShipFinishedUnloading(ship, currentLocation);
 
@@ -1114,17 +1114,15 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the ship object can undock from loading dock, if not false is returned.</returns>
         private bool ShipCanUndockFromDock(Ship ship, StatusLog lastStatusLog)
         {
-            return 
-                ship.HasBeenAlteredThisHour == false &&
-                lastStatusLog != null && (
-                    lastStatusLog.Status == Status.Undocking ||
-                    lastStatusLog.Status == Status.LoadingDone || 
-                    (lastStatusLog.Status == Status.DockedToLoadingDock &&
-                        ship.IsForASingleTrip &&
-                            !ContainsTransitStatus(ship)) ||
-                            (lastStatusLog.Status == Status.UnloadingDone &&
-                                ContainsTransitStatus(ship)) ||
-                                lastStatusLog.Status == Status.DockingToShipDock);
+            bool shipFinishedInHarbor = lastStatusLog.Status == Status.Undocking || lastStatusLog.Status == Status.LoadingDone;
+            bool singleTripShipCanleave = lastStatusLog.Status == Status.DockedToLoadingDock && ship.IsForASingleTrip && !ContainsTransitStatus(ship);
+
+            bool singleTripHasTransited = lastStatusLog.Status == Status.UnloadingDone || lastStatusLog.Status == Status.DockingToShipDock;
+
+            bool singletripCanDockToShipDock = ContainsTransitStatus(ship) && singleTripHasTransited;
+
+            return ship.HasBeenAlteredThisHour == false && lastStatusLog != null 
+                && (shipFinishedInHarbor || singleTripShipCanleave || singletripCanDockToShipDock);
         }
 
         /// <summary>
@@ -1137,11 +1135,9 @@ namespace Gruppe8.HarbNet
         {
             bool containsTransitStatus = ContainsTransitStatus(ship);
 
-            return 
-                ship.IsForASingleTrip == true && 
-                    containsTransitStatus && 
-                        lastStatusLog.Status != Status.DockingToShipDock && 
-                            FreeDockExists(ship) != false;
+            bool singletripCanDockToShipDock = lastStatusLog.Status != Status.DockingToShipDock && FreeShipDockExists(ship) != false;
+
+            return ship.IsForASingleTrip == true && containsTransitStatus && singletripCanDockToShipDock;
         }
 
         /// <summary>
@@ -1236,19 +1232,16 @@ namespace Gruppe8.HarbNet
 
                             ShipNowUndocking(ship, currentLocation);
                         }
-
                     }
+
                     else
                     {
                         ShipFinishedLoading(ship, currentLocation);
 
                         ShipNowUndocking(ship, currentLocation);
-
-
                     }
 
                     ship.HasBeenAlteredThisHour = true;
-
                 }
             }
         }
@@ -1267,7 +1260,6 @@ namespace Gruppe8.HarbNet
             {
                 container.AddStatusChangeToHistory(Status.Transit, _currentTime);
             }
-
 
             ShipUndockingEventArgs shipUndockingEventArgs = new(ship, _currentTime, "Ship is undocking from dock.", currentLocation);
             ShipUndocking?.Invoke(this, shipUndockingEventArgs);
@@ -1373,8 +1365,14 @@ namespace Gruppe8.HarbNet
             bool underMaxWeight;
             bool underMaxCapacity;
 
-            if (ShipHasNoContainers(ship) || ship.ContainersOnBoard.Last().Size == ContainerSize.Full && _harbor.GetStoredContainer(ContainerSize.Half) != null
-                || _harbor.GetStoredContainer(ContainerSize.Full) == null && _harbor.GetStoredContainer(ContainerSize.Half) != null)
+            bool shipHasNoContainers = ShipHasNoContainers(ship);
+            bool lastContainerIsFullSize = ship.ContainersOnBoard.LastOrDefault()?.Size == ContainerSize.Full;
+            bool harborStorageHasHalfContainer = _harbor.GetStoredContainer(ContainerSize.Half) != null;
+            bool harborStorageHasFullContainer = _harbor.GetStoredContainer(ContainerSize.Full) != null;
+
+            if (shipHasNoContainers 
+                || (lastContainerIsFullSize && harborStorageHasHalfContainer)
+                || (!harborStorageHasFullContainer && harborStorageHasHalfContainer))
             {
                 underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Half;
                 underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
@@ -1387,8 +1385,8 @@ namespace Gruppe8.HarbNet
                 }
             }
 
-            else if (ship.ContainersOnBoard.Last().Size == ContainerSize.Half && _harbor.GetStoredContainer(ContainerSize.Full) != null
-                || _harbor.GetStoredContainer(ContainerSize.Half) == null && _harbor.GetStoredContainer(ContainerSize.Full) != null)
+            else if (!lastContainerIsFullSize && harborStorageHasFullContainer
+                || (!harborStorageHasHalfContainer && harborStorageHasFullContainer))
             {
                 underMaxWeight = ship.MaxWeightInTonn >= ship.CurrentWeightInTonn + (int)ContainerSize.Full;
                 underMaxCapacity = ship.ContainerCapacity > ship.ContainersOnBoard.Count + 1;
@@ -1467,10 +1465,10 @@ namespace Gruppe8.HarbNet
             {
                 StatusLog lastStatusLog = GetStatusLog(ship);
 
-                if (IsShipInTransit(ship, lastStatusLog))
+                if (ShipIsInTransit(ship, lastStatusLog))
                 {
 
-                    if (ShipHasReturnedToHarbor(ship, lastStatusLog))
+                    if (ShipIsReadyToReturnToHarbor(ship, lastStatusLog))
                     {
                         _harbor.RestockContainers(ship, _currentTime);
 
@@ -1489,20 +1487,21 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">Ship object to check status on to see if it's current status is in transit.</param>
         /// <param name="lastStatusLog">The last StatusLog in the ship's history.</param>
         /// <returns>Returns true if the ship's most recent registered StatusLog is "Transit", if not the false is returned.</returns>
-        private bool IsShipInTransit(Ship ship, StatusLog lastStatusLog)
+        private bool ShipIsInTransit(Ship ship, StatusLog lastStatusLog)
         {
             return ship.HasBeenAlteredThisHour == false && lastStatusLog != null && lastStatusLog.Status == Status.Transit;
         }
 
         /// <summary>
-        /// Checks if the given ship has returned to harbor.
+        /// Checks if the given ship is ready return to harbor and has been out in transit for its given round-trip days.
         /// </summary>
-        /// <param name="ship">Ship object to check on to see if it has returned to harbor.</param>
+        /// <param name="ship">Ship object to check on to see if it is ready to return to harbor.</param>
         /// <param name="LastHistoryStatusLog">The last StatusLog in the ship's history.</param>
-        /// <returns>Returns true if the given ship has returned to harbor from its roundtrip, if not then false is returned.</returns>
-        private bool ShipHasReturnedToHarbor(Ship ship, StatusLog LastHistoryStatusLog)
+        /// <returns>Returns true if the given ship is ready to return to harbor from its roundtrip, if not then false is returned.</returns>
+        private bool ShipIsReadyToReturnToHarbor(Ship ship, StatusLog LastHistoryStatusLog)
         {
             double DaysSinceTransitStart = (_currentTime - LastHistoryStatusLog.Timestamp).TotalDays;
+            
             return DaysSinceTransitStart >= ship.RoundTripInDays;
         }
 
@@ -1547,7 +1546,6 @@ namespace Gruppe8.HarbNet
                                     TruckLoadingFromHarborStorageEventArgs truckLoadingFromStorageEventArgs = new(truck, _currentTime, "One truck has loaded a container and has left");
                                     TruckLoadingFromStorage?.Invoke(this, truckLoadingFromStorageEventArgs);
                                 }
-                                
                             }
                         }
 
@@ -1708,7 +1706,9 @@ namespace Gruppe8.HarbNet
                     return sb.ToString();
                 }
 
-                else { return ""; }
+                else 
+                { return ""; 
+                }
             }
 
             else
