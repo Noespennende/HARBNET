@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Abstract class defining the public API for StorageAreas such as the ContainerStorageRow class. Each storage Area can only store containers of one size at the time.
+    /// This abstract class can be used to make fakes to be used in testing of the API. 
     /// </summary>
     public abstract class StorageArea
     {

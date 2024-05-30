@@ -10,6 +10,7 @@ namespace Gruppe8.HarbNet.Advanced
     /// <summary>
     /// Abstract class defining the public API for HistoryRecords such as the DailyLog class.
     /// HistoryRecords contains information about the state of a harbour on a given date and time.
+    /// This abstract class can be used to make fakes to be used in testing of the API. 
     /// </summary>
     public abstract class HistoryRecord
     {

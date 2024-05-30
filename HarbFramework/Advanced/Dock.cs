@@ -11,7 +11,7 @@ namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Dock used for docking ships to the harbor. There are multiple types of docks that inherit from this class suck as
-    /// LoadingDocks and ShipDocks
+    /// LoadingDocks and ShipDocks.
     /// </summary>
     internal abstract class Dock
     {

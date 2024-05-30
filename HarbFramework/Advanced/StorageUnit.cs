@@ -9,6 +9,7 @@ namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Abstract class defining the public API of StorageUnits such as the container class.
+    /// This abstract class can be used to make fakes to be used in testing of the API. 
     /// </summary>
     public abstract class StorageUnit
     {
