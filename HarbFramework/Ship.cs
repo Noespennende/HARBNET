@@ -45,7 +45,7 @@ namespace Gruppe8.HarbNet
         
         /// <summary>
         /// Gets the TransitStatus of the ship. The transit status indicates at witch part of the transit the ship is currently.
-        /// For example wether or not it is leaving or arriving to the _harbor.
+        /// For example wether or not it is leaving or arriving to the harbor.
         /// </summary>
         /// <returns>Returns a TransitStatus enum representing where in the transit cycle the ship is currently</returns>
         internal TransitStatus TransitStatus { get; set; }
@@ -319,6 +319,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipSize">ShipSize enum representing the size of the ship</param>
         /// <exception cref="ArgumentException">Throws ArgumentException if shipSize is not found.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
         private void SetBaseShipInformation(ShipSize shipSize)
         {
             if (shipSize == ShipSize.Small)
@@ -365,8 +366,14 @@ namespace Gruppe8.HarbNet
             {
                 CurrentWeightInTonn += container.WeightInTonn;
             }
-
-            CheckForValidWeight();
+            try
+            {
+                CheckForValidWeight();
+            } catch (ArgumentOutOfRangeException)
+            {
+                throw;
+            }
+            
         }
 
         /// <summary>
@@ -444,11 +451,20 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size of the container's to be added to the ship's storage.</param>
         /// <param name="numberOfContainersToBeAddedToStorage">Int value representing the number of containers to be added to the ship's storage.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
         private void AddContainersOnBoard(ContainerSize containerSize, int numberOfContainersToBeAddedToStorage)
         {
             for (int i = 0; i < numberOfContainersToBeAddedToStorage; i++)
-            { 
-                CheckForValidWeight();
+            {
+                try
+                {
+                    CheckForValidWeight();
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    throw;
+                }
+
                 Container? ContainertoAdd = null;
             
                 if (containerSize == ContainerSize.Half) { 
