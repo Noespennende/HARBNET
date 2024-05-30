@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Agv class representing Agv viechles. Automated Guided Viechles that can deliver containers from point A to B in the harbor area.
+    /// Agv class representing Agv viechles. Automated Guided Viechles that can deliver containers from point A to B in the _harbor area.
     /// </summary>
     internal class Agv
     {
@@ -22,7 +22,7 @@ namespace Gruppe8.HarbNet
         /// Represents the container stored in the AGV's cargo.
         /// </summary>
         /// <return>Returns a container object representing the container stored in the AGV's cargo.</return>
-        internal Container Container { get; set; }
+        internal Container? Container { get; set; }
 
         /// <summary>
         /// Represents the current status of the AGV.
@@ -42,8 +42,8 @@ namespace Gruppe8.HarbNet
         /// <param name="location">Guid object representing the ID of the location the Agv will start at.</param>
         internal Agv (Guid location)
         {
-            this.Container = null;
-            this.Location = location;
+            Container = null;
+            Location = location;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Gruppe8.HarbNet
         /// <return>Returns a Guid object representing the ID of the container loaded to the AGV's cargo.</return>
         internal Guid LoadContainer(Container containerToBeLoaded)
         {
-            this.Container = containerToBeLoaded;
+            Container = containerToBeLoaded;
             return containerToBeLoaded.ID;
         }
 
@@ -61,10 +61,10 @@ namespace Gruppe8.HarbNet
         /// Unloads the container in the AGV's cargo.
         /// </summary>
         /// <return>Returns a container object representing the container that was unloaded from the AGV's cargo.</return>
-        internal Container UnloadContainer()
+        internal Container? UnloadContainer()
         {
-            Container containerToBeUnloaded = this.Container;
-            this.Container = null;
+            Container? containerToBeUnloaded = Container;
+            Container = null;
             return containerToBeUnloaded;
 
         }

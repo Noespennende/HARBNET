@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Trucks are viechles that can be used to transport containers to and from the harbor. A truck can hold a single container.
+    /// Trucks are viechles that can be used to transport containers to and from the _harbor. A truck can hold a single container.
     /// </summary>
     public class Truck
     {
@@ -18,16 +18,19 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Guid object representing the trucks unique ID.</returns>
         public Guid ID { get; internal set; } = Guid.NewGuid();
+        
         /// <summary>
         /// Gets the location ID of the trucks current location.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the trucks location.</returns>
         public Guid Location { get; internal set; }
+        
         /// <summary>
         /// Gets the current status of the truck.
         /// </summary>
         /// <return>Returns a Status enum representing the latest registered status of the truck.</return>
         public Status Status { get; internal set; }
+        
         /// <summary>
         /// Gets the container in the truck's storage.
         /// </summary>
@@ -40,9 +43,9 @@ namespace Gruppe8.HarbNet
         /// <param name="location">Guid object representing the current location of the truck to be created.</param>
         internal Truck (Guid location)
         {
-            this.Location = location;
-            this.Status = Status.Queuing;
-            this.Container = null;
+            Location = location;
+            Status = Status.Queuing;
+            Container = null;
         }
 
         /// <summary>
@@ -52,19 +55,21 @@ namespace Gruppe8.HarbNet
         /// <return>Returns a Guid object representing the container that were loaded on to the trucks storage.</return>
         internal Guid LoadContainer(Container containerToBeLoaded)
         {
-            this.Container = containerToBeLoaded;
+            Container = containerToBeLoaded;
+
             return containerToBeLoaded.ID;
         }
+
         /// <summary>
         /// Unloads a container from the truck's storage. Trucks storage is then set to null.
         /// </summary>
         /// <return>Returns the container object unloaded from the trucks storage.</return>
-        internal Container UnloadContainer()
+        internal Container? UnloadContainer()
         {
-            Container containerToBeUnloaded = this.Container;
-            this.Container = null;
-            return containerToBeUnloaded;
+            Container? containerToBeUnloaded = Container;
+            Container = null;
 
+            return containerToBeUnloaded;
         }
     }
 }

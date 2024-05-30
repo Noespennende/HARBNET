@@ -17,16 +17,19 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Guid object representing the subjects unique ID.</returns>
         public Guid Subject { get; internal set; }
+        
         /// <summary>
         /// Gets the ID of the subjects location.
         /// </summary>
         /// <returns>Returns a Guid object representing the locations unique ID.</returns>
         public Guid SubjectLocation { get; internal set; }
+        
         /// <summary>
         /// Gets the date and time the status change occured. 
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the subjects status change occured.</returns>
         public DateTime Timestamp { get; internal set; }
+        
         /// <summary>
         /// Gets the current status of the subject.
         /// </summary>
@@ -42,19 +45,23 @@ namespace Gruppe8.HarbNet
         /// <param name="status">Status enum representing the new status of the subject</param>
         internal StatusLog (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
         {
-            this.Subject = subject;
-            this.SubjectLocation = subjectLocation;
-            this.Timestamp = pointInTime;
-            this.Status = status;
+            Subject = subject;
+            SubjectLocation = subjectLocation;
+            Timestamp = pointInTime;
+            Status = status;
         }
 
         /// <summary>
         /// Returns a string with the date and time of status log, subjets ID, subjets location and current status.
         /// </summary>
         /// <returns> a String containing information about the subject on a given point in time.</returns>
-         override public string ToString()
+         public override string ToString()
         {
-            return ("Date: " + Timestamp.ToString() + ", Subject ID: " + Subject.ToString() + ", Location: " + SubjectLocation.ToString() + ", Status: " + Status.ToString());
+            return 
+                $"Date: + {Timestamp}" + 
+                $", Subject ID: {Subject}, " +
+                $"Location: {SubjectLocation}, " +
+                $"Status: {Status}";
         }
     }
 }

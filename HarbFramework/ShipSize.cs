@@ -26,6 +26,6 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Large ship, base weight: 100000 tonns, container capacity: 100
         /// </summary>
-        Large = 100000
+        Large = 100000,
     }
 }

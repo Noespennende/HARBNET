@@ -14,16 +14,16 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates new CraneCantBeLoadedException object.
         /// </summary>
-        public CraneCantBeLoadedException() { }
-
+        public CraneCantBeLoadedException() 
+        { 
+        }
 
         /// <summary>
         /// Creates new CraneCantBeLoadedException object.
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
         public CraneCantBeLoadedException(string message) : base(message)
-        {
-
+        { 
         }
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
         /// <param name="innerException">innerException to be thrown when exception is called.</param>
-        public CraneCantBeLoadedException(String message, Exception innerException) : base(message, innerException)
-        {
+        public CraneCantBeLoadedException(string message, Exception innerException) : base(message, innerException)
+        { 
         }
     }
 }

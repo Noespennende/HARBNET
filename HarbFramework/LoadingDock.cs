@@ -8,7 +8,7 @@ using Gruppe8.HarbNet.Advanced;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// LoadingDocks used in a simulation. LoadingDocks are docks where ships can load or unload their cargo from or to the Harbor. 
+    /// LoadingDocks used in a simulation. LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. 
     /// </summary>
     internal class LoadingDock : Dock
     {
@@ -26,7 +26,7 @@ namespace Gruppe8.HarbNet
         /// ships of the cooresponding size.</param>
         internal LoadingDock(ShipSize shipSize) : base(shipSize)
         {
-            this.Size = shipSize;
+            Size = shipSize;
         }
 
         /// <summary>
@@ -44,6 +44,7 @@ namespace Gruppe8.HarbNet
                     TruckLoadingSpots.Add(spot.Key, truck);
                 }
             }
+
             return null;
         }
 
@@ -64,6 +65,7 @@ namespace Gruppe8.HarbNet
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -82,6 +84,7 @@ namespace Gruppe8.HarbNet
                     return truck;
                 }
             }
+
             return null;
         }
     }

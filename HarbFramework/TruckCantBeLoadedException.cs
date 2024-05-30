@@ -14,15 +14,16 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates new TruckCantBeLoadedException object.
         /// </summary>
-        public TruckCantBeLoadedException() { }
-
+        public TruckCantBeLoadedException() 
+        { 
+        }
 
         /// <summary>
         /// Creates new TruckCantBeLoadedException object.
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
-        public TruckCantBeLoadedException(string message) : base(message) {
-            
+        public TruckCantBeLoadedException(string message) : base(message) 
+        { 
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
         /// <param name="innerException">innerException to be thrown when exception is called.</param>
-        public TruckCantBeLoadedException(String message, Exception innerException) : base(message, innerException)
+        public TruckCantBeLoadedException(string message, Exception innerException) : base(message, innerException)
         { 
         }
     }

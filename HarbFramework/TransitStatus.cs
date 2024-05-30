@@ -14,18 +14,18 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// No status.
         /// </summary>
-        none = 0,
+        None = 0,
         /// <summary>
-        /// Subject is arriving to harbor.
+        /// Subject is arriving to _harbor.
         /// </summary>
         Arriving = 1,
         /// <summary>
-        /// Subject is leaving the harbor.
+        /// Subject is leaving the _harbor.
         /// </summary>
         Leaving = 2,
         /// <summary>
         /// Subject is anchoring at the anchorage.
         /// </summary>
-        Anchoring = 3
+        Anchoring = 3,
     }
 }
