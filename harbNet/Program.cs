@@ -23,7 +23,7 @@ namespace Client.HarborName
 
             ShipNames shipNames = new ShipNames();
 
-            IList<Ship> clientShips = new List<Ship>();
+            List<Ship> clientShips = new List<Ship>();
 
             Random rand = new Random();
             int numberOfSmallShipDocks= 0;
@@ -32,8 +32,8 @@ namespace Client.HarborName
 
             int count = 0;
 
-            IList<Container> containerList = new List<Container>();
-            IList<ContainerStorageRow> storageRows = new List<ContainerStorageRow>();
+            List<Container> containerList = new List<Container>();
+            List<ContainerStorageRow> storageRows = new List<ContainerStorageRow>();
 
             for (int i = 0; i < 24; i++)
             {
@@ -108,7 +108,7 @@ namespace Client.HarborName
             // Det blir mye utskrift i konsoll med abonnering slik med på alle eventene.
             // For eksempel vil ShipLoadedContainer og ShipUnloadedContainer eventene stå for mye utskrift i dette eksempel-prosjektet. (Blir det uoversiktlig kan det være en løsning å kommentere ut akkurat disse to)
             // Som nevnt over representerer dette kun et eksempel på hvordan kunden kan opprette simuleringen og håndtere av event-kallene, og viser dermed hva som er mulig i forhold til eventer.
-
+            
             clientSim.SimulationStarting += (sender, e) =>
             {
                 SimulationStartingEventArgs args = (SimulationStartingEventArgs)e;
@@ -200,13 +200,13 @@ namespace Client.HarborName
                 ShipInTransitEventArgs args = (ShipInTransitEventArgs)e;
                 Console.WriteLine($"| {args.CurrentTime} | ' {args.Ship.Name}' is in transit at transit ID '{args.TransitLocationID}'\n");
             };
-
+            
             clientSim.ShipDockedToShipDock += (sender, e) =>
             {
                 ShipDockedToShipDockEventArgs args = (ShipDockedToShipDockEventArgs)e;
                 Console.WriteLine($"| {args.CurrentTime} | '{args.Ship.Name}' has docked to ship dock with ID '{args.DockID}'\n");
             };
-
+            
             clientSim.TruckLoadingFromStorage += (sender, e) =>
             {
                 TruckLoadingFromHarborStorageEventArgs args = (TruckLoadingFromHarborStorageEventArgs)e;
@@ -266,7 +266,7 @@ namespace Client.HarborName
                 Thread.Sleep(1000);
             };
 
-
+            
             clientSim.Run();
 
 

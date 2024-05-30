@@ -551,7 +551,6 @@ namespace Gruppe8.HarbNet
             foreach (LoadingDock loadingDock in allLoadingDocks)
             {
                 dockStatus[loadingDock] = loadingDock.Free;
-
             }
 
             foreach (var keyValue in dockStatus)
@@ -559,7 +558,7 @@ namespace Gruppe8.HarbNet
                 sb.AppendLine($"dockId: {keyValue.Key}, dock free: {keyValue.Value}");
             }
 
-            return dockStatus.ToString();
+            return sb.ToString();
         }
 
         /// <summary>

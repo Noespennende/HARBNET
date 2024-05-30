@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using Gruppe8.HarbNet.Advanced;
 
 namespace Gruppe8.HarbNet
@@ -470,49 +463,6 @@ namespace Gruppe8.HarbNet
             HistoryIList.Add(currentStatusChange);
 
             return currentStatusChange;
-        }
-
-        /// <summary>
-        /// Gets a container of the given size from the ships storage.
-        /// </summary>
-        /// <param name="containerSize">ContainerSize enum representing the size of the container to be retrieved.</param>
-        /// <returns>Returns a container object of the given size from the ships storage if one exists, if None of the gived containerSize is found null is returned.</returns>
-        /// <exception cref="ArgumentException">Exception thrown if given a ContainerSize enum value that is not valid for concrete implementation.</exception>
-        internal Container? GetContainer(ContainerSize containerSize)
-        {
-            if (containerSize == ContainerSize.None)
-            {
-                throw new ArgumentException("Invalid input. Container's of that size is not meant for concrete implementation. Please use ContainerSize 'Half' or 'Full' instead.", nameof(containerSize));
-            }
-
-            foreach (Container container in ContainersOnBoard)
-            {
-                if (container.Size == containerSize)
-                {
-                    return container;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets a number indicating the amount of containers of the given size that exists in the Ship's storage.
-        /// </summary>
-        /// <param name="containerSize">ContainerSize enum representing the size of the container's to be counted.</param>
-        /// <returns>Returns an int value representing the amount of the given size containers that exists in the ships storage.</returns>
-        internal int GetNumberOfContainersOnBoard(ContainerSize containerSize)
-        {
-            int count = 0;
-            foreach (Container container in ContainersOnBoard)
-            {
-                if (container.Size == containerSize)
-                {
-                    count++;
-                }
-            }
-
-            return count;
         }
 
         /// <summary>
