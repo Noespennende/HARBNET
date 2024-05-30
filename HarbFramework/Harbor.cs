@@ -1578,14 +1578,7 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
-        /// <summary>
-        /// Unloads a container of the given size from ship's cargo to a ContainerStorageSpace in the harbor storage area.
-        /// </summary>
-        /// <param name="containerSize">ContainerSize enum representing the size the containers to be unloaded from ship to the harbor storage area.</param>
-        /// <param name="ship">The ship object the container is unloaded from.</param>
-        /// <param name="currentTime">The date and time the container is unloaded from ship's storage to the harbor storage area.</param>
-        /// <returns>Returns a Guid object representing the ContainerSpaces the unloaded container was stored in, if the container was not unloaded from the ship null is returned</returns>
-        
+     
         
         /// <summary>
         /// Adds the given ship to the Anchorage.
@@ -1622,20 +1615,7 @@ namespace Gruppe8.HarbNet
             return Status.None;
         }
 
-        /// <summary>
-        /// Gets the availabilety of all ship docks in the harbor.
-        /// </summary>
-        /// <returns>Returns a IDictionary containing the Guid of the ship docks as keys and bool values that is true if the coresponding ship dock is free and false otherwise as values.</returns>
-        internal IDictionary<Guid, bool> StatusAllShipDocks()
-        {
-            IDictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
-            foreach(ShipDock shipDock in allShipDocks)
-            {
-                dockStatus[shipDock.ID] = shipDock.Free;
-            }
-
-            return dockStatus;
-        }
+        
 
         /// <summary>
         /// Returns a string with information about the status of all loading docks in the port. A loading dock is a dock used for loading cargo from and to Ships.
