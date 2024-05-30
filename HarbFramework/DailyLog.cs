@@ -22,39 +22,39 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the info in the DailyLog object were logged</returns>
         public override DateTime Timestamp { get; internal set; }
-        
+
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containting information of all ships that were in anchorage at the date and time when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing all the ships in anchorage when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsInAnchorage { get; }
-        
+
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containing information of all the ships that were in transit when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships in transit when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsInTransit { get; }
-        
+
         /// <summary>
         /// Gets a ReadOnlyCollection of container objects containing information of all the containers that were stored in harbour when the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Container object representing the containers stored in when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Container> ContainersInHarbor { get; }
-        
+
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containing information of all the ships that were docked in a loading dock when the DailyLog object were created.
         /// Loading docks are docks where ships can load and unload containers from/to their cargo to/from the harbor.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the docked in a loading dock when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsDockedInLoadingDocks { get; }
-        
+
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containing information of all the ships that were docked to ship docks when the DailyLog object were created.
         /// Ship docks are docks where ships can be stored when they are done with their cargo delivery.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the ships docked to ship docks when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsDockedInShipDocks { get; }
-        
+
         /// <summary>
         /// Gets a ReadOnlyCollection of container objects containing information of all the containers that have arrived to their destination during the simulation.
         /// </summary>
@@ -72,12 +72,12 @@ namespace Gruppe8.HarbNet
         /// <param name="shipsDockedInLoadingDocks">An IList with ship objects containing all the ships docked in loading docks at the time given.</param>
         /// <param name="ShipsDockedInShipDocks">An IList with ship objects containing all the ships docked in ship docks at the time given.</param>
         internal DailyLog(
-            DateTime time, 
-            IList<Ship> shipsInAnchorage, 
-            IList<Ship> shipsInTransit, 
-            IList<Container> containersInHarbour, 
-            IList<Container> containersAtDestination, 
-            IList<Ship> shipsDockedInLoadingDocks, 
+            DateTime time,
+            IList<Ship> shipsInAnchorage,
+            IList<Ship> shipsInTransit,
+            IList<Container> containersInHarbour,
+            IList<Container> containersAtDestination,
+            IList<Ship> shipsDockedInLoadingDocks,
             IList<Ship> shipsDockedInShipDocks)
         {
             Timestamp = time;
@@ -92,16 +92,17 @@ namespace Gruppe8.HarbNet
 
             ContainersInHarbor = new ReadOnlyCollection<Container>(DuplicateContainerList(containersInHarbour));
 
-            ContainersArrivedAtDestination = new ReadOnlyCollection<Container> (DuplicateContainerList(containersAtDestination));
+            ContainersArrivedAtDestination = new ReadOnlyCollection<Container>(DuplicateContainerList(containersAtDestination));
 
         }
+
 
         /// <summary>
         /// Duplicate a shipList making copies of all objects within the list and adds them to a new list.
         /// </summary>
         /// <param name="shipListToDuplicate">The IList containing the Ship objects to be duplicated.</param>
         /// <returns>Returns a Collection containing Ship objects, which are duplications of all objects in the shipListToDuplicate.</returns>
-        private Collection <Ship> DuplicateShipList(IList<Ship> shipListToDuplicate)
+        private Collection<Ship> DuplicateShipList(IList<Ship> shipListToDuplicate)
         {
             Collection<Ship> duplicatedList = new Collection<Ship>();
 
@@ -178,14 +179,14 @@ namespace Gruppe8.HarbNet
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
 
-            } 
-            
+            }
+
             else
             {
                 Console.WriteLine("\nNO SHIPS IN ANCHORAGE");
             }
 
-            if (ShipsInTransit.Count > 0) 
+            if (ShipsInTransit.Count > 0)
             {
                 Console.WriteLine("\nSHIPS IN TRANSIT:");
                 foreach (Ship ship in ShipsInTransit)
@@ -193,8 +194,8 @@ namespace Gruppe8.HarbNet
                     Console.WriteLine("NAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
-            } 
-            
+            }
+
             else
             {
                 Console.WriteLine("\nNO SHIPS IN TRANSIT");
@@ -208,31 +209,31 @@ namespace Gruppe8.HarbNet
                     Console.WriteLine("NAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
-            } 
-            
+            }
+
             else
             {
                 Console.WriteLine("\nNO SHIPS DOCKED IN LOADING DOCKS");
             }
 
-            
+
             if (ShipsDockedInShipDocks.Count > 0)
             {
                 Console.WriteLine("\nSHIPS IN SHIP DOCK:");
-                
+
                 foreach (Ship ship in ShipsDockedInShipDocks)
                 {
                     Console.WriteLine("NAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
                         ", MAX WEIGHT: " + ship.MaxWeightInTonn + "tonns " + ", CURRENT WEIGHT: " + ship.CurrentWeightInTonn + " tonns" + ", CONTAINER CAPACITY: " + ship.ContainerCapacity + ", CONTAINERS ONBOARD: " + ship.ContainersOnBoard.Count + ", ID: " + ship.ID);
                 }
-            } 
-            
+            }
+
             else
             {
                 Console.WriteLine("\nNO SHIPS DOCKED IN SHIP DOCKS");
             }
         }
-        
+
         /// <summary>
         /// Prints to console the historical data regarding the location, Size, Weight, status and ID of all containers in the simulation at the time and date the DailyLog object
         /// were created.
@@ -246,7 +247,7 @@ namespace Gruppe8.HarbNet
             if (ShipsInAnchorage.Count > 0)
             {
                 Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN ANCHORAGE:");
-                
+
                 bool infoPrinted = false;
 
                 foreach (Ship ship in ShipsInAnchorage)
@@ -263,24 +264,24 @@ namespace Gruppe8.HarbNet
                     }
 
                 }
-                
+
                 if (!infoPrinted)
                 {
                     Console.WriteLine("NONE");
                 }
             }
-            
+
             else
             {
                 Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN ANCHORAGE");
-            } 
-            
+            }
+
             if (ShipsInTransit.Count > 0)
             {
                 Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN TRANSIT:");
-                
+
                 bool infoPrinted = false;
-                
+
                 foreach (Ship ship in ShipsInTransit)
                 {
                     if (ship.ContainersOnBoard.Count > 0)
@@ -300,18 +301,18 @@ namespace Gruppe8.HarbNet
                     Console.WriteLine("NONE");
                 }
             }
-            
+
             else
             {
                 Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN TRANSIT");
             }
-            
+
             if (ShipsDockedInLoadingDocks.Count > 0)
             {
                 Console.WriteLine("\nCONTAINERS ONBOARD SHIPS IN LOADING DOCKS:");
-                
+
                 bool infoPrinted = false;
-                
+
                 foreach (Ship ship in ShipsDockedInLoadingDocks)
                 {
                     if (ship.ContainersOnBoard.Count > 0)
@@ -337,7 +338,7 @@ namespace Gruppe8.HarbNet
             {
                 Console.WriteLine("\nNO CONTAINERS ONBOARD SHIPS IN LOADING DOCKS");
             }
-            
+
             if (ContainersInHarbor.Count > 0)
             {
                 Console.WriteLine("\nCONTAINERS IN HARBOR STORAGE:");
@@ -345,7 +346,7 @@ namespace Gruppe8.HarbNet
                 foreach (Container container in ContainersInHarbor)
                 {
                     Console.WriteLine("CONTAINER SIZE: " + container.Size + ", WEIGHT: " + container.WeightInTonn + "tonns" + ", STATUS: " + container.GetCurrentStatus() + ", ID: " + container.ID);
-                }         
+                }
             }
 
             else
@@ -403,7 +404,7 @@ namespace Gruppe8.HarbNet
             if (ShipsInTransit.Count > 0)
             {
                 sb.Append("\nSHIPS IN TRANSIT:" + "\n");
-                
+
                 foreach (Ship ship in ShipsInTransit)
                 {
                     sb.Append("\nNAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
@@ -419,7 +420,7 @@ namespace Gruppe8.HarbNet
             if (ShipsDockedInLoadingDocks.Count > 0)
             {
                 sb.Append("\nSHIPS IN LOADING DOCK:");
-                
+
                 foreach (Ship ship in ShipsDockedInLoadingDocks)
                 {
                     sb.Append("\nNAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
@@ -435,7 +436,7 @@ namespace Gruppe8.HarbNet
             if (ShipsDockedInShipDocks.Count > 0)
             {
                 sb.Append("\nSHIPS IN SHIP DOCK:" + "\n");
-                
+
                 foreach (Ship ship in ShipsDockedInShipDocks)
                 {
                     sb.Append("\nNAME: " + ship.Name + ", SIZE: " + ship.ShipSize + ", STATUS: " + ship.GetCurrentStatus() +
@@ -457,13 +458,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="ShipsOrContainers">User can choose to write either "ships" or "containers" as input. "ships" returns information on all ships, "containers" return information on all containers</param>
         /// <returns>Returns a String containing historical data about all ships or all containers at the time in the simulation the DailyLog object were created..</returns>
-        public override string HistoryToString(string ShipsOrContainers) 
+        public override string HistoryToString(string ShipsOrContainers)
         {
             if (ShipsOrContainers.ToLower().Equals("ships") || ShipsOrContainers.ToLower().Equals("ship"))
             {
                 return HistoryToString();
             }
-            
+
             else if (ShipsOrContainers.ToLower().Equals("containers") || ShipsOrContainers.ToLower().Equals("container"))
             {
 
@@ -476,9 +477,9 @@ namespace Gruppe8.HarbNet
                 if (ShipsInAnchorage.Count > 0)
                 {
                     sb.Append("\nCONTAINERS ONBOARD SHIPS IN ANCHORAGE:" + "\n");
-                    
+
                     bool infoPrinted = false;
-                    
+
                     foreach (Ship ship in ShipsInAnchorage)
                     {
                         if (ship.ContainersOnBoard.Count > 0)
@@ -492,13 +493,13 @@ namespace Gruppe8.HarbNet
                             }
                         }
                     }
-                    
+
                     if (!infoPrinted)
                     {
                         sb.Append("NONE" + "\n");
                     }
                 }
-                
+
                 else
                 {
                     sb.Append("\nNO CONTAINERS ONBOARD SHIPS IN ANCHORAGE" + "\n");
@@ -507,9 +508,9 @@ namespace Gruppe8.HarbNet
                 if (ShipsInTransit.Count > 0)
                 {
                     sb.Append("\nCONTAINERS ONBOARD SHIPS IN TRANSIT:" + "\n");
-                    
+
                     bool infoPrinted = false;
-                    
+
                     foreach (Ship ship in ShipsDockedInLoadingDocks)
                     {
                         if (ship.ContainersOnBoard.Count > 0)
@@ -538,9 +539,9 @@ namespace Gruppe8.HarbNet
                 if (ShipsDockedInLoadingDocks.Count > 0)
                 {
                     sb.Append("\nCONTAINERS ONBOARD SHIPS IN LOADING DOCKS:" + "\n");
-                    
+
                     bool infoPrinted = false;
-                    
+
                     foreach (Ship ship in ShipsDockedInLoadingDocks)
                     {
                         if (ship.ContainersOnBoard.Count > 0)
@@ -598,13 +599,13 @@ namespace Gruppe8.HarbNet
                 }
 
                 return sb.ToString();
-            } 
-            
-            else 
+            }
+
+            else
             {
                 throw new ArgumentException("Invalid input. Valid input is 'ships' or 'container'.", nameof(ShipsOrContainers));
             }
-  
+
         }
 
         /// <summary>
@@ -614,7 +615,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a String containing the time the DailyLog object were created and the number of ships in all locations at this time.</returns>
         public override string ToString()
         {
-            return 
+            return
                 $"Timestamp: {Timestamp}, " +
                 $"Ships in anchorage {ShipsInAnchorage.Count}, " +
                 $"Ships in loading docks: {ShipsDockedInLoadingDocks.Count}, " +
@@ -623,5 +624,7 @@ namespace Gruppe8.HarbNet
                 $"Containers in harbor: {ContainersInHarbor.Count}, " +
                 $"Containers arrived at their destination: {ContainersArrivedAtDestination.Count}";
         }
+
+       
     }
 }
