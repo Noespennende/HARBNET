@@ -631,7 +631,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a status enum with the status the ship had at the given DateTime.</returns>
         internal Status GetStatusAtPointInTime(DateTime time)
         {
-            Status shipStatus = new();
+            Status shipStatus = Status.None;
             foreach (StatusLog statusLogObject in HistoryIList)
             {
                 if (statusLogObject.Timestamp < time)
@@ -646,6 +646,24 @@ namespace Gruppe8.HarbNet
             }
 
             return shipStatus;
+        }
+
+        /// <summary>
+        /// Unloads container from ship's cargo.
+        /// </summary>
+        /// <returns>Returns null if there is zero containers on board, otherwise returns the Container object that is unloaded from the ship's cargo.</returns>
+        internal Container? UnloadContainer()
+        {
+            if (ContainersOnBoard.Count <= 0)
+            {
+                return null;
+            }
+
+            Container containertoUnload = ContainersOnBoard[0];
+            ContainersOnBoard.RemoveAt(0);
+            CurrentWeightInTonn -= containertoUnload.WeightInTonn;
+
+            return containertoUnload;
         }
 
         /// <summary>
@@ -681,23 +699,7 @@ namespace Gruppe8.HarbNet
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Unloads container from ship's cargo.
-        /// </summary>
-        /// <returns>Returns null if there is zero containers on board, otherwise returns the Container object that is unloaded from the ship's cargo.</returns>
-        internal Container? UnloadContainer()
-        {
-            if(ContainersOnBoard.Count <= 0)
-            {
-                return null;
-            }
-
-            Container containertoUnload = ContainersOnBoard[0];
-            ContainersOnBoard.RemoveAt(0);
-            CurrentWeightInTonn -= containertoUnload.WeightInTonn;
-
-            return containertoUnload;
-        }
+        
 
         /// <summary>
         /// Returns a string with the Ships ID, name, size, startdate, round trip time, amount on containers of the differenct containerSizes on board, base weight in tonn, current weight in tonn and max weigth in tonn the ship can handle.

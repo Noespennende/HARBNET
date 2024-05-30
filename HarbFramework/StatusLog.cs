@@ -10,31 +10,31 @@ namespace Gruppe8.HarbNet
     /// <summary>
     /// StatusLogs to be stored in a ships or containers history. Each object containing information about the subject at the time the subject went trough a status change.
     /// </summary>
-    public class StatusLog
+    public class StatusLog : StatusRecord
     {
         /// <summary>
         /// Gets the unique ID for the subject.
         /// </summary>
         /// <returns>Returns a Guid object representing the subjects unique ID.</returns>
-        public Guid Subject { get; internal set; }
-        
+        public override Guid Subject { get; internal set; }
+
         /// <summary>
         /// Gets the ID of the subjects location.
         /// </summary>
         /// <returns>Returns a Guid object representing the locations unique ID.</returns>
-        public Guid SubjectLocation { get; internal set; }
-        
+        public override Guid SubjectLocation { get; internal set; }
+
         /// <summary>
         /// Gets the date and time the status change occured. 
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the subjects status change occured.</returns>
-        public DateTime Timestamp { get; internal set; }
-        
+        public override DateTime Timestamp { get; internal set; }
+
         /// <summary>
         /// Gets the current status of the subject.
         /// </summary>
         /// <return>Returns a Status enum representing the latest registered status of the subject.</return>
-        public Status Status { get; internal set; }
+        public override Status Status { get; internal set; }
 
         /// <summary>
         /// Constructor for a StatusLog object. Each object holds information about its subject at the time it went trough a status change.
