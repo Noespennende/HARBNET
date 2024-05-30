@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
-
-namespace Gruppe8.HarbNet.Advanced
+﻿namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Abstract class defining the public API of Ports such as the Harbor class.

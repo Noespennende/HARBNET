@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruppe8.HarbNet
+﻿namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Agv class representing Agv viechles. Automated Guided Viechles that can deliver containers from point A to B in the _harbor area.

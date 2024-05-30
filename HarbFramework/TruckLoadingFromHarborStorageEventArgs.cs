@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruppe8.HarbNet
+﻿namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// The EventArgs class for the TruckLoadingFromStorage event. This event is raised when a truck is loading a container from the harbor's storage

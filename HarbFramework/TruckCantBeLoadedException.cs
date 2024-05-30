@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruppe8.HarbNet
+﻿namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Exception thrown if an attempt is made to load a Truck with a container, but the attempt fail or if the Truck does not exist.

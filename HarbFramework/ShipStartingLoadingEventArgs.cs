@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruppe8.HarbNet
+﻿namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// The EventArgs class for the ShipStartingLoading event. This event is raised when a ship starts to load containers from the harbor in to the ship's cargohold.

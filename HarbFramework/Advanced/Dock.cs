@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruppe8.HarbNet.Advanced
+﻿namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Dock used for docking ships to the harbor. There are multiple types of docks that inherit from this class suck as

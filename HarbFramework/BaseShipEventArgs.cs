@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruppe8.HarbNet
+﻿namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Base EventArgs with basic args to be used as a base in more complex events where a ship is involved.

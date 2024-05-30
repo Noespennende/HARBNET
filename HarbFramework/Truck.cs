@@ -1,12 +1,4 @@
-﻿using Gruppe8.HarbNet.Advanced;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruppe8.HarbNet
+﻿namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// Trucks are viechles that can be used to transport containers to and from the harbor. A truck can hold a single container.

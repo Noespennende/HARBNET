@@ -1,17 +1,5 @@
 ﻿using Gruppe8.HarbNet.Advanced;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.Tracing;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Gruppe8.HarbNet
 {

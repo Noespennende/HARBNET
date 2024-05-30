@@ -1,8 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using Gruppe8.HarbNet.Advanced;
+using System.Collections.ObjectModel;
 using System.Text;
-using System.Xml.Linq;
-using Gruppe8.HarbNet.Advanced;
 
 namespace Gruppe8.HarbNet
 {

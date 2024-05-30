@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruppe8.HarbNet.Advanced
+﻿namespace Gruppe8.HarbNet.Advanced
 {
     /// <summary>
     /// Abstract class defining the public API for StatusRecords such as the StatusLog class.
