@@ -1585,30 +1585,7 @@ namespace Gruppe8.HarbNet
         /// <param name="ship">The ship object the container is unloaded from.</param>
         /// <param name="currentTime">The date and time the container is unloaded from ship's storage to the harbor storage area.</param>
         /// <returns>Returns a Guid object representing the ContainerSpaces the unloaded container was stored in, if the container was not unloaded from the ship null is returned</returns>
-        internal Guid UnloadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
-        {
-            Container? containerToBeUnloaded = ship.GetContainer(containerSize);
-            ContainerStorageRow? containerRow = GetContainerRowWithFreeSpace(containerSize);
-            
-            if (containerToBeUnloaded == null || containerRow == null)
-            {
-                return Guid.Empty;
-            }
-
-            ship.RemoveContainer(containerToBeUnloaded.ID);
-            storedContainers.Add(containerToBeUnloaded, containerRow);
-
-            ContainerSpace? containerSpace = containerRow.AddContainerToFreeSpace(containerToBeUnloaded);
-            if (containerSpace != null)
-            {
-                containerToBeUnloaded.CurrentLocation = containerSpace.ID;
-                containerToBeUnloaded.AddStatusChangeToHistory(Status.InStorage, currentTime);
-
-                return containerSpace.ID;
-            }
-
-            return Guid.Empty;
-        }
+        
         
         /// <summary>
         /// Adds the given ship to the Anchorage.
