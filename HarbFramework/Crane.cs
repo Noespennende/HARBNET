@@ -10,28 +10,28 @@ namespace Gruppe8.HarbNet
     /// <summary>
     /// Cranes used to load and unload containers to and from ships, trucks and the harbor's own storage area. 
     /// </summary>
-    internal class Crane
-    {
+    internal class Crane {
+
         /// <summary>
         /// Gets the unique ID for the crane.
         /// </summary>
         /// <returns>Returns a Guid object representing the cranes unique ID.</returns>
         internal Guid ID { get; set; }
-        
+
         /// <summary>
         /// Gets the Container object representing the container currently stored in the cranes cargo.
         /// </summary>
         /// <returns>Returns a Container object representing the container currently stored in the cranes cargo.
         /// If no container exist Null is returned.</returns>
         internal Container? Container { get; set; }
-        
+
         /// <summary>
         /// Gets a number representing the amount of loads the Crane can do in an hour.
         /// One load is defined by the crane loading one container on to its cargo or unload one container from its cargo.
         /// </summary>
         /// <returns>Returns the int value representing the amount of loads the container can perform in one hour of the simulation.</returns>
         internal int ContainersLoadedPerHour { get; set; }
-        
+
         /// <summary>
         /// Gets the ID of the containers current location. 
         /// </summary>
@@ -52,6 +52,7 @@ namespace Gruppe8.HarbNet
             Location = location;
             Container = null;
         }
+
 
         /// <summary>
         /// Loads the given container on to the cranes storage.
@@ -75,5 +76,7 @@ namespace Gruppe8.HarbNet
             Container = null;
             return containerToBeUnloaded;
         }
+
+
     }
 }
