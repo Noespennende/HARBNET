@@ -20,10 +20,6 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class Harbor : Port
     {
-
-
-
-
         /// <summary>
         /// Gets a list containing all containers stored in the harbor storage area.
         /// </summary>
@@ -39,7 +35,6 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <return>Returns a IList of container objects that represent all the containers that have arrived at their final destination during the simulation.</return>
         public override IList<Container> ArrivedAtDestination { get; internal set; } = new List<Container>();
-
 
         /// <summary>
         /// Gets the location ID for ships who are in transit at sea.
@@ -595,8 +590,6 @@ namespace Gruppe8.HarbNet
 
             return sb.ToString();
         }
-
-
 
         /// <summary>
         /// Creates the amount of ContainerRows given and fills each one with the amount of container spaces given.
@@ -1646,8 +1639,6 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
-
-
         /// <summary>
         /// Adds the given ship to the Anchorage.
         /// </summary>
@@ -1665,7 +1656,6 @@ namespace Gruppe8.HarbNet
         /// Returns a string with information about the status of all loading docks in the port. A loading dock is a dock used for loading cargo from and to Ships.
         /// </summary>
         /// <returns>String value containing information about the status of all the loading docks in the port.</returns>
-
         internal bool LoadingDockIsFree(Guid dockID)
         {
             bool dockIsFree = false;
@@ -1680,7 +1670,6 @@ namespace Gruppe8.HarbNet
             return dockIsFree;
         }
 
-      
         internal IList<Container> GetContainersStoredInHarbour()
         {
             IList<Container> list = new List<Container>();
@@ -1739,8 +1728,6 @@ namespace Gruppe8.HarbNet
 
             return list;
         }
-
-
 
         /// <summary>
         /// Sets the informatin of the harbor based on the values given in the constructor.
@@ -1860,8 +1847,5 @@ namespace Gruppe8.HarbNet
             freeShipDocks = allShipDocks.ToList();
             freeLoadingDocks = allLoadingDocks.ToList();
         }
-
-
-
     }
 }

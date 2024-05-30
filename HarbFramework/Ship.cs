@@ -545,7 +545,6 @@ namespace Gruppe8.HarbNet
             CurrentWeightInTonn += container.WeightInTonn;
         }
 
-
         /// <summary>
         /// Gets the current status of the ship.
         /// </summary>
@@ -604,7 +603,6 @@ namespace Gruppe8.HarbNet
 
             return containertoUnload;
         }
-
 
         /// <summary>
         /// Sets basic infomation for the ship based on the ship's size. The information set includes

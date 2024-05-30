@@ -21,7 +21,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Guid object representing the unique ID of the container.</returns>
         public override Guid ID { get; } = Guid.NewGuid();
-        
+
         /// <summary>
         /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the container has gone through throughout a simulation.
         /// Each StatusLog object contains information about one status change that happened to the container. Together the list holds information about the entire
@@ -29,32 +29,32 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with StatusLog objects with information on status changes the container has gone through throughout a simulation.</returns>
         public override ReadOnlyCollection<StatusLog> History => HistoryIList.AsReadOnly();
-        
-        /// <summary>
-        /// Gets a IList of StatusLog objects containing information on status changes the container has gone through throughout a simulation.
-        /// Each StatusLog object contains information about one status change that happened to the container. 
-        /// </summary>
-        /// <returns>Returns an Ilist with StatusLog objects with informations on the status changes the container has gone through throughout a simulation.</returns>
-        internal IList<StatusLog> HistoryIList {  get; } = new List<StatusLog>();
-        
+
         /// <summary>
         /// Gets the container's size
         /// </summary>
         /// <returns>Returns a ContainerSize enum representing the container's size</returns>
         public override ContainerSize Size { get; internal set; }
-        
+
         /// <summary>
         /// Gets the containers weight in tonns.
         /// </summary>
         /// <returns>Returns an int value representing the containers weight in tonns.</returns>
         public override int WeightInTonn { get; internal set; }
-        
+
         /// <summary>
         /// Gets the location ID of the container's current location.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the containers current location.</returns>
         public override Guid CurrentLocation { get; internal set; }
-        
+
+        /// <summary>
+        /// Gets a IList of StatusLog objects containing information on status changes the container has gone through throughout a simulation.
+        /// Each StatusLog object contains information about one status change that happened to the container. 
+        /// </summary>
+        /// <returns>Returns an Ilist with StatusLog objects with informations on the status changes the container has gone through throughout a simulation.</returns>
+        internal IList<StatusLog> HistoryIList { get; } = new List<StatusLog>();
+
         /// <summary>
         /// Gets a number representing how many days the Container has been stored in the harbor's storage.
         /// </summary>
@@ -67,7 +67,8 @@ namespace Gruppe8.HarbNet
         /// <param name="size">A ContainerSize enum representing the Size of container to be created.</param>
         /// <param name="weightInTonn">Int value representing the weight in tonns of container to be created.</param>
         /// <param name="currentLocation">Guid object representing the ID of the current position of the Container to be created.</param>
-        internal Container(ContainerSize size, int weightInTonn, Guid currentLocation) {
+        internal Container(ContainerSize size, int weightInTonn, Guid currentLocation)
+        {
             Size = size;
             CurrentLocation = currentLocation;
             WeightInTonn = weightInTonn;
@@ -82,10 +83,10 @@ namespace Gruppe8.HarbNet
         /// <param name="id">Guid representing the ID of the container to be created</param>
         /// <param name="containerHistory">An IList of StatusLog objects representing the history of the container to be created</param>
         internal Container(
-            ContainerSize size, 
-            int weightInTonn, 
-            Guid currentLocation, 
-            Guid id, 
+            ContainerSize size,
+            int weightInTonn,
+            Guid currentLocation,
+            Guid id,
             IList<StatusLog> containerHistory)
         {
             ID = id;
@@ -93,17 +94,6 @@ namespace Gruppe8.HarbNet
             CurrentLocation = currentLocation;
             WeightInTonn = weightInTonn;
             HistoryIList = containerHistory;
-        }
-
-        /// <summary>
-        /// Adds a StatusLog object to the Containers history list. This method is used to record information about a single
-        /// status change that happened to the container.
-        /// </summary>
-        /// <param name="status">Status enum representing the new status of the container.</param>
-        /// <param name="currentTime">DateTime object representing the date and time the status change occured./param>
-        internal void AddStatusChangeToHistory(Status status, DateTime currentTime)
-        {
-            HistoryIList.Add(new StatusLog(ID, CurrentLocation, currentTime, status));
         }
 
         /// <summary>
@@ -116,7 +106,7 @@ namespace Gruppe8.HarbNet
             {
                 return HistoryIList.Last().Status;
             }
-            
+
             else
             {
                 return Status.None;
@@ -136,7 +126,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         public override void PrintHistory()
         {
-            Console.WriteLine($"Container ID: {ID}"); 
+            Console.WriteLine($"Container ID: {ID}");
             foreach (StatusLog sl in HistoryIList)
             {
                 Console.WriteLine($"Date: {sl.Timestamp} Status: {sl.Status}\n");
@@ -152,7 +142,8 @@ namespace Gruppe8.HarbNet
             StringBuilder sb = new StringBuilder();
 
             sb.Append($"Container ID: {ID.ToString()}\n");
-            foreach (StatusLog sl in HistoryIList) {
+            foreach (StatusLog sl in HistoryIList)
+            {
                 sb.Append($"Container Id: {sl.Subject} Date: {sl.Timestamp} Status: {sl.Status}\n");
             }
             return sb.ToString();
@@ -165,6 +156,17 @@ namespace Gruppe8.HarbNet
         public override string ToString()
         {
             return $"ID: {ID}, Size: {Size}, Weight: {WeightInTonn} tonnes";
+        }
+
+        /// <summary>
+        /// Adds a StatusLog object to the Containers history list. This method is used to record information about a single
+        /// status change that happened to the container.
+        /// </summary>
+        /// <param name="status">Status enum representing the new status of the container.</param>
+        /// <param name="currentTime">DateTime object representing the date and time the status change occured./param>
+        internal void AddStatusChangeToHistory(Status status, DateTime currentTime)
+        {
+            HistoryIList.Add(new StatusLog(ID, CurrentLocation, currentTime, status));
         }
     }
 }

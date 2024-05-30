@@ -81,7 +81,14 @@ namespace Gruppe8.HarbNet.Advanced
         /// </summary>
         /// <returns>Returns an int value representing the current weight in tonns of the Cargo Vessel including the weight of its cargo.</returns>
         public abstract int CurrentWeightInTonn { get; internal set; }
-        
+
+        /// <summary>
+        /// Constructor used to create objects of the CargoVessel class.
+        /// </summary>
+        internal CargoVessel()
+        {
+        }
+
         /// <summary>
         /// Prints the Cargo Vessel's entire history to console.
         /// </summary>
@@ -98,12 +105,5 @@ namespace Gruppe8.HarbNet.Advanced
         /// </summary>
         /// <returns> a String containing information about the Cargo Vessel.</returns>
         public abstract override string ToString();
-
-        /// <summary>
-        /// Constructor used to create objects of the CargoVessel class.
-        /// </summary>
-        internal CargoVessel()
-        {
-        }
     }
 }
