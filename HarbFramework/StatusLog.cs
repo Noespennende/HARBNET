@@ -12,6 +12,7 @@ namespace Gruppe8.HarbNet
     /// </summary>
     public class StatusLog
     {
+
         /// <summary>
         /// Gets the unique ID for the subject.
         /// </summary>
@@ -29,7 +30,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the subjects status change occured.</returns>
         public DateTime Timestamp { get; internal set; }
-        
+
         /// <summary>
         /// Gets the current status of the subject.
         /// </summary>
@@ -43,7 +44,7 @@ namespace Gruppe8.HarbNet
         /// <param name="subjectLocation">Guid of the location of the subject at the time the subject changed status</param>
         /// <param name="pointInTime">Date and time the subject changed status</param>
         /// <param name="status">Status enum representing the new status of the subject</param>
-        internal StatusLog (Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
+        internal StatusLog(Guid subject, Guid subjectLocation, DateTime pointInTime, Status status)
         {
             Subject = subject;
             SubjectLocation = subjectLocation;
@@ -55,7 +56,7 @@ namespace Gruppe8.HarbNet
         /// Returns a string with the date and time of status log, subjets ID, subjets location and current status.
         /// </summary>
         /// <returns> a String containing information about the subject on a given point in time.</returns>
-         public override string ToString()
+        public override string ToString()
         {
             return 
                 $"Date: + {Timestamp}" + 
