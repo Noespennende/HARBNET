@@ -606,30 +606,6 @@ namespace Gruppe8.HarbNet
             CurrentWeightInTonn += container.WeightInTonn;
         }
 
-        /// <summary>
-        /// Sets the HasBeenAlteredThisHour variable to false. HasBeenAlteredThisHour indicates if the ship has performed an avtion this hour of the simulation.
-        /// </summary>
-        internal void SetHasBeenAlteredThisHourToFalse()
-        {
-            HasBeenAlteredThisHour = false;
-        }
-        
-        /// <summary>
-        /// Sets the HasBeenAlteredThisHour variable to true. HasBeenAlteredThisHour indicates if the ship has performed an avtion this hour of the simulation.
-        /// </summary>
-        internal void SetHasBeenAlteredThisHourToTrue()
-        {
-            HasBeenAlteredThisHour = true;
-        }
-        
-        /// <summary>
-        /// Gets the value of the HasBeenAlteredThisHour variable. HasBeenAlteredThisHour indicates if the ship has performed an avtion this hour of the simulation.
-        /// </summary>
-        /// <returns>Returns the boolean value of the HasBeenAlteredThisHour variable. True if the ship has performed an action this hour of the simulation, false otherwise.</returns>
-        internal bool GetHasBeenAlteredThisHour()
-        {
-            return HasBeenAlteredThisHour;
-        }
 
         /// <summary>
         /// Gets the current status of the ship.
