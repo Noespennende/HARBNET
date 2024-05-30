@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Cranes used to load and unload containers to and from ships, trucks and the _harbor's own storage area. 
+    /// Cranes used to load and unload containers to and from ships, trucks and the harbor's own storage area. 
     /// </summary>
     internal class Crane
     {
@@ -40,7 +40,7 @@ namespace Gruppe8.HarbNet
 
         /// <summary>
         /// Constructor used to create objects of the crane class. A crane can be used to load and unload containers to and from ships,
-        /// trucks and the _harbor's own storage area
+        /// trucks and the harbor's own storage area
         /// </summary>
         /// <param name="containersLoadedPerHour">Int value representing the amount of loads the Crane can do in an hour.
         /// One load is defined by the crane loading one container on to its cargo or unload one container from its cargo.</param>

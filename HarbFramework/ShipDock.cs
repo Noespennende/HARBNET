@@ -9,7 +9,7 @@ namespace Gruppe8.HarbNet
 {
     /// <summary>
     /// ShipDock to be used in a simulation. A shipDock is a dock where ships can be stored once they are finished with their
-    /// trip and have no new trips to complete. If no shipdocks are available in the _harbor a ship will go to the anchorage instead.
+    /// trip and have no new trips to complete. If no shipdocks are available in the harbor a ship will go to the anchorage instead.
     /// </summary>
     internal class ShipDock : Dock
     {

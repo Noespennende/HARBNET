@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Trucks are viechles that can be used to transport containers to and from the _harbor. A truck can hold a single container.
+    /// Trucks are viechles that can be used to transport containers to and from the harbor. A truck can hold a single container.
     /// </summary>
     public class Truck
     {

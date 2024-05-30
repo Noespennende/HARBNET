@@ -8,7 +8,7 @@ using Gruppe8.HarbNet.Advanced;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// LoadingDocks used in a simulation. LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. 
+    /// LoadingDocks used in a simulation. LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. 
     /// </summary>
     internal class LoadingDock : Dock
     {
@@ -46,27 +46,6 @@ namespace Gruppe8.HarbNet
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Checks if the given truck is stationed at one of the loadingspots in the LoadingDock.
-        /// </summary>
-        /// <param name="truck">Truck object to be checked if assigned to a loading spot.</param>
-        /// <returns>Returns a bool value. True is returned if truck exists in one of the docks loadingspots, if not false is returned.</returns>
-        internal bool TruckExistsInTruckLoadingSpots(Truck? truck)
-        {
-            if (truck == null) 
-                return false;
-
-            foreach (var spot in TruckLoadingSpots)
-            {
-                if (spot.Value == truck)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /// <summary>

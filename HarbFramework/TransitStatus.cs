@@ -16,11 +16,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         None = 0,
         /// <summary>
-        /// Subject is arriving to _harbor.
+        /// Subject is arriving to harbor.
         /// </summary>
         Arriving = 1,
         /// <summary>
-        /// Subject is leaving the _harbor.
+        /// Subject is leaving the harbor.
         /// </summary>
         Leaving = 2,
         /// <summary>

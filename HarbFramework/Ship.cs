@@ -38,9 +38,9 @@ namespace Gruppe8.HarbNet
         public override string Name { get; internal set; }
         
         /// <summary>
-        /// Gets the date and time the ship will arrive to the _harbor for the first time.
+        /// Gets the date and time the ship will arrive to the harbor for the first time.
         /// </summary>
-        /// <returns>Returns a DateTime object representing the date and time the ship will arrive to the _harbor for the first time.</returns>
+        /// <returns>Returns a DateTime object representing the date and time the ship will arrive to the harbor for the first time.</returns>
         public override DateTime StartDate { get; internal set; }
         
         /// <summary>
@@ -52,7 +52,7 @@ namespace Gruppe8.HarbNet
         
         /// <summary>
         /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
-        /// it takes for the ship to leave the _harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the _harbor again.
+        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the harbor again.
         /// </summary>
         /// <returns>Returns an int value representing the number of days the ship uses to do a round trip at sea.</returns>
         public override int RoundTripInDays { get; internal set; }
@@ -112,26 +112,26 @@ namespace Gruppe8.HarbNet
         
         /// <summary>
         /// Gets the maximum number of containers the ship can load in one hour. A container load is defined as loading a container
-        /// from the a _harbor loading crane and in to its own storage.
+        /// from the a harbor loading crane and in to its own storage.
         /// </summary>
         /// <returns>Returns an int value representing the number of containers the ship can load or unload in one hour.</returns>
         internal int ContainersLoadedPerHour { get; set; }
         
         /// <summary>
-        /// Gets and sets the number of containers the ship unload from its own storage an on to a _harbor loading crane.
+        /// Gets and sets the number of containers the ship unload from its own storage an on to a harbor loading crane.
         /// </summary>
         /// <returns>Returns an int value representing the number of containers can be unloaded from the ships cargo in one hour.</returns>
         internal int BaseBerthingTimeInHours { get; set; }
         
         /// <summary>
-        /// Gets and sets a number indicating the number of hours it takes for the ship to dock or undock to a _harbor dock.
+        /// Gets and sets a number indicating the number of hours it takes for the ship to dock or undock to a harbor dock.
         /// </summary>
         /// <returns>Returns an int value representing the number of hours it takes for the ship to dock or undock to harbour.</returns>
         internal int BaseDockingTimeInHours { get; set; }
         
         /// <summary>
         /// Gets and sets a bolean representing if the ship will only do one single trip. If this value is true it means the ship
-        /// will only perform one voyage before permanently docking to an available ship dock in the _harbor.
+        /// will only perform one voyage before permanently docking to an available ship dock in the harbor.
         /// </summary>
         /// <returns>Returns a boolean that is true if the ship will only do one single trip and false otherwise.</returns>
         internal bool IsForASingleTrip { get; set; } = false;
@@ -143,10 +143,10 @@ namespace Gruppe8.HarbNet
         internal bool HasBeenAlteredThisHour = false;
         
         /// <summary>
-        /// Gets and sets a number indicating the percentage of Containers that will be directly unloaded from the ship's storage and on to trucks on the _harbor.
+        /// Gets and sets a number indicating the percentage of Containers that will be directly unloaded from the ship's storage and on to trucks on the harbor.
         /// A value of 100 represents 100%. A value of 50 represnets 50%.
         /// </summary>
-        /// <returns>Returns the int value indicating the percentage of containers in the ships storage that will be directly unloaded from the ship and on to trucks on the _harbor.</returns>
+        /// <returns>Returns the int value indicating the percentage of containers in the ships storage that will be directly unloaded from the ship and on to trucks on the harbor.</returns>
         internal int ContainersLeftForTrucks { get; set; } = 0;
 
         /// <summary>
@@ -155,13 +155,18 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipName">Name of the ship object to be created.</param>
         /// <param name="shipSize">shipSize enum representing the size of the ship to be created. The ship's size determins the base and max weight of the ship as well as how much cargo it can hold.</param>
-        /// <param name="startDate">Date and time for when the ship will arrive to the _harbor for the first time.</param>
+        /// <param name="startDate">Date and time for when the ship will arrive to the harbor for the first time.</param>
         /// <param name="isForASingleTrip">A bolean representing if the ship will only do one single trip. If this value is true it means the ship
-        /// will only perform one voyage before permanently docking to an available ship dock in the _harbor.</param>
+        /// will only perform one voyage before permanently docking to an available ship dock in the harbor.</param>
         /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
-        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the Harbor again.</param>
-        /// <param name="containersToBeStoredInCargo">IList of Container objects that will be placed in the Ship's cargo when it first arrives to the Harbor</param>
-        public Ship(string shipName, ShipSize shipSize, DateTime startDate, bool isForASingleTrip, int roundTripInDays,
+        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the harbor again.</param>
+        /// <param name="containersToBeStoredInCargo">IList of Container objects that will be placed in the Ship's cargo when it first arrives to the harbor</param>
+        public Ship(
+            string shipName, 
+            ShipSize shipSize, 
+            DateTime startDate, 
+            bool isForASingleTrip,
+            int roundTripInDays,
             IList<Container> containersToBeStoredInCargo)
         {
             ID = Guid.NewGuid();
@@ -216,13 +221,13 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipName">Name of the ship object to be created.</param>
         /// <param name="shipSize">shipSize enum representing the size of the ship to be created. The ship's size determins the base and max weight of the ship as well as how much cargo it can hold.</param>
-        /// <param name="startDate">Date and time for when the ship will arrive to the _harbor for the first time.</param>
+        /// <param name="startDate">Date and time for when the ship will arrive to the harbor for the first time.</param>
         /// <param name="isForASingleTrip">A bolean representing if the ship will only do one single trip. If this value is true it means the ship
-        /// will only perform one voyage before permanently docking to an available ship dock in the _harbor.</param>
+        /// will only perform one voyage before permanently docking to an available ship dock in the harbor.</param>
         /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
-        /// it takes for the ship to leave the _harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the _harbor again.</param>
-        /// <param name="numberOfHalfContainersOnBoard">Int value representing the amount of Small containers that will be in the ships storage when it enters the _harbor for the first time.</param>
-        /// <param name="numberOfFullContainersOnBoard">Int value representing the amount of Large containers that will be in the ships storage when it enters the _harbor for the first time.</param>
+        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the harbor again.</param>
+        /// <param name="numberOfHalfContainersOnBoard">Int value representing the amount of Small containers that will be in the ships storage when it enters the harbor for the first time.</param>
+        /// <param name="numberOfFullContainersOnBoard">Int value representing the amount of Large containers that will be in the ships storage when it enters the harbor for the first time.</param>
         public Ship(
             string shipName, 
             ShipSize shipSize, 
@@ -268,11 +273,11 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="shipName">Name of the ship object to be created.</param>
         /// <param name="shipSize">shipSize enum representing the size of the ship to be created. The ship's size determins the base and max weight of the ship as well as how much cargo it can hold.</param>
-        /// <param name="startDate">Date and time for when the ship will arrive to the _harbor for the first time.</param>
+        /// <param name="startDate">Date and time for when the ship will arrive to the harbor for the first time.</param>
         /// <param name="isForASingleTrip">A bolean representing if the ship will only do one single trip. If this value is true it means the ship
-        /// will only perform one voyage before permanently docking to an available ship dock in the _harbor.</param>
+        /// will only perform one voyage before permanently docking to an available ship dock in the harbor.</param>
         /// <param name="roundTripInDays">Int value representing the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
-        /// it takes for the ship to leave the _harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the _harbor again.</param>
+        /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the harbor again.</param>
         /// <param name="id">Unique Guid that will be set as the ship's ID</param>
         /// <param name="containersOnboard">An IList containing Containers objects representing the containers in the ships cargo.</param>
         /// <param name="currentHistory">An IList containing StatusRecord objects representing the ships history so far in the simulation.</param>
@@ -406,7 +411,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a number indicating the amount of containers that will be directly loaded from the ship's cargo on to trucks in the _harbor.
+        /// Gets a number indicating the amount of containers that will be directly loaded from the ship's cargo on to trucks in the harbor.
         /// The number is calculated based on the percentage value given to the method.
         /// </summary>
         /// <param name="percentTrucks">Double value representing the percentage of containers that is to be loaded directly on trucks from the ships cargo.

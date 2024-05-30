@@ -16,28 +16,28 @@ using static System.Formats.Asn1.AsnWriter;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// _harbor to be used in a simulation. A _harbor represents the place where all activety in the simulation takes place. 
+    /// harbor to be used in a simulation. A harbor represents the place where all activety in the simulation takes place. 
     /// </summary>
     public class Harbor : Port
     {
         /// <summary>
-        /// Gets the unique ID for the _harbor.
+        /// Gets the unique ID for the harbor.
         /// </summary>
         /// <return>Returns a Guid object representing the harbors unique ID.</return>
         public override Guid ID { get; internal set; } = Guid.NewGuid();
         
         /// <summary>
-        /// Gets a list containing all loadingdocks in the _harbor. A loading dock is a place where ships can dock to the _harbor
-        /// to load and/or unload their cargo from/to the _harbor.
+        /// Gets a list containing all loadingdocks in the harbor. A loading dock is a place where ships can dock to the harbor
+        /// to load and/or unload their cargo from/to the harbor.
         /// </summary>
-        /// <return>Returns an IList with LoadingDock objects representing the all the loadingdocks in the _harbor.</return>
+        /// <return>Returns an IList with LoadingDock objects representing the all the loadingdocks in the harbor.</return>
         internal IList<LoadingDock> allLoadingDocks = new List<LoadingDock>();
         
         /// <summary>
         /// Gets a list containing all the loadingdocks that are free for ships to dock to them.
-        /// A loading dock is a place where ships can dock to the _harbor to load and/or unload their cargo from/to the _harbor.
+        /// A loading dock is a place where ships can dock to the harbor to load and/or unload their cargo from/to the harbor.
         /// </summary>
-        /// <return>Returns an Ilist with LoadingDock objects representing the available loadingdocks in the _harbor.</return>
+        /// <return>Returns an Ilist with LoadingDock objects representing the available loadingdocks in the harbor.</return>
         internal IList<LoadingDock> freeLoadingDocks = new List<LoadingDock>();
         
         /// <summary>
@@ -47,14 +47,14 @@ namespace Gruppe8.HarbNet
         internal IDictionary<Ship, LoadingDock> shipsInLoadingDock = new Dictionary<Ship, LoadingDock>();
         
         /// <summary>
-        /// Gets a list containing all the ShipDocks in the _harbor. ShipDocks are docks where ships can be stored once they are done
+        /// Gets a list containing all the ShipDocks in the harbor. ShipDocks are docks where ships can be stored once they are done
         /// delivering their cargo and have no more trips to make. If no shipdocks are available ships will achor in the anchorage instead.
         /// </summary>
-        /// <return>Returns an IList with ShipDick objects representing all the shipdocks in the _harbor.</return>
+        /// <return>Returns an IList with ShipDick objects representing all the shipdocks in the harbor.</return>
         internal IList<ShipDock> allShipDocks = new List<ShipDock>();
         
         /// <summary>
-        /// Gets all the shipdocks in the _harbor that are currently free for ships to dock to them.ShipDocks are docks where ships can be stored once they are done
+        /// Gets all the shipdocks in the harbor that are currently free for ships to dock to them.ShipDocks are docks where ships can be stored once they are done
         /// delivering their cargo and have no more trips to make. If no shipdocks are available ships will achor in the anchorage instead.
         /// </summary>
         /// <return>Returns an Ilist with ShipDock objects representing the shipdocks witch are available for ships to dock to them.</return>
@@ -68,7 +68,7 @@ namespace Gruppe8.HarbNet
         
         /// <summary>
         /// Gets a list containing all the ships currently anchored in the anchorage. The anchorage is a place where ships anchor while waiting for
-        /// docks to get free in the _harbor or when they are done with their trip and have no new trips to make.
+        /// docks to get free in the harbor or when they are done with their trip and have no new trips to make.
         /// </summary>
         /// <return>Returns an Ilist with Ship objects representing the ships anchored in the anchorage.</return>
         internal IList<Ship> Anchorage { get; } = new List<Ship>();
@@ -82,41 +82,41 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Gets a list containing all the ships in the simulation.
         /// </summary>
-        /// <return>Returns a Ilist containing all the ship objects used in the _harbor simulation</return>
+        /// <return>Returns a Ilist containing all the ship objects used in the harbor simulation</return>
         internal IList<Ship> AllShips { get; } = new List<Ship>();
         
         /// <summary>
         /// Gets a list containing all the ContainerStorageRows in the simulation.
         /// </summary>
-        /// <return>Returns an Ilist with ContainerStorageRow objects representing all the containerRows in the _harbor.</return>
+        /// <return>Returns an Ilist with ContainerStorageRow objects representing all the containerRows in the harbor.</return>
         internal IList<ContainerStorageRow> AllContainerRows { get; set; }
         
         /// <summary>
-        /// Gets a dictionary containing all containers in the _harbor storage area and the ContainerStorageRow they are stored in.
+        /// Gets a dictionary containing all containers in the harbor storage area and the ContainerStorageRow they are stored in.
         /// </summary>
         /// <return>Returns a IDictionary containing Container objects as keys and the ContainerStorageRow object they are stored in as values</return>
         internal IDictionary<Container, ContainerStorageRow> storedContainers = new Dictionary<Container, ContainerStorageRow>();
         
         /// <summary>
-        /// Gets a list containing all cranes in the _harbor storage area.
+        /// Gets a list containing all cranes in the harbor storage area.
         /// </summary>
-        /// <return>Returns an Ilist with Crane objects representing the cranes in the _harbor's storage area.</return>
+        /// <return>Returns an Ilist with Crane objects representing the cranes in the harbor's storage area.</return>
         internal IList<Crane> HarborStorageAreaCranes { get; set; } = new List<Crane>();
         
         /// <summary>
-        /// Get a list containing all the containers that have left the _harbor and arived at their final destination
+        /// Get a list containing all the containers that have left the harbor and arived at their final destination
         /// </summary>
         /// <return>Returns a IList of container objects that represent all the containers that have arrived at their final destination during the simulation.</return>
         public override IList<Container> ArrivedAtDestination { get; internal set; } = new List<Container>();
         
         /// <summary>
-        /// Gets a list containing all the cranes next to the _harbor loading docks.
+        /// Gets a list containing all the cranes next to the harbor loading docks.
         /// </summary>
-        /// <return>Returns an Ilist with Crane objects representing the cranes next to loading docks in the _harbor.</return>
+        /// <return>Returns an Ilist with Crane objects representing the cranes next to loading docks in the harbor.</return>
         internal IList<Crane> DockCranes { get; set; } = new List<Crane>();
         
         /// <summary>
-        /// Gets a list containing all AGVs in the _harbor who are currently moving a container around the _harbor area.
+        /// Gets a list containing all AGVs in the harbor who are currently moving a container around the harbor area.
         /// </summary>
         /// <return>Returns an Ilist with Agv objects representing all the AGV's who are currently moving containers.</return>
         internal IList<Agv> AgvWorking { get; set; } = new List<Agv>();
@@ -134,14 +134,14 @@ namespace Gruppe8.HarbNet
         internal IList<Truck> TrucksInTransit { get; set; } = new List<Truck>();
         
         /// <summary>
-        /// Gets a list containing all trucks standing in queue to enter the _harbor.
+        /// Gets a list containing all trucks standing in queue to enter the harbor.
         /// </summary>
-        /// <return>Returns an Ilist with Truck objects representing the Trucks in queue to enter the _harbor.</return>
+        /// <return>Returns an Ilist with Truck objects representing the Trucks in queue to enter the harbor.</return>
         internal IList<Truck> TrucksInQueue { get; set; } = new List<Truck>();
         
         /// <summary>
         /// Gets a number representing the percentage of containers directly loaded from ships on to trucks. Containers that are not loaded on to trucks
-        /// get brought to the _harbor storage area for storage.
+        /// get brought to the harbor storage area for storage.
         /// </summary>
         /// <returns>Returns a double value representing the percentege of the total amount of containers that are directly loaded from the ships on to trucks.
         /// A value of 1.0 represents 100%, a value of 0.5 represents 50%.</returns>
@@ -151,15 +151,15 @@ namespace Gruppe8.HarbNet
         /// Gets the percentege of containers loaded directly from the container storage area on to trucks. Conntainers who are not loaded on to trucks are instead
         /// loaded on to ships. 
         /// </summary>
-        /// <returns>Returns a double value representing the percentege of the total amount of containers that are directly loaded from the _harbor storage area on to trucks.
+        /// <returns>Returns a double value representing the percentege of the total amount of containers that are directly loaded from the harbor storage area on to trucks.
         /// A value of 1.0 represents 100%, a value of 0.5 represents 50%.</returns>
         internal double PercentOfContainersDirectlyLoadedFromStorageArea { get; set; }
         
         /// <summary>
-        /// Gets a number representing the amount of trucks that arrive to the _harbor per hour. Trucks who arrive will place themselves at the back of the
+        /// Gets a number representing the amount of trucks that arrive to the harbor per hour. Trucks who arrive will place themselves at the back of the
         /// TrucksInQueue queue.
         /// </summary>
-        /// <returns>Returns an int value representing the amount of trucks that arrive to the _harbor per hour.</returns>
+        /// <returns>Returns an int value representing the amount of trucks that arrive to the harbor per hour.</returns>
         internal int TrucksArrivePerHour { get; set; }
         
         /// <summary>
@@ -194,9 +194,9 @@ namespace Gruppe8.HarbNet
         public override Guid TruckTransitLocationID { get; } = Guid.NewGuid();
         
         /// <summary>
-        /// Gets the location ID of the location of the truck queue in to the _harbor.
+        /// Gets the location ID of the location of the truck queue in to the harbor.
         /// </summary>
-        /// <return>Returns a Guid object representing the location of trucks queueing to enter the _harbor.</return>
+        /// <return>Returns a Guid object representing the location of trucks queueing to enter the harbor.</return>
         public override Guid TruckQueueLocationID { get; } = Guid.NewGuid();
         
         /// <summary>
@@ -206,53 +206,53 @@ namespace Gruppe8.HarbNet
         public override Guid HarborStorageAreaID { get; } = Guid.NewGuid();
         
         /// <summary>
-        /// Gets the location ID of the Harbors dock area. The dock area is the area of the _harbor both LoadingDocks and ShipDocks is located.
+        /// Gets the location ID of the Harbors dock area. The dock area is the area of the harbor both LoadingDocks and ShipDocks is located.
         /// </summary>
         /// <return>Returns a Guid representing the harbors dock areas.</return>
         public override Guid HarborDockAreaID { get; } = Guid.NewGuid();
         
         /// <summary>
-        /// The location ID of containers who have arrived at their destination. The containers who have this ID as their location have left the _harbor
+        /// The location ID of containers who have arrived at their destination. The containers who have this ID as their location have left the harbor
         /// and arrived at their final destination.
         /// </summary>
         /// <return>A Guid object representing the location ID of containers who have arrived at their destination.</return>
         public override Guid DestinationID { get; } = Guid.NewGuid();
 
         /// <summary>
-        /// Creates a new object of the _harbor class.
+        /// Creates a new object of the harbor class.
         /// </summary>
-        /// <param name="listOfShips">An IList containing ship objects representing all the ships that will be used in a simulation of a _harbor.</param>
-        /// <param name="listOfContainerStorageRows">An IList containing ContainerStorageRows available in the _harbor's storage area.
-        /// Each container storage row represents one row of storage spaces where containers can be stored in the _harbor storage area.</param>
-        /// <param name="numberOfSmallLoadingDocks">Int value representing the amount of small loading docks that will be available in the _harbor dock area.
-        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. Small loading docks can only recieve ships of size small.</param>
-        /// <param name="numberOfMediumLoadingDocks">Int value representing the amount of medium loading that will be available in the _harbor dock area.
-        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. Medium loading docks can only recieve ships of size medium.</param>
-        /// <param name="numberOfLargeLoadingDocks">Int value representing the amount of large loadingthat will be available in the _harbor dock area.
-        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. Large loading docks can only recieve ships of size large.</param>
-        /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes to be placed in the _harbor's docking area. These cranes will be used to load
+        /// <param name="listOfShips">An IList containing ship objects representing all the ships that will be used in a simulation of a harbor.</param>
+        /// <param name="listOfContainerStorageRows">An IList containing ContainerStorageRows available in the harbor's storage area.
+        /// Each container storage row represents one row of storage spaces where containers can be stored in the harbor storage area.</param>
+        /// <param name="numberOfSmallLoadingDocks">Int value representing the amount of small loading docks that will be available in the harbor dock area.
+        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. Small loading docks can only recieve ships of size small.</param>
+        /// <param name="numberOfMediumLoadingDocks">Int value representing the amount of medium loading that will be available in the harbor dock area.
+        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. Medium loading docks can only recieve ships of size medium.</param>
+        /// <param name="numberOfLargeLoadingDocks">Int value representing the amount of large loadingthat will be available in the harbor dock area.
+        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. Large loading docks can only recieve ships of size large.</param>
+        /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes to be placed in the harbor's docking area. These cranes will be used to load
         /// or unload containers to and from ships</param>
         /// <param name="LoadsPerCranePerHour">Int value representing the amount of loads a single crane can do in one hour. A load is defined as either loading a container on the the cranes storage
         /// or unloading a container from a cranes storage.</param>
-        /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes to be placed in the _harbor's own storage area for containers. These cranes will be used to
+        /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes to be placed in the harbor's own storage area for containers. These cranes will be used to
         /// load or unload containers from or to the container storage rows inside the storage area</param>
-        /// <param name="numberOfSmallShipDocks">Int value representing the amount of small loading docks that will be available in the _harbor dock area.
+        /// <param name="numberOfSmallShipDocks">Int value representing the amount of small loading docks that will be available in the harbor dock area.
         /// Ship docks are docks where ships will permanently dock once they are done with all their voyages. A small loading dock can only recieve ships of size small. </param>
-        /// <param name="numberOfMediumShipDocks">Int value representing the amount of medium loading docks that will be available in the _harbor dock area.
+        /// <param name="numberOfMediumShipDocks">Int value representing the amount of medium loading docks that will be available in the harbor dock area.
         /// Ship docks are docks where ships will permanently dock once they are done with all their voyages. A medium loading dock can only recieve ships of size medium.</param>
-        /// <param name="numberOfLargeShipDocks">Int value representing the amount of large loading docks that will be available in the _harbor dock area.
+        /// <param name="numberOfLargeShipDocks">Int value representing the amount of large loading docks that will be available in the harbor dock area.
         /// Ship docks are docks where ships will permanently dock once they are done with all their voyages. A large loading dock can only recieve ships of size large.</param>
-        /// <param name="numberOfTrucksArriveToHarborPerHour">Int value representing the amount of trucks arriving to the _harbor per hour. Trucks are cargo viechles that can take one Container object
+        /// <param name="numberOfTrucksArriveToHarborPerHour">Int value representing the amount of trucks arriving to the harbor per hour. Trucks are cargo viechles that can take one Container object
         /// and deliver it to its final destination.</param>
         /// <param name="percentageOfContainersDirectlyLoadedFromShipToTrucks">Int value representing the percentage of containers directly loaded from ship on to trucks. Containers that are not
-        /// directly loaded on to trucks will instead go to the _harbor's storage area. A value of 100 represents 100%. A value of 50 represents 50%.</param>
-        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from _harbor storage to trucks.
+        /// directly loaded on to trucks will instead go to the harbor's storage area. A value of 100 represents 100%. A value of 50 represents 50%.</param>
+        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.
         /// Containers that are not loaded directly to trucks will instead be loaded on to Ships that will carry the cargo to its final destination. A value of 100 represents 100%. A value of 50 represents 50%.</param>
-        /// <param name="numberOfAgvs">Int value representing the amount of AGVs in the _harbor to be created. AGV's are Automated Guided Viechles that can deliver containers from point A to B in the _harbor area.
-        /// Typicly from the _harbor's docking area to the _harbor's storage area.</param>
+        /// <param name="numberOfAgvs">Int value representing the amount of AGVs in the harbor to be created. AGV's are Automated Guided Viechles that can deliver containers from point A to B in the harbor area.
+        /// Typicly from the harbor's docking area to the harbor's storage area.</param>
         /// <param name="loadsPerAgvPerHour">Int value representing the amount of loads each AGV is capable of doing in one hour. One load is defined as loading one container on to the AGVs cargo and driving it to its destination,
         /// or unloading one container from the AGVs cargo.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in _harbor if a parameter is out of range.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in harbor if a parameter is out of range.</exception>
         public Harbor(
             IList<Ship> listOfShips, 
             IList<ContainerStorageRow> listOfContainerStorageRows, 
@@ -294,31 +294,31 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Creates a new object of the _harbor class.
+        /// Creates a new object of the harbor class.
         /// </summary>
-        /// <param name="numberOfShips">Int value representing the number of ships to be created and used in the _harbor simulation. Each ship generated will be of a random size.</param>
-        /// <param name="numberOfHarborContainerStorageRows">An int indicating the number of ContainerStorageRows that will be available in the _harbor's storage area.
-        /// Each container storage row represents one row of storage spaces where containers can be stored in the _harbor storage area.</param>
+        /// <param name="numberOfShips">Int value representing the number of ships to be created and used in the harbor simulation. Each ship generated will be of a random size.</param>
+        /// <param name="numberOfHarborContainerStorageRows">An int indicating the number of ContainerStorageRows that will be available in the harbor's storage area.
+        /// Each container storage row represents one row of storage spaces where containers can be stored in the harbor storage area.</param>
         /// <param name="containerStorageCapacityInEachStorageRow">Int value representing the amount of containers each storage row can hold in its storage.</param>
-        /// <param name="numberOfLoadingDocks">Int value representing the amount of  loading docks that will be available in the _harbor dock area.
-        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. An equal amount of small, medium and large loading docks will be created,
+        /// <param name="numberOfLoadingDocks">Int value representing the amount of  loading docks that will be available in the harbor dock area.
+        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. An equal amount of small, medium and large loading docks will be created,
         ///  each dock can only recieve ships of the coresponding size.</param>
-        /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes to be placed in the _harbor's docking area. These cranes will be used to load
+        /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes to be placed in the harbor's docking area. These cranes will be used to load
         /// or unload containers to and from ships</param>
-        /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes to be placed in the _harbor's own storage area for containers. These cranes will be used to
+        /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes to be placed in the harbor's own storage area for containers. These cranes will be used to
         /// load or unload containers from or to the container storage rows inside the storage area</param>
-        /// <param name="numberOfAgvs">Int value representing the amount of AGVs in the _harbor to be created. AGV's are Automated Guided Viechles that can deliver containers from point A to B in the _harbor area.
-        /// Typicly from the _harbor's docking area to the _harbor's storage area.</param>
+        /// <param name="numberOfAgvs">Int value representing the amount of AGVs in the harbor to be created. AGV's are Automated Guided Viechles that can deliver containers from point A to B in the harbor area.
+        /// Typicly from the harbor's docking area to the harbor's storage area.</param>
         /// <param name="loadsPerCranePerHour">Int value representing the amount of loads a crane does per hour.</param>
         /// <param name="loadsPerAgvPerHour">Int value representing the amount of loads each AGV is capable of doing in one hour. One load is defined as loading one container on to the AGVs cargo and driving it to its destination,
         /// or unloading one container from the AGVs cargo.</param>
-        /// <param name="numberOftrucksArriveToHarborPerHour">Int value representing the amount of trucks arriving to the _harbor per hour. Trucks are cargo viechles that can take one Container object
+        /// <param name="numberOftrucksArriveToHarborPerHour">Int value representing the amount of trucks arriving to the harbor per hour. Trucks are cargo viechles that can take one Container object
         /// and deliver it to its final destination.</param>
         /// <param name="percentageOfContainersDirectlyLoadedFromShipToTrucks">Int value representing the percentage of containers directly loaded from ship on to trucks. Containers that are not
-        /// directly loaded on to trucks will instead go to the _harbor's storage area. A value of 100 represents 100%. A value of 50 represents 50%.</param>
-        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from _harbor storage to trucks.
+        /// directly loaded on to trucks will instead go to the harbor's storage area. A value of 100 represents 100%. A value of 50 represents 50%.</param>
+        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.
         /// Containers that are not loaded directly to trucks will instead be loaded on to Ships that will carry the cargo to its final destination. A value of 100 represents 100%. A value of 50 represents 50%.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in _harbor if parameter is out of set range.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Exception to be thrown in harbor if parameter is out of set range.</exception>
         public Harbor(
             int numberOfShips, 
             int numberOfHarborContainerStorageRows, 
@@ -412,33 +412,33 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Sets the informatin of the _harbor based on the values given in the constructor.
+        /// Sets the informatin of the harbor based on the values given in the constructor.
         /// </summary>
-        /// <param name="listOfShips">An IList containing ship objects representing all the ships that will be used in a simulation of a _harbor.</param>
-        /// <param name="numberOfSmallLoadingDocks">Int value representing the amount of small loading docks that will be available in the _harbor dock area.
-        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. Small loading docks can only recieve ships of size small.</param>
-        /// <param name="numberOfMediumLoadingDocks">Int value representing the amount of medium loading that will be available in the _harbor dock area.
-        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. Medium loading docks can only recieve ships of size medium.</param>
-        /// <param name="numberOfLargeLoadingDocks">Int value representing the amount of large loadingthat will be available in the _harbor dock area.
-        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. Large loading docks can only recieve ships of size large.</param>
-        /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes to be placed in the _harbor's docking area. These cranes will be used to load
+        /// <param name="listOfShips">An IList containing ship objects representing all the ships that will be used in a simulation of a harbor.</param>
+        /// <param name="numberOfSmallLoadingDocks">Int value representing the amount of small loading docks that will be available in the harbor dock area.
+        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. Small loading docks can only recieve ships of size small.</param>
+        /// <param name="numberOfMediumLoadingDocks">Int value representing the amount of medium loading that will be available in the harbor dock area.
+        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. Medium loading docks can only recieve ships of size medium.</param>
+        /// <param name="numberOfLargeLoadingDocks">Int value representing the amount of large loadingthat will be available in the harbor dock area.
+        ///  LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. Large loading docks can only recieve ships of size large.</param>
+        /// <param name="numberOfCranesNextToLoadingDocks">Int value representing the amount of cranes to be placed in the harbor's docking area. These cranes will be used to load
         /// or unload containers to and from ships</param>
         /// <param name="LoadsPerCranePerHour">Int value representing the amount of loads a single crane can do in one hour. A load is defined as either loading a container on the the cranes storage
         /// or unloading a container from a cranes storage.</param>
-        /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes to be placed in the _harbor's own storage area for containers. These cranes will be used to
+        /// <param name="numberOfCranesOnHarborStorageArea">Int value representing the amount of cranes to be placed in the harbor's own storage area for containers. These cranes will be used to
         /// load or unload containers from or to the container storage rows inside the storage area</param>
-        /// <param name="numberOfSmallShipDocks">Int value representing the amount of small loading docks that will be available in the _harbor dock area.
+        /// <param name="numberOfSmallShipDocks">Int value representing the amount of small loading docks that will be available in the harbor dock area.
         /// Ship docks are docks where ships will permanently dock once they are done with all their voyages. A small loading dock can only recieve ships of size small. </param>
-        /// <param name="numberOfMediumShipDocks">Int value representing the amount of medium loading docks that will be available in the _harbor dock area.
+        /// <param name="numberOfMediumShipDocks">Int value representing the amount of medium loading docks that will be available in the harbor dock area.
         /// Ship docks are docks where ships will permanently dock once they are done with all their voyages. A medium loading dock can only recieve ships of size medium.</param>
-        /// <param name="numberOfLargeShipDocks">Int value representing the amount of large loading docks that will be available in the _harbor dock area.
+        /// <param name="numberOfLargeShipDocks">Int value representing the amount of large loading docks that will be available in the harbor dock area.
         /// Ship docks are docks where ships will permanently dock once they are done with all their voyages. A large loading dock can only recieve ships of size large.</param>
         /// <param name="percentageOfContainersDirectlyLoadedFromShipToTrucks">Int value representing the percentage of containers directly loaded from ship on to trucks. Containers that are not
-        /// directly loaded on to trucks will instead go to the _harbor's storage area. A value of 100 represents 100%. A value of 50 represents 50%.</param>
-        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from _harbor storage to trucks.
+        /// directly loaded on to trucks will instead go to the harbor's storage area. A value of 100 represents 100%. A value of 50 represents 50%.</param>
+        /// <param name="percentageOfContainersDirectlyLoadedFromHarborStorageToTrucks">Int value representing the percentage of containers directly loaded from harbor storage to trucks.
         /// Containers that are not loaded directly to trucks will instead be loaded on to Ships that will carry the cargo to its final destination. A value of 100 represents 100%. A value of 50 represents 50%.</param>
-        /// /// <param name="numberOfAgv">Int value representing the amount of AGVs in the _harbor to be created. AGV's are Automated Guided Viechles that can deliver containers from point A to B in the _harbor area.
-        /// Typicly from the _harbor's docking area to the _harbor's storage area.</param>
+        /// /// <param name="numberOfAgv">Int value representing the amount of AGVs in the harbor to be created. AGV's are Automated Guided Viechles that can deliver containers from point A to B in the harbor area.
+        /// Typicly from the harbor's docking area to the harbor's storage area.</param>
         private void Initiliaze(
             IList<Ship> listOfShips, 
             int numberOfSmallLoadingDocks, 
@@ -532,10 +532,10 @@ namespace Gruppe8.HarbNet
 
         /// <summary>
         /// Creates the amount of ContainerRows given and fills each one with the amount of container spaces given.
-        /// Then adds the containerrows to the _harbor's storage area.
+        /// Then adds the containerrows to the harbor's storage area.
         /// </summary>
         /// <param name="numberOfContainerSpaces">Int value representing the amount of container spaces to be created in each ContainerStorageRow.</param>
-        /// <param name="numberOfContainerRows">Int value representing the amount of container rows to be created and added to the _harbor's storage area.</param>
+        /// <param name="numberOfContainerRows">Int value representing the amount of container rows to be created and added to the harbor's storage area.</param>
         internal void CreateContainerSpaces(int numberOfContainerSpaces, int numberOfContainerRows)
         {
             IList <ContainerStorageRow> containerRows = new List <ContainerStorageRow>();
@@ -612,7 +612,7 @@ namespace Gruppe8.HarbNet
             {
                 if (TrucksInTransit.Contains(truck))
                 {
-                    throw new TruckCantBeLoadedException("The truck you are trying to load is already in transit away from the _harbor and therefore can't load the container from the crane");
+                    throw new TruckCantBeLoadedException("The truck you are trying to load is already in transit away from the harbor and therefore can't load the container from the crane");
                 } 
                 
                 else
@@ -638,7 +638,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets one available cranes from the _harbor dock area.
+        /// Gets one available cranes from the harbor dock area.
         /// </summary>
         /// <returns>Returns one crane available from the harbors docking area. If no cranes are available null is returned. </returns>
         internal Crane? GetFreeLoadingDockCrane()
@@ -655,7 +655,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Removes truck from the truck queue inn to the _harbor.
+        /// Removes truck from the truck queue inn to the harbor.
         /// </summary>
         /// <param name="truck">Truck object to be removed from truck queue.</param>
         internal void RemoveTruckFromQueue(Truck truck)
@@ -844,7 +844,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads the given container from the given crane to a free ContainerStorageRow in the _harbor storage area if there is available space.
+        /// Loads the given container from the given crane to a free ContainerStorageRow in the harbor storage area if there is available space.
         /// </summary>
         /// <param name="crane">Crane object container is unloaded from</param>
         /// <param name="currentTime">The Date and Time the container is loaded.</param>
@@ -871,7 +871,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Loads a container of the given size from a ContainerStorageRow in the _harbor storage area to the given crane.
+        /// Loads a container of the given size from a ContainerStorageRow in the harbor storage area to the given crane.
         /// </summary>
         /// <param name="size">ContainerSize enum representing the Size of the container to be loaded on to the crane.</param>
         /// <param name="crane">Crane object that will load the container.</param>
@@ -882,7 +882,7 @@ namespace Gruppe8.HarbNet
         {
             if (!(crane.Container == null))
             {
-                throw new CraneCantBeLoadedException("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the _harbor storage area");
+                throw new CraneCantBeLoadedException("The crane you are trying to load already has a container in its storage and therefore has no room to load the container from the harbor storage area");
             }
 
             foreach (Container container in storedContainers.Keys)
@@ -890,7 +890,7 @@ namespace Gruppe8.HarbNet
                 if (container.Size == size)
                 {
                     crane.LoadContainer(container);
-                    container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
+                    container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
                     storedContainers[container].RemoveContainerFromContainerRow(container);
                     storedContainers.Remove(container);
                     
@@ -916,9 +916,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a Truck from the truck queue in to the _harbor.
+        /// Gets a Truck from the truck queue in to the harbor.
         /// </summary>
-        /// <returns>Returns the first truck in the queue in to the _harbor, if there are no trucks in the queue null is returned.</returns>
+        /// <returns>Returns the first truck in the queue in to the harbor, if there are no trucks in the queue null is returned.</returns>
         internal Truck? GetFreeTruck()
         {
             if (TrucksInQueue.Count > 0)
@@ -941,7 +941,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets available crane from the _harbor storage area.
+        /// Gets available crane from the harbor storage area.
         /// </summary>
         /// <returns>Returns the available crane object found in the storage area, if None is available null is returned.</returns>
         internal Crane? GetFreeStorageAreaCrane()
@@ -1199,10 +1199,10 @@ namespace Gruppe8.HarbNet
             }
 
         /// <summary>
-        /// Gets the ship with the given ID from the _harbor loading docks.
+        /// Gets the ship with the given ID from the harbor loading docks.
         /// </summary>
         /// <param name="shipID">Guid representing the ID of the ship to be found in loading dock.</param>
-        /// <returns>Returns the ship object if the ship is found in any of the _harbor loading docks.</returns>
+        /// <returns>Returns the ship object if the ship is found in any of the harbor loading docks.</returns>
         /// <exception cref="ArgumentException">Throws exception if ship is not found.</exception>
         internal Ship GetShipFromLoadingDock(Guid shipID)
         {
@@ -1219,10 +1219,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the ship with the given ID from the _harbor ship docks.
+        /// Gets the ship with the given ID from the harbor ship docks.
         /// </summary>
-        /// <param name="shipID">Guid representing the ID of the ship object to be found in any of the _harbor ship docks.</param>
-        /// <returns>Returns the ship object if the ship is found in any of the _harbor ship dock.</returns>
+        /// <param name="shipID">Guid representing the ID of the ship object to be found in any of the harbor ship docks.</param>
+        /// <returns>Returns the ship object if the ship is found in any of the harbor ship dock.</returns>
         /// <exception cref="ArgumentException">Throws exception if ship is not found.</exception>
         internal Ship GetShipFromShipDock(Guid shipID)
         {
@@ -1258,7 +1258,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a list containing all ships currently docked to a loading dock in the _harbor.
+        /// Gets a list containing all ships currently docked to a loading dock in the harbor.
         /// </summary>
         /// <returns>Returns an IList with Ship object containing all ships currently docked in loading docks.</returns>
         internal List<Ship> DockedShipsInLoadingDock()
@@ -1300,7 +1300,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if a free loading dock matching the given size exists in the _harbor.
+        /// Checks if a free loading dock matching the given size exists in the harbor.
         /// </summary>
         /// <param name="shipSize">ShipSize enum representing the Size of ships that can dock to the loading dock.</param>
         /// <returns>Returns true if there is available loading docks for the given ShipSize, false if no available loading docks exist.</returns>
@@ -1318,7 +1318,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if a free ship dock matching the given size exists in the _harbor.
+        /// Checks if a free ship dock matching the given size exists in the harbor.
         /// </summary>
         /// <param name="shipSize">ShipSize enum representing the Size of ships that can dock to the ship dock.</param>
         /// <returns>Returns true if there is available ship docks for the given ShipSize, false if no available ship docks exist.</returns>
@@ -1505,7 +1505,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a number indicating the count of how many free container spaces exist in the _harbor storage area to store containers of the given size.
+        /// Gets a number indicating the count of how many free container spaces exist in the harbor storage area to store containers of the given size.
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size of the containers the containerSpace has to fit.</param>
         /// <returns>Returns an int value representing the total number of free containerspaces exist of given size.</returns>
@@ -1527,11 +1527,11 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a number indicating the count of how many occupied container spaces exist in the _harbor storage area of the given size.
+        /// Gets a number indicating the count of how many occupied container spaces exist in the harbor storage area of the given size.
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size the containerSpace has to fit.</param>
-        /// <returns>Returns an int value representing the total number of occupied containerspaces of given size exist in the _harbor storage area.</returns>
-        internal int GetNumberOfOccupiedContainerSpaces(ContainerSize containerSize)
+        /// <returns>Returns an int value representing the total number of occupied containerspaces of given size exist in the harbor storage area.</returns>
+        internal int GetNumberOfOccupiedContainerSpaces()
         {
             return storedContainers.Count;
         }
@@ -1561,10 +1561,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets the a Container of the given size from the _harbor storage area.
+        /// Gets the a Container of the given size from the harbor storage area.
         /// </summary>
         /// <param name="containerSize">ContainerSize enum representing the size the containers to be retrieved.</param>
-        /// <returns>Returns a Container of the given Size from the _harbor storage area, if container of specified size is not found null is returned.</returns>
+        /// <returns>Returns a Container of the given Size from the harbor storage area, if container of specified size is not found null is returned.</returns>
         internal Container? GetStoredContainer(ContainerSize containerSize)
         {
             foreach (Container container in storedContainers.Keys)
@@ -1578,37 +1578,7 @@ namespace Gruppe8.HarbNet
             return null;
         }
 
-        /// <summary>
-        /// Unloads a container of the given size from ship's cargo to a ContainerStorageSpace in the _harbor storage area.
-        /// </summary>
-        /// <param name="containerSize">ContainerSize enum representing the size the containers to be unloaded from ship to the _harbor storage area.</param>
-        /// <param name="ship">The ship object the container is unloaded from.</param>
-        /// <param name="currentTime">The date and time the container is unloaded from ship's storage to the _harbor storage area.</param>
-        /// <returns>Returns a Guid object representing the ContainerSpaces the unloaded container was stored in, if the container was not unloaded from the ship null is returned</returns>
-        internal Guid UnloadContainer(ContainerSize containerSize, Ship ship, DateTime currentTime)
-        {
-            Container? containerToBeUnloaded = ship.GetContainer(containerSize);
-            ContainerStorageRow? containerRow = GetContainerRowWithFreeSpace(containerSize);
-            
-            if (containerToBeUnloaded == null || containerRow == null)
-            {
-                return Guid.Empty;
-            }
-
-            ship.RemoveContainer(containerToBeUnloaded.ID);
-            storedContainers.Add(containerToBeUnloaded, containerRow);
-
-            ContainerSpace? containerSpace = containerRow.AddContainerToFreeSpace(containerToBeUnloaded);
-            if (containerSpace != null)
-            {
-                containerToBeUnloaded.CurrentLocation = containerSpace.ID;
-                containerToBeUnloaded.AddStatusChangeToHistory(Status.InStorage, currentTime);
-
-                return containerSpace.ID;
-            }
-
-            return Guid.Empty;
-        }
+     
         
         /// <summary>
         /// Adds the given ship to the Anchorage.
@@ -1645,20 +1615,7 @@ namespace Gruppe8.HarbNet
             return Status.None;
         }
 
-        /// <summary>
-        /// Gets the availabilety of all ship docks in the _harbor.
-        /// </summary>
-        /// <returns>Returns a IDictionary containing the Guid of the ship docks as keys and bool values that is true if the coresponding ship dock is free and false otherwise as values.</returns>
-        internal IDictionary<Guid, bool> StatusAllShipDocks()
-        {
-            IDictionary<Guid, bool> dockStatus = new Dictionary<Guid, bool>();
-            foreach(ShipDock shipDock in allShipDocks)
-            {
-                dockStatus[shipDock.ID] = shipDock.Free;
-            }
-
-            return dockStatus;
-        }
+        
 
         /// <summary>
         /// Returns a string with information about the status of all loading docks in the port. A loading dock is a dock used for loading cargo from and to Ships.
@@ -1739,7 +1696,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a IDictionary containing information about the availabilety of all the loading docks in the _harbor.
+        /// Gets a IDictionary containing information about the availabilety of all the loading docks in the harbor.
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the loading docks and bool value representing if the loading docks are available or not. The key value is a Guid object
         /// representing the unque ID of a given dock. The value is a bool representing wether or not the dock is free. A bool value of True means the coresponding dock is free.</returns>
@@ -1775,7 +1732,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a IDictionary containing information about the availabilety of all the ship docks in the _harbor. A ship dock is a dock where ships can be stored once their voyage is completed.
+        /// Gets a IDictionary containing information about the availabilety of all the ship docks in the harbor. A ship dock is a dock where ships can be stored once their voyage is completed.
         /// </summary>
         /// <returns>Returns an IDictionary containing Guid representing the ship docks and bool value representing if the ship docks are available or not. The key value is a Guid object
         /// representing the unque ID of a given dock. The value is a bool representing wether or not the dock is free. A bool value of True means the coresponding dock is free.</returns>
@@ -1812,9 +1769,9 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a list containing all containers stored in the _harbor storage area.
+        /// Gets a list containing all containers stored in the harbor storage area.
         /// </summary>
-        /// <returns>Returns an Ilist with Container objects containing all containers stored in the _harbor storage area.</returns>
+        /// <returns>Returns an Ilist with Container objects containing all containers stored in the harbor storage area.</returns>
         internal IList<Container> GetContainersStoredInHarbour()
         {
             IList<Container> list = new List<Container>();
@@ -1875,10 +1832,10 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Gets a string containing information about the _harbor. This information includes the _harbor's ID, total amount of ships, amount of ships docked to loading docks, amount of free loading docks, amount of ships docked to shipdocks, amount of
-        /// free ship docks, amount of ships in anchorage, amount of ships in transit and amount of containers stored in the _harbor storage area.
+        /// Gets a string containing information about the harbor. This information includes the harbor's ID, total amount of ships, amount of ships docked to loading docks, amount of free loading docks, amount of ships docked to shipdocks, amount of
+        /// free ship docks, amount of ships in anchorage, amount of ships in transit and amount of containers stored in the harbor storage area.
         /// </summary>
-        /// <returns>Returns a string value containing information about the _harbor.</returns>
+        /// <returns>Returns a string value containing information about the harbor.</returns>
         public override string ToString()
         {
             return 
@@ -1890,7 +1847,7 @@ namespace Gruppe8.HarbNet
                 $"Free ship docks: {freeShipDocks.Count}, " +
                 $", Ships in anchorage: {Anchorage.Count}, " +
                 $"Ships in transit: {ShipsInTransit.Count}, " +
-                $"Containers stored in _harbor: {storedContainers.Count}";
+                $"Containers stored in harbor: {storedContainers.Count}";
         }
     }
 }

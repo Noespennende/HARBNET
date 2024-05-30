@@ -10,8 +10,8 @@ using Gruppe8.HarbNet.Advanced;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// ContainerRow used as storage space for containers in a _harbor.
-    /// Each container storage row represents one row of storage spaces where containers can be stored in the _harbor storage area.
+    /// ContainerRow used as storage space for containers in a harbor.
+    /// Each container storage row represents one row of storage spaces where containers can be stored in the harbor storage area.
     /// </summary>
     public class ContainerStorageRow : StorageArea
     {
@@ -30,7 +30,7 @@ namespace Gruppe8.HarbNet
 
         /// <summary>
         /// Constructor used to create objects of the ContainerStorageRow class.
-        /// Each container storage row represents one row of storage spaces where containers can be stored in the _harbor storage area.
+        /// Each container storage row represents one row of storage spaces where containers can be stored in the harbor storage area.
         /// </summary>
         /// <param name="numberOfContainerStorageSpaces">Int value representing the amount of container storage spaces to be created in a ContainerStorage row. Each container storage space has room to store
         /// one full size container or two half size containers.</param>

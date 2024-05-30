@@ -11,13 +11,13 @@ using Gruppe8.HarbNet.Advanced;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Class used to record historical events in a simulation. Each object of this class holds information about the state of the _harbor on one
+    /// Class used to record historical events in a simulation. Each object of this class holds information about the state of the harbor on one
     /// spesific day of the simulation.
     /// </summary>
     public class DailyLog : HistoryRecord
     {
         /// <summary>
-        /// Gets the date and time the DailyLog's info were logged. The information stored in the daily log represents a snapshot of the _harbor
+        /// Gets the date and time the DailyLog's info were logged. The information stored in the daily log represents a snapshot of the harbor
         /// on the date and time represented in this member.
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the info in the DailyLog object were logged</returns>
@@ -43,7 +43,7 @@ namespace Gruppe8.HarbNet
         
         /// <summary>
         /// Gets a ReadOnlyCollection of ship objects containing information of all the ships that were docked in a loading dock when the DailyLog object were created.
-        /// Loading docks are docks where ships can load and unload containers from/to their cargo to/from the _harbor.
+        /// Loading docks are docks where ships can load and unload containers from/to their cargo to/from the harbor.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with Ship object representing the docked in a loading dock when the DailyLog object was created.</returns>
         public override ReadOnlyCollection<Ship> ShipsDockedInLoadingDocks { get; }
@@ -608,7 +608,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Returns a string containing information about the date and time the DailyLog object were created and the amount of ships in anchorage, amount of ships docked in loading docks, amount of ships docked in ship dock, amount of ships in transit, amount of containers in _harbor and amount of containers that have arrived at their destination
+        /// Returns a string containing information about the date and time the DailyLog object were created and the amount of ships in anchorage, amount of ships docked in loading docks, amount of ships docked in ship dock, amount of ships in transit, amount of containers in harbor and amount of containers that have arrived at their destination
         /// at the moment the DailyLog object were created.
         /// </summary>
         /// <returns>Returns a String containing the time the DailyLog object were created and the number of ships in all locations at this time.</returns>
@@ -620,7 +620,7 @@ namespace Gruppe8.HarbNet
                 $"Ships in loading docks: {ShipsDockedInLoadingDocks.Count}, " +
                 $"Ships in ship dock: {ShipsDockedInShipDocks.Count}, " +
                 $"Ships in transit: {ShipsInTransit.Count}, " +
-                $"Containers in _harbor: {ContainersInHarbor.Count}, " +
+                $"Containers in harbor: {ContainersInHarbor.Count}, " +
                 $"Containers arrived at their destination: {ContainersArrivedAtDestination.Count}";
         }
     }
