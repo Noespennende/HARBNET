@@ -16,19 +16,6 @@ namespace Gruppe8.HarbNet
     public class ContainerStorageRow : StorageArea
     {
         /// <summary>
-        /// Gets the unique ID for the ContainerRow.
-        /// </summary>
-        /// <returns>Returns a Guid object representing the containerRows unique ID.</returns>
-        public override Guid ID { get; } = Guid.NewGuid();
-
-        /// <summary>
-        /// Gets an IList of ContainerSpace objects that can be used to store containers in the ContainerStorageRow. Each ContainerSpace object has room to store
-        /// one full size container or two half size containers.
-        /// </summary>
-        /// <returns>Returns a IList with ContainerSpace objects representing the total storage space of the ContainerStorageRow.</returns>
-        internal IList<ContainerSpace> RowOfContainerSpaces { get; set; } = new List<ContainerSpace>();
-
-        /// <summary>
         /// Constructor used to create objects of the ContainerStorageRow class.
         /// Each container storage row represents one row of storage spaces where containers can be stored in the harbor storage area.
         /// </summary>
@@ -41,6 +28,101 @@ namespace Gruppe8.HarbNet
                 RowOfContainerSpaces.Add(new ContainerSpace());
             }
         }
+
+        /// <summary>
+        /// Gets the amount of available Container spaces in the Storage Row.
+        /// </summary>
+        /// <param name="size">ContainerSize enum representing the size of the containers you want to check how many free spaces is available for.</param>
+        /// <returns>Returns an int value representing the total amount of available free space of the given container size.</returns>
+        public override int NumberOfFreeContainerSpaces(ContainerSize size)
+        {
+            int count = 0;
+            ContainerSize sizeOfContainersStored = SizeOfContainersStored();
+
+            if (sizeOfContainersStored == ContainerSize.None || size == sizeOfContainersStored)
+            {
+                foreach (ContainerSpace space in RowOfContainerSpaces)
+                {
+                    if (space.FreeOne)
+                    {
+                        count++;
+                    }
+
+                    if (space.FreeTwo && size == ContainerSize.Half)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Gets the size of the containers being stored in this Storage Row.
+        /// </summary>
+        /// <returns>Returns a ContainerSize enum representing the size of the containers being stored in this Storage Row. If no containers are being stored a ContainerSize enum with the value of None is returned.</returns>
+        public override ContainerSize SizeOfContainersStored()
+        {
+            foreach (ContainerSpace space in RowOfContainerSpaces)
+            {
+                if (space.SizeOfContainerStored != ContainerSize.None)
+                {
+                    return space.SizeOfContainerStored;
+                }
+            }
+
+            return ContainerSize.None;
+        }
+
+        /// <summary>
+        /// Gets an IList containing the IDs of all containers stored in this Storage Row.
+        /// </summary>
+        /// <returns>Returns a IList with Guid object representing the IDs of all containers being stored in this storage row.</returns>
+        public override IList<Guid> GetIDOfAllStoredContainers()
+        {
+            IList<Guid> idList = new List<Guid>();
+
+            foreach (ContainerSpace space in RowOfContainerSpaces)
+            {
+                if (space.StoredContainerOne != Guid.Empty)
+                {
+                    idList.Add(space.StoredContainerOne);
+                }
+                if (space.StoredContainerTwo != Guid.Empty)
+                {
+                    idList.Add(space.StoredContainerOne);
+                }
+            }
+
+            return idList;
+        }
+
+        /// <summary>
+        /// Gets a String value containing information about the Storage Row's ID, the total amount of container storage spaces and the amount of containers currently being stored.
+        /// </summary>
+        /// <returns>Returns a String containing information about the Storage Row's ID, the total amount of container storage spaces and the amount of containers currently being stored.</returns>
+        public override string ToString()
+        {
+            return
+                $"Storage row ID: {ID}, " +
+                $"Container storage spaces: {RowOfContainerSpaces.Count}, " +
+                $"Stored containers: {GetIDOfAllStoredContainers().Count}";
+        }
+
+        /// <summary>
+        /// Gets the unique ID for the ContainerRow.
+        /// </summary>
+        /// <returns>Returns a Guid object representing the containerRows unique ID.</returns>
+        public override Guid ID { get; } = Guid.NewGuid();
+
+        /// <summary>
+        /// Gets an IList of ContainerSpace objects that can be used to store containers in the ContainerStorageRow. Each ContainerSpace object has room to store
+        /// one full size container or two half size containers.
+        /// </summary>
+        /// <returns>Returns a IList with ContainerSpace objects representing the total storage space of the ContainerStorageRow.</returns>
+        internal IList<ContainerSpace> RowOfContainerSpaces { get; set; } = new List<ContainerSpace>();
+
 
         /// <summary>
         /// Gets the ContainerSpace object used to store the given container. 
@@ -245,87 +327,6 @@ namespace Gruppe8.HarbNet
                 }
             }
             return null;
-        }
-
-        /// <summary>
-        /// Gets the amount of available Container spaces in the Storage Row.
-        /// </summary>
-        /// <param name="size">ContainerSize enum representing the size of the containers you want to check how many free spaces is available for.</param>
-        /// <returns>Returns an int value representing the total amount of available free space of the given container size.</returns>
-        public override int NumberOfFreeContainerSpaces (ContainerSize size)
-        {
-            int count = 0;
-            ContainerSize sizeOfContainersStored = SizeOfContainersStored();
-
-            if (sizeOfContainersStored == ContainerSize.None || size == sizeOfContainersStored)
-            {
-                foreach (ContainerSpace space in RowOfContainerSpaces)
-                {
-                    if (space.FreeOne)
-                    {
-                        count++;
-                    }
-
-                    if (space.FreeTwo && size == ContainerSize.Half)
-                    {
-                        count++;
-                    }
-                }
-            }
-            
-            return count;
-        }
-
-        /// <summary>
-        /// Gets the size of the containers being stored in this Storage Row.
-        /// </summary>
-        /// <returns>Returns a ContainerSize enum representing the size of the containers being stored in this Storage Row. If no containers are being stored a ContainerSize enum with the value of None is returned.</returns>
-        public override ContainerSize SizeOfContainersStored()
-        {
-            foreach (ContainerSpace space in RowOfContainerSpaces)
-            {
-                if (space.SizeOfContainerStored != ContainerSize.None)
-                {
-                    return space.SizeOfContainerStored;
-                }
-            }
-
-            return ContainerSize.None;
-        }
-
-        /// <summary>
-        /// Gets an IList containing the IDs of all containers stored in this Storage Row.
-        /// </summary>
-        /// <returns>Returns a IList with Guid object representing the IDs of all containers being stored in this storage row.</returns>
-        public override IList<Guid> GetIDOfAllStoredContainers()
-        {
-            IList<Guid> idList = new List<Guid>();
-
-            foreach (ContainerSpace space in RowOfContainerSpaces)
-            {
-                if (space.StoredContainerOne != Guid.Empty)
-                {
-                    idList.Add(space.StoredContainerOne);
-                }
-                if (space.StoredContainerTwo != Guid.Empty)
-                {
-                    idList.Add(space.StoredContainerOne);
-                }
-            }
-
-            return idList;
-        }
-
-        /// <summary>
-        /// Gets a String value containing information about the Storage Row's ID, the total amount of container storage spaces and the amount of containers currently being stored.
-        /// </summary>
-        /// <returns>Returns a String containing information about the Storage Row's ID, the total amount of container storage spaces and the amount of containers currently being stored.</returns>
-        public override string ToString()
-        {
-            return 
-                $"Storage row ID: {ID}, " +
-                $"Container storage spaces: {RowOfContainerSpaces.Count}, " +
-                $"Stored containers: {GetIDOfAllStoredContainers().Count}";
         }
     }
 }

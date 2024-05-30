@@ -24,45 +24,38 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns a Guid object representing the ships unique ID.</returns>
         public override Guid ID { get; }
-        
+
         /// <summary>
         /// Gets the ships size. The ship's size determins the base and max weight of the ship as well as how much cargo it can hold.
         /// </summary>
         /// <returns>Returns a ShipSize enumm representing the ships size.</returns>
         public override ShipSize ShipSize { get; internal set; }
-        
+
         /// <summary>
         /// Gets the ships name. 
         /// </summary>
         /// <returns>Returns a string value representing the name of the ship.</returns>
         public override string Name { get; internal set; }
-        
+
         /// <summary>
         /// Gets the date and time the ship will arrive to the harbor for the first time.
         /// </summary>
         /// <returns>Returns a DateTime object representing the date and time the ship will arrive to the harbor for the first time.</returns>
         public override DateTime StartDate { get; internal set; }
-        
-        /// <summary>
-        /// Gets the TransitStatus of the ship. The transit status indicates at witch part of the transit the ship is currently.
-        /// For example wether or not it is leaving or arriving to the harbor.
-        /// </summary>
-        /// <returns>Returns a TransitStatus enum representing where in the transit cycle the ship is currently</returns>
-        internal TransitStatus TransitStatus { get; set; }
-        
+
         /// <summary>
         /// Gets the number of days the ship uses to complete a roundtrip at sea before returning to harbour. The number indicates the amount of days
         /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the harbor again.
         /// </summary>
         /// <returns>Returns an int value representing the number of days the ship uses to do a round trip at sea.</returns>
         public override int RoundTripInDays { get; internal set; }
-       
+
         /// <summary>
         /// Gets the location ID of the ships current location.
         /// </summary>
         /// <returns>Returns a Guid object representing the location ID of the ships current location.</returns>
         public override Guid CurrentLocation { get; internal set; }
-        
+
         /// <summary>
         /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the Ship has gone through throughout a simulation.
         /// Each StatusLog object contains information about one status change that happened to the Ship. Together the list holds information about the entire
@@ -70,7 +63,45 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns an ReadOnlyCollection with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
         public override ReadOnlyCollection<StatusLog> History => HistoryIList.AsReadOnly();
-        
+
+        /// <summary>
+        /// Gets all the containers in the ship's storage.
+        /// </summary>
+        /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
+        public override IList<Container> ContainersOnBoard { get; } = new List<Container>();
+
+        /// <summary>
+        /// The maximum amount of containers the ship can hold. Both half sized and full sized containers counts as 1 container.
+        /// </summary>
+        /// <returns>Returns an int value representing the maximum amount of containers a ship can hold.</returns>
+        public override int ContainerCapacity { get; internal set; }
+
+        /// <summary>
+        /// Gets the max weight in tonns the ship is allowed to reach.
+        /// </summary>
+        /// <returns>Returns an int value representing the max weight in tonns the ship is allowed to reach.</returns>
+        public override int MaxWeightInTonn { get; internal set; }
+
+        /// <summary>
+        /// Gets the weight of the ship when its storage is empty.
+        /// </summary>
+        /// <returns>Returns an int value representing the weight of the ship when the storage is empty.</returns>
+        public override int BaseWeightInTonn { get; internal set; }
+
+        /// <summary>
+        /// Gets the current weight of the ship including the cargo weight. This includes both the base weight of the ship
+        /// in addition to the weight of all its cargo.
+        /// </summary>
+        /// <returns>Returns an int value representing the current weight of the ship.</returns>
+        public override int CurrentWeightInTonn { get; internal set; }
+
+        /// <summary>
+        /// Gets the TransitStatus of the ship. The transit status indicates at witch part of the transit the ship is currently.
+        /// For example wether or not it is leaving or arriving to the harbor.
+        /// </summary>
+        /// <returns>Returns a TransitStatus enum representing where in the transit cycle the ship is currently</returns>
+        internal TransitStatus TransitStatus { get; set; }
+
         /// <summary>
         /// Gets a IList of StatusLog objects containing information on status changes the Ship has gone through throughout a simulation.
         /// Each StatusLog object contains information about one status change that happened to the Ship. Together the list holds information about the entire
@@ -78,70 +109,39 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <returns>Returns an IList with StatusLog objects with information on status changes the ship has gone trough troughout a simulation.</returns>
         internal IList<StatusLog> HistoryIList { get; }
-        
-        /// <summary>
-        /// Gets all the containers in the ship's storage.
-        /// </summary>
-        /// <returns>Returns an IList with Container objects representing the containers in the ships storage.</returns>
-        public override IList<Container> ContainersOnBoard {  get; } = new List<Container>();
-        
-        /// <summary>
-        /// The maximum amount of containers the ship can hold. Both half sized and full sized containers counts as 1 container.
-        /// </summary>
-        /// <returns>Returns an int value representing the maximum amount of containers a ship can hold.</returns>
-        public override int ContainerCapacity { get; internal set; }
-        
-        /// <summary>
-        /// Gets the max weight in tonns the ship is allowed to reach.
-        /// </summary>
-        /// <returns>Returns an int value representing the max weight in tonns the ship is allowed to reach.</returns>
-        public override int MaxWeightInTonn {  get; internal set; }
-        
-        /// <summary>
-        /// Gets the weight of the ship when its storage is empty.
-        /// </summary>
-        /// <returns>Returns an int value representing the weight of the ship when the storage is empty.</returns>
-        public override int BaseWeightInTonn { get; internal set; }
-        
-        /// <summary>
-        /// Gets the current weight of the ship including the cargo weight. This includes both the base weight of the ship
-        /// in addition to the weight of all its cargo.
-        /// </summary>
-        /// <returns>Returns an int value representing the current weight of the ship.</returns>
-        public override int CurrentWeightInTonn { get; internal set; }
-        
+
         /// <summary>
         /// Gets the maximum number of containers the ship can load in one hour. A container load is defined as loading a container
         /// from the a harbor loading crane and in to its own storage.
         /// </summary>
         /// <returns>Returns an int value representing the number of containers the ship can load or unload in one hour.</returns>
         internal int ContainersLoadedPerHour { get; set; }
-        
+
         /// <summary>
         /// Gets and sets the number of containers the ship unload from its own storage an on to a harbor loading crane.
         /// </summary>
         /// <returns>Returns an int value representing the number of containers can be unloaded from the ships cargo in one hour.</returns>
         internal int BaseBerthingTimeInHours { get; set; }
-        
+
         /// <summary>
         /// Gets and sets a number indicating the number of hours it takes for the ship to dock or undock to a harbor dock.
         /// </summary>
         /// <returns>Returns an int value representing the number of hours it takes for the ship to dock or undock to harbour.</returns>
         internal int BaseDockingTimeInHours { get; set; }
-        
+
         /// <summary>
         /// Gets and sets a bolean representing if the ship will only do one single trip. If this value is true it means the ship
         /// will only perform one voyage before permanently docking to an available ship dock in the harbor.
         /// </summary>
         /// <returns>Returns a boolean that is true if the ship will only do one single trip and false otherwise.</returns>
         internal bool IsForASingleTrip { get; set; } = false;
-        
+
         /// <summary>
         /// Checks if the ship has performed any action this hour. 
         /// </summary>
         /// <returns>Returns a bool that is true if ship has performed an action this past hour, or false if ship has performed no action.</returns>
         internal bool HasBeenAlteredThisHour = false;
-        
+
         /// <summary>
         /// Gets and sets a number indicating the percentage of Containers that will be directly unloaded from the ship's storage and on to trucks on the harbor.
         /// A value of 100 represents 100%. A value of 50 represnets 50%.
@@ -162,9 +162,9 @@ namespace Gruppe8.HarbNet
         /// it takes for the ship to leave the harbor, travel at sea to its delivery destination, deliver its cargo, travel back at sea and arrive to the harbor again.</param>
         /// <param name="containersToBeStoredInCargo">IList of Container objects that will be placed in the Ship's cargo when it first arrives to the harbor</param>
         public Ship(
-            string shipName, 
-            ShipSize shipSize, 
-            DateTime startDate, 
+            string shipName,
+            ShipSize shipSize,
+            DateTime startDate,
             bool isForASingleTrip,
             int roundTripInDays,
             IList<Container> containersToBeStoredInCargo)
@@ -186,7 +186,7 @@ namespace Gruppe8.HarbNet
             {
                 TransitStatus = TransitStatus.Arriving;
             }
-            
+
             if (shipSize == ShipSize.Large)
             {
                 ContainersLoadedPerHour = 8;
@@ -206,12 +206,12 @@ namespace Gruppe8.HarbNet
             {
                 ContainersOnBoard.Add((Container)container);
             }
-           
+
             HistoryIList.Add(new StatusLog(ID, Guid.Empty, startDate, Status.Anchoring));
 
             SetBaseShipInformation(shipSize);
 
-            
+
 
         }
 
@@ -229,12 +229,12 @@ namespace Gruppe8.HarbNet
         /// <param name="numberOfHalfContainersOnBoard">Int value representing the amount of Small containers that will be in the ships storage when it enters the harbor for the first time.</param>
         /// <param name="numberOfFullContainersOnBoard">Int value representing the amount of Large containers that will be in the ships storage when it enters the harbor for the first time.</param>
         public Ship(
-            string shipName, 
-            ShipSize shipSize, 
-            DateTime startDate, 
-            bool isForASingleTrip, 
-            int roundTripInDays, 
-            int numberOfHalfContainersOnBoard, 
+            string shipName,
+            ShipSize shipSize,
+            DateTime startDate,
+            bool isForASingleTrip,
+            int roundTripInDays,
+            int numberOfHalfContainersOnBoard,
             int numberOfFullContainersOnBoard)
         {
             ID = Guid.NewGuid();
@@ -282,13 +282,13 @@ namespace Gruppe8.HarbNet
         /// <param name="containersOnboard">An IList containing Containers objects representing the containers in the ships cargo.</param>
         /// <param name="currentHistory">An IList containing StatusRecord objects representing the ships history so far in the simulation.</param>
         internal Ship(
-            string shipName, 
-            ShipSize shipSize, 
-            DateTime startDate, 
-            bool isForASingleTrip, 
-            int roundTripInDays, 
-            Guid id, 
-            IList<Container> containersOnboard, 
+            string shipName,
+            ShipSize shipSize,
+            DateTime startDate,
+            bool isForASingleTrip,
+            int roundTripInDays,
+            Guid id,
+            IList<Container> containersOnboard,
             IList<StatusLog> currentHistory)
         {
             Name = shipName;
@@ -319,66 +319,71 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Sets basic infomation for the ship based on the ship's size. The information set includes
-        /// container capacity, Base Weight (in tonn) and Max weight based on the ships size.
+        /// Prints the ships entire history to console. Information printed includes the ship's name, ID, Date and Time of all status changes and the coresponding status the ship had at those times.
         /// </summary>
-        /// <param name="shipSize">ShipSize enum representing the size of the ship</param>
-        /// <exception cref="ArgumentException">Throws ArgumentException if shipSize is not found.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
-        private void SetBaseShipInformation(ShipSize shipSize)
+        public override void PrintHistory()
         {
-            if (shipSize == ShipSize.Small)
-            {
-                ContainerCapacity = 20;
-                BaseWeightInTonn = 5000;
-                MaxWeightInTonn = BaseWeightInTonn + (24 * 25);
-                
-                BaseDockingTimeInHours = 3;
-                BaseBerthingTimeInHours = 6;
+            Console.WriteLine($"Ship name: {Name}, Ship ID {ID}");
+            Console.WriteLine("------------------------------------");
 
+            foreach (StatusLog his in HistoryIList)
+            {
+                Console.WriteLine($"Date: {his.Timestamp} Status: {his.Status}|\n");
+            }
+        }
+
+        /// <summary>
+        /// Gives a string containing information of the ship's entire history. Information in the String includes the ship's name, ID, Date and Time of all status changes and the coresponding status the ship had at those times.
+        /// </summary>
+        /// <returns> a String containing information about the ship's entire history.</returns>
+        public override string HistoryToString()
+        {
+            StringBuilder sb = new();
+
+            sb.Append($"Ship name: {Name}, Ship ID {ID}" + "\n");
+            sb.Append("------------------------------------\n");
+
+            foreach (StatusLog his in HistoryIList)
+            {
+                sb.Append($"Date: {his.Timestamp} Status: {his.Status}\n");
             }
 
-            else if (shipSize == ShipSize.Medium)
-            {
+            return sb.ToString();
+        }
 
-                ContainerCapacity = 50;
-                BaseWeightInTonn = 50000;
-                MaxWeightInTonn = BaseWeightInTonn + (24 * 55);
-
-                BaseDockingTimeInHours = 5;
-                BaseBerthingTimeInHours = 7;
-
-            }
-
-            else if (shipSize == ShipSize.Large)
-            {
-                ContainerCapacity = 100;
-                BaseWeightInTonn = 100000;
-                MaxWeightInTonn = BaseWeightInTonn + (24 * 150);
-
-                BaseDockingTimeInHours = 7;
-                BaseBerthingTimeInHours = 9;
-            }
-
-            else
-            {
-                throw new ArgumentException("Invalid ship size given. Valid ship sizes: ShipSize.Small, ShipSize.Medium, ShipSize.Large", nameof(shipSize));
-            }
-
-            CurrentWeightInTonn = BaseWeightInTonn;
+        /// <summary>
+        /// Returns a string with the Ships ID, name, size, startdate, round trip time, amount on containers of the differenct containerSizes on board, base weight in tonn, current weight in tonn and max weigth in tonn the ship can handle.
+        /// </summary>
+        /// <returns> a String containing information about the ship.</returns>
+        /// 
+        public override string ToString()
+        {
+            int full = 0;
+            int half = 0;
 
             foreach (Container container in ContainersOnBoard)
             {
-                CurrentWeightInTonn += container.WeightInTonn;
+                if (container.Size == ContainerSize.Half)
+                {
+                    half++;
+                }
+
+                else
+                {
+                    full++;
+                }
             }
-            try
-            {
-                CheckForValidWeight();
-            } catch (ArgumentOutOfRangeException)
-            {
-                throw;
-            }
-            
+
+            return
+                $"ID: {ID}, " +
+                $"Name: {Name}, " +
+                $"Size: {ShipSize}," +
+                $" Start date: {StartDate}, " +
+                $"Round trip time: {RoundTripInDays} days, " +
+                $"Containers on board: {half} small, {full} large, " +
+                $"Base weight: {BaseWeightInTonn} tonnes, " +
+                $"Current weight: {CurrentWeightInTonn} tonnes, " +
+                $"Max weight: {MaxWeightInTonn} tonnes.";
         }
 
         /// <summary>
@@ -452,72 +457,6 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Generate new containers of the given size and adds them to the ship's storage.
-        /// </summary>
-        /// <param name="containerSize">ContainerSize enum representing the size of the container's to be added to the ship's storage.</param>
-        /// <param name="numberOfContainersToBeAddedToStorage">Int value representing the number of containers to be added to the ship's storage.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
-        private void AddContainersOnBoard(ContainerSize containerSize, int numberOfContainersToBeAddedToStorage)
-        {
-            for (int i = 0; i < numberOfContainersToBeAddedToStorage; i++)
-            {
-                try
-                {
-                    CheckForValidWeight();
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    throw;
-                }
-
-                Container? ContainertoAdd = null;
-            
-                if (containerSize == ContainerSize.Half) { 
-                   ContainertoAdd = new(ContainerSize.Half, 10, ID);
-                }
-
-                if (containerSize == ContainerSize.Full)
-                {
-                    ContainertoAdd = new Container(ContainerSize.Full, 20, ID);
-                }
-
-                if (ContainertoAdd != null)
-                {
-                    ContainertoAdd.HistoryIList.Add(new StatusLog(ContainertoAdd.ID, ID, StartDate, Status.Transit));
-                    ContainersOnBoard.Add(ContainertoAdd);
-                    CurrentWeightInTonn += ContainertoAdd.WeightInTonn;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Checks if the ships current weight does not exeede its maxweight and that the ships container capacity is not exeeded. Throws ArgumentOutOfRangeException if they are.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
-        private void CheckForValidWeight()
-        {
-            if (CurrentWeightInTonn > MaxWeightInTonn)
-            {
-                throw new ArgumentOutOfRangeException("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)");
-            }
-
-            else if (ShipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
-            {
-                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
-            }
-
-            else if (ShipSize == ShipSize.Medium && ContainersOnBoard.Count > ContainerCapacity)
-            {
-                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for medium ships is max 50 containers");
-            }
-
-            else if (ShipSize == ShipSize.Large && ContainersOnBoard.Count > ContainerCapacity)
-            {
-                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for large ships is max 100 containers");
-            }
-        }
-
-        /// <summary>
         /// Generates a new StatusLog object and adds it to the ships history. This method is used to record information about a single
         /// status change that happened to the Ship.
         /// </summary>
@@ -527,9 +466,9 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns StatusLog object containing information about the ship at the time the StatusLog were created.</returns>
         internal StatusLog AddStatusChangeToHistory(DateTime currentTime, Guid currentLocation, Status status)
         {
-            StatusLog currentStatusChange = new(ID,currentLocation, currentTime, status);
+            StatusLog currentStatusChange = new(ID, currentLocation, currentTime, status);
             HistoryIList.Add(currentStatusChange);
-            
+
             return currentStatusChange;
         }
 
@@ -583,7 +522,7 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns true if the container was found and removed from ship's storage, false if not.</returns>
         internal bool RemoveContainer(Guid containerID)
         {
-            foreach(Container container in ContainersOnBoard)
+            foreach (Container container in ContainersOnBoard)
             {
                 if (container.ID == containerID)
                 {
@@ -613,11 +552,11 @@ namespace Gruppe8.HarbNet
         /// <returns>Returns a status enum representing the current status of the ship.</returns>
         internal Status GetCurrentStatus()
         {
-            if(HistoryIList.Count > 0)
+            if (HistoryIList.Count > 0)
             {
                 return HistoryIList.Last().Status;
-            } 
-            
+            }
+
             else
             {
                 return Status.None;
@@ -638,7 +577,7 @@ namespace Gruppe8.HarbNet
                 {
                     shipStatus = statusLogObject.Status;
                 }
-                
+
                 else if (statusLogObject.Timestamp > time)
                 {
                     break;
@@ -649,45 +588,12 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Prints the ships entire history to console. Information printed includes the ship's name, ID, Date and Time of all status changes and the coresponding status the ship had at those times.
-        /// </summary>
-        public override void PrintHistory()
-        {
-            Console.WriteLine($"Ship name: {Name}, Ship ID {ID}");
-            Console.WriteLine("------------------------------------");
-            
-            foreach (StatusLog his in HistoryIList)
-            {
-                Console.WriteLine($"Date: {his.Timestamp} Status: {his.Status}|\n");
-            }
-        }
-
-        /// <summary>
-        /// Gives a string containing information of the ship's entire history. Information in the String includes the ship's name, ID, Date and Time of all status changes and the coresponding status the ship had at those times.
-        /// </summary>
-        /// <returns> a String containing information about the ship's entire history.</returns>
-        public override string HistoryToString()
-        {
-            StringBuilder sb = new();
-
-            sb.Append($"Ship name: {Name}, Ship ID {ID}" + "\n");
-            sb.Append("------------------------------------\n");
-
-            foreach (StatusLog his in HistoryIList)
-            {
-                sb.Append($"Date: {his.Timestamp} Status: {his.Status}\n");
-            }
-
-            return sb.ToString();
-        }
-
-        /// <summary>
         /// Unloads container from ship's cargo.
         /// </summary>
         /// <returns>Returns null if there is zero containers on board, otherwise returns the Container object that is unloaded from the ship's cargo.</returns>
         internal Container? UnloadContainer()
         {
-            if(ContainersOnBoard.Count <= 0)
+            if (ContainersOnBoard.Count <= 0)
             {
                 return null;
             }
@@ -699,39 +605,136 @@ namespace Gruppe8.HarbNet
             return containertoUnload;
         }
 
+
         /// <summary>
-        /// Returns a string with the Ships ID, name, size, startdate, round trip time, amount on containers of the differenct containerSizes on board, base weight in tonn, current weight in tonn and max weigth in tonn the ship can handle.
+        /// Sets basic infomation for the ship based on the ship's size. The information set includes
+        /// container capacity, Base Weight (in tonn) and Max weight based on the ships size.
         /// </summary>
-        /// <returns> a String containing information about the ship.</returns>
-        /// 
-        public override string ToString()
+        /// <param name="shipSize">ShipSize enum representing the size of the ship</param>
+        /// <exception cref="ArgumentException">Throws ArgumentException if shipSize is not found.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
+        private void SetBaseShipInformation(ShipSize shipSize)
         {
-            int full = 0;
-            int half = 0;
+            if (shipSize == ShipSize.Small)
+            {
+                ContainerCapacity = 20;
+                BaseWeightInTonn = 5000;
+                MaxWeightInTonn = BaseWeightInTonn + (24 * 25);
+
+                BaseDockingTimeInHours = 3;
+                BaseBerthingTimeInHours = 6;
+
+            }
+
+            else if (shipSize == ShipSize.Medium)
+            {
+
+                ContainerCapacity = 50;
+                BaseWeightInTonn = 50000;
+                MaxWeightInTonn = BaseWeightInTonn + (24 * 55);
+
+                BaseDockingTimeInHours = 5;
+                BaseBerthingTimeInHours = 7;
+
+            }
+
+            else if (shipSize == ShipSize.Large)
+            {
+                ContainerCapacity = 100;
+                BaseWeightInTonn = 100000;
+                MaxWeightInTonn = BaseWeightInTonn + (24 * 150);
+
+                BaseDockingTimeInHours = 7;
+                BaseBerthingTimeInHours = 9;
+            }
+
+            else
+            {
+                throw new ArgumentException("Invalid ship size given. Valid ship sizes: ShipSize.Small, ShipSize.Medium, ShipSize.Large", nameof(shipSize));
+            }
+
+            CurrentWeightInTonn = BaseWeightInTonn;
 
             foreach (Container container in ContainersOnBoard)
             {
-                if (container.Size == ContainerSize.Half)
-                {
-                    half++;
-                }  
-                
-                else
-                {
-                    full++;
-                }
+                CurrentWeightInTonn += container.WeightInTonn;
+            }
+            try
+            {
+                CheckForValidWeight();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw;
             }
 
-            return 
-                $"ID: {ID}, " +
-                $"Name: {Name}, " +
-                $"Size: {ShipSize}," +
-                $" Start date: {StartDate}, " +
-                $"Round trip time: {RoundTripInDays} days, " +
-                $"Containers on board: {half} small, {full} large, " +
-                $"Base weight: {BaseWeightInTonn} tonnes, " +
-                $"Current weight: {CurrentWeightInTonn} tonnes, " +
-                $"Max weight: {MaxWeightInTonn} tonnes.";
+        }
+
+        /// <summary>
+        /// Generate new containers of the given size and adds them to the ship's storage.
+        /// </summary>
+        /// <param name="containerSize">ContainerSize enum representing the size of the container's to be added to the ship's storage.</param>
+        /// <param name="numberOfContainersToBeAddedToStorage">Int value representing the number of containers to be added to the ship's storage.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
+        private void AddContainersOnBoard(ContainerSize containerSize, int numberOfContainersToBeAddedToStorage)
+        {
+            for (int i = 0; i < numberOfContainersToBeAddedToStorage; i++)
+            {
+                try
+                {
+                    CheckForValidWeight();
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    throw;
+                }
+
+                Container? ContainertoAdd = null;
+
+                if (containerSize == ContainerSize.Half)
+                {
+                    ContainertoAdd = new(ContainerSize.Half, 10, ID);
+                }
+
+                if (containerSize == ContainerSize.Full)
+                {
+                    ContainertoAdd = new Container(ContainerSize.Full, 20, ID);
+                }
+
+                if (ContainertoAdd != null)
+                {
+                    ContainertoAdd.HistoryIList.Add(new StatusLog(ContainertoAdd.ID, ID, StartDate, Status.Transit));
+                    ContainersOnBoard.Add(ContainertoAdd);
+                    CurrentWeightInTonn += ContainertoAdd.WeightInTonn;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if the ships current weight does not exeede its maxweight and that the ships container capacity is not exeeded. Throws ArgumentOutOfRangeException if they are.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Throws exception if the weight set for the ship is too high or if the ship contains more Containers than the ship of this size can handle.</exception>
+        private void CheckForValidWeight()
+        {
+            if (CurrentWeightInTonn > MaxWeightInTonn)
+            {
+                throw new ArgumentOutOfRangeException("The ships current weight is to heavy. Max overall container weight for small ships is 600 tonns (about 55 containers), for medium ships: 1320 tonns (about 55 containers), for large ships: 5600 tonns (about 150 containers)");
+            }
+
+            else if (ShipSize == ShipSize.Small && ContainersOnBoard.Count > ContainerCapacity)
+            {
+                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for small ships is max 20 containers");
+            }
+
+            else if (ShipSize == ShipSize.Medium && ContainersOnBoard.Count > ContainerCapacity)
+            {
+                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for medium ships is max 50 containers");
+            }
+
+            else if (ShipSize == ShipSize.Large && ContainersOnBoard.Count > ContainerCapacity)
+            {
+                throw new ArgumentOutOfRangeException("The ship has too many containers on board. The container capacity for large ships is max 100 containers");
+            }
         }
     }
 }

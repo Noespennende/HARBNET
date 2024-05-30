@@ -12,13 +12,14 @@ namespace Gruppe8.HarbNet
     /// </summary>
     internal class LoadingDock : Dock
     {
+
         /// <summary>
         /// Gets a dictionary containing the location ID of a spot where trucks can load cargo directly from ships and the truck currently occupying this spot.
         /// </summary>
         /// <returns>Returns a IDictionary with the Guid object representing the location ID of a spot where a truck can load cargo directly from a ship as keys
         /// and the truck currently occupying this spot as values.</returns>
         internal IDictionary<Guid, Truck?> TruckLoadingSpots { get; set; } = new Dictionary<Guid, Truck?>();
-        
+
         /// <summary>
         /// Creates a new LoadingDock object
         /// </summary>
