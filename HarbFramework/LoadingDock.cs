@@ -8,7 +8,7 @@ using Gruppe8.HarbNet.Advanced;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// LoadingDocks used in a simulation. LoadingDocks are docks where ships can load or unload their cargo from or to the _harbor. 
+    /// LoadingDocks used in a simulation. LoadingDocks are docks where ships can load or unload their cargo from or to the harbor. 
     /// </summary>
     internal class LoadingDock : Dock
     {

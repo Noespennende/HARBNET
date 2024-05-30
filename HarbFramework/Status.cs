@@ -40,23 +40,23 @@ namespace Gruppe8.HarbNet
         /// </summary>
         DockedToShipDock,
         /// <summary>
-        /// Unloading container(s) from ship to _harbor.
+        /// Unloading container(s) from ship to harbor.
         /// </summary>
         Unloading,
         /// <summary>
-        /// Done unloading container(s) from ship to _harbor.
+        /// Done unloading container(s) from ship to harbor.
         /// </summary>
         UnloadingDone,
         /// <summary>
-        /// Loading container(s) from _harbor to ship.
+        /// Loading container(s) from harbor to ship.
         /// </summary>
         Loading,
         /// <summary>
-        /// Done loading container(s) from _harbor to ship.
+        /// Done loading container(s) from harbor to ship.
         /// </summary>
         LoadingDone,
         /// <summary>
-        /// Undocking ship from _harbor.
+        /// Undocking ship from harbor.
         /// </summary>
         Undocking,
         /// <summary>

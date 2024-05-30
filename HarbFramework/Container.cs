@@ -12,7 +12,7 @@ using Gruppe8.HarbNet.Advanced;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Class representing storage containers to be used in a _harbor simulation.
+    /// Class representing storage containers to be used in a harbor simulation.
     /// </summary>
     public class Container : StorageUnit
     {
@@ -56,9 +56,9 @@ namespace Gruppe8.HarbNet
         public override Guid CurrentLocation { get; internal set; }
         
         /// <summary>
-        /// Gets a number representing how many days the Container has been stored in the _harbor's storage.
+        /// Gets a number representing how many days the Container has been stored in the harbor's storage.
         /// </summary>
-        /// <returns>Returns the int value representing the amount of days the Container has been stored in the _harbor's storage</returns>
+        /// <returns>Returns the int value representing the amount of days the Container has been stored in the harbor's storage</returns>
         internal int DaysInStorage { get; set; }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Adds another day to the total amount of days the container has been in the _harbor's storage.
+        /// Adds another day to the total amount of days the container has been in the harbor's storage.
         /// </summary>
         internal void AddAnotherDayInStorage()
         {
@@ -136,7 +136,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         public override void PrintHistory()
         {
-            Console.WriteLine($"Container ID: {ID.ToString()}"); 
+            Console.WriteLine($"Container ID: {ID}"); 
             foreach (StatusLog sl in HistoryIList)
             {
                 Console.WriteLine($"Date: {sl.Timestamp} Status: {sl.Status}\n");
