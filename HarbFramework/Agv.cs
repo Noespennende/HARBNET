@@ -25,12 +25,6 @@ namespace Gruppe8.HarbNet
         internal Container? Container { get; set; }
 
         /// <summary>
-        /// Represents the current status of the AGV.
-        /// </summary>
-        /// <return>Returns a Status enum representing the current status og the AGV.</return>
-        internal Status Status { get; set; }
-
-        /// <summary>
         /// Get the ID of the current location of the AGV.
         /// </summary>
         /// <return>Returns a Guid object representing the current location of the AGV.</return>
@@ -40,7 +34,7 @@ namespace Gruppe8.HarbNet
         /// Create new objects of the AGV class.
         /// </summary>
         /// <param name="location">Guid object representing the ID of the location the Agv will start at.</param>
-        internal Agv (Guid location)
+        internal Agv(Guid location)
         {
             Container = null;
             Location = location;
@@ -66,7 +60,6 @@ namespace Gruppe8.HarbNet
             Container? containerToBeUnloaded = Container;
             Container = null;
             return containerToBeUnloaded;
-
         }
     }
 }

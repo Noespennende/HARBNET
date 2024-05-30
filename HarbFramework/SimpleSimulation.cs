@@ -951,13 +951,19 @@ namespace Gruppe8.HarbNet
             }
             
             Container? container = _harbor.ShipToCrane(ship, craneDock, _currentTime);
-            if (container == null)
+            if (container != null)
             {
                 _harbor.CraneToTruck(craneDock, truck, _currentTime);
+
                 ship.ContainersLeftForTrucks--;
+
+                loadingDock.RemoveTruckFromTruckLoadingSpot(truck);
+                _harbor.SendTruckOnTransit(container);
+
+                return container;
             }
 
-            return container;
+            return null;
         }
 
         /// <summary>

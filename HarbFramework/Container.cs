@@ -65,11 +65,11 @@ namespace Gruppe8.HarbNet
         /// Constructor used to create objects of the Container class.
         /// </summary>
         /// <param name="size">A ContainerSize enum representing the Size of container to be created.</param>
-        /// <param name="WeightInTonn">Int value representing the weight in tonns of container to be created.</param>
-        /// <param name="currentPosition">Guid object representing the ID of the current position of the Container to be created.</param>
-        internal Container(ContainerSize size, int weightInTonn, Guid currentPosition) {
+        /// <param name="weightInTonn">Int value representing the weight in tonns of container to be created.</param>
+        /// <param name="currentLocation">Guid object representing the ID of the current position of the Container to be created.</param>
+        internal Container(ContainerSize size, int weightInTonn, Guid currentLocation) {
             Size = size;
-            CurrentLocation = currentPosition;
+            CurrentLocation = currentLocation;
             WeightInTonn = weightInTonn;
         }
 
@@ -77,20 +77,20 @@ namespace Gruppe8.HarbNet
         /// Constructor used to create objects of the Container class.
         /// </summary>
         /// <param name="size">A ContainerSize enum representing the Size of container to be created.</param>
-        /// <param name="WeightInTonn">Int value representing the weight in tonns of container to be created.</param>
-        /// <param name="currentPosition">Guid object representing the ID of the current position of the Container to be created.</param>
+        /// <param name="weightInTonn">Int value representing the weight in tonns of container to be created.</param>
+        /// <param name="currentLocation">Guid object representing the ID of the current position of the Container to be created.</param>
         /// <param name="id">Guid representing the ID of the container to be created</param>
         /// <param name="containerHistory">An IList of StatusLog objects representing the history of the container to be created</param>
         internal Container(
             ContainerSize size, 
             int weightInTonn, 
-            Guid currentPosition, 
+            Guid currentLocation, 
             Guid id, 
             IList<StatusLog> containerHistory)
         {
             ID = id;
             Size = size;
-            CurrentLocation = currentPosition;
+            CurrentLocation = currentLocation;
             WeightInTonn = weightInTonn;
             HistoryIList = containerHistory;
         }
@@ -101,7 +101,7 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="status">Status enum representing the new status of the container.</param>
         /// <param name="currentTime">DateTime object representing the date and time the status change occured./param>
-        internal void AddStatusChangeToHistory (Status status, DateTime currentTime)
+        internal void AddStatusChangeToHistory(Status status, DateTime currentTime)
         {
             HistoryIList.Add(new StatusLog(ID, CurrentLocation, currentTime, status));
         }

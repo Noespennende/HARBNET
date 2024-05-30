@@ -890,7 +890,7 @@ namespace Gruppe8.HarbNet
                 if (container.Size == size)
                 {
                     crane.LoadContainer(container);
-                    container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime );
+                    container.AddStatusChangeToHistory(Status.LoadingToCrane, currentTime);
                     storedContainers[container].RemoveContainerFromContainerRow(container);
                     storedContainers.Remove(container);
                     

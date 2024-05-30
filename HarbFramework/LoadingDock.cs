@@ -49,27 +49,6 @@ namespace Gruppe8.HarbNet
         }
 
         /// <summary>
-        /// Checks if the given truck is stationed at one of the loadingspots in the LoadingDock.
-        /// </summary>
-        /// <param name="truck">Truck object to be checked if assigned to a loading spot.</param>
-        /// <returns>Returns a bool value. True is returned if truck exists in one of the docks loadingspots, if not false is returned.</returns>
-        internal bool TruckExistsInTruckLoadingSpots(Truck? truck)
-        {
-            if (truck == null) 
-                return false;
-
-            foreach (var spot in TruckLoadingSpots)
-            {
-                if (spot.Value == truck)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Removes the given truck from the LoadingDocks loadingspot.
         /// </summary>
         /// <param name="truck">Truck object to be removed from loading spot.</param>
