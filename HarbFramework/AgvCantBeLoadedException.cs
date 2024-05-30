@@ -15,14 +15,16 @@ namespace Gruppe8.HarbNet
         /// <summary>
         /// Creates new AgvCantBeLoadedException.
         /// </summary>
-        public AgvCantBeLoadedException() { }
+        public AgvCantBeLoadedException() 
+        { 
+        }
 
         /// <summary>
         /// Creates new AgvCantBeLoadedException.
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
         public AgvCantBeLoadedException(string message) : base(message)
-        {
+        { 
         }
 
         /// <summary>
@@ -30,8 +32,8 @@ namespace Gruppe8.HarbNet
         /// </summary>
         /// <param name="message">Message to be thrown when exception is called.</param>
         /// <param name="innerException">innerException to be thrown when exception is called.</param>
-        public AgvCantBeLoadedException(String message, Exception innerException) : base(message, innerException)
-        {
+        public AgvCantBeLoadedException(string message, Exception innerException) : base(message, innerException)
+        { 
         }
     }
 }

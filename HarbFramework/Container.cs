@@ -12,7 +12,7 @@ using Gruppe8.HarbNet.Advanced;
 namespace Gruppe8.HarbNet
 {
     /// <summary>
-    /// Class representing storage containers to be used in a harbor simulation.
+    /// Class representing storage containers to be used in a _harbor simulation.
     /// </summary>
     public class Container : StorageUnit
     {
@@ -20,39 +20,45 @@ namespace Gruppe8.HarbNet
         /// Gets the unique ID for container.
         /// </summary>
         /// <returns>Returns a Guid object representing the unique ID of the container.</returns>
-        public override Guid ID { get; }
+        public override Guid ID { get; } = Guid.NewGuid();
+        
         /// <summary>
         /// Gets a ReadOnlyCollection of StatusLog objects containing information on status changes the container has gone through throughout a simulation.
         /// Each StatusLog object contains information about one status change that happened to the container. Together the list holds information about the entire
         /// history of status changes that happened to the Container.
         /// </summary>
         /// <returns>Returns a ReadOnlyCollection with StatusLog objects with information on status changes the container has gone through throughout a simulation.</returns>
-        public override ReadOnlyCollection<StatusLog> History { get { return HistoryIList.AsReadOnly(); } }
+        public override ReadOnlyCollection<StatusLog> History => HistoryIList.AsReadOnly();
+        
         /// <summary>
         /// Gets a IList of StatusLog objects containing information on status changes the container has gone through throughout a simulation.
         /// Each StatusLog object contains information about one status change that happened to the container. 
         /// </summary>
         /// <returns>Returns an Ilist with StatusLog objects with informations on the status changes the container has gone through throughout a simulation.</returns>
         internal IList<StatusLog> HistoryIList {  get; } = new List<StatusLog>();
+        
         /// <summary>
         /// Gets the container's size
         /// </summary>
         /// <returns>Returns a ContainerSize enum representing the container's size</returns>
         public override ContainerSize Size { get; internal set; }
+        
         /// <summary>
         /// Gets the containers weight in tonns.
         /// </summary>
         /// <returns>Returns an int value representing the containers weight in tonns.</returns>
         public override int WeightInTonn { get; internal set; }
+        
         /// <summary>
         /// Gets the location ID of the container's current location.
         /// </summary>
         /// <returns>Returns a Guid object representing the ID of the containers current location.</returns>
         public override Guid CurrentLocation { get; internal set; }
+        
         /// <summary>
-        /// Gets a number representing how many days the Container has been stored in the Harbor's storage.
+        /// Gets a number representing how many days the Container has been stored in the _harbor's storage.
         /// </summary>
-        /// <returns>Returns the int value representing the amount of days the Container has been stored in the Harbor's storage</returns>
+        /// <returns>Returns the int value representing the amount of days the Container has been stored in the _harbor's storage</returns>
         internal int DaysInStorage { get; set; }
 
         /// <summary>
@@ -61,11 +67,10 @@ namespace Gruppe8.HarbNet
         /// <param name="size">A ContainerSize enum representing the Size of container to be created.</param>
         /// <param name="WeightInTonn">Int value representing the weight in tonns of container to be created.</param>
         /// <param name="currentPosition">Guid object representing the ID of the current position of the Container to be created.</param>
-        internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition) {
-            this.ID = Guid.NewGuid();
-            this.Size = size;
-            this.CurrentLocation = currentPosition;
-            this.WeightInTonn = WeightInTonn;
+        internal Container(ContainerSize size, int weightInTonn, Guid currentPosition) {
+            Size = size;
+            CurrentLocation = currentPosition;
+            WeightInTonn = weightInTonn;
         }
 
         /// <summary>
@@ -76,13 +81,18 @@ namespace Gruppe8.HarbNet
         /// <param name="currentPosition">Guid object representing the ID of the current position of the Container to be created.</param>
         /// <param name="id">Guid representing the ID of the container to be created</param>
         /// <param name="containerHistory">An IList of StatusLog objects representing the history of the container to be created</param>
-        internal Container(ContainerSize size, int WeightInTonn, Guid currentPosition, Guid id, IList<StatusLog> containerHistory)
+        internal Container(
+            ContainerSize size, 
+            int weightInTonn, 
+            Guid currentPosition, 
+            Guid id, 
+            IList<StatusLog> containerHistory)
         {
-            this.ID = id;
-            this.Size = size;
-            this.CurrentLocation = currentPosition;
-            this.WeightInTonn = WeightInTonn;
-            this.HistoryIList = containerHistory;
+            ID = id;
+            Size = size;
+            CurrentLocation = currentPosition;
+            WeightInTonn = weightInTonn;
+            HistoryIList = containerHistory;
         }
 
         /// <summary>
@@ -106,15 +116,15 @@ namespace Gruppe8.HarbNet
             {
                 return HistoryIList.Last().Status;
             }
+            
             else
             {
                 return Status.None;
             }
-            
         }
 
         /// <summary>
-        /// Adds another day to the total amount of days the container has been in the Harbor's storage.
+        /// Adds another day to the total amount of days the container has been in the _harbor's storage.
         /// </summary>
         internal void AddAnotherDayInStorage()
         {
@@ -137,7 +147,7 @@ namespace Gruppe8.HarbNet
         /// Gets a string containing information about the container's entire History. Information in the string includes the date and time and status of the container for all status changes in the containers entire History. 
         /// </summary>
         /// <returns>Returns a String representing the history of a the container</returns>
-        public override String HistoryToString()
+        public override string HistoryToString()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -152,9 +162,9 @@ namespace Gruppe8.HarbNet
         /// Gets a String with containing the container's ID, Container's size and int value representing it's weight in tonn. 
         /// </summary>
         /// <returns>Returns a String with containing the container's ID, Container's size and int value representing it's weight in tonn. </returns>
-        public override String ToString()
+        public override string ToString()
         {
-            return ($"ID: {ID.ToString()}, Size: {Size}, Weight: {WeightInTonn} tonnes");
+            return $"ID: {ID}, Size: {Size}, Weight: {WeightInTonn} tonnes";
         }
     }
 }
